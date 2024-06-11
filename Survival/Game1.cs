@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Survival.HxPly;
+using Survival.Rendering;
 using System;
 using System.Collections.Generic;
 
@@ -136,6 +137,8 @@ namespace Survival
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            var gameModel = GameModel.LoadFrom(GraphicsDevice, @"Content\Fox.glb");
 
             _fox = Content.Load<Model>("model");
 

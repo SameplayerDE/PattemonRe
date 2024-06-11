@@ -43,5 +43,6 @@ namespace HxGLTF
         public string? Uri;
         public BufferView? BufferView;
         public MiMeType? MiMeType;
+        public string Name;
     }
 }

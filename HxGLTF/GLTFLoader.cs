@@ -7,63 +7,160 @@ namespace HxGLTF
 {
     public class GLTFLoader
     {
-        public static GLTFFile Load(string path)
+        public static GLTFFile Load(string pathOrBaseName)
         {
-            if (!File.Exists(path))
+            if (string.IsNullOrEmpty(pathOrBaseName))
             {
-                throw new FileNotFoundException("file could not be found");
+                throw new ArgumentNullException(nameof(pathOrBaseName), "File path or base name cannot be null or empty.");
             }
 
-            var extension = Path.GetExtension(path);
-            if (!extension.Equals(".gltf") && !extension.Equals(".glb"))
-            {
-                throw new FileLoadException("file could not be loaded, wrong file type");
-            }
+            string path = ValidateFileExists(pathOrBaseName);
 
-            return extension.Equals(".glb") ? LoadFromGLBFile(path) : LoadFromGLTFFile(path);
+            using (var fileStream = File.OpenRead(path))
+            {
+                var extension = Path.GetExtension(path);
+                ValidateFileType(extension);
+
+                byte[]? glbBytes = null;
+                string? json = null;
+                byte[]? binary = null;
+
+                if (extension.Equals(".glb", StringComparison.OrdinalIgnoreCase))
+                {
+                    glbBytes = ExtractGLBBytes(fileStream);
+                    json = ExtractJSONFromGLB(glbBytes);
+                    binary = ExtractBinaryFromGLB(glbBytes, json.Length);
+                }
+                else
+                {
+                    json = ExtractJSONFromFile(fileStream);
+                }
+
+                return LoadFromJsonWithBinary(path, json, binary);
+            }
         }
 
-        private static GLTFFile LoadFromGLBFile(string path)
+        private static string ValidateFileExists(string pathOrBaseName)
         {
-            var glbBytes = File.ReadAllBytes(path);
-            var stream = new MemoryStream(glbBytes);
+            string gltfPath = pathOrBaseName.EndsWith(".gltf", StringComparison.OrdinalIgnoreCase) ? pathOrBaseName : pathOrBaseName + ".gltf";
+            string glbPath = pathOrBaseName.EndsWith(".glb", StringComparison.OrdinalIgnoreCase) ? pathOrBaseName : pathOrBaseName + ".glb";
+
+            bool gltfExists = File.Exists(gltfPath);
+            bool glbExists = File.Exists(glbPath);
+
+            // If exact file path is provided and exists
+            if (File.Exists(pathOrBaseName))
+            {
+                return pathOrBaseName;
+            }
+            // If both .gltf and .glb exist and no extension was provided
+            else if (gltfExists && glbExists && !Path.HasExtension(pathOrBaseName))
+            {
+                throw new InvalidOperationException("Both .gltf and .glb files exist. Specify the file extension explicitly.");
+            }
+            else if (gltfExists)
+            {
+                return gltfPath;
+            }
+            else if (glbExists)
+            {
+                return glbPath;
+            }
+            else
+            {
+                throw new FileNotFoundException("Neither .gltf nor .glb file found with the specified name.", pathOrBaseName);
+            }
+        }
+
+        private static void ValidateFileType(string extension)
+        {
+            if (!extension.Equals(".gltf", StringComparison.OrdinalIgnoreCase) &&
+                !extension.Equals(".glb", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new FileLoadException("Invalid file type.");
+            }
+        }
+
+
+        private static byte[] ExtractGLBBytes(FileStream fileStream)
+        {
+            var glbBytes = new byte[fileStream.Length];
+            fileStream.Read(glbBytes, 0, glbBytes.Length);
+            return glbBytes;
+        }
+
+        private static string ExtractJSONFromGLB(byte[] glbBytes)
+        {
+            if (glbBytes.Length < 20)
+            {
+                throw new Exception("Invalid GLB file format.");
+            }
 
             var magic = BitConverter.ToUInt32(glbBytes, 0);
             if (magic != 0x46546C67)
             {
-                throw new Exception("file is damaged");
+                throw new Exception("Invalid GLB file format.");
             }
 
             var chunkLength0 = BitConverter.ToUInt32(glbBytes, 12);
-            var jsonChunkData = new byte[chunkLength0];
-            stream.Position = 20;
-            stream.Read(jsonChunkData, 0, (int)chunkLength0);
-            var json = System.Text.Encoding.UTF8.GetString(jsonChunkData);
+            if (glbBytes.Length < chunkLength0 + 20)
+            {
+                throw new Exception("Invalid GLB file format.");
+            }
 
-            var chunkLength1 = BitConverter.ToUInt32(glbBytes, 20 + (int)chunkLength0);
+            return System.Text.Encoding.UTF8.GetString(glbBytes, 20, (int)chunkLength0);
+        }
+
+        private static string ExtractJSONFromFile(FileStream fileStream)
+        {
+            using (var reader = new StreamReader(fileStream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        private static byte[] ExtractBinaryFromGLB(byte[] glbBytes, int jsonLength)
+        {
+            if (glbBytes.Length < jsonLength + 28)
+            {
+                throw new Exception("Invalid GLB file format.");
+            }
+
+            var chunkLength1 = BitConverter.ToUInt32(glbBytes, 20 + jsonLength);
+            var startIndex = 20 + jsonLength + 8;
+            if (glbBytes.Length < startIndex + chunkLength1)
+            {
+                throw new Exception("Invalid GLB file format.");
+            }
+
             var binChunkData = new byte[chunkLength1];
-            stream.Position = 28 + (int)chunkLength0;
-            stream.Read(binChunkData, 0, (int)chunkLength1);
-
-            return LoadFromJsonWithByteArray(path, json, binChunkData);
+            Array.Copy(glbBytes, startIndex, binChunkData, 0, (int)chunkLength1);
+            return binChunkData;
         }
 
-        private static GLTFFile LoadFromJsonWithByteArray(string path, string json, byte[] array)
+        private static GLTFFile LoadFromJsonWithBinary(string path, string json, byte[] binary = null)
         {
             var jObject = JObject.Parse(json);
 
+            // Überprüfe die erforderlichen Elemente
+            if (jObject["asset"] == null)
+            {
+                throw new ArgumentException("gltf file is missing data.");
+            }
+
             var asset = LoadAsset(jObject["asset"]);
-            var buffers = LoadBuffers(path, jObject["buffers"], array);
-            var bufferViews = LoadBufferViews(jObject["bufferViews"], buffers);
-            var accessors = LoadAccessors(jObject["accessors"], bufferViews);
-            var samplers = LoadSamplers(jObject["samplers"]);
-            var images = LoadImages(path, jObject["images"], bufferViews);
-            var textures = LoadTextures(jObject["textures"], samplers, images);
-            var materials = LoadMaterials(jObject["materials"], textures);
-            var meshes = LoadMeshes(jObject["meshes"], accessors, materials);
-            var nodes = LoadNodes(jObject["nodes"], meshes);
-            var animations = LoadAnimations(jObject["animations"], accessors, nodes);
-            var skins = LoadSkins(jObject["skins"], accessors, nodes);
+            var buffers = jObject["buffers"] != null ? LoadBuffers(path, jObject["buffers"], binary) : null;
+            var bufferViews = jObject["bufferViews"] != null ? LoadBufferViews(jObject["bufferViews"], buffers) : null;
+            var accessors = jObject["accessors"] != null ? LoadAccessors(jObject["accessors"], bufferViews) : null;
+            var samplers = jObject["samplers"] != null ? LoadSamplers(jObject["samplers"]) : null;
+            var images = jObject["images"] != null ? LoadImages(path, jObject["images"], bufferViews) : null;
+            var textures = jObject["textures"] != null ? LoadTextures(jObject["textures"], samplers, images) : null;
+            var materials = jObject["materials"] != null ? LoadMaterials(jObject["materials"], textures) : null;
+            var meshes = jObject["meshes"] != null ? LoadMeshes(jObject["meshes"], accessors, materials) : null;
+            var nodes = jObject["nodes"] != null ? LoadNodes(jObject["nodes"], meshes) : null;
+            var animations = jObject["animations"] != null ? LoadAnimations(jObject["animations"], accessors, nodes) : null;
+            var skins = jObject["skins"] != null ? LoadSkins(jObject["skins"], accessors, nodes) : null;
+
 
             return new GLTFFile()
             {
@@ -77,45 +174,9 @@ namespace HxGLTF
                 Textures = textures,
                 Materials = materials,
                 Meshes = meshes,
-                Animations = animations,
-                Skins = skins,
-            };
-        }
-
-        private static GLTFFile LoadFromGLTFFile(string path)
-        {
-            var json = File.ReadAllText(path);
-            var jObject = JObject.Parse(json);
-
-            //TODO: Check
-
-            var asset = LoadAsset(jObject["asset"]);
-            var buffers = LoadBuffers(path, jObject["buffers"]);
-            var bufferViews = LoadBufferViews(jObject["bufferViews"], buffers);
-            var accessors = LoadAccessors(jObject["accessors"], bufferViews);
-            var samplers = LoadSamplers(jObject["samplers"]);
-            var images = LoadImages(path, jObject["images"], bufferViews);
-            var textures = LoadTextures(jObject["textures"], samplers, images);
-            var materials = LoadMaterials(jObject["materials"], textures);
-            var meshes = LoadMeshes(jObject["meshes"], accessors, materials);
-            var nodes = LoadNodes(jObject["nodes"], meshes);
-            var animations = LoadAnimations(jObject["animations"], accessors, nodes);
-            var skins = LoadSkins(jObject["skins"], accessors, nodes);
-
-            return new GLTFFile()
-            {
-                Path = path,
-                Asset = asset,
-                Buffers = buffers,
-                BufferViews = bufferViews,
-                Accessors = accessors,
-                Images = images,
-                Samplers = samplers,
-                Textures = textures,
-                Materials = materials,
-                Meshes = meshes,
-                Animations = animations,
-                Skins = skins,
+                Nodes = nodes,
+                //Animations = animations,
+                //Skins = skins,
             };
         }
 
@@ -138,7 +199,7 @@ namespace HxGLTF
             return asset;
         }
 
-        private static Buffer[] LoadBuffers(string path, JToken jBuffers, byte[] array = null)
+        public static Buffer[] LoadBuffers(string path, JToken jBuffers, byte[] array = null)
         {
             var buffers = new Buffer[jBuffers.Count()];
             for (var i = 0; i < jBuffers.Count(); i++)
@@ -157,7 +218,14 @@ namespace HxGLTF
                 }
                 else
                 {
-                    buffer.Bytes = LoadBufferBytes(path, buffer.Uri);
+                    if (buffer.Uri.StartsWith("data:"))
+                    {
+                        buffer.Bytes = LoadBase64Buffer(buffer.Uri);
+                    }
+                    else
+                    {
+                        buffer.Bytes = LoadBufferBytes(path, buffer.Uri);
+                    }
                 }
                 buffers[i] = buffer;
             }
@@ -172,6 +240,12 @@ namespace HxGLTF
                 throw new FileNotFoundException();
             }
             return File.ReadAllBytes(combinedPath);
+        }
+
+        private static byte[] LoadBase64Buffer(string base64Uri)
+        {
+            var base64Data = base64Uri.Substring(base64Uri.IndexOf(",") + 1);
+            return Convert.FromBase64String(base64Data);
         }
 
         private static BufferView[] LoadBufferViews(JToken jBufferViews, Buffer[] buffers)
@@ -252,6 +326,12 @@ namespace HxGLTF
                 {
                     Uri = (string?)jImage?["uri"]
                 };
+
+                var jImageName = jImage["name"];
+                if (jImageName != null)
+                {
+                    image.Name = jImageName.ToString();
+                }
 
                 if (image.Uri == null)
                 {

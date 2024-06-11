@@ -31,18 +31,6 @@ namespace HxGLTF
             Bits = bits;
         }
         
-        /*
-        public override bool Equals(object obj)
-        {
-            var item = obj is int i ? i : 0;
-            return this.Id.Equals(item);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.Id.GetHashCode();
-        }
-        */
         
         public static ComponentType FromInt(int type)
         {
@@ -53,12 +41,12 @@ namespace HxGLTF
     public class Type
     {
         public readonly static Type Scalar = new Type("SCALAR", 1);
-        public readonly static Type Vec2   = new Type("VEC2", 2);
-        public readonly static Type Vec3   = new Type("VEC3", 3);
-        public readonly static Type Vec4   = new Type("VEC4", 4);
-        public readonly static Type Mat2   = new Type("MAT2", 4);
-        public readonly static Type Mat3   = new Type("MAT3", 9);
-        public readonly static Type Mat4   = new Type("MAT4", 16);
+        public readonly static Type Vec2   = new Type("VEC2", 2);  // vector2
+        public readonly static Type Vec3   = new Type("VEC3", 3);  // vector3
+        public readonly static Type Vec4   = new Type("VEC4", 4);  // vector4
+        public readonly static Type Mat2   = new Type("MAT2", 4);  // 2x2 matrix
+        public readonly static Type Mat3   = new Type("MAT3", 9);  // 3x3 matrix
+        public readonly static Type Mat4   = new Type("MAT4", 16); // 4x4 matrix
 
         private static Dictionary<string, Type> _types = new Dictionary<string, Type>()
         {
@@ -79,20 +67,6 @@ namespace HxGLTF
             Id = id;
             NumberOfComponents = numberOfComponents;
         }
-
-        /*
-        public override bool Equals(object obj)
-        {
-            var item = obj as string;
-
-            return item != string.Empty && this.Id.Equals(item);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.Id.GetHashCode();
-        }
-        */
         
         public static Type FromSting(string type)
         {
@@ -118,4 +92,154 @@ namespace HxGLTF
         public int BytesPerComponent => ComponentType.Bits / 8;
         public int TotalByteCount => BytesPerComponent * TotalComponentCount;
     }
+
+    public class AccessorReader
+    {
+        // read methode that gives me an array of the type like vector3 or vector2 with the data from the buffer
+        public static float[] ReadData(Accessor accessor)
+        {
+            if (accessor == null || accessor.BufferView == null || accessor.BufferView.Buffer == null || accessor.ComponentType == null || accessor.Type == null)
+            {
+                throw new ArgumentNullException("Accessor, BufferView, Buffer, Accessor.ComponentType, or Accessor.Type is null.");
+            }
+
+            var buffer = accessor.BufferView.Buffer;
+            var bufferData = buffer.Bytes;
+            var bufferOffset = accessor.BufferView.ByteOffset;
+            var byteOffset = accessor.ByteOffset;
+            var byteStride = accessor.BufferView.ByteStride;
+            var componentSizeInBytes = accessor.BytesPerComponent;
+            var componentCount = accessor.Count;
+            var totalComponentCount = accessor.TotalComponentCount;
+
+            Console.WriteLine(accessor.Type.Id);
+
+            var data = new float[totalComponentCount];
+
+            switch (accessor.ComponentType.Id)
+            {
+                case 5120: // Byte
+                    ReadDataInternal<sbyte>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                    break;
+                case 5121: // UByte
+                    ReadDataInternal<byte>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                    break;
+                case 5122: // Short
+                    ReadDataInternal<short>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                    break;
+                case 5123: // UShort
+                    ReadDataInternal<ushort>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                    break;
+                case 5125: // UInt
+                    ReadDataInternal<uint>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                    break;
+                case 5126: // Float
+                    ReadDataInternal<float>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                    break;
+                default:
+                    throw new ArgumentException("Unsupported component type.");
+            }
+
+            // if (accessor.Normalized)
+            // {
+            //     NormalizeData(data);
+            // }
+            return data;
+        }
+
+        public static float[] ReadDataIndexed(Accessor dataAccessor, Accessor indexAccessor)
+        {
+
+            var data = ReadData(dataAccessor);
+            var indices = ReadData(indexAccessor);
+
+            //var result = new float[indexAccessor.Count * dataAccessor.TypeComponentAmount()];
+            var result = new List<float>();
+            for (var x = 0; x < indices.Length; x++)
+            {
+                var index = (ushort)indices[x];
+                for (var j = 0; j < dataAccessor.Type.NumberOfComponents; j++)
+                {
+                    var calculatedIndex = index * dataAccessor.Type.NumberOfComponents + j;
+                    var d = data[calculatedIndex];
+                    result.Add(d);
+                    //result[calculatedIndex] = d;
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        private static void ReadDataInternal<T>(float[] data, byte[] bufferData, int bufferOffset, int byteOffset, int byteStride, int componentSizeInBytes, int componentCount) where T : struct
+        {
+
+            //var bytes = new List<byte>();
+            //var value = 0.0f;
+
+            //for (var i = 0; i < totalAmountOfBytes; i += numberOfComponents * bytesPerComponent)
+            //{
+            //    for (var k = 0; k < numberOfComponents * bytesPerComponent; k += bytesPerComponent)
+            //    {
+            //        bytes.Clear();
+            //        for (var j = 0; j < bytesPerComponent; j++)
+            //        {
+            //            bytes.Add(data[i + j + k]);
+            //        }
+            //        value = ReadData<T>(bufferData, );
+            //
+            //    }
+            //}
+
+
+
+            var componentsPerElement = data.Length / componentCount;
+            int x = 0;
+            for (int i = 0; i < componentCount * componentSizeInBytes; i += componentSizeInBytes)
+            {
+                int byteIndex = bufferOffset + byteOffset + i;
+                float value = ReadValue<T>(bufferData, byteIndex);
+                Console.WriteLine(value);
+                data[i / componentSizeInBytes] = value;
+                x++;
+                if (x >= componentsPerElement)
+                {
+                    x = 0;
+                    Console.WriteLine();
+                }
+            }
+        }
+
+        private static float ReadValue<T>(byte[] bufferData, int byteIndex) where T : struct
+        {
+            if (typeof(T) == typeof(sbyte))
+            {
+                return (float)Convert.ToSByte(bufferData[byteIndex]);
+            }
+            else if (typeof(T) == typeof(byte))
+            {
+                return (float)bufferData[byteIndex];
+            }
+            else if (typeof(T) == typeof(short))
+            {
+                return (float)BitConverter.ToInt16(bufferData, byteIndex);
+            }
+            else if (typeof(T) == typeof(ushort))
+            {
+                return (float)BitConverter.ToUInt16(bufferData, byteIndex);
+            }
+            else if (typeof(T) == typeof(uint))
+            {
+                return (float)BitConverter.ToUInt32(bufferData, byteIndex);
+            }
+            else if (typeof(T) == typeof(float))
+            {
+                return BitConverter.ToSingle(bufferData, byteIndex);
+            }
+            else
+            {
+                throw new ArgumentException("Unsupported data type.");
+            }
+        }
+    }
+
 }

@@ -23,9 +23,6 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\HxGLTF\HxGLTF.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +39,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Content\pkemon_oben.gltf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\psel.gltf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Content\Texture.png">
