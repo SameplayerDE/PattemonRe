@@ -81,7 +81,6 @@ namespace HxGLTF
             }
         }
 
-
         private static byte[] ExtractGLBBytes(FileStream fileStream)
         {
             var glbBytes = new byte[fileStream.Length];
@@ -161,6 +160,10 @@ namespace HxGLTF
             var animations = jObject["animations"] != null ? LoadAnimations(jObject["animations"], accessors, nodes) : null;
             var skins = jObject["skins"] != null ? LoadSkins(jObject["skins"], accessors, nodes) : null;
 
+            if (nodes != null && skins != null)
+            {
+                LinkNodesAndSkins(nodes, skins);
+            }
 
             return new GLTFFile()
             {
@@ -175,8 +178,8 @@ namespace HxGLTF
                 Materials = materials,
                 Meshes = meshes,
                 Nodes = nodes,
-                //Animations = animations,
-                //Skins = skins,
+                Animations = animations,
+                Skins = skins,
             };
         }
 
@@ -453,7 +456,7 @@ namespace HxGLTF
                         var indicesIndex = jIndices.Value<int>();
                         meshPrimitive.Indices = accessors[indicesIndex];
                     }
-                    
+
                     // Material
                     var jMaterial = jMeshPrimitive["material"];
                     if (jMaterial != null)
@@ -653,10 +656,19 @@ namespace HxGLTF
                     node.Name = jNodeName.ToString();
                 }
 
+                var jNodeSkin = jNode["skin"];
+                if (jNodeSkin != null)
+                {
+                    int skinIndex = jNodeSkin.Value<int>();
+                    node.SkinIndex = skinIndex;
+                }
+
                 var jNodeMesh = jNode["mesh"];
                 if (jNodeMesh != null)
                 {
-                    node.Mesh = meshes[jNodeMesh.Value<int>()];
+                    int meshIndex = jNodeMesh.Value<int>();
+                    node.MeshIndex = meshIndex;
+                    node.Mesh = meshes[meshIndex];
                 }
 
                 var jNodeMatrix = jNode["matrix"];
@@ -805,6 +817,7 @@ namespace HxGLTF
                 {
                     skinJoints[b] = nodes[skinJointsIndices[b]];
                 }
+                skin.JointsIndices = skinJointsIndices;
 
                 var jSkinInverseBindMatrices = jSkin["inverseBindMatrices"];
                 if (jSkinInverseBindMatrices != null)
@@ -816,7 +829,9 @@ namespace HxGLTF
                 var jSkinSkeleton = jSkin["skeleton"];
                 if (jSkinSkeleton != null)
                 {
-                    skin.Skeleton = nodes[jSkinSkeleton.Value<int>()];
+                    var skeletonIndex = jSkinSkeleton.Value<int>();
+                    skin.SkeletonIndex = skeletonIndex;
+                    skin.Skeleton = nodes[skeletonIndex];
                 }
 
                 skin.Joints = skinJoints;
@@ -824,6 +839,64 @@ namespace HxGLTF
                 skins[a] = skin;
             }
             return skins;
+        }
+
+        private static void LinkNodesAndSkins(Node[] nodes, Skin[] skins)
+        {
+            foreach (var node in nodes)
+            {
+                if (node.SkinIndex == -1)
+                {
+                    continue;
+                }
+
+                node.Skin = skins[node.SkinIndex];
+            }
+        }
+
+        public static Node LoadNode(JToken jNode)
+        {
+            if (jNode == null)
+            {
+                throw new Exception();
+            }
+
+            var node = new Node();
+
+            var jNodeName = jNode["name"];
+            if (jNodeName != null && jNodeName.Type == JTokenType.String)
+            {
+                node.Name = jNodeName.ToString();
+            }
+
+            var jNodeSkin = jNode["skin"];
+            if (jNodeSkin != null && jNodeSkin.Type == JTokenType.Integer)
+            {
+                var skinIndex = jNodeSkin.Value<int>();
+                
+            }
+
+            return node;
+        }
+
+        public static Skin LoadSkin(JToken jSkin)
+        {
+            if (jSkin == null)
+            {
+                throw new Exception();
+            }
+
+            var skin = new Skin();
+
+            var jSkinName = jSkin["name"];
+            if (jSkinName != null)
+            {
+                skin.Name = jSkinName.ToString();
+            }
+
+
+
+            return skin;
         }
     }
 }

@@ -132,36 +132,11 @@ namespace TestRendering
             
             _camera = new Camera(GraphicsDevice);
 
-            //var gltfFile = GLTFLoader.Load(@"X:\G Stuff");
-            //var gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\map06_20\map06_20.glb");
-            //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\map13_03\map13_03.glb");
-            //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\Platin\output_assets\map05_21c\map05_21c.gltf");
-            //var gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\Platin\output_assets\m_comp03_00_00c\m_comp03_00_00c.gltf");
-            //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\Platin\output_assets\ball\ball.gltf");
-            //gltfFile = GLTFLoader.Load(@"G:\Opera GX - Downloads\original_anime_girls\scene.gltf");
-            //var gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\ak_00\ak_00.glb");
-            //var gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\Platin\output_assets\psel_all\psel_all.gltf");
-            gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
-            gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
-            //gltfFile = GLTFLoader.Load(@"A:\FireFox Download\fortnite-cuddle_team_leader\scene.gltf");
+            //gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
+            //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
+            gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
             
             Console.WriteLine(gltfFile.Asset.Version);
-
-            //foreach (var image in gltfFile.Images)
-            //{
-            //    if (image != null)
-            //    {
-            //        if (Path.IsPathRooted(image.Uri))
-            //        {
-            //            loaded.Add(image.Uri, LoadFormFile(image.Uri));
-            //        }
-            //        else
-            //        {
-            //            var combinedPath = Path.Combine(Path.GetDirectoryName(gltfFile.Path) ?? string.Empty, image.Uri);
-            //            loaded.Add(image.Uri, LoadFormFile(combinedPath));
-            //        }
-            //    }
-            //}
 
             LoadImages();
             
@@ -199,47 +174,9 @@ namespace TestRendering
 
                         float[] data;
 
-                        //if (primitive.HasIndices)
-                        //{
-                        //    data = AccessorReader.ReadDataIndexed(dataAccessor, indicesAccessor);
-                        //}
-                        //else
-                        //{
-                        //    data = AccessorReader.ReadData(dataAccessor);
-                        //}
-                        //for (var i = 0; i < dataAccessor.Count; i++)
-                        //{
-                        //    if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
-                        //    {
-                        //        position.Add(new Vector3(
-                        //            data[i + 0],
-                        //            data[i + 1],
-                        //            data[i + 2]
-                        //        ));
-                        //    }
-                        //    else if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
-                        //    {
-                        //        normals.Add(new Vector3(
-                        //            data[i + 0],
-                        //            data[i + 1],
-                        //            data[i + 2]
-                        //        ));
-                        //    }
-                        //    else if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
-                        //    {
-                        //        uvs.Add(new Vector2(
-                        //            data[i + 0],
-                        //            data[i + 1]
-                        //        ));
-                        //    }
-                        //}
-
                         if (indices != null)
                         {
                             data = AccessorReader.ReadDataIndexed(dataAccessor, indicesAccessor);
-
-                            //var data = AccessorReader.ReadData(dataAccessor);
-                            //var indices = AccessorReader.ReadData(indicesAccessor);
 
                             if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
                             {
