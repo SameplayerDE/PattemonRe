@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace HxGLTF
 {
@@ -95,7 +96,6 @@ namespace HxGLTF
 
     public class AccessorReader
     {
-        // read methode that gives me an array of the type like vector3 or vector2 with the data from the buffer
         public static float[] ReadData(Accessor accessor)
         {
             if (accessor == null || accessor.BufferView == null || accessor.BufferView.Buffer == null || accessor.ComponentType == null || accessor.Type == null)
@@ -103,110 +103,39 @@ namespace HxGLTF
                 throw new ArgumentNullException("Accessor, BufferView, Buffer, Accessor.ComponentType, or Accessor.Type is null.");
             }
 
-            var buffer = accessor.BufferView.Buffer;
-            var bufferData = buffer.Bytes;
-            var bufferOffset = accessor.BufferView.ByteOffset;
-            var byteOffset = accessor.ByteOffset;
-            var byteStride = accessor.BufferView.ByteStride;
-            var componentSizeInBytes = accessor.BytesPerComponent;
-            var componentCount = accessor.Count;
-            var totalComponentCount = accessor.TotalComponentCount;
-
-            Console.WriteLine(accessor.Type.Id);
-
-            var data = new float[totalComponentCount];
+            var data = new float[accessor.TotalComponentCount];
 
             switch (accessor.ComponentType.Id)
             {
                 case 5120: // Byte
-                    ReadDataInternal<sbyte>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                    //ReadDataInternal<sbyte>(data, bufferData, bufferOffset, accessorOffset, byteStride, componentSizeInBytes, componentCount, componentsPerElement);
+                    ReadDataInternal<sbyte>(data, accessor);
                     break;
                 case 5121: // UByte
-                    ReadDataInternal<byte>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                   // ReadDataInternal<byte>(data, bufferData, bufferOffset, accessorOffset, byteStride, componentSizeInBytes, componentCount, componentsPerElement);
+                    ReadDataInternal<byte>(data, accessor);
                     break;
                 case 5122: // Short
-                    ReadDataInternal<short>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                    //ReadDataInternal<short>(data, bufferData, bufferOffset, accessorOffset, byteStride, componentSizeInBytes, componentCount, componentsPerElement);
+                    ReadDataInternal<short>(data, accessor);
                     break;
                 case 5123: // UShort
-                    ReadDataInternal<ushort>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                   // ReadDataInternal<ushort>(data, bufferData, bufferOffset, accessorOffset, byteStride, componentSizeInBytes, componentCount, componentsPerElement);
+                    ReadDataInternal<ushort>(data, accessor);
                     break;
                 case 5125: // UInt
-                    ReadDataInternal<uint>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                   // ReadDataInternal<uint>(data, bufferData, bufferOffset, accessorOffset, byteStride, componentSizeInBytes, componentCount, componentsPerElement);
+                    ReadDataInternal<uint>(data, accessor);
                     break;
                 case 5126: // Float
-                    ReadDataInternal<float>(data, bufferData, bufferOffset, byteOffset, byteStride, componentSizeInBytes, componentCount);
+                   // ReadDataInternal<float>(data, bufferData, bufferOffset, accessorOffset, byteStride, componentSizeInBytes, componentCount, componentsPerElement);
+                    ReadDataInternal<float>(data, accessor);
                     break;
                 default:
                     throw new ArgumentException("Unsupported component type.");
             }
 
-            // if (accessor.Normalized)
-            // {
-            //     NormalizeData(data);
-            // }
             return data;
-        }
-
-        public static float[] ReadDataIndexed(Accessor dataAccessor, Accessor indexAccessor)
-        {
-
-            var data = ReadData(dataAccessor);
-            var indices = ReadData(indexAccessor);
-
-            //var result = new float[indexAccessor.Count * dataAccessor.TypeComponentAmount()];
-            var result = new List<float>();
-            for (var x = 0; x < indices.Length; x++)
-            {
-                var index = (ushort)indices[x];
-                for (var j = 0; j < dataAccessor.Type.NumberOfComponents; j++)
-                {
-                    var calculatedIndex = index * dataAccessor.Type.NumberOfComponents + j;
-                    var d = data[calculatedIndex];
-                    result.Add(d);
-                    //result[calculatedIndex] = d;
-                }
-            }
-
-            return result.ToArray();
-        }
-
-        private static void ReadDataInternal<T>(float[] data, byte[] bufferData, int bufferOffset, int byteOffset, int byteStride, int componentSizeInBytes, int componentCount) where T : struct
-        {
-
-            //var bytes = new List<byte>();
-            //var value = 0.0f;
-
-            //for (var i = 0; i < totalAmountOfBytes; i += numberOfComponents * bytesPerComponent)
-            //{
-            //    for (var k = 0; k < numberOfComponents * bytesPerComponent; k += bytesPerComponent)
-            //    {
-            //        bytes.Clear();
-            //        for (var j = 0; j < bytesPerComponent; j++)
-            //        {
-            //            bytes.Add(data[i + j + k]);
-            //        }
-            //        value = ReadData<T>(bufferData, );
-            //
-            //    }
-            //}
-
-
-
-            var componentsPerElement = data.Length / componentCount;
-            int x = 0;
-            for (int i = 0; i < componentCount * componentSizeInBytes; i += componentSizeInBytes)
-            {
-                int byteIndex = bufferOffset + byteOffset + i;
-                float value = ReadValue<T>(bufferData, byteIndex);
-                Console.WriteLine(value);
-                data[i / componentSizeInBytes] = value;
-                x++;
-                if (x >= componentsPerElement)
-                {
-                    x = 0;
-                    Console.WriteLine();
-                }
-            }
         }
 
         private static float ReadValue<T>(byte[] bufferData, int byteIndex) where T : struct
@@ -240,6 +169,47 @@ namespace HxGLTF
                 throw new ArgumentException("Unsupported data type.");
             }
         }
+
+        private static void ReadDataInternal<T>(float[] data, Accessor accessor) where T : struct
+        {
+
+            var bufferData = accessor.BufferView.Buffer.Bytes;
+            var bufferViewOffset = accessor.BufferView.ByteOffset;
+            var accessorOffset = accessor.ByteOffset;
+
+            var totalOffset = accessorOffset + bufferViewOffset;
+
+            int i = 0;
+            for (int a = 0; a < accessor.Type.NumberOfComponents * accessor.BytesPerComponent * accessor.Count; a += accessor.BytesPerComponent)
+            {
+                var index = a + totalOffset;
+                var value = ReadValue<T>(bufferData, index);
+                data[i++] = value;
+            }
+        }
+
+        public static float[] ReadDataIndexed(Accessor dataAccessor, Accessor indexAccessor)
+        {
+            var dataBuffer = ReadData(dataAccessor);
+            var indexBuffer = ReadData(indexAccessor);
+
+            //var result = new float[indexAccessor.Count * dataAccessor.TypeComponentAmount()];
+            var result = new List<float>();
+            for (var x = 0; x < indexBuffer.Length; x++)
+            {
+                var index = (ushort)indexBuffer[x];
+                for (var j = 0; j < dataAccessor.Type.NumberOfComponents; j++)
+                {
+                    var calculatedIndex = index * dataAccessor.Type.NumberOfComponents + j;
+                    var d = dataBuffer[calculatedIndex];
+                    result.Add(d);
+                    //result[calculatedIndex] = d;
+                }
+            }
+
+            return result.ToArray();
+        }
+
     }
 
 }

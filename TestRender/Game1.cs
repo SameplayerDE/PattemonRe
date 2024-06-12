@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework.Graphics;
 using HxGLTF;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
+using System.Reflection;
+using Survival.Rendering;
+using Newtonsoft.Json.Linq;
 
 namespace TestRendering
 {
@@ -20,8 +23,8 @@ namespace TestRendering
         private GraphicsDeviceManager _graphicsDeviceManager;
         private SpriteBatch _spriteBatch;
 
-        private List<VertexPositionNormalTexture> _positions = new List<VertexPositionNormalTexture>();
-        private VertexPositionNormalTexture[] _positionsArray;
+        private List<VertexPositionNormalColorTexture> _positions = new List<VertexPositionNormalColorTexture>();
+        private VertexPositionNormalColorTexture[] _positionsArray;
         private Matrix world, view, proj;
         private Effect _effect;
         private VertexBuffer _vertexBuffer;
@@ -111,7 +114,7 @@ namespace TestRendering
 
                     if (imageData != null && imageData.Length > 0)
                     {
-                        //loaded.Add(image.Name, Texture2D.FromStream(GraphicsDevice, new MemoryStream(imageData)));
+                        loaded.Add(image.Name, Texture2D.FromStream(GraphicsDevice, new MemoryStream(imageData)));
                     }
                 }
             }
@@ -138,7 +141,7 @@ namespace TestRendering
             //gltfFile = GLTFLoader.Load(@"G:\Opera GX - Downloads\original_anime_girls\scene.gltf");
             //var gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\ak_00\ak_00.glb");
             //var gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\Platin\output_assets\psel_all\psel_all.gltf");
-            gltfFile = GLTFLoader.Load(@"Content\Cube");
+            gltfFile = GLTFLoader.Load(@"Content\psel");
             //gltfFile = GLTFLoader.Load(@"G:\Opera GX - Downloads\glTF\avocado\Avocado.gltf");
             
             Console.WriteLine(gltfFile.Asset.Version);
@@ -185,43 +188,79 @@ namespace TestRendering
                     var uvs = new List<Vector2>();
                     foreach (var attribute in primitive.Attributes)
                     {
+
+                        Console.WriteLine(attribute.Key);
+                        Console.WriteLine(attribute.Value.Type.Id);
+
                         var dataAccessor = attribute.Value;
                         var elementCount = dataAccessor.Count;
                         var numberOfComponents = dataAccessor.Type.NumberOfComponents;
 
                         float[] data;
 
+                        //if (primitive.HasIndices)
+                        //{
+                        //    data = AccessorReader.ReadDataIndexed(dataAccessor, indicesAccessor);
+                        //}
+                        //else
+                        //{
+                        //    data = AccessorReader.ReadData(dataAccessor);
+                        //}
+                        //for (var i = 0; i < dataAccessor.Count; i++)
+                        //{
+                        //    if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
+                        //    {
+                        //        position.Add(new Vector3(
+                        //            data[i + 0],
+                        //            data[i + 1],
+                        //            data[i + 2]
+                        //        ));
+                        //    }
+                        //    else if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
+                        //    {
+                        //        normals.Add(new Vector3(
+                        //            data[i + 0],
+                        //            data[i + 1],
+                        //            data[i + 2]
+                        //        ));
+                        //    }
+                        //    else if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
+                        //    {
+                        //        uvs.Add(new Vector2(
+                        //            data[i + 0],
+                        //            data[i + 1]
+                        //        ));
+                        //    }
+                        //}
+
                         if (indices != null)
                         {
                             data = AccessorReader.ReadDataIndexed(dataAccessor, indicesAccessor);
-                            for (var i = 0; i < indicesAccessor.TotalComponentCount; i += indicesAccessor.Type.NumberOfComponents)
+
+                            //var data = AccessorReader.ReadData(dataAccessor);
+                            //var indices = AccessorReader.ReadData(indicesAccessor);
+
+                            if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
                             {
-                                for (var j = 0; j < indicesAccessor.Type.NumberOfComponents; j++)
+                                for (var x = 0; x < data.Length; x += 3)
                                 {
-                                    var index = (int)indices[i + j];
-                                    if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
-                                    {
-                                        var vec = new Vector3(
-                                            data[index * numberOfComponents + 0],
-                                            data[index * numberOfComponents + 1],
-                                            data[index * numberOfComponents + 2]);
-                                        position.Add(vec);
-                                    }
-                                    if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
-                                    {
-                                        normals.Add(new Vector3(
-                                            data[index * numberOfComponents + 0],
-                                            data[index * numberOfComponents + 1],
-                                            data[index * numberOfComponents + 2]
-                                        ));
-                                    }
-                                    if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
-                                    {
-                                        uvs.Add(new Vector2(
-                                            data[index * numberOfComponents + 0],
-                                            data[index * numberOfComponents + 1]
-                                        ));
-                                    }
+                                    position.Add(new Vector3(data[x], data[x + 1], data[x + 2]));
+                                }
+                            }
+
+                            if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
+                            {
+                                for (var x = 0; x < data.Length; x += 3)
+                                {
+                                    normals.Add(new Vector3(data[x], data[x + 1], data[x + 2]));
+                                }
+                            }
+
+                            if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
+                            {
+                                for (var x = 0; x < data.Length; x += 2)
+                                {
+                                    uvs.Add(new Vector2(data[x], data[x + 1]));
                                 }
                             }
                         }
@@ -238,7 +277,7 @@ namespace TestRendering
                                         data[i * numberOfComponents + 2]
                                     ));
                                 }
-                                if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
+                                else if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
                                 {
                                     normals.Add(new Vector3(
                                         data[i * numberOfComponents + 0],
@@ -246,7 +285,7 @@ namespace TestRendering
                                         data[i * numberOfComponents + 2]
                                     ));
                                 }
-                                if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
+                                else if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
                                 {
                                     uvs.Add(new Vector2(
                                         data[i * numberOfComponents + 0],
@@ -256,22 +295,24 @@ namespace TestRendering
                             }
                         }
 
-                        // Hier fügen wir die gesammelten Positionen, Normalen und Texturkoordinaten in die _positions-Liste ein
-                        for (int i = 0; i < position.Count; i++)
-                        {
-                            _positions.Add(new VertexPositionNormalTexture(
-                                position[i],
-                                normals.Count > i ? normals[i] : Vector3.Up,
-                                uvs.Count > i ? uvs[i] : Vector2.Zero
-                            ));
-                        }
-
-                        // Setzen des VertexBuffers
-                        _positionsArray = _positions.ToArray();
-                        vertexBuffer = new VertexBuffer(GraphicsDevice, VertexPositionNormalTexture.VertexDeclaration, _positionsArray.Length, BufferUsage.WriteOnly);
-                        vertexBuffer.SetData(_positionsArray);
-                        _vertexBuffers.Add(vertexBuffer);
                     }
+
+                    // Hier fügen wir die gesammelten Positionen, Normalen und Texturkoordinaten in die _positions-Liste ein
+                    for (int i = 0; i < position.Count; i++)
+                    {
+                        _positions.Add(new VertexPositionNormalColorTexture(
+                            position[i],
+                            Color.White,
+                            normals.Count > i ? normals[i] : Vector3.Up,
+                            uvs.Count > i ? uvs[i] : Vector2.Zero
+                        ));
+                    }
+
+                    // Setzen des VertexBuffers
+                    _positionsArray = _positions.ToArray();
+                    vertexBuffer = new VertexBuffer(GraphicsDevice, VertexPositionNormalColorTexture.VertexDeclaration, _positionsArray.Length, BufferUsage.WriteOnly);
+                    vertexBuffer.SetData(_positionsArray);
+                    _vertexBuffers.Add(vertexBuffer);
                 }
             }
             base.Initialize();
@@ -353,19 +394,68 @@ namespace TestRendering
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            // Allowed values for texture wrapping
+            const int CLAMP_TO_EDGE = 33071;
+            const int MIRRORED_REPEAT = 33648;
+            const int REPEAT = 10497;
+
             foreach (var mesh in gltfFile.Meshes)
             {
                 int i = 0;
                 foreach (var primitive in mesh.Primitives)
                 {
                     GraphicsDevice.SetVertexBuffer(_vertexBuffers[i]);
-                    // Setze BasicEffect-Parameter
-                    _basicEffect.World = world * Matrix.CreateScale(10f);
+
+                    // Set BasicEffect parameters
+                    _basicEffect.World = world * Matrix.CreateScale(1f);
                     _basicEffect.View = view;
                     _basicEffect.Projection = proj;
-                    _basicEffect.Texture = _testTexture2D; // Hier muss die Implementierung von GetTexture eingefügt werden
+
+                    var sampler = primitive.Material.BaseColorTexture.Sampler;
+
+                    // Setting texture wrapping modes
+                    TextureAddressMode wrapS = TextureAddressMode.Wrap;
+                    TextureAddressMode wrapT = TextureAddressMode.Wrap;
+
+                    switch (sampler.WrapS)
+                    {
+                        case CLAMP_TO_EDGE:
+                            wrapS = TextureAddressMode.Clamp;
+                            break;
+                        case MIRRORED_REPEAT:
+                            wrapS = TextureAddressMode.Mirror;
+                            break;
+                        case REPEAT:
+                            wrapS = TextureAddressMode.Wrap;
+                            break;
+                    }
+
+                    switch (sampler.WrapT)
+                    {
+                        case CLAMP_TO_EDGE:
+                            wrapT = TextureAddressMode.Clamp;
+                            break;
+                        case MIRRORED_REPEAT:
+                            wrapT = TextureAddressMode.Mirror;
+                            break;
+                        case REPEAT:
+                            wrapT = TextureAddressMode.Wrap;
+                            break;
+                    }
+
+                    // Assuming _basicEffect.Texture is of type Texture2D
+                    _basicEffect.Texture = loaded[primitive.Material.BaseColorTexture.Source.Name];
                     _basicEffect.TextureEnabled = true;
-                    _basicEffect.VertexColorEnabled = false; // Hier musst du entscheiden, ob du Farben in deinem Modell verwenden möchtest
+                    _basicEffect.VertexColorEnabled = false;
+
+                    // Apply the wrapping modes to the texture sampler state
+                    _basicEffect.GraphicsDevice.SamplerStates[0] = new SamplerState
+                    {
+                        AddressU = wrapS,
+                        AddressV = wrapT,
+                        Filter = TextureFilter.Point
+                    };
+
 
                     foreach (var pass in _basicEffect.CurrentTechnique.Passes)
                     {
@@ -375,7 +465,8 @@ namespace TestRendering
                     i++;
                 }
             }
- 
+
+
             base.Draw(gameTime);
 
             

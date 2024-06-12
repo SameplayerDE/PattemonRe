@@ -400,7 +400,7 @@ namespace HxGLTF
                     if (pbr.ContainsKey("baseColorTexture"))
                     {
                         var baseColorTexture = (JObject)pbr["baseColorTexture"];
-                        //material.PbrMetallicRoughness.BaseColorTexture = textures[(int)baseColorTexture["index"]];
+                        material.BaseColorTexture = textures[(int)baseColorTexture["index"]];
                     }
                 }
 

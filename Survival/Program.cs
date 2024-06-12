@@ -35,12 +35,24 @@ namespace Survival
             {
                 foreach (var primitive in mesh.Primitives)
                 {
-                    foreach (var attribute in primitive.Attributes)
+                    if (primitive.HasIndices)
                     {
-                        Console.WriteLine("-----------------------------------------------------");
-                        Console.WriteLine(attribute.Key);
-                        AccessorReader.ReadData(attribute.Value);
+                        foreach (var attribute in primitive.Attributes)
+                        {
+                            Console.WriteLine("-----------------------------------------------------");
+                            AccessorReader.ReadDataIndexed(attribute.Value, primitive.Indices);
+                        }
                     }
+                    else
+                    {
+                        foreach (var attribute in primitive.Attributes)
+                        {
+                            Console.WriteLine("-----------------------------------------------------");
+                            Console.WriteLine(attribute.Key);
+                            AccessorReader.ReadData(attribute.Value);
+                        }
+                    }
+                    
                 }
             }
 
