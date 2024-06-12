@@ -258,7 +258,7 @@ namespace HxGLTF
                 {
                     Buffer = buffers[(int)jToken["buffer"]],
                     ByteLength = (int)jToken["byteLength"],
-                    ByteOffset = (int)jToken["byteOffset"],
+                    ByteOffset = (int)(jToken["byteOffset"] ?? 0),
                     ByteStride = (int)(jToken["byteStride"] ?? 0)
                 };
             }

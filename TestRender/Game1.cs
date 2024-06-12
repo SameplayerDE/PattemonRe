@@ -141,8 +141,9 @@ namespace TestRendering
             //gltfFile = GLTFLoader.Load(@"G:\Opera GX - Downloads\original_anime_girls\scene.gltf");
             //var gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\ak_00\ak_00.glb");
             //var gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\Platin\output_assets\psel_all\psel_all.gltf");
-            gltfFile = GLTFLoader.Load(@"Content\test");
-            //gltfFile = GLTFLoader.Load(@"G:\Opera GX - Downloads\glTF\avocado\Avocado.gltf");
+            gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
+            gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
+            //gltfFile = GLTFLoader.Load(@"A:\FireFox Download\fortnite-cuddle_team_leader\scene.gltf");
             
             Console.WriteLine(gltfFile.Asset.Version);
 
@@ -360,7 +361,7 @@ namespace TestRendering
                 Direction -= Vector3.Up;
             }
             
-            _camera.Move(-Direction * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            _camera.Move(-Direction * (float)gameTime.ElapsedGameTime.TotalSeconds * 5f);
             
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
@@ -382,7 +383,7 @@ namespace TestRendering
             
             _camera.Update(gameTime);
             
-            world = Matrix.CreateTranslation(Vector3.Zero) * Matrix.CreateScale(0.01f);
+            world = Matrix.CreateTranslation(Vector3.Zero) * Matrix.CreateScale(0.05f);
             view = _camera.View;
             proj  = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.1f, 100f);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
@@ -411,7 +412,19 @@ namespace TestRendering
                     _basicEffect.View = view;
                     _basicEffect.Projection = proj;
 
+                    if (primitive.Material == null)
+                    {
+                        continue;
+                    }
+
+                    if (primitive.Material.BaseColorTexture == null)
+                    {
+                        continue;
+                    }
+
                     var sampler = primitive.Material.BaseColorTexture.Sampler;
+
+                    
 
                     // Setting texture wrapping modes
                     TextureAddressMode wrapS = TextureAddressMode.Wrap;
@@ -444,7 +457,8 @@ namespace TestRendering
                     }
 
                     // Assuming _basicEffect.Texture is of type Texture2D
-                    _basicEffect.Texture = loaded[primitive.Material.BaseColorTexture.Source.Name];
+                    _basicEffect.Texture = _testTexture2D;
+                    _basicEffect.Texture = loaded[primitive.Material.BaseColorTexture.Source.Uri];
                     _basicEffect.TextureEnabled = true;
                     _basicEffect.VertexColorEnabled = false;
 
