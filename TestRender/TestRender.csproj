@@ -47,6 +47,9 @@
     <None Update="Content\Simple.gltf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\test.glb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Texture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -141,7 +141,7 @@ namespace TestRendering
             //gltfFile = GLTFLoader.Load(@"G:\Opera GX - Downloads\original_anime_girls\scene.gltf");
             //var gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\ak_00\ak_00.glb");
             //var gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\Platin\output_assets\psel_all\psel_all.gltf");
-            gltfFile = GLTFLoader.Load(@"Content\psel");
+            gltfFile = GLTFLoader.Load(@"Content\test");
             //gltfFile = GLTFLoader.Load(@"G:\Opera GX - Downloads\glTF\avocado\Avocado.gltf");
             
             Console.WriteLine(gltfFile.Asset.Version);
@@ -392,7 +392,7 @@ namespace TestRendering
         protected override void Draw(GameTime gameTime)
         {
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // Allowed values for texture wrapping
             const int CLAMP_TO_EDGE = 33071;
@@ -456,6 +456,46 @@ namespace TestRendering
                         Filter = TextureFilter.Point
                     };
 
+                    // Set alpha rendering mode
+                    string alphaMode = primitive.Material.AlphaMode ?? "OPAQUE"; // Default to "OPAQUE" if not specified
+                    float alphaCutoff = primitive.Material.AlphaCutoff ?? 0.5f; // Default alpha cutoff value for MASK mode
+
+                    switch (alphaMode)
+                    {
+                        case "OPAQUE":
+                            GraphicsDevice.BlendState = BlendState.Opaque;
+                            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                            break;
+
+                        case "MASK":
+                        case "BLEND":
+                            // For "MASK" mode, configure AlphaTestEffect instead of BasicEffect
+                            var alphaTestEffect = new AlphaTestEffect(GraphicsDevice)
+                            {
+                                World = _basicEffect.World,
+                                View = _basicEffect.View,
+                                Projection = _basicEffect.Projection,
+                                DiffuseColor = _basicEffect.DiffuseColor,
+                                AlphaFunction = CompareFunction.Greater,
+                                ReferenceAlpha = (int)(alphaCutoff * 255),
+                                Texture = _basicEffect.Texture
+                            };
+
+                            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+                            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+                            // Apply passes and draw primitives
+                            foreach (var pass in alphaTestEffect.CurrentTechnique.Passes)
+                            {
+                                pass.Apply();
+                                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, _vertexBuffers[i].VertexCount);
+                            }
+                            i++;
+                            continue; // Skip the BasicEffect pass since we've used AlphaTestEffect
+                            
+
+                       
+                    }
 
                     foreach (var pass in _basicEffect.CurrentTechnique.Passes)
                     {
