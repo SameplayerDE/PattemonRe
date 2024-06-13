@@ -1,13 +1,30 @@
 ﻿using HxGLTF;
 using Microsoft.Xna.Framework.Graphics;
-using System;
+using System.Collections.Generic;
 
 namespace TestRender
 {
     public class GameModel
     {
         public GameNode[] Nodes;
+        public Dictionary<string, GameModelAnimation> Animations;
+        
+        public void Play(string animationKey)
+        {
+            if (Animations == null)
+            {
+                return;
+            }
 
+            if (!Animations.TryGetValue(animationKey, out var animation))
+            {
+                return;
+            }
+            
+            // do something
+            
+        }
+        
         public static GameModel From(GraphicsDevice graphicsDevice, GLTFFile file)
         {
             var scene = file.Scenes[0];
