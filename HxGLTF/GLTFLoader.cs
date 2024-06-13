@@ -7,6 +7,122 @@ namespace HxGLTF
 {
     public class GLTFLoader
     {
+        public static void LoadSmart(string pathOrBaseName)
+        {
+            if (string.IsNullOrEmpty(pathOrBaseName))
+            {
+                throw new ArgumentNullException(nameof(pathOrBaseName), "File path or base name cannot be null or empty.");
+            }
+            string path = ValidateFileExists(pathOrBaseName);
+            using (var fileStream = File.OpenRead(path))
+            {
+                var extension = Path.GetExtension(path);
+                ValidateFileType(extension);
+
+                byte[]? glbBytes = null;
+                string? json = null;
+                byte[]? binary = null;
+
+                if (extension.Equals(".glb", StringComparison.OrdinalIgnoreCase))
+                {
+                    glbBytes = ExtractGLBBytes(fileStream);
+                    json = ExtractJSONFromGLB(glbBytes);
+                    binary = ExtractBinaryFromGLB(glbBytes, json.Length);
+                }
+                else
+                {
+                    json = ExtractJSONFromFile(fileStream);
+                }
+
+                LoadFromJsonWithBinarySmart(path, json, binary);
+            }
+        }
+
+        private static void LoadFromJsonWithBinarySmart(string path, string json, byte[]? buffer = null)
+        {
+            var jObject = JObject.Parse(json);
+
+            var jAsset = jObject["asset"];
+            if (jAsset == null)
+            {
+                throw new Exception();
+            }
+
+            var jScenes = jObject["scenes"];
+            if (jScenes == null)
+            {
+                return;
+            }
+
+            var sceneCount = jScenes.Count();
+            var scenes = new Scene[sceneCount];
+
+            for (int a = 0; a < sceneCount; a++)
+            {
+                var jScene = jScenes[a];
+                if (jScene == null)
+                {
+                    throw new Exception();
+                }
+                var scene = new Scene();
+
+                var jSceneName = jScene["name"];
+                if (jSceneName != null)
+                {
+                    var sceneName = jSceneName.ToString();
+                    scene.Name = sceneName;
+                }
+
+                var jSceneNodeIndices = jScene["nodes"];
+                if (jSceneNodeIndices != null)
+                {
+                    var sceneNodeIndices = jSceneNodeIndices.Value<int[]>();
+                    scene.NodesIndices = sceneNodeIndices;
+
+                    var jNodes = jObject["nodes"];
+                    if (jNodes == null)
+                    {
+                        throw new Exception();
+                    }
+
+                    foreach (var nodeIndex in scene.NodesIndices!)
+                    {
+                        var jNode = jNodes[nodeIndex];
+                        if (jNode == null)
+                        {
+                            throw new Exception();
+                        }
+                        var node = new Node();
+
+                        var jNodeName = jNode["name"];
+                        if (jNodeName != null && jNodeName.Type == JTokenType.String)
+                        {
+                            node.Name = jNodeName.ToString();
+                        }
+
+                        var jNodeSkin = jNode["skin"];
+                        if (jNodeSkin != null)
+                        {
+                            int skinIndex = jNodeSkin.Value<int>();
+                            node.SkinIndex = skinIndex;
+                        }
+
+                        var jNodeMesh = jNode["mesh"];
+                        if (jNodeMesh != null)
+                        {
+                            int meshIndex = jNodeMesh.Value<int>();
+                            node.MeshIndex = meshIndex;
+                        }
+                    }
+
+                }
+
+                scenes[a] = scene;
+            }
+
+
+        }
+
         public static GLTFFile Load(string pathOrBaseName)
         {
             if (string.IsNullOrEmpty(pathOrBaseName))
@@ -636,6 +752,53 @@ namespace HxGLTF
             return animations;
         }
 
+        private static Scene[] LoadScenes(JToken jScenes)
+        {
+            var sceneCount = jScenes.Count();
+            var scenes = new Scene[sceneCount];
+
+            for (int i = 0; i < sceneCount; i++)
+            {
+                var jScene = jScenes[i];
+                if (jScene == null)
+                {
+                    throw new Exception();
+                }
+                var scene = new Scene();
+
+                var jSceneName = jScene["name"];
+                if (jSceneName != null)
+                {
+                    var sceneName = jSceneName.ToString();
+                    scene.Name = sceneName;
+                }
+
+                var jSceneNodeIndices = jScene["nodes"];
+                if (jSceneNodeIndices != null)
+                {
+                    var sceneNodeIndices = jSceneNodeIndices.Value<int[]>();
+                    scene.NodesIndices = sceneNodeIndices;
+                }
+
+                scenes[i] = scene;
+            }
+
+            return scenes;
+        }
+
+        private static void LinkNodesAndSkins(Node[] nodes, Skin[] skins)
+        {
+            foreach (var node in nodes)
+            {
+                if (node.SkinIndex == -1)
+                {
+                    continue;
+                }
+
+                node.Skin = skins[node.SkinIndex];
+            }
+        }
+
         private static Node[] LoadNodes(JToken jNodes, Mesh[] meshes)
         {
             var nodes = new Node[jNodes.Count()];
@@ -839,64 +1002,6 @@ namespace HxGLTF
                 skins[a] = skin;
             }
             return skins;
-        }
-
-        private static void LinkNodesAndSkins(Node[] nodes, Skin[] skins)
-        {
-            foreach (var node in nodes)
-            {
-                if (node.SkinIndex == -1)
-                {
-                    continue;
-                }
-
-                node.Skin = skins[node.SkinIndex];
-            }
-        }
-
-        public static Node LoadNode(JToken jNode)
-        {
-            if (jNode == null)
-            {
-                throw new Exception();
-            }
-
-            var node = new Node();
-
-            var jNodeName = jNode["name"];
-            if (jNodeName != null && jNodeName.Type == JTokenType.String)
-            {
-                node.Name = jNodeName.ToString();
-            }
-
-            var jNodeSkin = jNode["skin"];
-            if (jNodeSkin != null && jNodeSkin.Type == JTokenType.Integer)
-            {
-                var skinIndex = jNodeSkin.Value<int>();
-                
-            }
-
-            return node;
-        }
-
-        public static Skin LoadSkin(JToken jSkin)
-        {
-            if (jSkin == null)
-            {
-                throw new Exception();
-            }
-
-            var skin = new Skin();
-
-            var jSkinName = jSkin["name"];
-            if (jSkinName != null)
-            {
-                skin.Name = jSkinName.ToString();
-            }
-
-
-
-            return skin;
         }
     }
 }

@@ -51,14 +51,23 @@ namespace TestRendering
         {
             GraphicsDevice = graphicsDevice;
             _position = new Vector3(0, 0, 0);
-            GeneratePerspectiveProjectionMatrix();
+            GenerateProjectionMatrix();
         }
 
-        protected void GeneratePerspectiveProjectionMatrix()
+        protected void GenerateProjectionMatrix()
         {
             var presentationParameters = GraphicsDevice.PresentationParameters;
-            _aspectRatio = (float)presentationParameters.BackBufferWidth / (float)presentationParameters.BackBufferHeight;
-            _projection = Matrix.CreatePerspectiveFieldOfView(_fov, _aspectRatio, _nearClipPlane, _farClipPlane);
+            float aspectRatio = (float)presentationParameters.BackBufferWidth / (float)presentationParameters.BackBufferHeight;
+
+            // Combination of orthographic and perspective
+            float width = 20f;
+            float height = width / aspectRatio;
+
+            _projection = Matrix.CreateOrthographic(width, height, _nearClipPlane, _farClipPlane);
+
+            // Add slight perspective effect
+            Matrix perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), aspectRatio, _nearClipPlane, _farClipPlane);
+            _projection = Matrix.Lerp(_projection, perspective, 0.009f); // Adjust 0.1f to control the mix level
         }
 
         public void Move(Vector3 translation)

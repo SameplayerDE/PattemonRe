@@ -134,8 +134,9 @@ namespace TestRendering
 
             //gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
             //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
-            gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
-            
+            //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
+            gltfFile = GLTFLoader.Load(@"Content\map01_22c\map01_22c.glb"); 
+
             Console.WriteLine(gltfFile.Asset.Version);
 
             LoadImages();
@@ -161,7 +162,10 @@ namespace TestRendering
 
                     var position = new List<Vector3>();
                     var normals = new List<Vector3>();
+                    var colors = new List<Color>();
                     var uvs = new List<Vector2>();
+
+                    var hasColor = false;
                     foreach (var attribute in primitive.Attributes)
                     {
 
@@ -178,6 +182,8 @@ namespace TestRendering
                         {
                             data = AccessorReader.ReadDataIndexed(dataAccessor, indicesAccessor);
 
+                            Console.WriteLine(attribute.Key);
+
                             if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
                             {
                                 for (var x = 0; x < data.Length; x += 3)
@@ -186,6 +192,7 @@ namespace TestRendering
                                 }
                             }
 
+                           
                             if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
                             {
                                 for (var x = 0; x < data.Length; x += 3)
@@ -201,10 +208,22 @@ namespace TestRendering
                                     uvs.Add(new Vector2(data[x], data[x + 1]));
                                 }
                             }
+
+                            if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
+                            {
+                                for (var x = 0; x < data.Length; x += 3)
+                                {
+                                    colors.Add(new Color(data[x], data[x + 1], data[x + 2]));
+                                }
+                                hasColor = true;
+                            }
                         }
                         else
                         {
                             data = AccessorReader.ReadData(dataAccessor);
+
+                            Console.WriteLine(attribute.Key);
+
                             for (var i = 0; i < dataAccessor.Count; i++)
                             {
                                 if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
@@ -223,6 +242,15 @@ namespace TestRendering
                                         data[i * numberOfComponents + 2]
                                     ));
                                 }
+                                else if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
+                                {
+                                    colors.Add(new Color(
+                                        data[i * numberOfComponents + 0],
+                                        data[i * numberOfComponents + 1],
+                                        data[i * numberOfComponents + 2]
+                                    ));
+                                    hasColor = true;
+                                }
                                 else if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
                                 {
                                     uvs.Add(new Vector2(
@@ -233,6 +261,11 @@ namespace TestRendering
                             }
                         }
 
+                        if (hasColor == false)
+                        {
+                            colors.Add(new Color(0.5f, 0.5f, 0.5f));
+                        }
+
                     }
 
                     // Hier fügen wir die gesammelten Positionen, Normalen und Texturkoordinaten in die _positions-Liste ein
@@ -240,7 +273,7 @@ namespace TestRendering
                     {
                         _positions.Add(new VertexPositionNormalColorTexture(
                             position[i],
-                            Color.White,
+                            colors[i],
                             normals.Count > i ? normals[i] : Vector3.Up,
                             uvs.Count > i ? uvs[i] : Vector2.Zero
                         ));
@@ -322,7 +355,7 @@ namespace TestRendering
             
             world = Matrix.CreateTranslation(Vector3.Zero) * Matrix.CreateScale(0.05f);
             view = _camera.View;
-            proj  = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.1f, 100f);
+            proj  = _camera.Projection;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             base.Update(gameTime);
         }
@@ -356,12 +389,11 @@ namespace TestRendering
 
                     if (primitive.Material.BaseColorTexture == null)
                     {
+                        _basicEffect.TextureEnabled = false;
                         continue;
                     }
 
                     var sampler = primitive.Material.BaseColorTexture.Sampler;
-
-                    
 
                     // Setting texture wrapping modes
                     TextureAddressMode wrapS = TextureAddressMode.Wrap;
