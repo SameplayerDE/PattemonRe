@@ -16,6 +16,7 @@
         public Mesh[] Meshes;
         public Animation[] Animations;
         public Skin[] Skins;
+        public Scene[] Scenes;
 
         public bool HasBuffers => Buffers != null && Buffers.Length > 0;
         public bool HasBufferViews => BufferViews != null && BufferViews.Length > 0;
@@ -28,5 +29,6 @@
         public bool HasMeshes => Meshes != null && Meshes.Length > 0;
         public bool HasAnimations => Animations != null && Animations.Length > 0;
         public bool HasSkins => Skins != null && Skins.Length > 0;
+        public bool HasScenes => Scenes != null && Scenes.Length > 0;
     }
 }

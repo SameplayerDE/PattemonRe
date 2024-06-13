@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using Survival.Rendering;
 using Newtonsoft.Json.Linq;
+using TestRender;
 
 namespace TestRendering
 {
@@ -39,6 +40,7 @@ namespace TestRendering
 
         private BasicEffect _basicEffect;
         private GLTFFile gltfFile;
+        private GameModel gameModel;
 
         public readonly static BlendState AlphaSubtractive = new BlendState
         {
@@ -133,159 +135,13 @@ namespace TestRendering
             _camera = new Camera(GraphicsDevice);
 
             //gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
-            //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
+            gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
             //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
-            gltfFile = GLTFLoader.Load(@"Content\map01_22c\map01_22c.glb"); 
+            //gltfFile = GLTFLoader.Load(@"Content\map01_22c\map01_22c.glb");
+            gameModel = GameModel.From(GraphicsDevice, gltfFile);
 
             Console.WriteLine(gltfFile.Asset.Version);
 
-            LoadImages();
-            
-            foreach (var mesh in gltfFile.Meshes)
-            {
-                foreach (var primitive in mesh.Primitives)
-                {
-
-                    alpha.Add(false);
-                    doubleSided.Add(false);
-
-                    _positions.Clear();
-                    VertexBuffer vertexBuffer;
-                    int primitiveCount = 0;
-                    var indicesAccessor = primitive.Indices;
-                    float[] indices = null;
-                    if (indicesAccessor != null)
-                    {
-                        primitiveCount = indicesAccessor.Count;
-                        indices = AccessorReader.ReadData(indicesAccessor);
-                    }
-
-                    var position = new List<Vector3>();
-                    var normals = new List<Vector3>();
-                    var colors = new List<Color>();
-                    var uvs = new List<Vector2>();
-
-                    var hasColor = false;
-                    foreach (var attribute in primitive.Attributes)
-                    {
-
-                        Console.WriteLine(attribute.Key);
-                        Console.WriteLine(attribute.Value.Type.Id);
-
-                        var dataAccessor = attribute.Value;
-                        var elementCount = dataAccessor.Count;
-                        var numberOfComponents = dataAccessor.Type.NumberOfComponents;
-
-                        float[] data;
-
-                        if (indices != null)
-                        {
-                            data = AccessorReader.ReadDataIndexed(dataAccessor, indicesAccessor);
-
-                            Console.WriteLine(attribute.Key);
-
-                            if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
-                            {
-                                for (var x = 0; x < data.Length; x += 3)
-                                {
-                                    position.Add(new Vector3(data[x], data[x + 1], data[x + 2]));
-                                }
-                            }
-
-                           
-                            if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
-                            {
-                                for (var x = 0; x < data.Length; x += 3)
-                                {
-                                    normals.Add(new Vector3(data[x], data[x + 1], data[x + 2]));
-                                }
-                            }
-
-                            if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
-                            {
-                                for (var x = 0; x < data.Length; x += 2)
-                                {
-                                    uvs.Add(new Vector2(data[x], data[x + 1]));
-                                }
-                            }
-
-                            if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
-                            {
-                                for (var x = 0; x < data.Length; x += 3)
-                                {
-                                    colors.Add(new Color(data[x], data[x + 1], data[x + 2]));
-                                }
-                                hasColor = true;
-                            }
-                        }
-                        else
-                        {
-                            data = AccessorReader.ReadData(dataAccessor);
-
-                            Console.WriteLine(attribute.Key);
-
-                            for (var i = 0; i < dataAccessor.Count; i++)
-                            {
-                                if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
-                                {
-                                    position.Add(new Vector3(
-                                        data[i * numberOfComponents + 0],
-                                        data[i * numberOfComponents + 1],
-                                        data[i * numberOfComponents + 2]
-                                    ));
-                                }
-                                else if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
-                                {
-                                    normals.Add(new Vector3(
-                                        data[i * numberOfComponents + 0],
-                                        data[i * numberOfComponents + 1],
-                                        data[i * numberOfComponents + 2]
-                                    ));
-                                }
-                                else if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
-                                {
-                                    colors.Add(new Color(
-                                        data[i * numberOfComponents + 0],
-                                        data[i * numberOfComponents + 1],
-                                        data[i * numberOfComponents + 2]
-                                    ));
-                                    hasColor = true;
-                                }
-                                else if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
-                                {
-                                    uvs.Add(new Vector2(
-                                        data[i * numberOfComponents + 0],
-                                        data[i * numberOfComponents + 1]
-                                    ));
-                                }
-                            }
-                        }
-
-                        if (hasColor == false)
-                        {
-                            colors.Add(new Color(0.5f, 0.5f, 0.5f));
-                        }
-
-                    }
-
-                    // Hier fügen wir die gesammelten Positionen, Normalen und Texturkoordinaten in die _positions-Liste ein
-                    for (int i = 0; i < position.Count; i++)
-                    {
-                        _positions.Add(new VertexPositionNormalColorTexture(
-                            position[i],
-                            colors[i],
-                            normals.Count > i ? normals[i] : Vector3.Up,
-                            uvs.Count > i ? uvs[i] : Vector2.Zero
-                        ));
-                    }
-
-                    // Setzen des VertexBuffers
-                    _positionsArray = _positions.ToArray();
-                    vertexBuffer = new VertexBuffer(GraphicsDevice, VertexPositionNormalColorTexture.VertexDeclaration, _positionsArray.Length, BufferUsage.WriteOnly);
-                    vertexBuffer.SetData(_positionsArray);
-                    _vertexBuffers.Add(vertexBuffer);
-                }
-            }
             base.Initialize();
         }
 
@@ -365,134 +221,86 @@ namespace TestRendering
 
             GraphicsDevice.Clear(Color.Black);
 
-            // Allowed values for texture wrapping
-            const int CLAMP_TO_EDGE = 33071;
-            const int MIRRORED_REPEAT = 33648;
-            const int REPEAT = 10497;
 
-            foreach (var mesh in gltfFile.Meshes)
+            int i = 0;
+            foreach (var primitive in gameModel.Root.Mesh.Primitives)
             {
-                int i = 0;
-                foreach (var primitive in mesh.Primitives)
+                GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
+
+                // Set BasicEffect parameters
+                _basicEffect.World = world * Matrix.CreateScale(1f);
+                _basicEffect.View = view;
+                _basicEffect.Projection = proj;
+                //_basicEffect.EnableDefaultLighting();
+
+                if (primitive.Material == null)
                 {
-                    GraphicsDevice.SetVertexBuffer(_vertexBuffers[i]);
-
-                    // Set BasicEffect parameters
-                    _basicEffect.World = world * Matrix.CreateScale(1f);
-                    _basicEffect.View = view;
-                    _basicEffect.Projection = proj;
-
-                    if (primitive.Material == null)
-                    {
-                        continue;
-                    }
-
-                    if (primitive.Material.BaseColorTexture == null)
-                    {
-                        _basicEffect.TextureEnabled = false;
-                        continue;
-                    }
-
-                    var sampler = primitive.Material.BaseColorTexture.Sampler;
-
-                    // Setting texture wrapping modes
-                    TextureAddressMode wrapS = TextureAddressMode.Wrap;
-                    TextureAddressMode wrapT = TextureAddressMode.Wrap;
-
-                    switch (sampler.WrapS)
-                    {
-                        case CLAMP_TO_EDGE:
-                            wrapS = TextureAddressMode.Clamp;
-                            break;
-                        case MIRRORED_REPEAT:
-                            wrapS = TextureAddressMode.Mirror;
-                            break;
-                        case REPEAT:
-                            wrapS = TextureAddressMode.Wrap;
-                            break;
-                    }
-
-                    switch (sampler.WrapT)
-                    {
-                        case CLAMP_TO_EDGE:
-                            wrapT = TextureAddressMode.Clamp;
-                            break;
-                        case MIRRORED_REPEAT:
-                            wrapT = TextureAddressMode.Mirror;
-                            break;
-                        case REPEAT:
-                            wrapT = TextureAddressMode.Wrap;
-                            break;
-                    }
-
-                    // Assuming _basicEffect.Texture is of type Texture2D
-                    _basicEffect.Texture = _testTexture2D;
-                    _basicEffect.Texture = loaded[primitive.Material.BaseColorTexture.Source.Uri];
-                    _basicEffect.TextureEnabled = true;
-                    _basicEffect.VertexColorEnabled = false;
-
-                    // Apply the wrapping modes to the texture sampler state
-                    _basicEffect.GraphicsDevice.SamplerStates[0] = new SamplerState
-                    {
-                        AddressU = wrapS,
-                        AddressV = wrapT,
-                        Filter = TextureFilter.Point
-                    };
-
-                    // Set alpha rendering mode
-                    string alphaMode = primitive.Material.AlphaMode ?? "OPAQUE"; // Default to "OPAQUE" if not specified
-                    float alphaCutoff = primitive.Material.AlphaCutoff ?? 0.5f; // Default alpha cutoff value for MASK mode
-
-                    switch (alphaMode)
-                    {
-                        case "OPAQUE":
-                            GraphicsDevice.BlendState = BlendState.Opaque;
-                            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-                            break;
-
-                        case "MASK":
-                        case "BLEND":
-                            // For "MASK" mode, configure AlphaTestEffect instead of BasicEffect
-                            var alphaTestEffect = new AlphaTestEffect(GraphicsDevice)
-                            {
-                                World = _basicEffect.World,
-                                View = _basicEffect.View,
-                                Projection = _basicEffect.Projection,
-                                DiffuseColor = _basicEffect.DiffuseColor,
-                                AlphaFunction = CompareFunction.Greater,
-                                ReferenceAlpha = (int)(alphaCutoff * 255),
-                                Texture = _basicEffect.Texture
-                            };
-
-                            GraphicsDevice.BlendState = BlendState.AlphaBlend;
-                            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-
-                            // Apply passes and draw primitives
-                            foreach (var pass in alphaTestEffect.CurrentTechnique.Passes)
-                            {
-                                pass.Apply();
-                                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, _vertexBuffers[i].VertexCount);
-                            }
-                            i++;
-                            continue; // Skip the BasicEffect pass since we've used AlphaTestEffect
-                            
-
-                       
-                    }
-
-                    foreach (var pass in _basicEffect.CurrentTechnique.Passes)
-                    {
-                        pass.Apply();
-                        GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, _vertexBuffers[i].VertexCount);
-                    }
-                    i++;
+                    continue;
                 }
+                
+                if (primitive.Material.BaseTexture == null)
+                {
+                    _basicEffect.TextureEnabled = false;
+                    continue;
+                }
+
+                var sampler = primitive.Material.BaseTexture.Sampler;
+                _basicEffect.Texture = primitive.Material.BaseTexture.Texture;
+                _basicEffect.TextureEnabled = true;
+                _basicEffect.VertexColorEnabled = false;
+
+                _basicEffect.GraphicsDevice.SamplerStates[0] = new SamplerState
+                {
+                    AddressU = sampler.WrapS,
+                    AddressV = sampler.WrapT,
+                    Filter = TextureFilter.Point
+                };
+
+                string alphaMode = primitive.Material.AlphaMode; // Default to "OPAQUE" if not specified
+                float alphaCutoff = primitive.Material.AlphaCutoff; // Default alpha cutoff value for MASK mode
+
+                switch (alphaMode)
+                {
+                    case "OPAQUE":
+                        GraphicsDevice.BlendState = BlendState.Opaque;
+                        GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                        break;
+
+                    case "MASK":
+                    case "BLEND":
+                        var alphaTestEffect = new AlphaTestEffect(GraphicsDevice)
+                        {
+                            World = _basicEffect.World,
+                            View = _basicEffect.View,
+                            Projection = _basicEffect.Projection,
+                            DiffuseColor = _basicEffect.DiffuseColor,
+                            AlphaFunction = CompareFunction.Greater,
+                            ReferenceAlpha = (int)(alphaCutoff * 255),
+                            Texture = _basicEffect.Texture
+                        };
+
+                        GraphicsDevice.BlendState = BlendState.AlphaBlend;
+                        GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+                        // Apply passes and draw primitives
+                        foreach (var pass in alphaTestEffect.CurrentTechnique.Passes)
+                        {
+                            pass.Apply();
+                            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount);
+                        }
+                        i++;
+                        continue; // Skip the BasicEffect pass since we've used AlphaTestEffect
+
+                }
+
+                foreach (var pass in _basicEffect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount);
+                }
+                i++;
             }
-
-
             base.Draw(gameTime);
-
-            
         }
     }
 

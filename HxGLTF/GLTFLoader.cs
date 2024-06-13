@@ -275,6 +275,7 @@ namespace HxGLTF
             var nodes = jObject["nodes"] != null ? LoadNodes(jObject["nodes"], meshes) : null;
             var animations = jObject["animations"] != null ? LoadAnimations(jObject["animations"], accessors, nodes) : null;
             var skins = jObject["skins"] != null ? LoadSkins(jObject["skins"], accessors, nodes) : null;
+            var scenes = jObject["scenes"] != null ? LoadScenes(jObject["scenes"], nodes) : null;
 
             if (nodes != null && skins != null)
             {
@@ -296,6 +297,7 @@ namespace HxGLTF
                 Nodes = nodes,
                 Animations = animations,
                 Skins = skins,
+                Scenes = scenes
             };
         }
 
@@ -778,6 +780,47 @@ namespace HxGLTF
                 {
                     var sceneNodeIndices = jSceneNodeIndices.Value<int[]>();
                     scene.NodesIndices = sceneNodeIndices;
+                }
+
+                scenes[i] = scene;
+            }
+
+            return scenes;
+        }
+
+        private static Scene[] LoadScenes(JToken jScenes, Node[] nodes)
+        {
+            var sceneCount = jScenes.Count();
+            var scenes = new Scene[sceneCount];
+
+            for (int i = 0; i < sceneCount; i++)
+            {
+                var jScene = jScenes[i];
+                if (jScene == null)
+                {
+                    throw new Exception();
+                }
+                var scene = new Scene();
+
+                var jSceneName = jScene["name"];
+                if (jSceneName != null)
+                {
+                    var sceneName = jSceneName.ToString();
+                    scene.Name = sceneName;
+                }
+
+                var jSceneNodeIndices = jScene["nodes"];
+                if (jSceneNodeIndices != null)
+                {
+                    var sceneNodeIndices = jSceneNodeIndices.ToObject<int[]>();
+                    scene.NodesIndices = sceneNodeIndices;
+
+                    scene.Nodes = new Node[scene.NodesIndices!.Length];
+                    for (int j = 0; j < scene.NodesIndices.Length; j++) 
+                    {
+                        int nodeIndex = scene.NodesIndices[j];
+                        scene.Nodes[j] = nodes[nodeIndex];
+                    }
                 }
 
                 scenes[i] = scene;
