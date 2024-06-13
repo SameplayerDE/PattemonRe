@@ -10,6 +10,7 @@ using System.Reflection;
 using Survival.Rendering;
 using Newtonsoft.Json.Linq;
 using TestRender;
+using System.Xml.Linq;
 
 namespace TestRendering
 {
@@ -39,7 +40,6 @@ namespace TestRendering
         private List<bool> doubleSided = new List<bool>();
 
         private BasicEffect _basicEffect;
-        private GLTFFile gltfFile;
         private GameModel gameModel;
 
         public readonly static BlendState AlphaSubtractive = new BlendState
@@ -79,48 +79,7 @@ namespace TestRendering
             return result;
         }
 
-        private void LoadImages()
-        {
-            if (!gltfFile.HasImages)
-            {
-                return;
-            }
-            foreach (var image in gltfFile.Images)
-            {
-                if (image != null)
-                {
-                    byte[] imageData = null;
-                    if (!string.IsNullOrEmpty(image.Uri))
-                    {
-                        if (Path.IsPathRooted(image.Uri))
-                        {
-                            loaded.Add(image.Uri, LoadFormFile(image.Uri));
-                        }
-                        else
-                        {
-                            var combinedPath = Path.Combine(Path.GetDirectoryName(gltfFile.Path) ?? string.Empty, image.Uri);
-                            loaded.Add(image.Uri, LoadFormFile(combinedPath));
-                        }
-                    }
-                    else if (image.BufferView != null)
-                    {
-                        var bufferView = image.BufferView;
-                        var buffer = bufferView.Buffer; // Annahme: Implementierung von Buffer
-                        imageData = new byte[bufferView.ByteLength];
-                        Array.Copy(buffer.Bytes, bufferView.ByteOffset, imageData, 0, bufferView.ByteLength);
-                    }
-                    else
-                    {
-                        throw new Exception("Image URI und BufferView sind beide null.");
-                    }
-
-                    if (imageData != null && imageData.Length > 0)
-                    {
-                        loaded.Add(image.Name, Texture2D.FromStream(GraphicsDevice, new MemoryStream(imageData)));
-                    }
-                }
-            }
-        }
+        
 
         protected override void Initialize()
         {
@@ -134,9 +93,11 @@ namespace TestRendering
             
             _camera = new Camera(GraphicsDevice);
 
+            GLTFFile gltfFile;
             //gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
-            gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
-            //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
+            //gltfFile = GLTFLoader.Load(@"Content\Cube.glb");
+            //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
+            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
             //gltfFile = GLTFLoader.Load(@"Content\map01_22c\map01_22c.glb");
             gameModel = GameModel.From(GraphicsDevice, gltfFile);
 
@@ -216,16 +177,41 @@ namespace TestRendering
             base.Update(gameTime);
         }
 
+
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            GraphicsDevice.Clear(Color.Black);
+            foreach (var node in gameModel.Nodes)
+            {
+                DrawNode(node);
+            }
 
+            base.Draw(gameTime);
+        }
 
-            int i = 0;
-            foreach (var primitive in gameModel.Root.Mesh.Primitives)
+        private void DrawNode(GameNode node)
+        {
+            if (node.Mesh != null)
+            {
+                DrawMesh(node.Mesh);
+            }
+
+            if (node.HasChildren)
+            {
+                foreach (var child in node.Children)
+                {
+                    DrawNode(child);
+                }
+            }
+        }
+
+        private void DrawMesh(GameMesh mesh)
+        {
+            foreach (var primitive in mesh.Primitives)
             {
                 GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
+                //GraphicsDevice.Indices = primitive.IsIndexed ? primitive.IndexBuffer : null;
 
                 // Set BasicEffect parameters
                 _basicEffect.World = world * Matrix.CreateScale(1f);
@@ -237,7 +223,7 @@ namespace TestRendering
                 {
                     continue;
                 }
-                
+
                 if (primitive.Material.BaseTexture == null)
                 {
                     _basicEffect.TextureEnabled = false;
@@ -249,12 +235,12 @@ namespace TestRendering
                 _basicEffect.TextureEnabled = true;
                 _basicEffect.VertexColorEnabled = false;
 
-                _basicEffect.GraphicsDevice.SamplerStates[0] = new SamplerState
-                {
-                    AddressU = sampler.WrapS,
-                    AddressV = sampler.WrapT,
-                    Filter = TextureFilter.Point
-                };
+                //_basicEffect.GraphicsDevice.SamplerStates[0] = new SamplerState
+                //{
+                //    AddressU = sampler.WrapS,
+                //    AddressV = sampler.WrapT,
+                //    Filter = TextureFilter.Point
+                //};
 
                 string alphaMode = primitive.Material.AlphaMode; // Default to "OPAQUE" if not specified
                 float alphaCutoff = primitive.Material.AlphaCutoff; // Default alpha cutoff value for MASK mode
@@ -266,42 +252,39 @@ namespace TestRendering
                         GraphicsDevice.DepthStencilState = DepthStencilState.Default;
                         break;
 
-                    case "MASK":
-                    case "BLEND":
-                        var alphaTestEffect = new AlphaTestEffect(GraphicsDevice)
-                        {
-                            World = _basicEffect.World,
-                            View = _basicEffect.View,
-                            Projection = _basicEffect.Projection,
-                            DiffuseColor = _basicEffect.DiffuseColor,
-                            AlphaFunction = CompareFunction.Greater,
-                            ReferenceAlpha = (int)(alphaCutoff * 255),
-                            Texture = _basicEffect.Texture
-                        };
+                    //ase "MASK":
+                    //ase "BLEND":
+                    //   var alphaTestEffect = new AlphaTestEffect(GraphicsDevice)
+                    //   {
+                    //       World = _basicEffect.World,
+                    //       View = _basicEffect.View,
+                    //       Projection = _basicEffect.Projection,
+                    //       DiffuseColor = _basicEffect.DiffuseColor,
+                    //       AlphaFunction = CompareFunction.Greater,
+                    //       ReferenceAlpha = (int)(alphaCutoff * 255),
+                    //       Texture = _basicEffect.Texture
+                    //   };
 
-                        GraphicsDevice.BlendState = BlendState.AlphaBlend;
-                        GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                    //   GraphicsDevice.BlendState = BlendState.AlphaBlend;
+                    //   GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-                        // Apply passes and draw primitives
-                        foreach (var pass in alphaTestEffect.CurrentTechnique.Passes)
-                        {
-                            pass.Apply();
-                            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount);
-                        }
-                        i++;
-                        continue; // Skip the BasicEffect pass since we've used AlphaTestEffect
-
+                    //   // Apply passes and draw primitives
+                    //   foreach (var pass in alphaTestEffect.CurrentTechnique.Passes)
+                    //   {
+                    //       pass.Apply();
+                    //       GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount);
+                    //   }
+                    //   continue; // Skip the BasicEffect pass since we've used AlphaTestEffect
                 }
 
                 foreach (var pass in _basicEffect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount);
+                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount / 3);
                 }
-                i++;
             }
-            base.Draw(gameTime);
         }
+
     }
 
 }

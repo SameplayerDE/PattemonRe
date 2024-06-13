@@ -6,7 +6,7 @@ namespace TestRender
 {
     public class GameModel
     {
-        public GameNode Root;
+        public GameNode[] Nodes;
 
         public static GameModel From(GraphicsDevice graphicsDevice, GLTFFile file)
         {
@@ -15,20 +15,14 @@ namespace TestRender
 
             if (scene.HasNodes)
             {
-                if (scene.Nodes.Length > 1)
-                {
-                    throw new Exception();
-                }
-
-                var node = scene.Nodes[0];
-
-                if (!node.HasMesh)
-                {
-                    throw new Exception();
-                }
-                var rootNode = GameNode.From(graphicsDevice, file, node);
-
                 result = new GameModel();
+                result.Nodes = new GameNode[scene.Nodes.Length];
+                for (int i = 0; i < scene.Nodes.Length; i++)
+                {
+                    var node = scene.Nodes[i];
+                    var gameNode = GameNode.From(graphicsDevice, file, node);
+                    result.Nodes[i] = gameNode;
+                }
             }
 
             return result;

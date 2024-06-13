@@ -16,7 +16,7 @@ namespace TestRender
         public bool IsIndexed;
         public GameMaterial Material;
 
-        public static GameMeshPrimitives From(GraphicsDevice graphicsDevice, GLTFFile file, MeshPrimitive primitive)
+       public static GameMeshPrimitives From(GraphicsDevice graphicsDevice, GLTFFile file, MeshPrimitive primitive)
         {
             GameMeshPrimitives result = new GameMeshPrimitives();
 
@@ -24,13 +24,11 @@ namespace TestRender
 
             var position = new List<Vector3>();
             var normals = new List<Vector3>();
-            var colors = new List<Color>();
             var uvs = new List<Vector2>();
 
-            var hasColor = false;
+            
             foreach (var attribute in primitive.Attributes)
             {
-
                 Console.WriteLine(attribute.Key);
                 Console.WriteLine(attribute.Value.Type.Id);
 
@@ -73,11 +71,7 @@ namespace TestRender
 
                     if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
                     {
-                        for (var x = 0; x < data.Length; x += 3)
-                        {
-                            colors.Add(new Color(data[x], data[x + 1], data[x + 2]));
-                        }
-                        hasColor = true;
+                        
                     }
                 }
                 else
@@ -106,12 +100,7 @@ namespace TestRender
                         }
                         else if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
                         {
-                            colors.Add(new Color(
-                                data[i * numberOfComponents + 0],
-                                data[i * numberOfComponents + 1],
-                                data[i * numberOfComponents + 2]
-                            ));
-                            hasColor = true;
+                            
                         }
                         else if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
                         {
@@ -122,12 +111,6 @@ namespace TestRender
                         }
                     }
                 }
-
-                if (hasColor == false)
-                {
-                    colors.Add(new Color(0.5f, 0.5f, 0.5f));
-                }
-
             }
 
             var vertexBufferDummy = new List<VertexPositionNormalColorTexture>();
@@ -137,7 +120,7 @@ namespace TestRender
             {
                 vertexBufferDummy.Add(new VertexPositionNormalColorTexture(
                     position[i],
-                    colors[i],
+                    Color.White,
                     normals.Count > i ? normals[i] : Vector3.Up,
                     uvs.Count > i ? uvs[i] : Vector2.Zero
                 ));

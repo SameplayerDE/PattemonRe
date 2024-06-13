@@ -67,7 +67,7 @@ namespace TestRendering
 
             // Add slight perspective effect
             Matrix perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), aspectRatio, _nearClipPlane, _farClipPlane);
-            _projection = Matrix.Lerp(_projection, perspective, 0.009f); // Adjust 0.1f to control the mix level
+            _projection = Matrix.Lerp(_projection, perspective, 1f); // Adjust 0.1f to control the mix level
         }
 
         public void Move(Vector3 translation)

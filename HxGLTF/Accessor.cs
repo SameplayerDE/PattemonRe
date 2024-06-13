@@ -209,6 +209,44 @@ namespace HxGLTF
 
             return result.ToArray();
         }
+        
+        public static (float[],int[]) ReadDataIndexed2(Accessor dataAccessor, Accessor indexAccessor)
+        {
+            
+// Read indices and data
+            var indexBuffer = ReadData(indexAccessor);
+            var dataBuffer = ReadData(dataAccessor);
+
+// Filter unique indices and sort them in ascending order
+            HashSet<int> uniqueIndicesSet = new HashSet<int>();
+            foreach (int index in indexBuffer)
+            {
+                uniqueIndicesSet.Add(index);
+            }
+
+            List<int> uniqueIndices = uniqueIndicesSet.ToList();
+            uniqueIndices.Sort();  // Sort in ascending order
+
+            // Load data based on sorted unique indices
+            List<float> uniqueData = new List<float>();
+            Dictionary<int, int> indexMapping = new Dictionary<int, int>();
+            int newIndex = 0;
+
+            foreach (int index in uniqueIndices)
+            {
+                uniqueData.Add(dataBuffer[index]);
+                indexMapping[index] = newIndex++;
+            }
+
+// Map the original indices to the new indices
+            int[] newIndexBuffer = new int[indexBuffer.Length];
+            for (int i = 0; i < indexBuffer.Length; i++)
+            {
+                newIndexBuffer[i] = indexMapping[(int)indexBuffer[i]];
+            }
+
+            return (uniqueData.ToArray(), newIndexBuffer);
+        }
 
     }
 

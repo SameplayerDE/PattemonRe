@@ -9,8 +9,8 @@
 
     public class AnimationSampler
     {
-        public Accessor Input;
-        public Accessor Output;
-        public InterpolationAlgorithm Interpolation = InterpolationAlgorithm.Linear;
+        public Accessor Input; // time 
+        public Accessor Output; // data
+        public InterpolationAlgorithm Interpolation = InterpolationAlgorithm.Linear; // algorithm
     }
 }
