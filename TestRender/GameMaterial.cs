@@ -10,6 +10,7 @@ namespace TestRender
     {
         public TextureAddressMode WrapS;
         public TextureAddressMode WrapT;
+        public SamplerState SamplerState;
     }
 
     public class GameTexture
@@ -68,11 +69,17 @@ namespace TestRender
                 throw new Exception("Image URI and BufferView are both null.");
             }
 
-            var sampler = material.BaseColorTexture.Sampler != null ? new GameTextureSampler
+            var sampler = new GameTextureSampler
             {
-                WrapS = ConvertWrapMode(material.BaseColorTexture.Sampler.WrapS),
-                WrapT = ConvertWrapMode(material.BaseColorTexture.Sampler.WrapT)
-            } : new GameTextureSampler { WrapS = TextureAddressMode.Wrap, WrapT = TextureAddressMode.Wrap };
+                SamplerState = new SamplerState()
+                {
+                    AddressU = ConvertWrapMode(material.BaseColorTexture.Sampler.WrapS),
+                    AddressV = ConvertWrapMode(material.BaseColorTexture.Sampler.WrapT),
+                    Filter = TextureFilter.Point
+                },
+                WrapT = ConvertWrapMode(material.BaseColorTexture.Sampler.WrapT),
+                WrapS = ConvertWrapMode(material.BaseColorTexture.Sampler.WrapS)
+            };
 
             return new GameMaterial
             {

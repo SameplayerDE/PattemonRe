@@ -1,4 +1,5 @@
-﻿using HxGLTF;
+﻿using System;
+using HxGLTF;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
@@ -40,6 +41,14 @@ namespace TestRender
                     var gameNode = GameNode.From(graphicsDevice, file, node);
                     result.Nodes[i] = gameNode;
                 }
+
+                result.Animations = new Dictionary<string, GameModelAnimation>();
+                for (int i = 0; i < file.Animations.Length; i++)
+                {
+                    var animation = file.Animations[i];
+                    result.Animations[Guid.NewGuid().ToString()] = GameModelAnimation.From(graphicsDevice, file, animation);
+                }
+                
             }
 
             return result;

@@ -14,6 +14,8 @@ namespace HxGLTF
         public Vector3 Translation = Vector3.Zero;
         public string? Name;
 
+        public int Index;
+
         public int MeshIndex = -1;
         public int SkinIndex = -1;
 

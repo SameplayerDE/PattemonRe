@@ -27,17 +27,12 @@ namespace TestRendering
 
         private List<VertexPositionNormalColorTexture> _positions = new List<VertexPositionNormalColorTexture>();
         private VertexPositionNormalColorTexture[] _positionsArray;
-        private Matrix world, view, proj;
         private Effect _effect;
-        private VertexBuffer _vertexBuffer;
-        private List<VertexBuffer> _vertexBuffers = new List<VertexBuffer>();
 
         private Camera _camera;
         
         private Texture2D _testTexture2D;
-        private Dictionary<string, Texture2D> loaded = new Dictionary<string, Texture2D>();
-        private List<bool> alpha = new List<bool>();
-        private List<bool> doubleSided = new List<bool>();
+
 
         private BasicEffect _basicEffect;
         private GameModel gameModel;
@@ -84,8 +79,6 @@ namespace TestRendering
         protected override void Initialize()
         {
             _basicEffect = new BasicEffect(GraphicsDevice);
-            // _dsScreen = new RenderTarget2D(GraphicsDevice, 256, 192, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8);
-            _dsScreen = new RenderTarget2D(GraphicsDevice, 1280, 720, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8);
             
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
@@ -97,10 +90,11 @@ namespace TestRendering
             //gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
             //gltfFile = GLTFLoader.Load(@"Content\Cube.glb");
             //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
-            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
+            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
+            gltfFile = GLTFLoader.Load(@"Content\Simple");
             //gltfFile = GLTFLoader.Load(@"Content\map01_22c\map01_22c.glb");
             gameModel = GameModel.From(GraphicsDevice, gltfFile);
-
+            gameModel.Nodes[0].Translation = new Vector3(100, 100, 100);
             Console.WriteLine(gltfFile.Asset.Version);
 
             base.Initialize();
@@ -169,10 +163,11 @@ namespace TestRendering
             }
             
             _camera.Update(gameTime);
+
+            // animation
             
-            world = Matrix.CreateTranslation(Vector3.Zero) * Matrix.CreateScale(0.05f);
-            view = _camera.View;
-            proj  = _camera.Projection;
+            
+            
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             base.Update(gameTime);
         }
@@ -194,7 +189,7 @@ namespace TestRendering
         {
             if (node.Mesh != null)
             {
-                DrawMesh(node.Mesh);
+                DrawMesh(node, node.Mesh);
             }
 
             if (node.HasChildren)
@@ -206,7 +201,7 @@ namespace TestRendering
             }
         }
 
-        private void DrawMesh(GameMesh mesh)
+        private void DrawMesh(GameNode node, GameMesh mesh)
         {
             foreach (var primitive in mesh.Primitives)
             {
@@ -214,9 +209,9 @@ namespace TestRendering
                 //GraphicsDevice.Indices = primitive.IsIndexed ? primitive.IndexBuffer : null;
 
                 // Set BasicEffect parameters
-                _basicEffect.World = world * Matrix.CreateScale(1f);
-                _basicEffect.View = view;
-                _basicEffect.Projection = proj;
+                _basicEffect.World = node.Matrix * (Matrix.CreateTranslation(node.Translation) * Matrix.CreateFromQuaternion(node.Rotation) * Matrix.CreateScale(node.Scale)) * Matrix.CreateScale(1f);
+                _basicEffect.View = _camera.View;
+                _basicEffect.Projection = _camera.Projection;
                 //_basicEffect.EnableDefaultLighting();
 
                 if (primitive.Material == null)
@@ -227,23 +222,21 @@ namespace TestRendering
                 if (primitive.Material.BaseTexture == null)
                 {
                     _basicEffect.TextureEnabled = false;
-                    continue;
+                    
                 }
-
-                var sampler = primitive.Material.BaseTexture.Sampler;
-                _basicEffect.Texture = primitive.Material.BaseTexture.Texture;
-                _basicEffect.TextureEnabled = true;
-                _basicEffect.VertexColorEnabled = false;
-
-                //_basicEffect.GraphicsDevice.SamplerStates[0] = new SamplerState
-                //{
-                //    AddressU = sampler.WrapS,
-                //    AddressV = sampler.WrapT,
-                //    Filter = TextureFilter.Point
-                //};
+                else
+                {
+                    var sampler = primitive.Material.BaseTexture.Sampler;
+                    _basicEffect.Texture = primitive.Material.BaseTexture.Texture;
+                    _basicEffect.TextureEnabled = true;
+                    _basicEffect.VertexColorEnabled = false;
+                    
+                    _basicEffect.GraphicsDevice.SamplerStates[0] = primitive.Material.BaseTexture.Sampler.SamplerState;
+                }
+                
 
                 string alphaMode = primitive.Material.AlphaMode; // Default to "OPAQUE" if not specified
-                float alphaCutoff = primitive.Material.AlphaCutoff; // Default alpha cutoff value for MASK mode
+                //float alphaCutoff = primitive.Material.AlphaCutoff; // Default alpha cutoff value for MASK mode
 
                 switch (alphaMode)
                 {

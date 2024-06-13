@@ -652,6 +652,7 @@ namespace HxGLTF
                     }
 
                     var animationSampler = new AnimationSampler();
+                    animationSampler.Index = b;
 
                     // Input accessor
                     var jAnimationSamplerInput = jAnimationSampler["input"];
@@ -855,7 +856,8 @@ namespace HxGLTF
                 }
 
                 var node = new Node();
-
+                node.Index = a;
+                
                 var jNodeName = jNode["name"];
                 if (jNodeName != null && jNodeName.Type == JTokenType.String)
                 {
