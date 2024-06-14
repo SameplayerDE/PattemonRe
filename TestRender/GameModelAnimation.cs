@@ -21,9 +21,9 @@ namespace TestRender
     public class GameModelAnimationSampler
     {
 
-        public float[] Input;
+        public float[] Input; // time stamps
         public InterpolationAlgorithm InterpolationAlgorithm;
-        public float[] Output;
+        public float[] Output; // data
         
         public static GameModelAnimationSampler From(GraphicsDevice graphicsDevice, GLTFFile file, Animation animation, AnimationSampler sampler)
         {
@@ -55,7 +55,8 @@ namespace TestRender
     {
         public GameModelAnimationChannel[] Channels;
         public GameModelAnimationSampler[] Samplers;
-
+        public float Duration;
+        
         public static GameModelAnimation From(GraphicsDevice graphicsDevice, GLTFFile file, Animation animation)
         {
             var result = new GameModelAnimation();
@@ -74,8 +75,28 @@ namespace TestRender
                 result.Samplers[i] = GameModelAnimationSampler.From(graphicsDevice, file, animation, animationSampler);
             }
             
-           
+            // Berechne die Dauer der Animation
+            result.Duration = CalculateAnimationDuration(result.Samplers);
+            
             return result;
         }
+        
+        private static float CalculateAnimationDuration(GameModelAnimationSampler[] samplers)
+        {
+            float maxTimeStamp = 0;
+            foreach (var sampler in samplers)
+            {
+                if (sampler.Input.Length > 0)
+                {
+                    float lastTimeStamp = sampler.Input[sampler.Input.Length - 1];
+                    if (lastTimeStamp > maxTimeStamp)
+                    {
+                        maxTimeStamp = lastTimeStamp;
+                    }
+                }
+            }
+            return maxTimeStamp;
+        }
+        
     } 
 }

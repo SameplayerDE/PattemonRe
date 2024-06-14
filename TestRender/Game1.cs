@@ -37,6 +37,7 @@ namespace TestRendering
         
         private BasicEffect _basicEffect;
         private GameModel gameModel;
+        private GameModel gameModel2;
 
         public readonly static BlendState AlphaSubtractive = new BlendState
         {
@@ -90,7 +91,8 @@ namespace TestRendering
             GLTFFile gltfFile;
             //gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
             //gltfFile = GLTFLoader.Load(@"Content\Cube.glb");
-            //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
+            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
+            gameModel2 = GameModel.From(GraphicsDevice, gltfFile);
             //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
             gltfFile = GLTFLoader.Load(@"Content\Simple");
             //gltfFile = GLTFLoader.Load(@"Content\helm");
@@ -333,6 +335,12 @@ namespace TestRendering
                             }
                         }
                     }
+
+                    if (AnimationTimer > animation.Duration)
+                    {
+                        AnimationTimer = 0;
+                    }
+                    
                 }
 
                 GraphicsDevice.DepthStencilState = DepthStencilState.Default;
@@ -350,6 +358,15 @@ namespace TestRendering
                 foreach (var nodeIndex in scene.Nodes)
                 {
                     var node = gameModel.Nodes[nodeIndex];
+                    DrawNode(node);
+                }
+            }
+            
+            foreach (var scene in gameModel2.Scenes)
+            {
+                foreach (var nodeIndex in scene.Nodes)
+                {
+                    var node = gameModel2.Nodes[nodeIndex];
                     DrawNode(node);
                 }
             }
@@ -375,82 +392,54 @@ namespace TestRendering
         }
 
         private void DrawMesh(GameNode node, GameMesh mesh)
+{
+    foreach (var primitive in mesh.Primitives)
+    {
+        GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
+
+        // Set BasicEffect parameters
+        _basicEffect.World = node.GlobalTransform * Matrix.CreateScale(0.5f);
+        _basicEffect.View = _camera.View;
+        _basicEffect.Projection = _camera.Projection;
+        
+        // Check if there is a material assigned
+        if (primitive.Material != null)
         {
-            foreach (var primitive in mesh.Primitives)
+            // Check if there is a base texture assigned
+            if (primitive.Material.BaseTexture != null)
             {
-                GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
-                //GraphicsDevice.Indices = primitive.IsIndexed ? primitive.IndexBuffer : null;
+                _basicEffect.Texture = primitive.Material.BaseTexture.Texture;
+                _basicEffect.TextureEnabled = true;
+                _basicEffect.VertexColorEnabled = false; // Disable vertex colors when using textures
 
-                // Set BasicEffect parameters
-                //_basicEffect.World = node.Matrix * (Matrix.CreateTranslation(node.Translation) * Matrix.CreateFromQuaternion(node.Rotation) * Matrix.CreateScale(node.Scale)) * Matrix.CreateScale(1f);
-                _basicEffect.World = node.GlobalTransform;
-                _basicEffect.View = _camera.View;
-                _basicEffect.Projection = _camera.Projection;
-                //_basicEffect.EnableDefaultLighting();
-
-                if (primitive.Material == null)
-                {
-                    continue;
-                }
-
-                if (primitive.Material.BaseTexture == null)
-                {
-                    _basicEffect.TextureEnabled = false;
-                }
-                else
-                {
-                    var sampler = primitive.Material.BaseTexture.Sampler;
-                    _basicEffect.Texture = primitive.Material.BaseTexture.Texture;
-                    _basicEffect.TextureEnabled = true;
-                    
-                    _basicEffect.VertexColorEnabled = true;
-                    
-                    _basicEffect.GraphicsDevice.SamplerStates[0] = primitive.Material.BaseTexture.Sampler.SamplerState;
-                }
-                _basicEffect.DiffuseColor = primitive.Material.BaseColorFactor.ToVector3() * 4;
-
-                string alphaMode = primitive.Material.AlphaMode; // Default to "OPAQUE" if not specified
-                //float alphaCutoff = primitive.Material.AlphaCutoff; // Default alpha cutoff value for MASK mode
-
-                switch (alphaMode)
-                {
-                    case "OPAQUE":
-                        GraphicsDevice.BlendState = BlendState.Opaque;
-                        GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-                        break;
-
-                    //ase "MASK":
-                    //ase "BLEND":
-                    //   var alphaTestEffect = new AlphaTestEffect(GraphicsDevice)
-                    //   {
-                    //       World = _basicEffect.World,
-                    //       View = _basicEffect.View,
-                    //       Projection = _basicEffect.Projection,
-                    //       DiffuseColor = _basicEffect.DiffuseColor,
-                    //       AlphaFunction = CompareFunction.Greater,
-                    //       ReferenceAlpha = (int)(alphaCutoff * 255),
-                    //       Texture = _basicEffect.Texture
-                    //   };
-
-                    //   GraphicsDevice.BlendState = BlendState.AlphaBlend;
-                    //   GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-
-                    //   // Apply passes and draw primitives
-                    //   foreach (var pass in alphaTestEffect.CurrentTechnique.Passes)
-                    //   {
-                    //       pass.Apply();
-                    //       GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount);
-                    //   }
-                    //   continue; // Skip the BasicEffect pass since we've used AlphaTestEffect
-                }
-
-                foreach (var pass in _basicEffect.CurrentTechnique.Passes)
-                {
-                    pass.Apply();
-                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount / 3);
-                }
+                // Set texture sampler state
+                GraphicsDevice.SamplerStates[0] = primitive.Material.BaseTexture.Sampler.SamplerState;
+            }
+            else
+            {
+                _basicEffect.TextureEnabled = false;
+                _basicEffect.VertexColorEnabled = true; // Enable vertex colors if no texture is used
             }
         }
+        else
+        {
+            _basicEffect.TextureEnabled = false;
+            _basicEffect.VertexColorEnabled = true; // Enable vertex colors if no material is assigned
+        }
+
+        GraphicsDevice.BlendState = BlendState.AlphaBlend;
+        GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+        
+
+        // Apply the effect and draw the primitives
+        foreach (var pass in _basicEffect.CurrentTechnique.Passes)
+        {
+            pass.Apply();
+            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount / 3);
+        }
+    }
+}
+
 
     }
 

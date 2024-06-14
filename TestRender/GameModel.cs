@@ -36,16 +36,6 @@ namespace TestRender
         {
             
             var result = new GameModel();
-
-            if (file.HasScenes)
-            {
-                result.Scenes = new GameScene[file.Scenes.Length];
-                for (var i = 0; i < file.Scenes.Length; i++)
-                {
-                    var scene = GameScene.From(graphicsDevice, file, file.Scenes[i]);
-                    result.Scenes[i] = scene;
-                }
-            }
             
             if (file.HasNodes)
             {
@@ -91,6 +81,20 @@ namespace TestRender
                 }
             }
 
+            if (file.HasScenes)
+            {
+                result.Scenes = new GameScene[file.Scenes.Length];
+                for (var i = 0; i < file.Scenes.Length; i++)
+                {
+                    var scene = GameScene.From(graphicsDevice, file, file.Scenes[i]);
+                    for (var j = 0; j < scene.Nodes.Length; j++)
+                    {
+                        result.Nodes[j].UpdateGlobalTransform();
+                    }
+                    result.Scenes[i] = scene;
+                }
+            }
+            
             //if (scene.HasNodes)
             //{
             //    result = new GameModel();
