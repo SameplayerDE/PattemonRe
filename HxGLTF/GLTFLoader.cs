@@ -523,6 +523,17 @@ namespace HxGLTF
                         var baseColorTexture = (JObject)pbr["baseColorTexture"];
                         material.BaseColorTexture = textures[(int)baseColorTexture["index"]];
                     }
+                    
+                    if (pbr.ContainsKey("baseColorFactor"))
+                    {
+                        var baseColorFactor = pbr["baseColorFactor"];
+                        var rgba = baseColorFactor.ToObject<float[]>();
+                        material.BasColorFactor = new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
+                    }
+                    else
+                    {
+                        material.BasColorFactor = Color.White;
+                    }
                 }
 
                 materials[i] = material;
@@ -542,7 +553,7 @@ namespace HxGLTF
                     throw new Exception($"Mesh at index {a} is null.");
                 }
                 var mesh = new Mesh();
-
+                mesh.Index = a;
                 // Name
                 var jMeshName = jMesh["name"];
                 if (jMeshName != null && jMeshName.Type == JTokenType.String)

@@ -33,7 +33,8 @@ namespace TestRendering
         
         private Texture2D _testTexture2D;
 
-
+        private float AnimationTimer = 0.00f;
+        
         private BasicEffect _basicEffect;
         private GameModel gameModel;
 
@@ -92,9 +93,9 @@ namespace TestRendering
             //gltfFile = GLTFLoader.Load(@"C:\Users\asame\Documents\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
             //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
             gltfFile = GLTFLoader.Load(@"Content\Simple");
+            //gltfFile = GLTFLoader.Load(@"Content\helm");
             //gltfFile = GLTFLoader.Load(@"Content\map01_22c\map01_22c.glb");
             gameModel = GameModel.From(GraphicsDevice, gltfFile);
-            gameModel.Nodes[0].Translation = new Vector3(100, 100, 100);
             Console.WriteLine(gltfFile.Asset.Version);
 
             base.Initialize();
@@ -108,68 +109,253 @@ namespace TestRendering
             _testTexture2D = Content.Load<Texture2D>("1");
         }
 
+        // Function to convert quaternion to Euler angles
+        public Vector3 ToEulerAngles(Quaternion q)
+        {
+            Vector3 angles;
+
+            // Roll (x-axis rotation)
+            double sinr_cosp = 2 * (q.W * q.X + q.Y * q.Z);
+            double cosr_cosp = 1 - 2 * (q.X * q.X + q.Y * q.Y);
+            angles.X = (float)Math.Atan2(sinr_cosp, cosr_cosp);
+
+            // Pitch (y-axis rotation)
+            double sinp = 2 * (q.W * q.Y - q.Z * q.X);
+            if (Math.Abs(sinp) >= 1)
+                angles.Y = (float)Math.CopySign(Math.PI / 2, sinp); // Use 90 degrees if out of range
+            else
+                angles.Y = (float)Math.Asin(sinp);
+
+            // Yaw (z-axis rotation)
+            double siny_cosp = 2 * (q.W * q.Z + q.X * q.Y);
+            double cosy_cosp = 1 - 2 * (q.Y * q.Y + q.Z * q.Z);
+            angles.Z = (float)Math.Atan2(siny_cosp, cosy_cosp);
+
+            return angles;
+        }
+        
         protected override void Update(GameTime gameTime)
         {
             if (!IsActive)
             {
                 return;
             }
-            
+
+
             Vector3 Direction = new Vector3();
-            
+
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 Direction += Vector3.Forward;
             }
+
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
                 Direction += Vector3.Left;
             }
+
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
                 Direction += Vector3.Right;
             }
+
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
                 Direction += Vector3.Backward;
             }
+
             if (Keyboard.GetState().IsKeyDown(Keys.Q))
             {
                 Direction -= Vector3.Down;
             }
+
             if (Keyboard.GetState().IsKeyDown(Keys.E))
             {
                 Direction -= Vector3.Up;
             }
-            
+
             _camera.Move(-Direction * (float)gameTime.ElapsedGameTime.TotalSeconds * 5f);
-            
+
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
                 _camera.RotateX(-1);
             }
+
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
                 _camera.RotateX(1);
             }
-            
+
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
                 _camera.RotateY(1);
             }
+
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
                 _camera.RotateY(-1);
             }
-            
+
             _camera.Update(gameTime);
 
             // animation
-            
-            
-            
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            base.Update(gameTime);
+
+
+            AnimationTimer += (float)gameTime.ElapsedGameTime.TotalSeconds / 2;
+
+
+            if (gameModel.HasAnimations)
+            {
+                var animation = gameModel.Animations.First().Value;
+                foreach (var channel in animation.Channels)
+                {
+                    var targetPath = channel.Target.Path;
+
+                    var valuesPerElement = targetPath switch
+                    {
+                        "rotation" => 4,
+                        "translation" or "scale" => 3,
+                        _ => 0
+                    };
+
+                    if (valuesPerElement > 0)
+                    {
+                        var sampler = animation.Samplers[channel.SamplerIndex];
+                        float[] timeStamps = sampler.Input;
+
+                        //if (AnimationTimer > timeStamps.Last())
+                        //{
+                        //    AnimationTimer = 0;
+                        //}
+                        
+                        int prevIndex = -1;
+                        int nextIndex = -1;
+
+                        // Find the indices for the surrounding keyframes
+                        for (int i = 0; i < timeStamps.Length; i++)
+                        {
+                            if (timeStamps[i] <= AnimationTimer)
+                            {
+                                prevIndex = i;
+                            }
+
+                            if (timeStamps[i] > AnimationTimer)
+                            {
+                                nextIndex = i;
+                                break;
+                            }
+                        }
+
+                        if (nextIndex == -1)
+                        {
+                            nextIndex = 0;
+                        }
+
+                        if (sampler.InterpolationAlgorithm == InterpolationAlgorithm.Step)
+                        {
+                            // For step interpolation, just use the previous index
+                            if (prevIndex >= 0)
+                            {
+                                var data = new float[valuesPerElement];
+                                for (int i = 0; i < valuesPerElement; i++)
+                                {
+                                    int offset = prevIndex * valuesPerElement;
+                                    data[i] = sampler.Output[offset + i];
+                                }
+
+                                if (targetPath == "rotation")
+                                {
+                                    Quaternion rotation = new Quaternion(data[0], data[1], data[2], data[3]);
+                                    gameModel.Nodes[channel.Target.NodeIndex].Rotate(rotation);
+                                }
+                            }
+                        }
+                        else if (sampler.InterpolationAlgorithm == InterpolationAlgorithm.Linear)
+                        {
+                            // For linear interpolation, use both prev and next indices
+                            if (prevIndex >= 0 && nextIndex >= 0)
+                            {
+                                var prevTimeStamp = timeStamps[prevIndex];
+                                var nextTimeStamp = timeStamps[nextIndex];
+                                float t;
+
+                                // Sicherstellen, dass t im Bereich von 0 bis 1 liegt
+                                if (nextTimeStamp > prevTimeStamp)
+                                {
+                                    t = (AnimationTimer - prevTimeStamp) / (nextTimeStamp - prevTimeStamp);
+                                    t = MathHelper.Clamp(t, 0f, 1f); // Clamp auf den Bereich von 0 bis 1
+                                }
+                                else
+                                {
+                                    t = 0f; // Fall, wenn prevTimeStamp == nextTimeStamp (selten, aber möglich)
+                                }
+
+                                Console.WriteLine("Time inter: " + t);
+
+                                var prevData = new float[valuesPerElement];
+                                var nextData = new float[valuesPerElement];
+                                for (int i = 0; i < valuesPerElement; i++)
+                                {
+                                    int offsetPrev = prevIndex * valuesPerElement;
+                                    int offsetNext = nextIndex * valuesPerElement;
+                                    prevData[i] = sampler.Output[offsetPrev + i];
+                                    nextData[i] = sampler.Output[offsetNext + i];
+                                }
+                                
+                                //Console.WriteLine(targetPath);
+                                //sgameModel.Nodes[channel.Target.NodeIndex].Rotate(gameModel.Nodes[channel.Target.NodeIndex].Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)gameTime.TotalGameTime.TotalSeconds));
+                                int testNode = 0;
+                                //gameModel.Nodes[testNode].Rotate(gameModel.Nodes[testNode].Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)gameTime.ElapsedGameTime.TotalSeconds / 10));
+
+                                if (targetPath == "rotation")
+                                {
+                                    // Use Slerp for smoother quaternion interpolation
+                                    Quaternion prevRotation = new Quaternion(prevData[0], prevData[1], prevData[2], prevData[3]);
+                                    Quaternion nextRotation = new Quaternion(nextData[0], nextData[1], nextData[2], nextData[3]);
+                                    Quaternion rotation = Quaternion.Slerp(prevRotation, nextRotation, t);
+
+                                    // Convert quaternions to Euler angles for debugging
+                                    Vector3 prevEulerAngles = ToEulerAngles(prevRotation);
+                                    Vector3 nextEulerAngles = ToEulerAngles(nextRotation);
+                                    Vector3 interpolatedEulerAngles = ToEulerAngles(rotation);
+
+                                    // Debug information
+                                    Console.WriteLine($"Previous Rotation - Quaternion: {prevRotation}, Euler Angles: {prevEulerAngles}");
+                                    Console.WriteLine($"Next Rotation - Quaternion: {nextRotation}, Euler Angles: {nextEulerAngles}");
+                                    Console.WriteLine($"Interpolated Rotation - Quaternion: {rotation}, Euler Angles: {interpolatedEulerAngles}");
+
+                                    // Apply the rotation
+                                    gameModel.Nodes[channel.Target.NodeIndex].Rotate(rotation);
+                                    
+                                    //gameModel.Nodes[channel.Target.NodeIndex].Rotate(gameModel.Nodes[channel.Target.NodeIndex].Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)gameTime.ElapsedGameTime.TotalSeconds / 10));
+                                    
+                                }
+                                else if (targetPath == "translation")
+                                {
+                                    
+                                    // Use Slerp for smoother quaternion interpolation
+                                    Vector3 prev = new Vector3(prevData[0], prevData[1], prevData[2]);
+                                    Vector3 next = new Vector3(nextData[0], nextData[1], nextData[2]);
+                                    Vector3 translation = Vector3.Lerp(prev, next, t);
+                                    gameModel.Nodes[channel.Target.NodeIndex].Translate(translation);
+                                    
+                                }
+                                else if (targetPath == "scale")
+                                {
+                                    // Use Slerp for smoother quaternion interpolation
+                                    Vector3 prev = new Vector3(prevData[0], prevData[1], prevData[2]);
+                                    Vector3 next = new Vector3(nextData[0], nextData[1], nextData[2]);
+                                    Vector3 scale = Vector3.Lerp(prev, next, t);
+                                    gameModel.Nodes[channel.Target.NodeIndex].Resize(scale);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                base.Update(gameTime);
+            }
         }
 
 
@@ -177,9 +363,13 @@ namespace TestRendering
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            foreach (var node in gameModel.Nodes)
+            foreach (var scene in gameModel.Scenes)
             {
-                DrawNode(node);
+                foreach (var nodeIndex in scene.Nodes)
+                {
+                    var node = gameModel.Nodes[nodeIndex];
+                    DrawNode(node);
+                }
             }
 
             base.Draw(gameTime);
@@ -187,16 +377,17 @@ namespace TestRendering
 
         private void DrawNode(GameNode node)
         {
-            if (node.Mesh != null)
+            if (node.HasMesh)
             {
+                //DrawMesh(node, gameModel.Meshes[node.MeshIndex]);
                 DrawMesh(node, node.Mesh);
             }
-
+            
             if (node.HasChildren)
             {
                 foreach (var child in node.Children)
                 {
-                    DrawNode(child);
+                    DrawNode(node.Model.Nodes[child]);
                 }
             }
         }
@@ -209,7 +400,8 @@ namespace TestRendering
                 //GraphicsDevice.Indices = primitive.IsIndexed ? primitive.IndexBuffer : null;
 
                 // Set BasicEffect parameters
-                _basicEffect.World = node.Matrix * (Matrix.CreateTranslation(node.Translation) * Matrix.CreateFromQuaternion(node.Rotation) * Matrix.CreateScale(node.Scale)) * Matrix.CreateScale(1f);
+                //_basicEffect.World = node.Matrix * (Matrix.CreateTranslation(node.Translation) * Matrix.CreateFromQuaternion(node.Rotation) * Matrix.CreateScale(node.Scale)) * Matrix.CreateScale(1f);
+                _basicEffect.World = node.GlobalTransform;
                 _basicEffect.View = _camera.View;
                 _basicEffect.Projection = _camera.Projection;
                 //_basicEffect.EnableDefaultLighting();
@@ -222,18 +414,18 @@ namespace TestRendering
                 if (primitive.Material.BaseTexture == null)
                 {
                     _basicEffect.TextureEnabled = false;
-                    
                 }
                 else
                 {
                     var sampler = primitive.Material.BaseTexture.Sampler;
                     _basicEffect.Texture = primitive.Material.BaseTexture.Texture;
                     _basicEffect.TextureEnabled = true;
-                    _basicEffect.VertexColorEnabled = false;
+                    
+                    _basicEffect.VertexColorEnabled = true;
                     
                     _basicEffect.GraphicsDevice.SamplerStates[0] = primitive.Material.BaseTexture.Sampler.SamplerState;
                 }
-                
+                _basicEffect.DiffuseColor = primitive.Material.BaseColorFactor.ToVector3() * 4;
 
                 string alphaMode = primitive.Material.AlphaMode; // Default to "OPAQUE" if not specified
                 //float alphaCutoff = primitive.Material.AlphaCutoff; // Default alpha cutoff value for MASK mode
