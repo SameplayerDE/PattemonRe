@@ -302,33 +302,15 @@ namespace TestRendering
                                     nextData[i] = sampler.Output[offsetNext + i];
                                 }
                                 
-                                //Console.WriteLine(targetPath);
-                                //sgameModel.Nodes[channel.Target.NodeIndex].Rotate(gameModel.Nodes[channel.Target.NodeIndex].Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)gameTime.TotalGameTime.TotalSeconds));
-                                int testNode = 0;
-                                //gameModel.Nodes[testNode].Rotate(gameModel.Nodes[testNode].Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)gameTime.ElapsedGameTime.TotalSeconds / 10));
-
                                 if (targetPath == "rotation")
                                 {
                                     // Use Slerp for smoother quaternion interpolation
                                     Quaternion prevRotation = new Quaternion(prevData[0], prevData[1], prevData[2], prevData[3]);
                                     Quaternion nextRotation = new Quaternion(nextData[0], nextData[1], nextData[2], nextData[3]);
                                     Quaternion rotation = Quaternion.Slerp(prevRotation, nextRotation, t);
-
-                                    // Convert quaternions to Euler angles for debugging
-                                    Vector3 prevEulerAngles = ToEulerAngles(prevRotation);
-                                    Vector3 nextEulerAngles = ToEulerAngles(nextRotation);
-                                    Vector3 interpolatedEulerAngles = ToEulerAngles(rotation);
-
-                                    // Debug information
-                                    Console.WriteLine($"Previous Rotation - Quaternion: {prevRotation}, Euler Angles: {prevEulerAngles}");
-                                    Console.WriteLine($"Next Rotation - Quaternion: {nextRotation}, Euler Angles: {nextEulerAngles}");
-                                    Console.WriteLine($"Interpolated Rotation - Quaternion: {rotation}, Euler Angles: {interpolatedEulerAngles}");
-
                                     // Apply the rotation
                                     gameModel.Nodes[channel.Target.NodeIndex].Rotate(rotation);
-                                    
-                                    //gameModel.Nodes[channel.Target.NodeIndex].Rotate(gameModel.Nodes[channel.Target.NodeIndex].Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)gameTime.ElapsedGameTime.TotalSeconds / 10));
-                                    
+
                                 }
                                 else if (targetPath == "translation")
                                 {
