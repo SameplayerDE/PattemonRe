@@ -1,32 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using HxGLTF;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using HxGLTF;
 using Microsoft.Xna.Framework.Input;
-using System.Linq;
-using System.Reflection;
 using Survival.Rendering;
-using Newtonsoft.Json.Linq;
 using TestRender;
-using System.Xml.Linq;
 
 namespace TestRendering
 {
     public class Game1 : Game
     {
-
-        public static GameWindow GameWindow;
-
-
-        private RenderTarget2D _dsScreen;
-        
         private GraphicsDeviceManager _graphicsDeviceManager;
         private SpriteBatch _spriteBatch;
-
-        private List<VertexPositionNormalColorTexture> _positions = new List<VertexPositionNormalColorTexture>();
-        private VertexPositionNormalColorTexture[] _positionsArray;
+        
         private Effect _effect;
 
         private Camera _camera;
@@ -34,10 +23,11 @@ namespace TestRendering
         private Texture2D _testTexture2D;
 
         private float AnimationTimer = 0.00f;
-        
-        private BasicEffect _basicEffect;
+
         private GameModel gameModel;
         private GameModel gameModel2;
+        private GameModel gameModel3;
+        private GameModel gameModel4;
 
         public readonly static BlendState AlphaSubtractive = new BlendState
         {
@@ -49,7 +39,6 @@ namespace TestRendering
         
         public Game1()
         {
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
             _graphicsDeviceManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -61,45 +50,35 @@ namespace TestRendering
             _graphicsDeviceManager.PreferredBackBufferWidth = 1280;
             
             _graphicsDeviceManager.ApplyChanges();
-
-            GameWindow = Window;
-            
-            
         }
-        
-        
-        protected Texture2D LoadFormFile(string path)
-        {
-            var fileStream = new FileStream(path, FileMode.Open);
-            var result = Texture2D.FromStream(GraphicsDevice, fileStream);
-            fileStream.Dispose();
-            return result;
-        }
-
-        
 
         protected override void Initialize()
         {
-            _basicEffect = new BasicEffect(GraphicsDevice);
-            
-            RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.None;
-            GraphicsDevice.RasterizerState = rasterizerState;
             
             _camera = new Camera(GraphicsDevice);
 
             GLTFFile gltfFile;
+            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_00_00\m_dun3501_00_00.glb");
+            gameModel3 = GameModel.From(GraphicsDevice, gltfFile);
+            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_01\m_dun3501_01_01.glb");
+            gameModel4 = GameModel.From(GraphicsDevice, gltfFile);
             //gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
             //gltfFile = GLTFLoader.Load(@"Content\Cube.glb");
-            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
+            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_00_01\m_dun3501_00_01.glb");
             gameModel2 = GameModel.From(GraphicsDevice, gltfFile);
             //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
-            gltfFile = GLTFLoader.Load(@"Content\Simple");
+            //gltfFile = GLTFLoader.Load(@"Content\Simple");
+            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
             //gltfFile = GLTFLoader.Load(@"Content\helm");
             //gltfFile = GLTFLoader.Load(@"Content\map01_22c\map01_22c.glb");
             gameModel = GameModel.From(GraphicsDevice, gltfFile);
             Console.WriteLine(gltfFile.Asset.Version);
 
+            gameModel.Translation = new Vector3(1, 0, 1) * 256;
+            gameModel2.Translation = new Vector3(-1, 0, 3) * 256;
+            gameModel3.Translation = new Vector3(-1, 0, 1) * 256;
+            gameModel4.Translation = new Vector3(1, 0, 3) * 256;
+            
             base.Initialize();
         }
 
@@ -107,35 +86,10 @@ namespace TestRendering
         {
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _effect = Content.Load<Effect>("DiffuseShader");
+            _effect = Content.Load<Effect>("PBRShader");
             _testTexture2D = Content.Load<Texture2D>("1");
         }
 
-        // Function to convert quaternion to Euler angles
-        public Vector3 ToEulerAngles(Quaternion q)
-        {
-            Vector3 angles;
-
-            // Roll (x-axis rotation)
-            double sinr_cosp = 2 * (q.W * q.X + q.Y * q.Z);
-            double cosr_cosp = 1 - 2 * (q.X * q.X + q.Y * q.Y);
-            angles.X = (float)Math.Atan2(sinr_cosp, cosr_cosp);
-
-            // Pitch (y-axis rotation)
-            double sinp = 2 * (q.W * q.Y - q.Z * q.X);
-            if (Math.Abs(sinp) >= 1)
-                angles.Y = (float)Math.CopySign(Math.PI / 2, sinp); // Use 90 degrees if out of range
-            else
-                angles.Y = (float)Math.Asin(sinp);
-
-            // Yaw (z-axis rotation)
-            double siny_cosp = 2 * (q.W * q.Z + q.X * q.Y);
-            double cosy_cosp = 1 - 2 * (q.Y * q.Y + q.Z * q.Z);
-            angles.Z = (float)Math.Atan2(siny_cosp, cosy_cosp);
-
-            return angles;
-        }
-        
         protected override void Update(GameTime gameTime)
         {
             if (!IsActive)
@@ -143,6 +97,14 @@ namespace TestRendering
                 return;
             }
 
+            if (Keyboard.GetState().IsKeyDown(Keys.O))
+            {
+                _camera.EnableMix = true;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.P))
+            {
+                _camera.EnableMix = false;
+            }
 
             Vector3 Direction = new Vector3();
 
@@ -176,7 +138,9 @@ namespace TestRendering
                 Direction -= Vector3.Up;
             }
 
-            _camera.Move(-Direction * (float)gameTime.ElapsedGameTime.TotalSeconds * 5f);
+            Direction *= 100;
+            
+            _camera.Move(-Direction * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
@@ -224,11 +188,6 @@ namespace TestRendering
                     {
                         var sampler = animation.Samplers[channel.SamplerIndex];
                         float[] timeStamps = sampler.Input;
-
-                        //if (AnimationTimer > timeStamps.Last())
-                        //{
-                        //    AnimationTimer = 0;
-                        //}
                         
                         int prevIndex = -1;
                         int nextIndex = -1;
@@ -343,104 +302,169 @@ namespace TestRendering
                     
                 }
 
-                GraphicsDevice.DepthStencilState = DepthStencilState.Default;
                 base.Update(gameTime);
             }
         }
-
-
+        
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            foreach (var scene in gameModel.Scenes)
-            {
-                foreach (var nodeIndex in scene.Nodes)
-                {
-                    var node = gameModel.Nodes[nodeIndex];
-                    DrawNode(node);
-                }
-            }
+            GraphicsDevice.Clear(Color.Black);
             
-            foreach (var scene in gameModel2.Scenes)
-            {
-                foreach (var nodeIndex in scene.Nodes)
-                {
-                    var node = gameModel2.Nodes[nodeIndex];
-                    DrawNode(node);
-                }
-            }
-
+            
+            DrawModel(gameModel);
+            DrawModel(gameModel2);
+            DrawModel(gameModel3);
+            DrawModel(gameModel4);
+            
             base.Draw(gameTime);
         }
 
-        private void DrawNode(GameNode node)
+        private void DrawModel(GameModel model)
+        {
+            foreach (var scene in model.Scenes)
+            {
+                foreach (var nodeIndex in scene.Nodes)
+                {
+                    var node = model.Nodes[nodeIndex];
+                    DrawNode(model, node);
+                }
+            }
+        }
+
+        private void DrawNode(GameModel model, GameNode node)
         {
             if (node.HasMesh)
             {
                 //DrawMesh(node, gameModel.Meshes[node.MeshIndex]);
-                DrawMesh(node, node.Mesh);
+                DrawMesh(model, node, node.Mesh);
             }
             
             if (node.HasChildren)
             {
                 foreach (var child in node.Children)
                 {
-                    DrawNode(node.Model.Nodes[child]);
+                    DrawNode(model, node.Model.Nodes[child]);
                 }
             }
         }
 
-        private void DrawMesh(GameNode node, GameMesh mesh)
-{
-    foreach (var primitive in mesh.Primitives)
-    {
-        GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
-
-        // Set BasicEffect parameters
-        _basicEffect.World = node.GlobalTransform * Matrix.CreateScale(0.5f);
-        _basicEffect.View = _camera.View;
-        _basicEffect.Projection = _camera.Projection;
-        
-        // Check if there is a material assigned
-        if (primitive.Material != null)
+        private void DrawMesh(GameModel model, GameNode node, GameMesh mesh)
         {
-            // Check if there is a base texture assigned
-            if (primitive.Material.BaseTexture != null)
+            int alphaMode = 0;
+            
+            _effect.Parameters["World"].SetValue(node.GlobalTransform * Matrix.CreateTranslation(model.Translation));
+            _effect.Parameters["View"].SetValue(_camera.View);
+            _effect.Parameters["Projection"].SetValue(_camera.Projection);
+            
+            foreach (var primitive in mesh.Primitives)
             {
-                _basicEffect.Texture = primitive.Material.BaseTexture.Texture;
-                _basicEffect.TextureEnabled = true;
-                _basicEffect.VertexColorEnabled = false; // Disable vertex colors when using textures
+                GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
+                
+                _effect.Parameters["TextureEnabled"]?.SetValue(false);
+                _effect.Parameters["NormalMapEnabled"]?.SetValue(false);
+                _effect.Parameters["OcclusionMapEnabled"]?.SetValue(false);
+                _effect.Parameters["EmissiveTextureEnabled"]?.SetValue(false);
+                
+                if (primitive.Material != null)
+                {
+                    var material = primitive.Material;
+                    
+                    //_effect.Parameters["EmissiveColorFactor"].SetValue(material.EmissiveFactor.ToVector4());
+                    _effect.Parameters["BaseColorFactor"].SetValue(material.BaseColorFactor.ToVector4());
+                    _effect.Parameters["AlphaCutoff"].SetValue(material.AlphaCutoff);
 
-                // Set texture sampler state
-                GraphicsDevice.SamplerStates[0] = primitive.Material.BaseTexture.Sampler.SamplerState;
+                    switch (material.AlphaMode)
+                    {
+                        case "OPAQUE":
+                            alphaMode = 0;
+                            break;
+                        case "MASK":
+                            alphaMode = 1;
+                            break;
+                        case "BLEND":
+                            continue;
+                            break;
+                    }
+                    
+                    _effect.Parameters["AlphaMode"].SetValue(alphaMode);
+                    
+                    if (material.HasTexture)
+                    {
+                        _effect.Parameters["TextureEnabled"].SetValue(true);
+                        _effect.Parameters["Texture"].SetValue(primitive.Material.BaseTexture.Texture);
+                        
+                        GraphicsDevice.SamplerStates[0] = primitive.Material.BaseTexture.Sampler.SamplerState;
+                    }
+                    
+                    //if (material.HasEmissiveTexture)
+                    //{
+                    //    _effect.Parameters["EmissiveTextureEnabled"].SetValue(true);
+                    //    _effect.Parameters["EmissiveTexture"].SetValue(primitive.Material.EmissiveTexture.Texture);
+                    //    
+                    //    GraphicsDevice.SamplerStates[3] = primitive.Material.EmissiveTexture.Sampler.SamplerState;
+                    //}
+                }
+                
+                foreach (var pass in _effect.Techniques[Math.Max(alphaMode - 1, 0)].Passes)
+                {
+                    pass.Apply();
+                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount / 3);
+                }
             }
-            else
+            
+            foreach (var primitive in mesh.Primitives)
             {
-                _basicEffect.TextureEnabled = false;
-                _basicEffect.VertexColorEnabled = true; // Enable vertex colors if no texture is used
+                GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
+                
+                _effect.Parameters["TextureEnabled"]?.SetValue(false);
+                _effect.Parameters["NormalMapEnabled"]?.SetValue(false);
+                _effect.Parameters["OcclusionMapEnabled"]?.SetValue(false);
+                _effect.Parameters["EmissiveTextureEnabled"]?.SetValue(false);
+                
+                if (primitive.Material != null)
+                {
+                    var material = primitive.Material;
+                    
+                    //_effect.Parameters["EmissiveColorFactor"].SetValue(material.EmissiveFactor.ToVector4());
+                    _effect.Parameters["BaseColorFactor"].SetValue(material.BaseColorFactor.ToVector4());
+                    _effect.Parameters["AlphaCutoff"].SetValue(material.AlphaCutoff);
+
+                    switch (material.AlphaMode)
+                    {
+                        case "OPAQUE":
+                            continue;
+                        case "MASK":
+                            continue;
+                        case "BLEND":
+                            alphaMode = 2;
+                            break;
+                    }
+                    
+                    _effect.Parameters["AlphaMode"].SetValue(alphaMode);
+                    
+                    if (material.HasTexture)
+                    {
+                        _effect.Parameters["TextureEnabled"].SetValue(true);
+                        _effect.Parameters["Texture"].SetValue(primitive.Material.BaseTexture.Texture);
+                        
+                        GraphicsDevice.SamplerStates[0] = primitive.Material.BaseTexture.Sampler.SamplerState;
+                    }
+                    
+                    //if (material.HasEmissiveTexture)
+                    //{
+                    //    _effect.Parameters["EmissiveTextureEnabled"].SetValue(true);
+                    //    _effect.Parameters["EmissiveTexture"].SetValue(primitive.Material.EmissiveTexture.Texture);
+                    //    
+                    //    GraphicsDevice.SamplerStates[3] = primitive.Material.EmissiveTexture.Sampler.SamplerState;
+                    //}
+                }
+                
+                foreach (var pass in _effect.Techniques[Math.Max(alphaMode - 1, 0)].Passes)
+                {
+                    pass.Apply();
+                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount / 3);
+                }
             }
-        }
-        else
-        {
-            _basicEffect.TextureEnabled = false;
-            _basicEffect.VertexColorEnabled = true; // Enable vertex colors if no material is assigned
-        }
-
-        GraphicsDevice.BlendState = BlendState.AlphaBlend;
-        GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-        
-
-        // Apply the effect and draw the primitives
-        foreach (var pass in _basicEffect.CurrentTechnique.Passes)
-        {
-            pass.Apply();
-            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount / 3);
         }
     }
-}
-
-
-    }
-
 }

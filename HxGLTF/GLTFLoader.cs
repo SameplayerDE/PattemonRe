@@ -507,32 +507,85 @@ namespace HxGLTF
             var materials = new Material[jMaterials.Count()];
             for (var i = 0; i < jMaterials.Count(); i++)
             {
-                var jToken = (JObject)jMaterials[i];
-                var material = new Material
+                var jMaterial = jMaterials[i];
+                if (jMaterial == null)
                 {
-                    Name = (string)(jToken["name"] ?? string.Empty),
-                    AlphaMode = (string)(jToken["alphaMode"] ?? string.Empty),
-                    DoubleSided = (bool)(jToken["doubleSided"] ?? false)
-                };
+                    throw new Exception();
+                }
 
-                if (jToken.ContainsKey("pbrMetallicRoughness"))
+                var material = new Material();
+                
+                var jName = jMaterial["name"];
+                if (jName != null)
                 {
-                    var pbr = (JObject)jToken["pbrMetallicRoughness"];
-                    if (pbr.ContainsKey("baseColorTexture"))
+                    material.Name = jName.ToString();
+                }
+
+                var jAlphaMode = jMaterial["alphaMode"];
+                if (jAlphaMode != null)
+                {
+                    material.AlphaMode = jAlphaMode.ToString();
+                }
+
+                var jAlphaCutoff = jMaterial["alphaCutoff"];
+                if (jAlphaCutoff != null)
+                {
+                    material.AlphaCutoff = jAlphaCutoff.ToObject<float>();
+                }
+
+                var jDoubleSided = jMaterial["doubleSided"];
+                if (jDoubleSided != null)
+                {
+                    material.DoubleSided = jDoubleSided.ToObject<bool>();
+                }
+
+                var jEmissiveFactor = jMaterial["emissiveFactor"];
+                if (jEmissiveFactor != null)
+                {
+                    var rgb = jEmissiveFactor.ToObject<float[]>();
+                    material.EmissiveFactor = new Color(rgb[0], rgb[1], rgb[2], 1);
+                }
+                
+                var jEmissiveTextureInfo = jMaterial["emissiveTexture"];
+                if (jEmissiveTextureInfo != null)
+                {
+                    var jIndex = jEmissiveTextureInfo["index"];
+                    if (jIndex == null)
                     {
-                        var baseColorTexture = (JObject)pbr["baseColorTexture"];
-                        material.BaseColorTexture = textures[(int)baseColorTexture["index"]];
+                        throw new Exception();
                     }
-                    
-                    if (pbr.ContainsKey("baseColorFactor"))
+
+                    var index = jIndex.ToObject<int>();
+                    material.EmissiveTexture = textures[index];
+                }
+                
+                var jPbr = jMaterial["pbrMetallicRoughness"];
+                if (jPbr != null)
+                {
+                    var jBaseColorFactor = jPbr["baseColorFactor"];
+                    if (jBaseColorFactor != null)
                     {
-                        var baseColorFactor = pbr["baseColorFactor"];
-                        var rgba = baseColorFactor.ToObject<float[]>();
+                        var rgba = jBaseColorFactor.ToObject<float[]>();
                         material.BasColorFactor = new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
                     }
-                    else
+
+                    var jMetallicFactor = jPbr["metallicFactor"];
+                    if (jMetallicFactor != null)
                     {
-                        material.BasColorFactor = Color.White;
+                        
+                    }
+
+                    var jBaseColorTextureInfo = jPbr["baseColorTexture"];
+                    if (jBaseColorTextureInfo != null)
+                    {
+                        var jIndex = jBaseColorTextureInfo["index"];
+                        if (jIndex == null)
+                        {
+                            throw new Exception();
+                        }
+
+                        var index = jIndex.ToObject<int>();
+                        material.BaseColorTexture = textures[index];
                     }
                 }
 

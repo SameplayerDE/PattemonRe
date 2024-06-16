@@ -47,6 +47,8 @@ namespace TestRendering
         public Vector3 Position { get { return _position; } }
         public Vector3 Rotation { get { return _rotation; } }
 
+        public bool EnableMix = false;
+        
         public Camera(GraphicsDevice graphicsDevice)
         {
             GraphicsDevice = graphicsDevice;
@@ -67,7 +69,14 @@ namespace TestRendering
 
             // Add slight perspective effect
             Matrix perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), aspectRatio, _nearClipPlane, _farClipPlane);
-            _projection = Matrix.Lerp(_projection, perspective, 1f); // Adjust 0.1f to control the mix level
+            if (EnableMix)
+            {
+                _projection = Matrix.Lerp(_projection, perspective, 0.09f); // Adjust 0.1f to control the mix level
+            }
+            else
+            {
+                _projection = perspective;
+            }
         }
 
         public void Move(Vector3 translation)
@@ -117,6 +126,8 @@ namespace TestRendering
             _direction = _position + forward;
 
             _view = Matrix.CreateLookAt(_position, _direction, _up);
+            
+            GenerateProjectionMatrix();
         }
     }
 }

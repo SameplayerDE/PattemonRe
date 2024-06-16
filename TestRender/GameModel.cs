@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Transactions;
+using Microsoft.Xna.Framework;
 
 namespace TestRender
 {
@@ -14,6 +15,8 @@ namespace TestRender
         public GameMesh[] Meshes;
         public Dictionary<string, GameModelAnimation> Animations;
 
+        public Vector3 Translation;
+        
         public bool HasAnimations => Animations != null;
         
         public void Play(string animationKey)

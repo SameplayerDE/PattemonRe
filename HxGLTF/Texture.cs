@@ -2,7 +2,8 @@
 {
     public class Texture
     {
-        public Image Source;
-        public TextureSampler Sampler;
+        public int Index;
+        public Image? Source;
+        public TextureSampler? Sampler;
     }
 }

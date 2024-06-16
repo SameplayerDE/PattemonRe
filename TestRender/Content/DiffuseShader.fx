@@ -74,7 +74,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 	float3 N = normalize(input.Normal);
     float3 L = normalize(input.LightDirection);
 	
-    float4 diffuseColor = input.Color * tex2D(TextureSampler, calculatedUVs);
+    float4 diffuseColor = input.Color * Texture.Sample(TextureSampler, calculatedUVs);
      
 	if (HasNormalMap == true) {
 	    float3 normalMap = tex2D(NormalMapSampler, calculatedUVs);
