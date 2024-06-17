@@ -1095,7 +1095,31 @@ namespace HxGLTF
                 if (jSkinInverseBindMatrices != null)
                 {
                     var inverseBindMatricesIndex = jSkinInverseBindMatrices.Value<int>();
-                    skin.InverseBindMatrices = accessors[inverseBindMatricesIndex];
+                    var accessor = accessors[inverseBindMatricesIndex];
+                    
+                    var matrixData = AccessorReader.ReadData(accessor);
+                    var matrices = new List<Matrix>();
+                    
+                    for (var b = 0; b < matrixData.Length; b += 16)
+                    {
+                        var matrix = new Matrix(
+                            matrixData[b], matrixData[b + 4], matrixData[b + 8], matrixData[b + 12],
+                            matrixData[b + 1], matrixData[b + 5], matrixData[b + 9], matrixData[b + 13],
+                            matrixData[b + 2], matrixData[b + 6], matrixData[b + 10], matrixData[b + 14],
+                            matrixData[b + 3], matrixData[b + 7], matrixData[b + 11], matrixData[b + 15]
+                        );
+                        
+                        matrix = new Matrix(
+                            matrixData[b], matrixData[b + 1], matrixData[b + 2], matrixData[b + 3],
+                            matrixData[b + 4], matrixData[b + 5], matrixData[b + 6], matrixData[b + 7],
+                            matrixData[b + 8], matrixData[b + 9], matrixData[b + 10], matrixData[b + 11],
+                            matrixData[b + 12], matrixData[b + 13], matrixData[b + 14], matrixData[b + 15]
+                        );
+
+                        
+                        matrices.Add(matrix);
+                    }
+                    skin.InverseBindMatrices = matrices.ToArray();
                 }
 
                 var jSkinSkeleton = jSkin["skeleton"];

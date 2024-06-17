@@ -51,12 +51,17 @@ sampler EmissiveTextureSampler : register(s3)
 float4 BaseColorFactor = float4(1.0, 1.0, 1.0, 1.0);
 float4 EmissiveColorFactor = float4(0.0, 0.0, 0.0, 1);
 
+bool SkinningEnabled;
+Matrix Bones[60];
+
 struct VertexShaderInput
 {
 	float4 Position : POSITION0;
 	float4 Color : COLOR0;
 	float3 Normal : NORMAL0;
 	float2 TextureCoordinate : TEXCOORD0;
+    float4 BlendIndices : BLENDINDICES0;
+    float4 BlendWeight : BLENDWEIGHT0;
 };
 
 struct VertexShaderOutput
@@ -70,11 +75,24 @@ struct VertexShaderOutput
 VertexShaderOutput MainVS(in VertexShaderInput input)
 {
 	VertexShaderOutput output = (VertexShaderOutput)0;
-	float4 position = input.Position;
-	float4 color = input.Color;
-	float3 normal = input.Normal;
-	float2 textureCoordinate = input.TextureCoordinate;
 	
+	float4 position = input.Position;
+    float3 normal = input.Normal;
+	float4 color = input.Color;
+	float2 textureCoordinate = input.TextureCoordinate;
+    
+    if (SkinningEnabled == true)
+    {
+        float4x4 skinMatrix = 
+            input.BlendWeight.x * Bones[int(input.BlendIndices.x)] +
+            input.BlendWeight.y * Bones[int(input.BlendIndices.y)] +
+            input.BlendWeight.z * Bones[int(input.BlendIndices.z)] +
+            input.BlendWeight.w * Bones[int(input.BlendIndices.w)];
+
+        position = mul(position, skinMatrix);
+        normal = mul(normal, skinMatrix);
+    }
+
     float4 worldPosition = mul(position, World);
     float4 viewPosition = mul(worldPosition, View);
 	
@@ -117,6 +135,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
         // Blend Mode
         finalColor.a = alpha;
     }
+
     
 	return finalColor;
 }

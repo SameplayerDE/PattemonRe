@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using HxGLTF;
@@ -24,18 +25,10 @@ namespace TestRendering
 
         private float AnimationTimer = 0.00f;
 
-        private GameModel gameModel;
-        private GameModel gameModel2;
-        private GameModel gameModel3;
-        private GameModel gameModel4;
+        private List<GameModel> gameModels = [];
+        private GameModel hero;
 
-        public readonly static BlendState AlphaSubtractive = new BlendState
-        {
-            ColorSourceBlend = Blend.One,
-            AlphaSourceBlend = Blend.One,			    
-            ColorDestinationBlend = Blend.Zero,
-            AlphaDestinationBlend = Blend.Zero
-        };
+        private SpriteFont _font;
         
         public Game1()
         {
@@ -59,25 +52,34 @@ namespace TestRendering
 
             GLTFFile gltfFile;
             gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_00_00\m_dun3501_00_00.glb");
-            gameModel3 = GameModel.From(GraphicsDevice, gltfFile);
+            gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
+            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\hero\hero");
+            hero = GameModel.From(GraphicsDevice, gltfFile);
             gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_01\m_dun3501_01_01.glb");
-            gameModel4 = GameModel.From(GraphicsDevice, gltfFile);
+            gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
             //gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
             //gltfFile = GLTFLoader.Load(@"Content\Cube.glb");
             gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_00_01\m_dun3501_00_01.glb");
-            gameModel2 = GameModel.From(GraphicsDevice, gltfFile);
+            gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
             //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
             //gltfFile = GLTFLoader.Load(@"Content\Simple");
             gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
             //gltfFile = GLTFLoader.Load(@"Content\helm");
             //gltfFile = GLTFLoader.Load(@"Content\map01_22c\map01_22c.glb");
-            gameModel = GameModel.From(GraphicsDevice, gltfFile);
+            gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
+            
+            gltfFile = GLTFLoader.Load(@"Content\Fox.gltf");
+            //gltfFile = GLTFLoader.Load(@"Content\Simple");
+            gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
+            
             Console.WriteLine(gltfFile.Asset.Version);
 
-            gameModel.Translation = new Vector3(1, 0, 1) * 256;
-            gameModel2.Translation = new Vector3(-1, 0, 3) * 256;
-            gameModel3.Translation = new Vector3(-1, 0, 1) * 256;
-            gameModel4.Translation = new Vector3(1, 0, 3) * 256;
+            gameModels[3].Translation = new Vector3(1, 0, 1) * 256;
+            gameModels[2].Translation = new Vector3(-1, 0, 3) * 256;
+            gameModels[0].Translation = new Vector3(-1, 0, 1) * 256;
+            gameModels[1].Translation = new Vector3(1, 0, 3) * 256;
+            
+            gameModels[4].Translation = new Vector3(0, 1, 0) * 128;
             
             base.Initialize();
         }
@@ -87,25 +89,22 @@ namespace TestRendering
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _effect = Content.Load<Effect>("PBRShader");
+            _effect.Parameters["Bones"].SetValue(new Matrix[60]); 
             _testTexture2D = Content.Load<Texture2D>("1");
+            _font = Content.Load<SpriteFont>("Font");
         }
 
         protected override void Update(GameTime gameTime)
         {
+
+            var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            
             if (!IsActive)
             {
                 return;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.O))
-            {
-                _camera.EnableMix = true;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.P))
-            {
-                _camera.EnableMix = false;
-            }
-
+            
             Vector3 Direction = new Vector3();
 
             if (Keyboard.GetState().IsKeyDown(Keys.W))
@@ -137,184 +136,87 @@ namespace TestRendering
             {
                 Direction -= Vector3.Up;
             }
-
-            Direction *= 100;
             
-            _camera.Move(-Direction * (float)gameTime.ElapsedGameTime.TotalSeconds);
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            if (Keyboard.GetState().IsKeyDown(Keys.O))
             {
-                _camera.RotateX(-1);
+                _camera.EnableMix = true;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.P))
+            {
+                _camera.EnableMix = false;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            if (Keyboard.GetState().IsKeyUp(Keys.LeftShift))
             {
-                _camera.RotateX(1);
-            }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
-                _camera.RotateY(1);
-            }
+                Direction *= 100;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
-                _camera.RotateY(-1);
-            }
+                _camera.Move(-Direction * delta);
 
-            _camera.Update(gameTime);
-
-            // animation
-
-
-            AnimationTimer += (float)gameTime.ElapsedGameTime.TotalSeconds / 2;
-
-
-            if (gameModel.HasAnimations)
-            {
-                var animation = gameModel.Animations.First().Value;
-                foreach (var channel in animation.Channels)
+                if (Keyboard.GetState().IsKeyDown(Keys.Up))
                 {
-                    var targetPath = channel.Target.Path;
-
-                    var valuesPerElement = targetPath switch
-                    {
-                        "rotation" => 4,
-                        "translation" or "scale" => 3,
-                        _ => 0
-                    };
-
-                    if (valuesPerElement > 0)
-                    {
-                        var sampler = animation.Samplers[channel.SamplerIndex];
-                        float[] timeStamps = sampler.Input;
-                        
-                        int prevIndex = -1;
-                        int nextIndex = -1;
-
-                        // Find the indices for the surrounding keyframes
-                        for (int i = 0; i < timeStamps.Length; i++)
-                        {
-                            if (timeStamps[i] <= AnimationTimer)
-                            {
-                                prevIndex = i;
-                            }
-
-                            if (timeStamps[i] > AnimationTimer)
-                            {
-                                nextIndex = i;
-                                break;
-                            }
-                        }
-
-                        if (nextIndex == -1)
-                        {
-                            nextIndex = 0;
-                        }
-
-                        if (sampler.InterpolationAlgorithm == InterpolationAlgorithm.Step)
-                        {
-                            // For step interpolation, just use the previous index
-                            if (prevIndex >= 0)
-                            {
-                                var data = new float[valuesPerElement];
-                                for (int i = 0; i < valuesPerElement; i++)
-                                {
-                                    int offset = prevIndex * valuesPerElement;
-                                    data[i] = sampler.Output[offset + i];
-                                }
-
-                                if (targetPath == "rotation")
-                                {
-                                    Quaternion rotation = new Quaternion(data[0], data[1], data[2], data[3]);
-                                    gameModel.Nodes[channel.Target.NodeIndex].Rotate(rotation);
-                                }
-                            }
-                        }
-                        else if (sampler.InterpolationAlgorithm == InterpolationAlgorithm.Linear)
-                        {
-                            // For linear interpolation, use both prev and next indices
-                            if (prevIndex >= 0 && nextIndex >= 0)
-                            {
-                                var prevTimeStamp = timeStamps[prevIndex];
-                                var nextTimeStamp = timeStamps[nextIndex];
-                                float t;
-
-                                // Sicherstellen, dass t im Bereich von 0 bis 1 liegt
-                                if (nextTimeStamp > prevTimeStamp)
-                                {
-                                    t = (AnimationTimer - prevTimeStamp) / (nextTimeStamp - prevTimeStamp);
-                                    t = MathHelper.Clamp(t, 0f, 1f); // Clamp auf den Bereich von 0 bis 1
-                                }
-                                else
-                                {
-                                    t = 0f; // Fall, wenn prevTimeStamp == nextTimeStamp (selten, aber möglich)
-                                }
-
-                                Console.WriteLine("Time inter: " + t);
-
-                                var prevData = new float[valuesPerElement];
-                                var nextData = new float[valuesPerElement];
-                                for (int i = 0; i < valuesPerElement; i++)
-                                {
-                                    int offsetPrev = prevIndex * valuesPerElement;
-                                    int offsetNext = nextIndex * valuesPerElement;
-                                    prevData[i] = sampler.Output[offsetPrev + i];
-                                    nextData[i] = sampler.Output[offsetNext + i];
-                                }
-                                
-                                if (targetPath == "rotation")
-                                {
-                                    // Use Slerp for smoother quaternion interpolation
-                                    Quaternion prevRotation = new Quaternion(prevData[0], prevData[1], prevData[2], prevData[3]);
-                                    Quaternion nextRotation = new Quaternion(nextData[0], nextData[1], nextData[2], nextData[3]);
-                                    Quaternion rotation = Quaternion.Slerp(prevRotation, nextRotation, t);
-                                    // Apply the rotation
-                                    gameModel.Nodes[channel.Target.NodeIndex].Rotate(rotation);
-
-                                }
-                                else if (targetPath == "translation")
-                                {
-                                    
-                                    // Use Slerp for smoother quaternion interpolation
-                                    Vector3 prev = new Vector3(prevData[0], prevData[1], prevData[2]);
-                                    Vector3 next = new Vector3(nextData[0], nextData[1], nextData[2]);
-                                    Vector3 translation = Vector3.Lerp(prev, next, t);
-                                    gameModel.Nodes[channel.Target.NodeIndex].Translate(translation);
-                                    
-                                }
-                                else if (targetPath == "scale")
-                                {
-                                    // Use Slerp for smoother quaternion interpolation
-                                    Vector3 prev = new Vector3(prevData[0], prevData[1], prevData[2]);
-                                    Vector3 next = new Vector3(nextData[0], nextData[1], nextData[2]);
-                                    Vector3 scale = Vector3.Lerp(prev, next, t);
-                                    gameModel.Nodes[channel.Target.NodeIndex].Resize(scale);
-                                }
-                            }
-                        }
-                    }
-
-                    if (AnimationTimer > animation.Duration)
-                    {
-                        AnimationTimer = 0;
-                    }
-                    
+                    _camera.RotateX(-1);
                 }
 
-                base.Update(gameTime);
+                if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                {
+                    _camera.RotateX(1);
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                {
+                    _camera.RotateY(1);
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                {
+                    _camera.RotateY(-1);
+                }
+
             }
+            else
+            {
+                
+                hero.Translation += Direction * 16 * delta;
+            }
+
+            //hero.Rotation = _camera.Rotation;
+            _camera.Update(gameTime);
+
+            foreach (var model in gameModels)
+            {
+                if (!model.HasAnimations)
+                {
+                    continue;
+                }
+                var animation = model.Animations.First();
+                model.Play(animation.Key);
+            }
+            
+            foreach (var model in gameModels)
+            {
+                model.Update(gameTime);
+            }
+            
+            base.Update(gameTime);
         }
         
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
             
+            foreach (var model in gameModels)
+            {
+                DrawModel(model);
+            }
             
-            DrawModel(gameModel);
-            DrawModel(gameModel2);
-            DrawModel(gameModel3);
-            DrawModel(gameModel4);
+            DrawModel(hero);
+            
+            _spriteBatch.Begin();
+            
+            _spriteBatch.DrawString(_font, _camera.OrthoFactor.ToString(CultureInfo.InvariantCulture), new Vector2(0, 0), Color.White);
+            
+            _spriteBatch.End();
             
             base.Draw(gameTime);
         }
@@ -333,6 +235,9 @@ namespace TestRendering
 
         private void DrawNode(GameModel model, GameNode node)
         {
+            
+            //skinnig here?
+            
             if (node.HasMesh)
             {
                 //DrawMesh(node, gameModel.Meshes[node.MeshIndex]);
@@ -352,9 +257,54 @@ namespace TestRendering
         {
             int alphaMode = 0;
             
-            _effect.Parameters["World"].SetValue(node.GlobalTransform * Matrix.CreateTranslation(model.Translation));
+            var worldMatrix = node.GlobalTransform *
+                                 Matrix.CreateScale(model.Scale) *
+                                 Matrix.CreateRotationX(model.Rotation.X) *
+                                 Matrix.CreateRotationY(model.Rotation.Y) *
+                                 Matrix.CreateTranslation(model.Translation);
+            
+            _effect.Parameters["World"].SetValue(node.GlobalTransform * worldMatrix);
             _effect.Parameters["View"].SetValue(_camera.View);
             _effect.Parameters["Projection"].SetValue(_camera.Projection);
+            
+            if (model.Skins is { Length: > 0 } && model.HasAnimations)
+            {
+                var skin = model.Skins[0];
+                Matrix[] jointMatrices = new Matrix[skin.Joints.Length];
+
+                for (int i = 0; i < skin.Joints.Length; i++)
+                {
+                    int nodeIndex = skin.Joints[i];
+                    GameNode tnode = model.Nodes[nodeIndex];
+
+                    // Get the global transform of the joint node
+                    Matrix globalTransform = tnode.GlobalTransform;
+
+                    // Get the inverse bind matrix for the joint from the skin
+                    Matrix inverseBindMatrix = skin.InverseBindMatrices[i];
+
+                    // Compute the joint matrix
+                    Matrix jointMatrix = globalTransform * inverseBindMatrix;
+
+                    // Store the joint matrix in the array
+                    jointMatrices[i] = jointMatrix;
+                }
+
+                // Set the joint matrices array in the shader effect
+                _effect.Parameters["Bones"].SetValue(jointMatrices);
+                _effect.Parameters["SkinningEnabled"]?.SetValue(true);
+            }
+            else
+            {
+                _effect.Parameters["SkinningEnabled"]?.SetValue(false);
+            }
+            
+            //if (model.Skins is { Length: > 0 })
+            //{
+            //    var skin = model.Skins[0];
+            //    _effect.Parameters["Bones"].SetValue(skin.InverseBindMatrices);
+            //    _effect.Parameters["SkinningEnabled"]?.SetValue(true);
+            //}
             
             foreach (var primitive in mesh.Primitives)
             {
@@ -364,6 +314,7 @@ namespace TestRendering
                 _effect.Parameters["NormalMapEnabled"]?.SetValue(false);
                 _effect.Parameters["OcclusionMapEnabled"]?.SetValue(false);
                 _effect.Parameters["EmissiveTextureEnabled"]?.SetValue(false);
+                
                 
                 if (primitive.Material != null)
                 {

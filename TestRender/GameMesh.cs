@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using Survival.Rendering;
 
 namespace TestRender
 {
@@ -18,13 +17,15 @@ namespace TestRender
 
        public static GameMeshPrimitives From(GraphicsDevice graphicsDevice, GLTFFile file, MeshPrimitive primitive)
         {
-            GameMeshPrimitives result = new GameMeshPrimitives();
+            var result = new GameMeshPrimitives();
 
             result.Material = GameMaterial.From(graphicsDevice, file, primitive.Material);
 
             var position = new List<Vector3>();
             var normals = new List<Vector3>();
             var uvs = new List<Vector2>();
+            var joints = new List<Vector4>();
+            var w = new List<Vector4>();
 
             
             foreach (var attribute in primitive.Attributes)
@@ -42,7 +43,7 @@ namespace TestRender
                 {
                     data = AccessorReader.ReadDataIndexed(dataAccessor, primitive.Indices);
 
-                    Console.WriteLine(attribute.Key);
+                    Console.WriteLine("Key: " + attribute.Key + ", Type: " + dataAccessor.Type.Id);
 
                     if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
                     {
@@ -66,6 +67,22 @@ namespace TestRender
                         for (var x = 0; x < data.Length; x += 2)
                         {
                             uvs.Add(new Vector2(data[x], data[x + 1]));
+                        }
+                    }
+                    
+                    if (attribute.Key == "JOINTS_0" && dataAccessor.Type.Id == "VEC4")
+                    {
+                        for (var x = 0; x < data.Length; x += 4)
+                        {
+                            joints.Add(new Vector4(data[x], data[x + 1], data[x + 2], data[x + 3]));
+                        }
+                    }
+                    
+                    if (attribute.Key == "WEIGHTS_0" && dataAccessor.Type.Id == "VEC4")
+                    {
+                        for (var x = 0; x < data.Length; x += 4)
+                        {
+                            w.Add(new Vector4(data[x], data[x + 1], data[x + 2], data[x + 3]));
                         }
                     }
 
@@ -109,27 +126,47 @@ namespace TestRender
                                 data[i * numberOfComponents + 1]
                             ));
                         }
+                        else if (attribute.Key == "JOINTS_0" && dataAccessor.Type.Id == "VEC4")
+                        {
+                            joints.Add(new Vector4(
+                                data[i * numberOfComponents + 0],
+                                data[i * numberOfComponents + 1],
+                                data[i * numberOfComponents + 2],
+                                data[i * numberOfComponents + 3]
+                            ));
+                        }
+                        else if (attribute.Key == "WEIGHTS_0" && dataAccessor.Type.Id == "VEC4")
+                        {
+                            w.Add(new Vector4(
+                                data[i * numberOfComponents + 0],
+                                data[i * numberOfComponents + 1],
+                                data[i * numberOfComponents + 2],
+                                data[i * numberOfComponents + 3]
+                            ));
+                        }
                     }
                 }
             }
 
-            var vertexBufferDummy = new List<VertexPositionNormalColorTexture>();
+            var vertexBufferDummy = new List<VertexPositionColorNormalTextureBlend>();
 
             // Hier fügen wir die gesammelten Positionen, Normalen und Texturkoordinaten in die _positions-Liste ein
             for (int i = 0; i < position.Count; i++)
             {
-                vertexBufferDummy.Add(new VertexPositionNormalColorTexture(
+                vertexBufferDummy.Add(new VertexPositionColorNormalTextureBlend(
                     position[i],
                     Color.White,
                     normals.Count > i ? normals[i] : Vector3.Up,
-                    uvs.Count > i ? uvs[i] : Vector2.Zero
+                    uvs.Count > i ? uvs[i] : Vector2.Zero,
+                    joints[i],
+                    w[i]
                 ));
             }
 
             // Setzen des VertexBuffers
             var vertexArray = vertexBufferDummy.ToArray();
-            VertexPositionNormalColorTexture.CalculateNormals(vertexArray);
-            result.VertexBuffer = new VertexBuffer(graphicsDevice, VertexPositionNormalColorTexture.VertexDeclaration, vertexBufferDummy.Count, BufferUsage.WriteOnly);
+            //VertexPositionColorNormalTextureBlend.CalculateNormals(vertexArray);
+            result.VertexBuffer = new VertexBuffer(graphicsDevice, VertexPositionColorNormalTextureBlend.VertexDeclaration, vertexBufferDummy.Count, BufferUsage.WriteOnly);
             result.VertexBuffer.SetData(vertexArray);
 
             return result;

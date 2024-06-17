@@ -48,6 +48,7 @@ namespace TestRendering
         public Vector3 Rotation { get { return _rotation; } }
 
         public bool EnableMix = false;
+        public float OrthoFactor = 0.0f;
         
         public Camera(GraphicsDevice graphicsDevice)
         {
@@ -71,7 +72,7 @@ namespace TestRendering
             Matrix perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), aspectRatio, _nearClipPlane, _farClipPlane);
             if (EnableMix)
             {
-                _projection = Matrix.Lerp(_projection, perspective, 0.09f); // Adjust 0.1f to control the mix level
+                _projection = Matrix.Lerp(_projection, perspective, OrthoFactor); // Adjust 0.1f to control the mix level
             }
             else
             {
@@ -116,8 +117,10 @@ namespace TestRendering
             if (RotationY < 0) RotationY += MathHelper.ToRadians(360);
         }
 
+        private float accumulatedTime = 0.0f;
         public virtual void Update(GameTime gameTime)
         {
+            var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _translation = Vector3.Transform(_translation, RotationMY);
             _position += _translation;
             _translation = Vector3.Zero;
@@ -126,8 +129,27 @@ namespace TestRendering
             _direction = _position + forward;
 
             _view = Matrix.CreateLookAt(_position, _direction, _up);
-            
+
+            if (EnableMix)
+            {
+                // Akkumuliere die verstrichene Zeit
+                accumulatedTime += delta;
+
+                // Erhöhe den OrthoFactor um 0,01f alle 2 Sekunden
+                if (accumulatedTime >= 2.0f)
+                {
+                    OrthoFactor += 0.01f;
+                    accumulatedTime -= 2.0f; // Reset der Akkumulation nach 2 Sekunden
+                }
+
+                if (OrthoFactor > 1.0f)
+                {
+                    OrthoFactor = 0.0f;
+                }
+            }
+
             GenerateProjectionMatrix();
         }
+        
     }
 }
