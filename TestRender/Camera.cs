@@ -48,7 +48,7 @@ namespace TestRendering
         public Vector3 Rotation { get { return _rotation; } }
 
         public bool EnableMix = false;
-        public float OrthoFactor = 0.0f;
+        public float OrthoFactor = 0.03f;
         
         public Camera(GraphicsDevice graphicsDevice)
         {
@@ -135,24 +135,7 @@ namespace TestRendering
             _direction = _position + forward;
 
             _view = Matrix.CreateLookAt(_position, _direction, _up);
-
-            if (EnableMix)
-            {
-                // Akkumuliere die verstrichene Zeit
-                accumulatedTime += delta;
-
-                // Erhöhe den OrthoFactor um 0,01f alle 2 Sekunden
-                if (accumulatedTime >= 2.0f)
-                {
-                    OrthoFactor += 0.01f;
-                    accumulatedTime -= 2.0f; // Reset der Akkumulation nach 2 Sekunden
-                }
-
-                if (OrthoFactor > 1.0f)
-                {
-                    OrthoFactor = 0.0f;
-                }
-            }
+            
 
             GenerateProjectionMatrix();
         }

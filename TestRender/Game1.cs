@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using HxGLTF;
+using HxGLTF.Implementation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Survival.Rendering;
-using TestRender;
+using TestRendering;
 
-namespace TestRendering
+namespace TestRender
 {
     public class Game1 : Game
     {
+        private KeyboardState _prev;
+        private KeyboardState _curr;
+        
         private GraphicsDeviceManager _graphicsDeviceManager;
         private SpriteBatch _spriteBatch;
         
@@ -51,40 +51,60 @@ namespace TestRendering
             _camera = new Camera(GraphicsDevice);
 
             GLTFFile gltfFile;
-            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_00_00\m_dun3501_00_00.glb");
-            gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
-            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\hero\hero");
-            //hero = GameModel.From(GraphicsDevice, gltfFile);
-            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_01\m_dun3501_01_01.glb");
-            gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
-            ////gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
-            ////gltfFile = GLTFLoader.Load(@"Content\Cube.glb");
-            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_00_01\m_dun3501_00_01.glb");
-            gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
+            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_00_00\m_dun3501_00_00.glb");
+            //gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
+            ////gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\hero\hero");
+            ////hero = GameModel.From(GraphicsDevice, gltfFile);
+            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_01\m_dun3501_01_01.glb");
+            //gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
+            //////gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
+            //////gltfFile = GLTFLoader.Load(@"Content\Cube.glb");
+            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_00_01\m_dun3501_00_01.glb");
+            //gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
+            ////
+            //////gltfFile = GLTFLoader.Load(@"Content\Simple");
+            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
+            //////gltfFile = GLTFLoader.Load(@"Content\helm");
+            ////gltfFile = GLTFLoader.Load(@"Content\map01_22c\map01_22c.glb");
+            //gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
+            ////
+            ////gltfFile = GLTFLoader.Load(@"Content\Fox.gltf");
+            ////gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
+            ////gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\ak_w02\ak_w02");
+            ////gltfFile = GLTFLoader.Load(@"Content\aura");
+            
+            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\psel_mb_a\psel_mb_a");
+            //gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
             //
-            ////gltfFile = GLTFLoader.Load(@"Content\Simple");
-            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
-            ////gltfFile = GLTFLoader.Load(@"Content\helm");
-            //gltfFile = GLTFLoader.Load(@"Content\map01_22c\map01_22c.glb");
-            gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
+            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\psel_mb_b\psel_mb_b");
+            //gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
             //
-            //gltfFile = GLTFLoader.Load(@"Content\Fox.gltf");
-            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
-            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\ak_w02\ak_w02");
-            //gltfFile = GLTFLoader.Load(@"Content\jeny_tpose_riged");
-            //gltfFile = GLTFLoader.Load(@"Content\Simple");
+            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\psel_mb_c\psel_mb_c");
+            //gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
+            
+            gltfFile = GLTFLoader.Load(@"Content\psel");
             gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
             
-            Console.WriteLine(gltfFile.Asset.Version);
+            //gltfFile = GLTFLoader.Load(@"Content\hilda_regular_00");
+            ////gltfFile = GLTFLoader.Load(@"Content\jeny_tpose_riged");
+            ////gltfFile = GLTFLoader.Load(@"Content\Simple");
+            //gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
+            //
+            //Console.WriteLine(gltfFile.Asset.Version);
 
-           gameModels[3].Translation = new Vector3(1, 0, 1) * 256;
-           gameModels[2].Translation = new Vector3(-1, 0, 3) * 256;
-           gameModels[0].Translation = new Vector3(-1, 0, 1) * 256;
-           gameModels[1].Translation = new Vector3(1, 0, 3) * 256;
-           //
-           gameModels[4].Translation = new Vector3(0, 1, 0) * 128;
-           //gameModels[4].Scale = new Vector3(10, 10, 10);
-           //
+           //gameModels[3].Translation = new Vector3(1, 0, 1) * 256;
+           //gameModels[2].Translation = new Vector3(-1, 0, 3) * 256;
+           //gameModels[0].Translation = new Vector3(-1, 0, 1) * 256;
+           //gameModels[1].Translation = new Vector3(1, 0, 3) * 256;
+           ////
+           ////gameModels[4].Translation = new Vector3(-140, 2.5f, 380);
+           ////gameModels[4].Scale = Vector3.One * 20;
+           ////gameModels[4].RotateX(90);
+           ////
+           //gameModels[5].Translation = new Vector3(-160, 2.5f, 350);
+           //gameModels[5].Scale = Vector3.One * 30;
+//
+           //hero = gameModels[4];
             base.Initialize();
         }
 
@@ -110,6 +130,8 @@ namespace TestRendering
                 return;
             }
 
+            _prev = _curr;
+            _curr = Keyboard.GetState();
             
             Vector3 Direction = new Vector3();
 
@@ -189,25 +211,29 @@ namespace TestRendering
             //hero.Rotation = _camera.Rotation;
             _camera.Update(gameTime);
 
-            foreach (var model in gameModels)
+            if (_prev.IsKeyUp(Keys.Space) && _curr.IsKeyDown(Keys.Space))
             {
-                if (!model.HasAnimations)
+                foreach (var model in gameModels)
                 {
-                    continue;
-                }
-
-                int i = 0;
-                foreach (var animation in model.Animations)
-                {
-                    if (i++ > 1)
+                    if (!model.HasAnimations)
                     {
-                        
+                        continue;
                     }
-                    model.Play(animation.Key);
-                }
 
+                    int i = 0;
+                    foreach (var animation in model.Animations)
+                    {
+                        if (i++ > 1)
+                        {
+
+                        }
+
+                        model.Play(animation.Key);
+                    }
+
+                }
             }
-            
+
             foreach (var model in gameModels)
             {
                 model.Update(gameTime);
@@ -224,14 +250,7 @@ namespace TestRendering
             {
                 DrawModel(model);
             }
-            
-            //DrawModel(hero);
-            
-            _spriteBatch.Begin();
-            
-            _spriteBatch.DrawString(_font, _camera.OrthoFactor.ToString(CultureInfo.InvariantCulture), new Vector2(0, 0), Color.White);
-            
-            _spriteBatch.End();
+
             
             base.Draw(gameTime);
         }

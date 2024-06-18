@@ -106,6 +106,7 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
+    float4 position = input.Position;
     float4 finalColor = input.Color * BaseColorFactor;
 
     if (TextureEnabled == true)
