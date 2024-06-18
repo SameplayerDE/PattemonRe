@@ -53,34 +53,38 @@ namespace TestRendering
             GLTFFile gltfFile;
             gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_00_00\m_dun3501_00_00.glb");
             gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
-            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\hero\hero");
-            hero = GameModel.From(GraphicsDevice, gltfFile);
+            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\hero\hero");
+            //hero = GameModel.From(GraphicsDevice, gltfFile);
             gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_01\m_dun3501_01_01.glb");
             gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
-            //gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
-            //gltfFile = GLTFLoader.Load(@"Content\Cube.glb");
+            ////gltfFile = GLTFLoader.Load(@"Content\pkemon_oben");
+            ////gltfFile = GLTFLoader.Load(@"Content\Cube.glb");
             gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_00_01\m_dun3501_00_01.glb");
             gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
-            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
-            //gltfFile = GLTFLoader.Load(@"Content\Simple");
+            //
+            ////gltfFile = GLTFLoader.Load(@"Content\Simple");
             gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\m_dun3501_01_00\m_dun3501_01_00.glb");
-            //gltfFile = GLTFLoader.Load(@"Content\helm");
+            ////gltfFile = GLTFLoader.Load(@"Content\helm");
             //gltfFile = GLTFLoader.Load(@"Content\map01_22c\map01_22c.glb");
             gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
-            
-            gltfFile = GLTFLoader.Load(@"Content\Fox.gltf");
+            //
+            //gltfFile = GLTFLoader.Load(@"Content\Fox.gltf");
+            //gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\badgegate_02\badgegate_02.glb");
+            gltfFile = GLTFLoader.Load(@"A:\ModelExporter\black2\output_assets\ak_w02\ak_w02");
+            //gltfFile = GLTFLoader.Load(@"Content\jeny_tpose_riged");
             //gltfFile = GLTFLoader.Load(@"Content\Simple");
             gameModels.Add(GameModel.From(GraphicsDevice, gltfFile));
             
             Console.WriteLine(gltfFile.Asset.Version);
 
-            gameModels[3].Translation = new Vector3(1, 0, 1) * 256;
-            gameModels[2].Translation = new Vector3(-1, 0, 3) * 256;
-            gameModels[0].Translation = new Vector3(-1, 0, 1) * 256;
-            gameModels[1].Translation = new Vector3(1, 0, 3) * 256;
-            
-            gameModels[4].Translation = new Vector3(0, 1, 0) * 128;
-            
+           gameModels[3].Translation = new Vector3(1, 0, 1) * 256;
+           gameModels[2].Translation = new Vector3(-1, 0, 3) * 256;
+           gameModels[0].Translation = new Vector3(-1, 0, 1) * 256;
+           gameModels[1].Translation = new Vector3(1, 0, 3) * 256;
+           //
+           gameModels[4].Translation = new Vector3(0, 1, 0) * 128;
+           //gameModels[4].Scale = new Vector3(10, 10, 10);
+           //
             base.Initialize();
         }
 
@@ -89,9 +93,11 @@ namespace TestRendering
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _effect = Content.Load<Effect>("PBRShader");
-            _effect.Parameters["Bones"].SetValue(new Matrix[60]); 
+            _effect.Parameters["Bones"].SetValue(new Matrix[128]); 
             _testTexture2D = Content.Load<Texture2D>("1");
             _font = Content.Load<SpriteFont>("Font");
+            
+            _camera.Move(0, 1, -3);
         }
 
         protected override void Update(GameTime gameTime)
@@ -189,8 +195,17 @@ namespace TestRendering
                 {
                     continue;
                 }
-                var animation = model.Animations.First();
-                model.Play(animation.Key);
+
+                int i = 0;
+                foreach (var animation in model.Animations)
+                {
+                    if (i++ > 1)
+                    {
+                        
+                    }
+                    model.Play(animation.Key);
+                }
+
             }
             
             foreach (var model in gameModels)
@@ -210,7 +225,7 @@ namespace TestRendering
                 DrawModel(model);
             }
             
-            DrawModel(hero);
+            //DrawModel(hero);
             
             _spriteBatch.Begin();
             
@@ -276,6 +291,7 @@ namespace TestRendering
                 {
                     int nodeIndex = skin.Joints[i];
                     GameNode tnode = model.Nodes[nodeIndex];
+                    tnode.UpdateGlobalTransform();
 
                     // Get the global transform of the joint node
                     Matrix globalTransform = tnode.GlobalTransform;
@@ -284,14 +300,14 @@ namespace TestRendering
                     Matrix inverseBindMatrix = skin.InverseBindMatrices[i];
 
                     // Compute the joint matrix
-                    Matrix jointMatrix = globalTransform * inverseBindMatrix;
+                    Matrix jointMatrix = inverseBindMatrix * globalTransform; // Reihenfolge der Matrixmultiplikation beachten
 
                     // Store the joint matrix in the array
                     jointMatrices[i] = jointMatrix;
                 }
 
                 // Set the joint matrices array in the shader effect
-                _effect.Parameters["Bones"].SetValue(jointMatrices);
+                _effect.Parameters["Bones"].SetValue(jointMatrices); // Setze die korrekten Joint-Matrizen
                 _effect.Parameters["SkinningEnabled"]?.SetValue(true);
             }
             else

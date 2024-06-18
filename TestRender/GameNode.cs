@@ -29,12 +29,6 @@ namespace TestRender
 
         public void UpdateGlobalTransform()
         {
-
-            if (Index == 2)
-            {
-                int i = 0;
-            }
-            
             // Berechne die globale Transformation basierend auf der lokalen und der Eltern-Transformation
             GlobalTransform = LocalTransform;
             if (Parent != null)
@@ -47,19 +41,13 @@ namespace TestRender
             {
                 foreach (var child in Children)
                 {
-                    Model.Nodes[child].UpdateGlobalTransform();
+                   // Model.Nodes[child].UpdateGlobalTransform();
                 }
             }
         }
 
         public void Rotate(Quaternion rotation)
         {
-
-            if (Index == 2)
-            {
-                int i = 0;
-            }
-            
             // Aktualisiere die Rotation
             Rotation = rotation; 
             // Aktualisiere die lokale Transformationsmatrix

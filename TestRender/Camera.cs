@@ -80,6 +80,12 @@ namespace TestRendering
             }
         }
 
+        
+        public void Move(float x, float y, float z)
+        {
+            Move(new Vector3(x, y, z));
+        }
+        
         public void Move(Vector3 translation)
         {
             _translation += translation;

@@ -14,6 +14,12 @@ namespace HxGLTF
         public string AlphaMode = "OPAQUE";
         public float AlphaCutoff = 0.5f;
         public bool DoubleSided = false;
+        
+        // For KHR_materials_pbrSpecularGlossiness extension
+        public Texture? DiffuseTexture;
+        public Color DiffuseFactor = Color.White;
+        public Color SpecularFactor = Color.Black;
+        public float GlossinessFactor = 0.0f;
     }
 
     public class NormalTextureInfo

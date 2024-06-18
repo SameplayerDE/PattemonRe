@@ -45,7 +45,7 @@ namespace TestRender
         
         public void Play(string animationKey)
         {
-            if (animationKey == _currentAnimationKey && _isPlaying)
+            if (animationKey == _currentAnimationKey || _isPlaying)
             {
                 return;
             }
@@ -192,7 +192,7 @@ namespace TestRender
                             {
                                 Quaternion prevRotation = new Quaternion(prevData[0], prevData[1], prevData[2], prevData[3]);
                                 Quaternion nextRotation = new Quaternion(nextData[0], nextData[1], nextData[2], nextData[3]);
-                                Quaternion rotation = Quaternion.Slerp(prevRotation, nextRotation, t);
+                                Quaternion rotation = Quaternion.Lerp(prevRotation, nextRotation, t);
                                 Nodes[channel.Target.NodeIndex].Rotate(rotation);
                             }
                             else if (targetPath == "translation")

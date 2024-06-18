@@ -52,7 +52,7 @@ float4 BaseColorFactor = float4(1.0, 1.0, 1.0, 1.0);
 float4 EmissiveColorFactor = float4(0.0, 0.0, 0.0, 1);
 
 bool SkinningEnabled;
-Matrix Bones[60];
+Matrix Bones[128];
 
 struct VertexShaderInput
 {

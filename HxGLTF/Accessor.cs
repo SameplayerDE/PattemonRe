@@ -138,37 +138,66 @@ namespace HxGLTF
             return data;
         }
 
-        private static float ReadValue<T>(byte[] bufferData, int byteIndex) where T : struct
+        private static float ReadValue<T>(byte[] bufferData, int byteIndex, bool debug = false) where T : struct
         {
             if (typeof(T) == typeof(sbyte))
             {
-                return (float)Convert.ToSByte(bufferData[byteIndex]);
+                sbyte value = (sbyte)Convert.ToSByte(bufferData[byteIndex]);
+                
+
+                return (float)value;
             }
             else if (typeof(T) == typeof(byte))
             {
-                return (float)bufferData[byteIndex];
+                byte value = bufferData[byteIndex];
+                if (debug)
+                {
+                    Console.WriteLine($"Type: {typeof(T)}, Value: {value}");
+                }
+                return (float)value;
             }
             else if (typeof(T) == typeof(short))
             {
-                return (float)BitConverter.ToInt16(bufferData, byteIndex);
+                short value = BitConverter.ToInt16(bufferData, byteIndex);
+                if (debug)
+                {
+                    Console.WriteLine($"Type: {typeof(T)}, Value: {value}");
+                }
+                return (float)value;
             }
             else if (typeof(T) == typeof(ushort))
             {
-                return (float)BitConverter.ToUInt16(bufferData, byteIndex);
+                ushort value = BitConverter.ToUInt16(bufferData, byteIndex);
+                if (debug)
+                {
+                    Console.WriteLine($"Type: {typeof(T)}, Value: {value}");
+                }
+                return (float)value;
             }
             else if (typeof(T) == typeof(uint))
             {
-                return (float)BitConverter.ToUInt32(bufferData, byteIndex);
+                uint value = BitConverter.ToUInt32(bufferData, byteIndex);
+                if (debug)
+                {
+                    Console.WriteLine($"Type: {typeof(T)}, Value: {value}");
+                }
+                return (float)value;
             }
             else if (typeof(T) == typeof(float))
             {
-                return BitConverter.ToSingle(bufferData, byteIndex);
+                float value = BitConverter.ToSingle(bufferData, byteIndex);
+                if (debug)
+                {
+                    Console.WriteLine($"Type: {typeof(T)}, Value: {value}");
+                }
+                return value;
             }
             else
             {
                 throw new ArgumentException("Unsupported data type.");
             }
         }
+
 
         private static void ReadDataInternal<T>(float[] data, Accessor accessor) where T : struct
         {
@@ -178,14 +207,52 @@ namespace HxGLTF
             var accessorOffset = accessor.ByteOffset;
 
             var totalOffset = accessorOffset + bufferViewOffset;
+            var displacement = accessor.BufferView.ByteStride; 
+            int totalBytes = accessor.Type.NumberOfComponents * accessor.BytesPerComponent * accessor.Count;
 
-            int i = 0;
-            for (int a = 0; a < accessor.Type.NumberOfComponents * accessor.BytesPerComponent * accessor.Count; a += accessor.BytesPerComponent)
+            if (displacement != 0)
             {
-                var index = a + totalOffset;
-                var value = ReadValue<T>(bufferData, index);
-                data[i++] = value;
+                /*
+                 * The data of the attributes that are stored in a single bufferView may be stored as an Array-Of-Structures. A single bufferView may, for example, contain the data for vertex positions and for vertex normals in an interleaved fashion. In this case, the byteOffset of an accessor defines the start of the first relevant data element for the respective attribute, and the bufferView defines an additional byteStride property. This is the number of bytes between the start of one element of its accessors, and the start of the next one. An example of how interleaved position and normal attributes are stored inside a bufferView is shown in Image 5d.
+                 */
+                
+                int componentSize = accessor.BytesPerComponent;
+                    
+                for (int i = 0; i < accessor.Count; i++)
+                {
+                    for (int j = 0; j < accessor.Type.NumberOfComponents; j++)
+                    {
+                        int elementOffset = totalOffset + i * displacement + j * componentSize;
+                        var value = ReadValue<T>(bufferData, elementOffset);
+                        data[i * accessor.Type.NumberOfComponents + j] = value;
+                    }
+                }
             }
+            else
+            {
+                int i = 0;
+                for (int a = 0; a < totalBytes; a += accessor.BytesPerComponent)
+                {
+                    var index = a + totalOffset;
+                    if (index >= bufferData.Length)
+                    {
+                        throw new Exception();
+                    }
+                    var value = ReadValue<T>(bufferData, index);
+                    data[i++] = value;
+                }
+            }
+            
+            //for (int a = 0; a < accessor.Count; a++) // elements
+            //{
+            //    for (int b = 0; b < accessor.Type.NumberOfComponents; b++) // components per element
+            //    {
+            //        var index = b + accessor.Type.NumberOfComponents * a + totalOffset;
+            //        var value = ReadValue<T>(bufferData, index);
+            //        data[b + accessor.Type.NumberOfComponents * a] = value;
+            //    }
+            //}
+
         }
 
         public static float[] ReadDataIndexed(Accessor dataAccessor, Accessor indexAccessor)

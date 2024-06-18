@@ -53,7 +53,6 @@ namespace TestRender
                         }
                     }
 
-
                     if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
                     {
                         for (var x = 0; x < data.Length; x += 3)
@@ -72,7 +71,7 @@ namespace TestRender
                     
                     if (attribute.Key == "JOINTS_0" && dataAccessor.Type.Id == "VEC4")
                     {
-                        for (var x = 0; x < data.Length; x += 4)
+                        for (var x = 0; x < data.Length; x += dataAccessor.Type.NumberOfComponents)
                         {
                             joints.Add(new Vector4(data[x], data[x + 1], data[x + 2], data[x + 3]));
                         }
@@ -82,7 +81,13 @@ namespace TestRender
                     {
                         for (var x = 0; x < data.Length; x += 4)
                         {
-                            w.Add(new Vector4(data[x], data[x + 1], data[x + 2], data[x + 3]));
+                            var vector = new Vector4(
+                                data[x + 0],
+                                data[x + 1],
+                                data[x + 2],
+                                data[x + 3]
+                            );
+                            w.Add(vector);
                         }
                     }
 
@@ -95,8 +100,8 @@ namespace TestRender
                 {
                     data = AccessorReader.ReadData(dataAccessor);
 
-                    Console.WriteLine(attribute.Key);
-
+                    Console.WriteLine("Key: " + attribute.Key + ", Type: " + dataAccessor.Type.Id);
+                    
                     for (var i = 0; i < dataAccessor.Count; i++)
                     {
                         if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
@@ -137,12 +142,13 @@ namespace TestRender
                         }
                         else if (attribute.Key == "WEIGHTS_0" && dataAccessor.Type.Id == "VEC4")
                         {
-                            w.Add(new Vector4(
+                            var vector = new Vector4(
                                 data[i * numberOfComponents + 0],
                                 data[i * numberOfComponents + 1],
                                 data[i * numberOfComponents + 2],
                                 data[i * numberOfComponents + 3]
-                            ));
+                            );
+                            w.Add(vector);
                         }
                     }
                 }
@@ -158,9 +164,9 @@ namespace TestRender
                     Color.White,
                     normals.Count > i ? normals[i] : Vector3.Up,
                     uvs.Count > i ? uvs[i] : Vector2.Zero,
-                    joints[i],
-                    w[i]
-                ));
+                    joints.Count > i ? joints[i] : Vector4.Zero,
+                    w.Count > i ?  w[i] : Vector4.UnitX)
+                );
             }
 
             // Setzen des VertexBuffers

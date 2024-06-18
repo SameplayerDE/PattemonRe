@@ -588,6 +588,47 @@ namespace HxGLTF
                         material.BaseColorTexture = textures[index];
                     }
                 }
+                
+                var jExtensions = jMaterial["extensions"];
+                if (jExtensions != null)
+                {
+                    var jKHRMaterials = jExtensions["KHR_materials_pbrSpecularGlossiness"];
+                    if (jKHRMaterials != null)
+                    {
+                        var jDiffuseTexture = jKHRMaterials["diffuseTexture"];
+                        if (jDiffuseTexture != null)
+                        {
+                            var jIndex = jDiffuseTexture["index"];
+                            if (jIndex == null)
+                            {
+                                throw new Exception("Invalid diffuse texture index in material " + i);
+                            }
+
+                            var index = jIndex.ToObject<int>();
+                            material.DiffuseTexture = textures[index];
+                        }
+
+                        var jDiffuseFactor = jKHRMaterials["diffuseFactor"];
+                        if (jDiffuseFactor != null)
+                        {
+                            var rgba = jDiffuseFactor.ToObject<float[]>();
+                            material.DiffuseFactor = new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
+                        }
+
+                        var jSpecularFactor = jKHRMaterials["specularFactor"];
+                        if (jSpecularFactor != null)
+                        {
+                            var rgb = jSpecularFactor.ToObject<float[]>();
+                            material.SpecularFactor = new Color(rgb[0], rgb[1], rgb[2], 1);
+                        }
+
+                        var jGlossinessFactor = jKHRMaterials["glossinessFactor"];
+                        if (jGlossinessFactor != null)
+                        {
+                            material.GlossinessFactor = jGlossinessFactor.ToObject<float>();
+                        }
+                    }
+                }
 
                 materials[i] = material;
             }
@@ -1102,20 +1143,19 @@ namespace HxGLTF
                     
                     for (var b = 0; b < matrixData.Length; b += 16)
                     {
-                        var matrix = new Matrix(
-                            matrixData[b], matrixData[b + 4], matrixData[b + 8], matrixData[b + 12],
-                            matrixData[b + 1], matrixData[b + 5], matrixData[b + 9], matrixData[b + 13],
-                            matrixData[b + 2], matrixData[b + 6], matrixData[b + 10], matrixData[b + 14],
-                            matrixData[b + 3], matrixData[b + 7], matrixData[b + 11], matrixData[b + 15]
-                        );
+                        //var matrix = new Matrix(
+                        //    matrixData[b], matrixData[b + 4], matrixData[b + 8], matrixData[b + 12],
+                        //    matrixData[b + 1], matrixData[b + 5], matrixData[b + 9], matrixData[b + 13],
+                        //    matrixData[b + 2], matrixData[b + 6], matrixData[b + 10], matrixData[b + 14],
+                        //    matrixData[b + 3], matrixData[b + 7], matrixData[b + 11], matrixData[b + 15]
+                        //);
                         
-                        matrix = new Matrix(
+                        var matrix = new Matrix(
                             matrixData[b], matrixData[b + 1], matrixData[b + 2], matrixData[b + 3],
                             matrixData[b + 4], matrixData[b + 5], matrixData[b + 6], matrixData[b + 7],
                             matrixData[b + 8], matrixData[b + 9], matrixData[b + 10], matrixData[b + 11],
                             matrixData[b + 12], matrixData[b + 13], matrixData[b + 14], matrixData[b + 15]
                         );
-
                         
                         matrices.Add(matrix);
                     }

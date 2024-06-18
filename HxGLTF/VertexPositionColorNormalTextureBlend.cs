@@ -70,8 +70,8 @@ public struct VertexPositionColorNormalTextureBlend : IVertexType
         Color = data.Color;
         Normal = normal;
         TextureCoordinate = data.TextureCoordinate;
-        BlendIndices = new Vector4(0, 0, 0, 0); // Neutraler Wert
-        BlendWeight = new Vector4(1, 0, 0, 0);  // Neutraler Wert
+        BlendIndices = data.BlendIndices; // Neutraler Wert
+        BlendWeight = data.BlendWeight;  // Neutraler Wert
     }
 
     public static void CalculateNormals(VertexPositionColorNormalTextureBlend[] data)
