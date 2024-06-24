@@ -28,11 +28,13 @@ namespace HxGLTF.Implementation
         public string AlphaMode;
         public float AlphaCutoff;
         public GameTexture BaseTexture;
+        public GameTexture NormalMap;
         public GameTexture EmissiveTexture;
         public Color BaseColorFactor;
         public Color EmissiveFactor;
         
         public bool HasTexture => BaseTexture != null;
+        public bool HasNormalMap => NormalMap != null;
         public bool HasEmissiveTexture => EmissiveTexture != null;
         
         public static GameMaterial From(GraphicsDevice graphicsDevice, GLTFFile file, Material material)
@@ -181,6 +183,75 @@ namespace HxGLTF.Implementation
                 }
 
                 result.EmissiveTexture = new GameTexture
+                {
+                    Texture = texture,
+                    Sampler = sampler
+                };
+            }
+            
+            if (material.NormalTexture != null)
+            {
+                if (material.NormalTexture.Source == null)
+                {
+                    throw new Exception();
+                }
+
+                Texture2D texture;
+                var image = material.NormalTexture.Source;
+                if (!string.IsNullOrEmpty(image.Uri))
+                {
+                    string imagePath = Path.IsPathRooted(image.Uri) ? image.Uri : Path.Combine(Path.GetDirectoryName(file.Path), image.Uri);
+
+                    using (var stream = File.OpenRead(imagePath))
+                    {
+                        texture = Texture2D.FromStream(graphicsDevice, stream);
+                    }
+                }
+                else if (image.BufferView != null)
+                {
+                    var bufferView = image.BufferView;
+                    var buffer = bufferView.Buffer;
+                    byte[] imageData = new byte[bufferView.ByteLength];
+                    Array.Copy(buffer.Bytes, bufferView.ByteOffset, imageData, 0, bufferView.ByteLength);
+
+                    using (var stream = new MemoryStream(imageData))
+                    {
+                        texture = Texture2D.FromStream(graphicsDevice, stream);
+                    }
+                }
+                else
+                {
+                    throw new Exception("Image URI and BufferView are both null.");
+                }
+                
+                GameTextureSampler sampler;
+                
+                if (material.NormalTexture.Sampler != null)
+                {
+                    sampler = new GameTextureSampler
+                    {
+                        SamplerState = new SamplerState()
+                        {
+                            AddressU = ConvertWrapMode(material.NormalTexture.Sampler.WrapS),
+                            AddressV = ConvertWrapMode(material.NormalTexture.Sampler.WrapT),
+                            Filter = TextureFilter.Point
+                        }
+                    };
+                }
+                else
+                {
+                    sampler = new GameTextureSampler
+                    {
+                        SamplerState = new SamplerState()
+                        {
+                            AddressU = TextureAddressMode.Wrap,
+                            AddressV = TextureAddressMode.Wrap,
+                            Filter = TextureFilter.Point
+                        }
+                    };
+                }
+
+                result.NormalMap = new GameTexture
                 {
                     Texture = texture,
                     Sampler = sampler

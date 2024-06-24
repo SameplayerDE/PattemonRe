@@ -9,82 +9,89 @@ namespace HxGLTF.Implementation
         public GameScene[] Scenes;
         public GameMesh[] Meshes;
         public GameSkin[] Skins;
-        public Dictionary<string, GameModelAnimation> Animations;
+        public GameModelAnimation[] Animations;
 
+        public Matrix GlobalTranformation;
+        public Matrix LocalTranformation;
+        
         public Vector3 Translation = Vector3.Zero;
         public Vector3 Scale = Vector3.One;
-        public Vector3 Rotation = Vector3.Zero;
+        public Quaternion Rotation = Quaternion.Identity;
         
-        public bool HasAnimations => Animations != null;
-        
-        private string _currentAnimationKey;
+        private int _currentAnimationIndex;
+        private int _nextAnimationIndex;
+
         private float _animationTimer;
-        private bool _isPlaying;
+        public bool IsPlaying;
         
-        public void RotateX(float x)
+        //AnimationPlayerClass
+        
+        public void Play(int index)
         {
-            Rotation.X += MathHelper.ToRadians(x);
-            Rotation.X = Math.Clamp(Rotation.X, MathHelper.ToRadians(-89.9f), MathHelper.ToRadians(89.9f));
-        }
-
-        public void RotateZ(float z)
-        {
-            Rotation.Z += MathHelper.ToRadians(z);
-        }
-
-        public void RotateY(float y)
-        {
-            Rotation.Y += MathHelper.ToRadians(y);
-            if (Rotation.Y < 0) Rotation.Y += MathHelper.ToRadians(360);
+            _currentAnimationIndex = index;
+            IsPlaying = true;
+            // set what animation should be played
+            // check if currenlty animaton is running
+            // if currently not then just play the animation 
+            // if yes then try to interpolate currently running animation with next animation so that there is not visual cut
         }
         
-        public void Play(string animationKey)
+        public void Stop()
         {
-            if (animationKey == _currentAnimationKey || _isPlaying)
-            {
-                return;
-            }
-            if (HasAnimations && Animations.TryGetValue(animationKey, out var animation))
-            {
-                _currentAnimationKey = animationKey;
-                _animationTimer = 0;
-                _isPlaying = true;
-            }
-            else
-            {
-                _currentAnimationKey = null;
-                _animationTimer = 0;
-                _isPlaying = false;
-            }
+            _currentAnimationIndex = -1;
+            IsPlaying = false;
+            // set what animation should be played
+            // check if currenlty animaton is running
+            // if currently not then just play the animation 
+            // if yes then try to interpolate currently running animation with next animation so that there is not visual cut
         }
         
         public void Update(GameTime gameTime)
         {
-            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (_isPlaying && HasAnimations && _currentAnimationKey != null)
+            var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (Animations != null)
             {
-                var animation = Animations[_currentAnimationKey];
-
-                // Update animation timer
-                _animationTimer += delta;
-
-                // Update animation based on current timer
-                UpdateAnimation(_animationTimer);
-
-                // Check if animation has completed
-                if (_animationTimer >= animation.Duration)
+                if (IsPlaying)
                 {
-                    _isPlaying = false;
-                    _currentAnimationKey = null;
-                    _animationTimer = 0;
+                    GameModelAnimation currentAnimation;
+                    if (Animations.Length <= _currentAnimationIndex)
+                    {
+                        throw new Exception();
+                    }
+
+                    currentAnimation = Animations[_currentAnimationIndex];
+                    UpdateAnimation(currentAnimation, _animationTimer);
+                    _animationTimer += delta;
+                    if (_animationTimer > currentAnimation.Duration)
+                    {
+                        _animationTimer = 0;
+                    }
+                }
+            }
+
+            if (Skins != null)
+            {
+                if (Skins.Length > 0)
+                {
+                    foreach (var skin in Skins)
+                    {
+                        skin.Update(gameTime);
+                    }
                 }
             }
         }
 
-        private void UpdateAnimation(float animationTime)
+        private void UpdateAnimation(GameModelAnimation animation, float animationTime)
         {
-            var animation = Animations[_currentAnimationKey];
-
+            
+            //GameModelAnimation nextAnimation;
+            //if (Animations.Length <= _nextAnimationIndex)
+            //{
+            //    throw new Exception();
+            //}
+            //nextAnimation = Animations[_nextAnimationIndex];
+            
             foreach (var channel in animation.Channels)
             {
                 var targetPath = channel.Target.Path;
@@ -93,38 +100,44 @@ namespace HxGLTF.Implementation
                 {
                     "rotation" => 4,
                     "translation" or "scale" => 3,
+                    "texture" => 2,
                     _ => 0
                 };
 
-                if (valuesPerElement > 0)
+                if (valuesPerElement <= 0)
                 {
-                    var sampler = animation.Samplers[channel.SamplerIndex];
-                    float[] timeStamps = sampler.Input;
+                    continue;
+                }
+                var sampler = animation.Samplers[channel.SamplerIndex];
+                var timeStamps = sampler.Input;
 
-                    int prevIndex = -1;
-                    int nextIndex = -1;
+                var prevIndex = -1;
+                var nextIndex = -1;
 
-                    // Find the indices for the surrounding keyframes
-                    for (int i = 0; i < timeStamps.Length; i++)
+                // Find the indices for the surrounding keyframes
+                for (var i = 0; i < timeStamps.Length; i++)
+                {
+                    if (timeStamps[i] <= animationTime)
                     {
-                        if (timeStamps[i] <= animationTime)
-                        {
-                            prevIndex = i;
-                        }
-
-                        if (timeStamps[i] > animationTime)
-                        {
-                            nextIndex = i;
-                            break;
-                        }
+                        prevIndex = i;
                     }
 
-                    if (nextIndex == -1)
+                    if (!(timeStamps[i] > animationTime))
                     {
-                        nextIndex = 0;
+                        continue;
                     }
+                    nextIndex = i;
+                    break;
+                }
 
-                    if (sampler.InterpolationAlgorithm == InterpolationAlgorithm.Step)
+                if (nextIndex == -1)
+                {
+                    nextIndex = 0;
+                }
+
+                switch (sampler.InterpolationAlgorithm)
+                {
+                    case InterpolationAlgorithm.Step:
                     {
                         // For step interpolation, just use the previous index
                         if (prevIndex >= 0)
@@ -151,9 +164,22 @@ namespace HxGLTF.Implementation
                                 Vector3 scale = new Vector3(data[0], data[1], data[2]);
                                 Nodes[channel.Target.NodeIndex].Resize(scale);
                             }
+                            else if (targetPath == "texture")
+                            {
+                                Vector2 uv = new Vector2(data[0], data[1]);
+                                var node = Nodes[channel.Target.NodeIndex];
+                                if (node.HasMesh)
+                                {
+                                    var mesh = node.Mesh;
+                                    //mesh.Primitives.
+                                }
+
+                            }
                         }
+
+                        break;
                     }
-                    else if (sampler.InterpolationAlgorithm == InterpolationAlgorithm.Linear)
+                    case InterpolationAlgorithm.Linear:
                     {
                         // For linear interpolation, use both prev and next indices
                         if (prevIndex >= 0 && nextIndex >= 0)
@@ -205,11 +231,51 @@ namespace HxGLTF.Implementation
                                 Nodes[channel.Target.NodeIndex].Resize(scale);
                             }
                         }
+
+                        break;
                     }
+                    case InterpolationAlgorithm.Cubicspline:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             
-            Console.WriteLine(_animationTimer);
+        }
+
+        public void Translate(Vector3 translation)
+        {
+            Translation += translation;
+            UpdateTransform();
+        }
+
+        public void RotateBy(Quaternion rotation)
+        {
+            Rotation *= rotation;
+            UpdateTransform();
+        }
+        
+        public void RotateTo(Quaternion rotation)
+        {
+            Rotation = rotation;
+            UpdateTransform();
+        }
+
+        private void UpdateTransform()
+        {
+            LocalTranformation = Matrix.CreateScale(Scale) *
+                                  Matrix.CreateFromQuaternion(Rotation) *
+                                  Matrix.CreateTranslation(Translation);
+
+            foreach (var node in Nodes)
+            {
+                //node.UpdateGlobalTransform();
+            }
+        }
+
+        public void Draw(GraphicsDevice graphicsDevice, Effect effect, Matrix world, Matrix view, Matrix projection)
+        {
+            
         }
         
         public static GameModel From(GraphicsDevice graphicsDevice, GLTFFile file)
@@ -252,12 +318,11 @@ namespace HxGLTF.Implementation
             
             if (file.HasAnimations)
             {
-                result.Animations = new Dictionary<string, GameModelAnimation>();
+                result.Animations = new GameModelAnimation[file.Animations.Length];
                 for (int i = 0; i < file.Animations.Length; i++)
                 {
                     var animation = file.Animations[i];
-                    result.Animations[Guid.NewGuid().ToString()] =
-                        GameModelAnimation.From(graphicsDevice, file, animation);
+                    result.Animations[i] = GameModelAnimation.From(graphicsDevice, file, animation);
                 }
             }
 
@@ -281,6 +346,7 @@ namespace HxGLTF.Implementation
                 for (var i = 0; i < file.Skins.Length; i++)
                 {
                     var skin = GameSkin.From(graphicsDevice, file, file.Skins[i]);
+                    skin.Model = result;
                     result.Skins[i] = skin;
                 }
             }

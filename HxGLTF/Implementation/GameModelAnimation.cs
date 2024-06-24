@@ -51,6 +51,7 @@ namespace HxGLTF.Implementation
     
     public class GameModelAnimation
     {
+        public string? Name = string.Empty;
         public GameModelAnimationChannel[] Channels;
         public GameModelAnimationSampler[] Samplers;
         public float Duration;
@@ -58,7 +59,7 @@ namespace HxGLTF.Implementation
         public static GameModelAnimation From(GraphicsDevice graphicsDevice, GLTFFile file, Animation animation)
         {
             var result = new GameModelAnimation();
-            
+
             result.Channels = new GameModelAnimationChannel[animation.Channels.Length];
             for (int i = 0; i < result.Channels.Length; i++)
             {
@@ -75,6 +76,7 @@ namespace HxGLTF.Implementation
             
             // Berechne die Dauer der Animation
             result.Duration = CalculateAnimationDuration(result.Samplers);
+            result.Name = animation.Name;
             
             return result;
         }

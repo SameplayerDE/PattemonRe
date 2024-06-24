@@ -559,6 +559,19 @@ namespace HxGLTF
                     material.EmissiveTexture = textures[index];
                 }
                 
+                var jNormalMap = jMaterial["normalTexture"];
+                if (jNormalMap != null)
+                {
+                    var jIndex = jNormalMap["index"];
+                    if (jIndex == null)
+                    {
+                        throw new Exception();
+                    }
+
+                    var index = jIndex.ToObject<int>();
+                    material.NormalTexture = textures[index];
+                }
+                
                 var jPbr = jMaterial["pbrMetallicRoughness"];
                 if (jPbr != null)
                 {

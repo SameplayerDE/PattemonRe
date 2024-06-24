@@ -12,6 +12,7 @@ namespace HxGLTF
     public class MeshPrimitive
     {
         public Dictionary<string, Accessor> Attributes;
+        public Dictionary<string, Accessor>[] Targets;
         public Accessor? Indices;
         public Material? Material;
         public int Mode = 4; //TODO Create Mode Class

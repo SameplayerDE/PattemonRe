@@ -12,7 +12,8 @@ namespace HxGLTF
         Translation,
         Rotation,
         Scale,
-        Weights
+        Weights,
+        Texture
     }
 
     public class AnimationChannelTarget

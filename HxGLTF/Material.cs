@@ -7,7 +7,7 @@ namespace HxGLTF
         public string Name = string.Empty;
         public Texture? BaseColorTexture;
         public Texture? EmissiveTexture;
-        public NormalTextureInfo? NormalTexture;
+        public Texture? NormalTexture;
         
         public Color BasColorFactor = Color.White;
         public Color EmissiveFactor = Color.Black;

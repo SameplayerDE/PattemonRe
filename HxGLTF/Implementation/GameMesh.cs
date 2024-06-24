@@ -6,6 +6,7 @@ namespace HxGLTF.Implementation
     public class GameMeshPrimitives
     {
         public VertexBuffer VertexBuffer;
+        public List<VertexPositionColorNormalTextureBlend[]> MorphTargets;
         public int VertexCount;
         public IndexBuffer IndexBuffer;
         public int IndexCount;
@@ -20,15 +21,17 @@ namespace HxGLTF.Implementation
 
             var position = new List<Vector3>();
             var normals = new List<Vector3>();
+            var colors = new List<Color>();
             var uvs = new List<Vector2>();
             var joints = new List<Vector4>();
             var w = new List<Vector4>();
 
+   
             
             foreach (var attribute in primitive.Attributes)
             {
-                Console.WriteLine(attribute.Key);
-                Console.WriteLine(attribute.Value.Type.Id);
+               //Console.WriteLine(attribute.Key);
+               //Console.WriteLine(attribute.Value.Type.Id);
 
                 var dataAccessor = attribute.Value;
                 var elementCount = dataAccessor.Count;
@@ -36,17 +39,35 @@ namespace HxGLTF.Implementation
 
                 float[] data;
 
+                
+                
                 if (primitive.HasIndices)
                 {
                     data = AccessorReader.ReadDataIndexed(dataAccessor, primitive.Indices);
 
-                    Console.WriteLine("Key: " + attribute.Key + ", Type: " + dataAccessor.Type.Id);
+                    //Console.WriteLine("Key: " + attribute.Key + ", Type: " + dataAccessor.Type.Id);
 
                     if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
                     {
                         for (var x = 0; x < data.Length; x += 3)
                         {
                             position.Add(new Vector3(data[x], data[x + 1], data[x + 2]));
+                        }
+                    }
+                    
+                    if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC4")
+                    {
+                        for (var x = 0; x < data.Length; x += 4)
+                        {
+                            colors.Add(new Color(data[x], data[x + 1], data[x + 2], data[x + 3]));
+                        }
+                    }
+                    
+                    if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
+                    {
+                        for (var x = 0; x < data.Length; x += 3)
+                        {
+                            colors.Add(new Color(data[x], data[x + 1], data[x + 2], 1));
                         }
                     }
 
@@ -97,7 +118,7 @@ namespace HxGLTF.Implementation
                 {
                     data = AccessorReader.ReadData(dataAccessor);
 
-                    Console.WriteLine("Key: " + attribute.Key + ", Type: " + dataAccessor.Type.Id);
+                    //Console.WriteLine("Key: " + attribute.Key + ", Type: " + dataAccessor.Type.Id);
                     
                     for (var i = 0; i < dataAccessor.Count; i++)
                     {
@@ -117,9 +138,28 @@ namespace HxGLTF.Implementation
                                 data[i * numberOfComponents + 2]
                             ));
                         }
+                        else if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC4")
+                        {
+                            for (var x = 0; x < data.Length; x += 4)
+                            {
+                                colors.Add(new Color(
+                                    data[i * numberOfComponents + 0],
+                                    data[i * numberOfComponents + 1],
+                                    data[i * numberOfComponents + 2],
+                                    data[i * numberOfComponents + 3]));
+                            }
+                        }
+                    
                         else if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
                         {
-                            
+                            for (var x = 0; x < data.Length; x += 3)
+                            {
+                                colors.Add(new Color(
+                                    data[i * numberOfComponents + 0],
+                                    data[i * numberOfComponents + 1],
+                                    data[i * numberOfComponents + 2],
+                                    1));
+                            }
                         }
                         else if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
                         {
@@ -158,7 +198,7 @@ namespace HxGLTF.Implementation
             {
                 vertexBufferDummy.Add(new VertexPositionColorNormalTextureBlend(
                     position[i],
-                    Color.White,
+                    colors.Count > i ? colors[i] : Color.White,
                     normals.Count > i ? normals[i] : Vector3.Up,
                     uvs.Count > i ? uvs[i] : Vector2.Zero,
                     joints.Count > i ? joints[i] : Vector4.Zero,
@@ -179,6 +219,7 @@ namespace HxGLTF.Implementation
     public class GameMesh
     {
         public GameMeshPrimitives[] Primitives;
+        public float[] Weights;
 
         public static GameMesh From(GraphicsDevice graphicsDevice, GLTFFile file, Mesh mesh)
         {

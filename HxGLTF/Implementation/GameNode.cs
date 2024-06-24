@@ -38,7 +38,7 @@ namespace HxGLTF.Implementation
             {
                 foreach (var child in Children)
                 {
-                   // Model.Nodes[child].UpdateGlobalTransform();
+                   //Model.Nodes[child].UpdateGlobalTransform();
                 }
             }
         }

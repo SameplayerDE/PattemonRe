@@ -7,16 +7,33 @@
 	#define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
-matrix World;
-matrix View;
-matrix Projection;
 
-float3 LightPosition = float3(10, 10, 10);
+cbuffer Matrices : register(b0)
+{
+    matrix World;
+    matrix View;
+    matrix Projection;
+}
 
-float AlphaCutoff;
-int AlphaMode;
+cbuffer Constants : register(b1)
+{
+    float AlphaCutoff;
+    int AlphaMode;
+    
+    float4 BaseColorFactor = float4(1.0, 1.0, 1.0, 1.0);
+    float4 EmissiveColorFactor = float4(0.0, 0.0, 0.0, 1);
 
-bool TextureEnabled;
+    bool TextureEnabled;
+    bool NormalMapEnabled;
+    bool OcclusionMapEnabled;
+    bool EmissiveTextureEnabled;
+    bool SkinningEnabled;
+}
+
+cbuffer Skinning : register(b2) {
+    uint NumberOfBones;
+    matrix Bones[128];
+}
 
 Texture2D Texture : register(t0);
 sampler TextureSampler : register(s0)
@@ -24,15 +41,11 @@ sampler TextureSampler : register(s0)
 	Texture = (Texture);
 };
 
-bool NormalMapEnabled;
-
 Texture2D NormalMap : register(t1);
 sampler NormalMapSampler : register(s1)
 {
 	Texture = (NormalMap);
 };
-
-bool OcclusionMapEnabled;
 
 Texture2D OcclusionMap : register(t2);
 sampler OcclusionMapSampler : register(s2)
@@ -40,19 +53,11 @@ sampler OcclusionMapSampler : register(s2)
     Texture = (OcclusionMap);
 };
 
-bool EmissiveTextureEnabled;
-
 Texture2D EmissiveTexture : register(t3);
 sampler EmissiveTextureSampler : register(s3)
 {
     Texture = (EmissiveTexture);
 };
-
-float4 BaseColorFactor = float4(1.0, 1.0, 1.0, 1.0);
-float4 EmissiveColorFactor = float4(0.0, 0.0, 0.0, 1);
-
-bool SkinningEnabled;
-Matrix Bones[128];
 
 struct VertexShaderInput
 {
@@ -74,38 +79,40 @@ struct VertexShaderOutput
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
 {
-	VertexShaderOutput output = (VertexShaderOutput)0;
-	
-	float4 position = input.Position;
+    VertexShaderOutput output;
+
+    float4 position = input.Position;
     float3 normal = input.Normal;
-	float4 color = input.Color;
-	float2 textureCoordinate = input.TextureCoordinate;
+    float4 color = input.Color;
+    float2 textureCoordinate = input.TextureCoordinate;
     
     if (SkinningEnabled == true)
     {
-        float4x4 skinMatrix = 
+        matrix skinMatrix = 
             input.BlendWeight.x * Bones[int(input.BlendIndices.x)] +
             input.BlendWeight.y * Bones[int(input.BlendIndices.y)] +
             input.BlendWeight.z * Bones[int(input.BlendIndices.z)] +
             input.BlendWeight.w * Bones[int(input.BlendIndices.w)];
-
         position = mul(position, skinMatrix);
         normal = mul(normal, skinMatrix);
+
     }
 
     float4 worldPosition = mul(position, World);
     float4 viewPosition = mul(worldPosition, View);
-	
+
     output.Position = mul(viewPosition, Projection);
-    output.Normal = mul(normal, World);
-    output.Color = color;
-    output.TextureCoordinate = textureCoordinate;
-    
+    output.Normal = normal;
+    output.Color = input.Color;
+    output.TextureCoordinate = input.TextureCoordinate;
+
+
     return output;
 }
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
+
     float4 position = input.Position;
     float4 finalColor = input.Color * BaseColorFactor;
 
@@ -115,14 +122,17 @@ float4 MainPS(VertexShaderOutput input) : COLOR
         finalColor = finalColor * textureColor;
     }
     
-    //if (EmissiveTextureEnabled == true) {
-    //    finalColor = finalColor + (tex2D(EmissiveTextureSampler, input.TextureCoordinate) * EmissiveColorFactor);
-    //}
-    //else
+    //if (NormalMapEnabled == true)
     //{
-    //    finalColor = finalColor + (float4(1, 1, 1, 1) * EmissiveColorFactor);
+    //    float3 normalMapNormal = tex2D(NormalMapSampler, input.TextureCoordinate).rgb * 2.0 - 1.0;
+    //    normal = normalize(normal + normalMapNormal);
     //}
     
+    if (EmissiveTextureEnabled == true)
+    {
+        finalColor += tex2D(EmissiveTextureSampler, input.TextureCoordinate) * EmissiveColorFactor;
+    }
+
     float alpha = finalColor.a;
         
     if (AlphaMode == 1)
@@ -180,6 +190,3 @@ technique T1
         PixelShader = compile PS_SHADERMODEL MainPS();
     }
 };
-
-//Texture2D NormalMap : register(t1);
-//Texture2D OcclusionMap : register(t2);

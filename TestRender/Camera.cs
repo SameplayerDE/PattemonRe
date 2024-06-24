@@ -47,8 +47,8 @@ namespace TestRendering
         public Vector3 Position { get { return _position; } }
         public Vector3 Rotation { get { return _rotation; } }
 
-        public bool EnableMix = false;
-        public float OrthoFactor = 0.03f;
+        public bool EnableMix = true;
+        public float OrthoFactor = 0.009f;
         
         public Camera(GraphicsDevice graphicsDevice)
         {
@@ -101,9 +101,14 @@ namespace TestRendering
             _rotation = rotation;
         }
 
-        public void Rotate(Vector3 rotation)
+        public void RotateBy(Vector3 rotation)
         {
             _rotation += rotation;
+        }
+        
+        public void RotateTo(Vector3 rotation)
+        {
+            _rotation = rotation;
         }
 
         public void RotateX(float x)
