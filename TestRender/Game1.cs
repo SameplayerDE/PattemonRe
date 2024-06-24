@@ -159,9 +159,9 @@ namespace TestRender
             //basePath = @"A:\ModelExporter\black2\output_assets\";
             //basePath = @"A:\ModelExporter\heartgold\output_assets\";
 
-            for (int x = 1; x <= maxChunksX; x++)
+            for (int x = 0; x <= maxChunksX; x++)
             {
-                for (int y = 1; y <= maxChunksY; y++)
+                for (int y = 0; y <= maxChunksY; y++)
                 {
                     if (y >= _mapFileMatrix.GetLength(0) || x >= _mapFileMatrix.GetLength(1))
                     {
