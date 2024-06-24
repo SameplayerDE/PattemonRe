@@ -248,6 +248,12 @@ namespace HxGLTF.Implementation
             Translation += translation;
             UpdateTransform();
         }
+        
+        public void TranslateTo(Vector3 translation)
+        {
+            Translation = translation;
+            UpdateTransform();
+        }
 
         public void RotateBy(Quaternion rotation)
         {

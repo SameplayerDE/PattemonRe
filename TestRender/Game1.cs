@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -32,6 +33,10 @@ namespace TestRender
         
         string[,] _mapFileMatrix = new string[30, 30];
         int[,] _mapHeightMatrix = new int[30, 30];
+        List<GameModel> _mapObjectMatrix = [];
+
+        private int _chunkX = 0;
+        private int _chunkY = 0;
         
         static string[,] ReadMatrixFromFile(string filePath)
         {
@@ -90,6 +95,36 @@ namespace TestRender
         }
 
         
+        public List<GameModel> ReadModelMatrix(string filePath)
+        {
+            string[] lines = File.ReadAllLines(filePath);
+
+            // Initialisiere die Liste von GameModel-Objekten
+            List<GameModel> models = new List<GameModel>();
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string[] values = lines[i].Split(',');
+                if (values.Length == 6)
+                {
+                    if (int.TryParse(values[0], out int cx) &&
+                        int.TryParse(values[1], out int cy) &&
+                        float.TryParse(values[3], NumberStyles.Float, CultureInfo.InvariantCulture, out float x) &&
+                        float.TryParse(values[4], NumberStyles.Float, CultureInfo.InvariantCulture, out float y) &&
+                        float.TryParse(values[5], NumberStyles.Float, CultureInfo.InvariantCulture, out float z))
+                    {
+                        var gltfFile = GLTFLoader.Load(@$"A:\ModelExporter\Platin\output_assets\{values[2]}\{values[2]}.gltf");
+                        var model = GameModel.From(GraphicsDevice, gltfFile);
+                        //model.TranslateTo(new Vector3(x, y, z) * 16);
+                        model.TranslateTo(new Vector3(cx * 512, 0, cy * 512) + new Vector3(x, y, z) * 16);
+                        models.Add(model);
+                    }
+                }
+            }
+
+            return models;
+        }
+        
         public Game1()
         {
             _graphicsDeviceManager = new GraphicsDeviceManager(this);
@@ -113,13 +148,13 @@ namespace TestRender
 
             _mapFileMatrix = ReadMatrixFromFile(@"Content\MapFileMatrix.csv");
             _mapHeightMatrix = ReadNumberMatrixFromFile(@"Content\MapHeightMatrix.csv");
+            _mapObjectMatrix = ReadModelMatrix(@"Content\MapObjectMatrix.csv");
             
             _hero = new Hero();
             
-            
             int maxChunksX = 128;
             int maxChunksY = 128;
-
+            
             string basePath = @"A:\ModelExporter\Platin\overworldmaps\";
             //basePath = @"A:\ModelExporter\black2\output_assets\";
             //basePath = @"A:\ModelExporter\heartgold\output_assets\";
@@ -144,11 +179,10 @@ namespace TestRender
                         var gltfFile = GLTFLoader.Load(filePath);
                         var gameModel = GameModel.From(GraphicsDevice, gltfFile);
                         gameModels.Add(gameModel);
-                        gameModel.Translation = new Vector3(x * 512, chunkHeight * 16, y * 512);
+                        gameModel.Translation = new Vector3(x * 512, chunkHeight * 8, y * 512);
                     }
                 }
             }
-            
             base.Initialize();
         }
 
@@ -176,7 +210,6 @@ namespace TestRender
 
             _prev = _curr;
             _curr = Keyboard.GetState();
-
             
             var direction = new Vector3();
 
@@ -221,8 +254,8 @@ namespace TestRender
 
             if (Keyboard.GetState().IsKeyUp(Keys.LeftShift))
             {
-                
-                direction *= 1000;
+
+                direction *= 128;
                 _camera.Move(-direction * delta);
 
                 if (Keyboard.GetState().IsKeyDown(Keys.Up))
@@ -255,8 +288,17 @@ namespace TestRender
             _hero.Update(gameTime);
             
             _camera.Update(gameTime);
-            
 
+            // Die Größe eines Chunks
+            int chunkSize = 512;
+
+// Position der Kamera
+            float cameraPosX = _camera.Position.X;
+            float cameraPosZ = _camera.Position.Z;
+
+// Berechne die Chunk-Koordinaten, verschoben um die Hälfte der Chunk-Größe
+            _chunkX = (int)((cameraPosX + chunkSize / 2) / chunkSize);
+            _chunkY = (int)((cameraPosZ + chunkSize / 2) / chunkSize);
             //Console.WriteLine(_camera.Position);
 
             foreach (var model in gameModels)
@@ -277,12 +319,21 @@ namespace TestRender
             {
                 DrawModel(model);
             }
+            //if (_chunkX < _mapObjectMatrix.GetLength(0) && _chunkY < _mapObjectMatrix.GetLength(1))
+            //{
+            //    
+            //}
+            foreach (var model in _mapObjectMatrix)
+            {
+                DrawModel(model);
+            }
+            
             GraphicsDevice.SetRenderTarget(null);
             
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             _spriteBatch.Draw(_screen, GraphicsDevice.Viewport.Bounds, Color.White);
-            _spriteBatch.DrawString(_font, _camera.Rotation.ToString(), Vector2.Zero, Color.White);
-            _spriteBatch.DrawString(_font, _camera.Rotation.ToString(), new Vector2(0, _font.LineSpacing), Color.Black);
+            _spriteBatch.DrawString(_font, _camera.Rotation.ToString(), Vector2.Zero, Color.Red);
+            _spriteBatch.DrawString(_font, $"{_chunkX}, {_chunkY}", new Vector2(0, _font.LineSpacing), Color.Red);
             _spriteBatch.End();
             
             base.Draw(gameTime);
