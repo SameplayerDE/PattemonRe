@@ -20,7 +20,7 @@ namespace TestRendering
         protected Vector3 _position = Vector3.Zero;
         protected Vector3 _rotation = Vector3.Zero;
 
-        protected float _fov = MathHelper.ToRadians(70);
+        protected float _fov = MathHelper.ToRadians(45);
         protected float _aspectRatio = 1.6f;
         protected float _nearClipPlane = 0.1f;
         protected float _farClipPlane = 20000000000f;

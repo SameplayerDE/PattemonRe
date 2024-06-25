@@ -30,6 +30,8 @@ namespace TestRender
         private SpriteFont _font;
 
         private RenderTarget2D _screen;
+
+        private List<Chunk> _chunks = [];
         
         string[,] _mapFileMatrix = new string[30, 30];
         int[,] _mapHeightMatrix = new int[30, 30];
@@ -178,8 +180,16 @@ namespace TestRender
                         var chunkHeight = _mapHeightMatrix[y, x];
                         var gltfFile = GLTFLoader.Load(filePath);
                         var gameModel = GameModel.From(GraphicsDevice, gltfFile);
-                        gameModels.Add(gameModel);
                         gameModel.Translation = new Vector3(x * 512, chunkHeight * 8, y * 512);
+
+                        var chunk = new Chunk();
+                        chunk.X = x;
+                        chunk.Y = y;
+                        chunk.Id = folderName;
+                        chunk.Height = chunkHeight;
+                        chunk.Terrain = gameModel;
+   
+                        _chunks.Add(chunk);
                     }
                 }
             }
@@ -194,7 +204,7 @@ namespace TestRender
             _effect = Content.Load<Effect>("PBRShader");
             _effect.Parameters["Bones"].SetValue(new Matrix[64]); 
             _font = Content.Load<SpriteFont>("Font");
-            
+            _hero.Position = new Vector3(3, 0, 27) * 512 + new Vector3(0, 16, 0);
             _camera.Teleport(new Vector3(3, 0, 27) * 512);
         }
 
@@ -278,11 +288,11 @@ namespace TestRender
                     _camera.RotateY(-1);
                 }
             }
-           //else
-           //{
-           //    _camera.RotateTo(new Vector3(MathHelper.ToRadians(45), MathHelper.ToRadians(180), 0));
-           //    _camera.Teleport(_hero.Position + (Vector3.Backward * 16 * 10) + new Vector3(0, 16 * 10, 0));
-           //}
+            else
+            {
+                _camera.RotateTo(new Vector3(MathHelper.ToRadians(45), MathHelper.ToRadians(180), 0));
+                _camera.Teleport(_hero.Position + (Vector3.Backward * 16 * 10) + new Vector3(0, 16 * 10, 0));
+            }
             
             
             _hero.Update(gameTime);
@@ -318,6 +328,11 @@ namespace TestRender
             foreach (var model in gameModels)
             {
                 DrawModel(model);
+            }
+            
+            foreach (var chunk in _chunks)
+            {
+                DrawModel(chunk.Terrain);
             }
             //if (_chunkX < _mapObjectMatrix.GetLength(0) && _chunkY < _mapObjectMatrix.GetLength(1))
             //{
