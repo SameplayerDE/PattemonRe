@@ -22,43 +22,18 @@ namespace TestRender
         private SpriteBatch _spriteBatch;
         
         private Effect _effect;
-
         private Camera _camera;
-
-        private Hero _hero;
-        private List<GameModel> gameModels = [];
         private SpriteFont _font;
-
         private RenderTarget2D _screen;
 
         private List<Chunk> _chunks = [];
+        private List<GameModel> _mapObjects = [];
         
         string[,] _mapFileMatrix = new string[30, 30];
         int[,] _mapHeightMatrix = new int[30, 30];
-        List<GameModel> _mapObjectMatrix = [];
 
         private int _chunkX = 0;
         private int _chunkY = 0;
-        
-        static string[,] ReadMatrixFromFile(string filePath)
-        {
-            string[] lines = File.ReadAllLines(filePath);
-            int rows = lines.Length;
-            int cols = lines[0].Split(',').Length;
-
-            string[,] matrix = new string[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-            {
-                string[] values = lines[i].Split(',');
-                for (int j = 0; j < cols; j++)
-                {
-                    matrix[i, j] = string.IsNullOrEmpty(values[j]) ? "" : values[j];
-                }
-            }
-
-            return matrix;
-        }
         
         static int[,] ReadNumberMatrixFromFile(string filePath)
         {
@@ -95,7 +70,6 @@ namespace TestRender
 
             return matrix;
         }
-
         
         public List<GameModel> ReadModelMatrix(string filePath)
         {
@@ -148,11 +122,10 @@ namespace TestRender
                 GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
             _camera = new Camera(GraphicsDevice);
 
-            _mapFileMatrix = ReadMatrixFromFile(@"Content\MapFileMatrix.csv");
+            _mapFileMatrix = Utils.ReadMatrix(@"Content\MapFileMatrix.csv");
             _mapHeightMatrix = ReadNumberMatrixFromFile(@"Content\MapHeightMatrix.csv");
-            _mapObjectMatrix = ReadModelMatrix(@"Content\MapObjectMatrix.csv");
-            
-            _hero = new Hero();
+            _mapObjects = ReadModelMatrix(@"Content\MapObjectMatrix.csv");
+            var chunkHeaders = ChunkHeader.Load(@"Content\Header0411.json");
             
             int maxChunksX = 128;
             int maxChunksY = 128;
@@ -198,13 +171,11 @@ namespace TestRender
 
         protected override void LoadContent()
         {
-            _hero.LoadContent(GraphicsDevice, Content);
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _effect = Content.Load<Effect>("PBRShader");
             _effect.Parameters["Bones"].SetValue(new Matrix[64]); 
             _font = Content.Load<SpriteFont>("Font");
-            _hero.Position = new Vector3(3, 0, 27) * 512 + new Vector3(0, 16, 0);
             _camera.Teleport(new Vector3(3, 0, 27) * 512);
         }
 
@@ -288,14 +259,6 @@ namespace TestRender
                     _camera.RotateY(-1);
                 }
             }
-            else
-            {
-                _camera.RotateTo(new Vector3(MathHelper.ToRadians(45), MathHelper.ToRadians(180), 0));
-                _camera.Teleport(_hero.Position + (Vector3.Backward * 16 * 10) + new Vector3(0, 16 * 10, 0));
-            }
-            
-            
-            _hero.Update(gameTime);
             
             _camera.Update(gameTime);
 
@@ -310,63 +273,98 @@ namespace TestRender
             _chunkX = (int)((cameraPosX + chunkSize / 2) / chunkSize);
             _chunkY = (int)((cameraPosZ + chunkSize / 2) / chunkSize);
             //Console.WriteLine(_camera.Position);
-
-            foreach (var model in gameModels)
-            {
-                model.Update(gameTime);
-            }
             
             base.Update(gameTime);
         }
         
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.SetRenderTarget(_screen);
+            //GraphicsDevice.SetRenderTarget(_screen);
             GraphicsDevice.Clear(Color.Black);
-            
-            DrawModel(_hero._model);
-            foreach (var model in gameModels)
+
+            int[] offsetX = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+            int[] offsetY = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+
+            foreach (var dx in offsetX)
             {
-                DrawModel(model);
+                foreach (var dy in offsetY)
+                {
+                    var targetX = _chunkX + dx;
+                    var targetY = _chunkY + dy;
+
+                    var validChunks = _chunks.Where(chunk => chunk.X == targetX && chunk.Y == targetY);
+                    
+                    //No Alpha Blend
+                    foreach (var chunk in validChunks)
+                    {
+                        DrawModel(chunk.Terrain);
+                        foreach (var building in chunk.Buildings)
+                        {
+                            DrawModel(building);
+                        }
+                    }
+                }
+            }
+            foreach (var building in _mapObjects)
+            {
+                DrawModel(building);
             }
             
-            foreach (var chunk in _chunks)
+            foreach (var dx in offsetX)
             {
-                DrawModel(chunk.Terrain);
-            }
-            //if (_chunkX < _mapObjectMatrix.GetLength(0) && _chunkY < _mapObjectMatrix.GetLength(1))
-            //{
-            //    
-            //}
-            foreach (var model in _mapObjectMatrix)
-            {
-                DrawModel(model);
+                foreach (var dy in offsetY)
+                {
+                    var targetX = _chunkX + dx;
+                    var targetY = _chunkY + dy;
+
+                    var validChunks = _chunks.Where(chunk => chunk.X == targetX && chunk.Y == targetY);
+                    
+                    
+                    //Only Alpha Blend
+                    foreach (var chunk in validChunks)
+                    {
+                        DrawModel(chunk.Terrain, true);
+                        foreach (var building in chunk.Buildings)
+                        {
+                            DrawModel(building, true);
+                        }
+                    }
+                }
             }
             
-            GraphicsDevice.SetRenderTarget(null);
+            foreach (var building in _mapObjects)
+            {
+                DrawModel(building, true);
+            }
+            
+            //GraphicsDevice.SetRenderTarget(null);
             
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _spriteBatch.Draw(_screen, GraphicsDevice.Viewport.Bounds, Color.White);
+            //_spriteBatch.Draw(_screen, GraphicsDevice.Viewport.Bounds, Color.White);
             _spriteBatch.DrawString(_font, _camera.Rotation.ToString(), Vector2.Zero, Color.Red);
-            _spriteBatch.DrawString(_font, $"{_chunkX}, {_chunkY}", new Vector2(0, _font.LineSpacing), Color.Red);
+            var currentChunk = _chunks.FirstOrDefault(chunk => chunk.X == _chunkX && chunk.Y == _chunkY);
+
+            if (currentChunk != null)
+                _spriteBatch.DrawString(_font, $"{_chunkX}, {_chunkY}, {currentChunk.Id}",
+                    new Vector2(0, _font.LineSpacing), Color.Red);
             _spriteBatch.End();
             
             base.Draw(gameTime);
         }
 
-        private void DrawModel(GameModel model)
+        private void DrawModel(GameModel model, bool alpha = false)
         {
             foreach (var scene in model.Scenes)
             {
                 foreach (var nodeIndex in scene.Nodes)
                 {
                     var node = model.Nodes[nodeIndex];
-                    DrawNode(model, node);
+                    DrawNode(model, node, alpha);
                 }
             }
         }
 
-        private void DrawNode(GameModel model, GameNode node)
+        private void DrawNode(GameModel model, GameNode node, bool alpha = false)
         {
             
             //skinnig here?
@@ -374,26 +372,27 @@ namespace TestRender
             if (node.HasMesh)
             {
                 //DrawMesh(node, gameModel.Meshes[node.MeshIndex]);
-                DrawMesh(model, node, node.Mesh);
+                DrawMesh(model, node, node.Mesh, alpha);
             }
             
             if (node.HasChildren)
             {
                 foreach (var child in node.Children)
                 {
-                    DrawNode(model, node.Model.Nodes[child]);
+                    DrawNode(model, node.Model.Nodes[child], alpha);
                 }
             }
         }
 
-        private void DrawMesh(GameModel model, GameNode node, GameMesh mesh)
+        private void DrawMesh(GameModel model, GameNode node, GameMesh mesh, bool alpha = false)
         {
             var alphaMode = 0;
+
             
             var worldMatrix = Matrix.CreateScale(model.Scale) *
                               Matrix.CreateFromQuaternion(model.Rotation) *
                               Matrix.CreateTranslation(model.Translation);
-            
+
             _effect.Parameters["World"].SetValue(node.GlobalTransform * worldMatrix);
             _effect.Parameters["View"].SetValue(_camera.View);
             _effect.Parameters["Projection"].SetValue(_camera.Projection);
@@ -424,148 +423,132 @@ namespace TestRender
             {
                 _effect.Parameters["SkinningEnabled"]?.SetValue(false);
             }
-
-            foreach (var primitive in mesh.Primitives)
+            
+            if (alpha == false)
             {
-                GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
-                
-                _effect.Parameters["TextureEnabled"]?.SetValue(false);
-                _effect.Parameters["NormalMapEnabled"]?.SetValue(false);
-                _effect.Parameters["OcclusionMapEnabled"]?.SetValue(false);
-                _effect.Parameters["EmissiveTextureEnabled"]?.SetValue(false);
-                
-                if (primitive.Material != null)
+                foreach (var primitive in mesh.Primitives)
                 {
-                    var material = primitive.Material;
-                    
-                    _effect.Parameters["EmissiveColorFactor"].SetValue(material.EmissiveFactor.ToVector4());
-                    _effect.Parameters["BaseColorFactor"].SetValue(material.BaseColorFactor.ToVector4());
-                    _effect.Parameters["AlphaCutoff"].SetValue(material.AlphaCutoff);
+                    GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
 
-                    switch (material.AlphaMode)
+                    _effect.Parameters["TextureEnabled"]?.SetValue(false);
+                    _effect.Parameters["NormalMapEnabled"]?.SetValue(false);
+                    _effect.Parameters["OcclusionMapEnabled"]?.SetValue(false);
+                    _effect.Parameters["EmissiveTextureEnabled"]?.SetValue(false);
+
+                    if (primitive.Material != null)
                     {
-                        case "OPAQUE":
-                            alphaMode = 0;
-                            break;
-                        case "MASK":
-                            alphaMode = 1;
-                            break;
-                        case "BLEND":
-                            continue;
-                            break;
+                        var material = primitive.Material;
+
+                        _effect.Parameters["EmissiveColorFactor"].SetValue(material.EmissiveFactor.ToVector4());
+                        _effect.Parameters["BaseColorFactor"].SetValue(material.BaseColorFactor.ToVector4());
+                        _effect.Parameters["AlphaCutoff"].SetValue(material.AlphaCutoff);
+
+                        switch (material.AlphaMode)
+                        {
+                            case "OPAQUE":
+                                alphaMode = 0;
+                                break;
+                            case "MASK":
+                                alphaMode = 1;
+                                break;
+                            case "BLEND":
+                                continue;
+                                break;
+                        }
+
+                        _effect.Parameters["AlphaMode"].SetValue(alphaMode);
+
+                        if (material.HasTexture)
+                        {
+                            _effect.Parameters["TextureEnabled"].SetValue(true);
+                            _effect.Parameters["Texture"].SetValue(primitive.Material.BaseTexture.Texture);
+
+                            GraphicsDevice.SamplerStates[0] = primitive.Material.BaseTexture.Sampler.SamplerState;
+                        }
+
+                        //if (material.HasNormalMap)
+                        //{
+                        //    //_effect.Parameters["NormalMapEnabled"]?.SetValue(true);
+                        //    //_effect.Parameters["NormalMap"]?.SetValue(primitive.Material.NormalMap.Texture);
+                        //    
+                        //    //GraphicsDevice.SamplerStates[1] = primitive.Material.NormalMap.Sampler.SamplerState;
+                        //}
+
+                        if (material.HasEmissiveTexture)
+                        {
+                            _effect.Parameters["EmissiveTextureEnabled"].SetValue(true);
+                            _effect.Parameters["EmissiveTexture"].SetValue(primitive.Material.EmissiveTexture.Texture);
+
+                            GraphicsDevice.SamplerStates[3] = primitive.Material.EmissiveTexture.Sampler.SamplerState;
+                        }
                     }
-                    
-                    _effect.Parameters["AlphaMode"].SetValue(alphaMode);
-                    
-                    if (material.HasTexture)
+
+                    foreach (var pass in _effect.Techniques[Math.Max(alphaMode - 1, 0)].Passes)
                     {
-                        _effect.Parameters["TextureEnabled"].SetValue(true);
-                        _effect.Parameters["Texture"].SetValue(primitive.Material.BaseTexture.Texture);
-                        
-                        GraphicsDevice.SamplerStates[0] = primitive.Material.BaseTexture.Sampler.SamplerState;
+                        pass.Apply();
+                        GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0,
+                            primitive.VertexBuffer.VertexCount / 3);
                     }
-                    
-                    //if (material.HasNormalMap)
-                    //{
-                    //    //_effect.Parameters["NormalMapEnabled"]?.SetValue(true);
-                    //    //_effect.Parameters["NormalMap"]?.SetValue(primitive.Material.NormalMap.Texture);
-                    //    
-                    //    //GraphicsDevice.SamplerStates[1] = primitive.Material.NormalMap.Sampler.SamplerState;
-                    //}
-                    
-                    if (material.HasEmissiveTexture)
-                    {
-                        _effect.Parameters["EmissiveTextureEnabled"].SetValue(true);
-                        _effect.Parameters["EmissiveTexture"].SetValue(primitive.Material.EmissiveTexture.Texture);
-                        
-                        GraphicsDevice.SamplerStates[3] = primitive.Material.EmissiveTexture.Sampler.SamplerState;
-                    }
-                }
-                
-                foreach (var pass in _effect.Techniques[Math.Max(alphaMode - 1, 0)].Passes)
-                {
-                    pass.Apply();
-                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount / 3);
                 }
             }
-            
-            foreach (var primitive in mesh.Primitives)
+            else
             {
-                GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
 
-                _effect.Parameters["TextureEnabled"]?.SetValue(false);
-                _effect.Parameters["NormalMapEnabled"]?.SetValue(false);
-                _effect.Parameters["OcclusionMapEnabled"]?.SetValue(false);
-                _effect.Parameters["EmissiveTextureEnabled"]?.SetValue(false);
-
-                if (primitive.Material != null)
+                foreach (var primitive in mesh.Primitives)
                 {
-                    var material = primitive.Material;
+                    GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
 
-                    //_effect.Parameters["EmissiveColorFactor"].SetValue(material.EmissiveFactor.ToVector4());
-                    _effect.Parameters["BaseColorFactor"].SetValue(material.BaseColorFactor.ToVector4());
-                    _effect.Parameters["AlphaCutoff"].SetValue(material.AlphaCutoff);
+                    _effect.Parameters["TextureEnabled"]?.SetValue(false);
+                    _effect.Parameters["NormalMapEnabled"]?.SetValue(false);
+                    _effect.Parameters["OcclusionMapEnabled"]?.SetValue(false);
+                    _effect.Parameters["EmissiveTextureEnabled"]?.SetValue(false);
 
-                    switch (material.AlphaMode)
+                    if (primitive.Material != null)
                     {
-                        case "OPAQUE":
-                            continue;
-                        case "MASK":
-                            continue;
-                        case "BLEND":
-                            alphaMode = 2;
-                            break;
+                        var material = primitive.Material;
+
+                        //_effect.Parameters["EmissiveColorFactor"].SetValue(material.EmissiveFactor.ToVector4());
+                        _effect.Parameters["BaseColorFactor"].SetValue(material.BaseColorFactor.ToVector4());
+                        _effect.Parameters["AlphaCutoff"].SetValue(material.AlphaCutoff);
+
+                        switch (material.AlphaMode)
+                        {
+                            case "OPAQUE":
+                                continue;
+                            case "MASK":
+                                continue;
+                            case "BLEND":
+                                alphaMode = 2;
+                                break;
+                        }
+
+                        _effect.Parameters["AlphaMode"].SetValue(alphaMode);
+
+                        if (material.HasTexture)
+                        {
+                            _effect.Parameters["TextureEnabled"].SetValue(true);
+                            _effect.Parameters["Texture"].SetValue(primitive.Material.BaseTexture.Texture);
+
+                            GraphicsDevice.SamplerStates[0] = primitive.Material.BaseTexture.Sampler.SamplerState;
+                        }
+
+                        //if (material.HasEmissiveTexture)
+                        //{
+                        //    _effect.Parameters["EmissiveTextureEnabled"].SetValue(true);
+                        //    _effect.Parameters["EmissiveTexture"].SetValue(primitive.Material.EmissiveTexture.Texture);
+                        //
+                        //    GraphicsDevice.SamplerStates[3] = primitive.Material.EmissiveTexture.Sampler.SamplerState;
+                        //}
                     }
 
-                    _effect.Parameters["AlphaMode"].SetValue(alphaMode);
-
-                    if (material.HasTexture)
+                    foreach (var pass in _effect.Techniques[Math.Max(alphaMode - 1, 0)].Passes)
                     {
-                        _effect.Parameters["TextureEnabled"].SetValue(true);
-                        _effect.Parameters["Texture"].SetValue(primitive.Material.BaseTexture.Texture);
-
-                        GraphicsDevice.SamplerStates[0] = primitive.Material.BaseTexture.Sampler.SamplerState;
+                        pass.Apply();
+                        GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0,
+                            primitive.VertexBuffer.VertexCount / 3);
                     }
-
-                    //if (material.HasEmissiveTexture)
-                    //{
-                    //    _effect.Parameters["EmissiveTextureEnabled"].SetValue(true);
-                    //    _effect.Parameters["EmissiveTexture"].SetValue(primitive.Material.EmissiveTexture.Texture);
-                    //
-                    //    GraphicsDevice.SamplerStates[3] = primitive.Material.EmissiveTexture.Sampler.SamplerState;
-                    //}
-                }
-
-                foreach (var pass in _effect.Techniques[Math.Max(alphaMode - 1, 0)].Passes)
-                {
-                    pass.Apply();
-                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitive.VertexBuffer.VertexCount / 3);
                 }
             }
-            
         }
     }
-    
-    [StructLayout(LayoutKind.Sequential, Pack = 16)]
-    public struct Constants
-    {
-        public Matrix World;
-        public Matrix View;
-        public Matrix Projection;
-
-        public float AlphaCutoff;
-        public int AlphaMode;
-
-        public bool TextureEnabled;
-        public bool NormalMapEnabled;
-        public bool OcclusionMapEnabled;
-        public bool EmissiveTextureEnabled;
-
-        public Vector4 BaseColorFactor;
-        public Vector4 EmissiveColorFactor;
-
-        public bool SkinningEnabled;
-        public Matrix[] Bones;
-    }
-    
 }

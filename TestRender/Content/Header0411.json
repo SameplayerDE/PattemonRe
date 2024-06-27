@@ -1,0 +1,36 @@
+﻿[
+    {
+        "headerId": "0411",
+        "locationName": "Zweiblattdorf",
+        "showNameTag": true,
+        "areaIcon": "",
+        "internalName": "",
+        "musicDayId": 0,
+        "musicDayName": "",
+        "musicNightId": 0,
+        "musicNightName": "",
+        "weatherId": 0,
+        "weatherName": "",
+        "canUseFly": false,
+        "canUseRope": false,
+        "canUseRun": false,
+        "canUseBicycle": false
+    },
+    {
+        "headerId": "0342",
+        "locationName": "Route 201",
+        "showNameTag": false,
+        "areaIcon": "",
+        "internalName": "",
+        "musicDayId": 0,
+        "musicDayName": "",
+        "musicNightId": 0,
+        "musicNightName": "",
+        "weatherId": 0,
+        "weatherName": "",
+        "canUseFly": false,
+        "canUseRope": false,
+        "canUseRun": false,
+        "canUseBicycle": false
+    }
+]

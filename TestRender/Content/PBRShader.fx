@@ -184,9 +184,9 @@ technique T1
         FillMode = Solid;
         ZWriteEnable = true;
         CullMode = None;
-        AlphaBlendEnable = true;
-        DestBlend = INVSRCALPHA;
-        SrcBlend = SRCALPHA;
+        AlphaBlendEnable = true; 
+        SrcBlend = SrcAlpha; 
+        DestBlend = InvSrcAlpha; 
         PixelShader = compile PS_SHADERMODEL MainPS();
     }
 };
