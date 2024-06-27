@@ -13,24 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin 1.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:1.jpg
-
-#begin DiffuseShader.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:DiffuseShader.fx
-
 #begin Font.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -43,22 +25,3 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:PBRShader.fx
-
-#begin Skinned.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Skinned.fx
-
-#begin Texture.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Texture.png
-
