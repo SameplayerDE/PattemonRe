@@ -10,12 +10,12 @@
         <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove="Icon.ico"/>
-        <None Remove="Icon.bmp"/>
-    </ItemGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="Icon.ico"/>
-        <EmbeddedResource Include="Icon.bmp"/>
+        <EmbeddedResource Include="Icon.ico">
+            <LogicalName>Icon.ico</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Icon.bmp">
+            <LogicalName>Icon.bmp</LogicalName>
+        </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
         <MonoGameContentReference Include="Content\Content.mgcb"/>
@@ -30,5 +30,10 @@
         <PackageReference Include="System.Drawing.Common" Version="9.0.0-preview.5.24306.5" />
         <PackageReference Include="Tesseract" Version="5.2.0" />
         <PackageReference Include="Tesseract.Drawing" Version="5.2.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Update="Content\pokemon-dp-pro.ttf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>

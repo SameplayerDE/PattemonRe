@@ -29,77 +29,13 @@ namespace TestRender
         private List<Chunk> _chunks = [];
         private List<GameModel> _mapObjects = [];
         
-        string[,] _mapFileMatrix = new string[30, 30];
-        int[,] _mapHeightMatrix = new int[30, 30];
-
         private int _chunkX = 0;
         private int _chunkY = 0;
+
+        private bool ShowArea = false;
+        private Texture2D AreaTexture;
         
-        static int[,] ReadNumberMatrixFromFile(string filePath)
-        {
-            string[] lines = File.ReadAllLines(filePath);
-            int rows = lines.Length;
-            int cols = lines[0].Split(',').Length;
-
-            int[,] matrix = new int[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-            {
-                string[] values = lines[i].Split(',');
-                for (int j = 0; j < cols; j++)
-                {
-                    if (!string.IsNullOrEmpty(values[j]))
-                    {
-                        if (int.TryParse(values[j], out int number))
-                        {
-                            matrix[i, j] = number;
-                        }
-                        else
-                        {
-                            // Handle invalid number format here if needed
-                            matrix[i, j] = 0; // Default value if conversion fails
-                        }
-                    }
-                    else
-                    {
-                        // Handle empty string or null case
-                        matrix[i, j] = 0; // Default value if string is empty or null
-                    }
-                }
-            }
-
-            return matrix;
-        }
-        
-        public List<GameModel> ReadModelMatrix(string filePath)
-        {
-            string[] lines = File.ReadAllLines(filePath);
-
-            // Initialisiere die Liste von GameModel-Objekten
-            List<GameModel> models = new List<GameModel>();
-
-            for (int i = 0; i < lines.Length; i++)
-            {
-                string[] values = lines[i].Split(',');
-                if (values.Length == 6)
-                {
-                    if (int.TryParse(values[0], out int cx) &&
-                        int.TryParse(values[1], out int cy) &&
-                        float.TryParse(values[3], NumberStyles.Float, CultureInfo.InvariantCulture, out float x) &&
-                        float.TryParse(values[4], NumberStyles.Float, CultureInfo.InvariantCulture, out float y) &&
-                        float.TryParse(values[5], NumberStyles.Float, CultureInfo.InvariantCulture, out float z))
-                    {
-                        var gltfFile = GLTFLoader.Load(@$"A:\ModelExporter\Platin\output_assets\{values[2]}\{values[2]}.gltf");
-                        var model = GameModel.From(GraphicsDevice, gltfFile);
-                        //model.TranslateTo(new Vector3(x, y, z) * 16);
-                        model.TranslateTo(new Vector3(cx * 512, 0, cy * 512) + new Vector3(x, y, z) * 16);
-                        models.Add(model);
-                    }
-                }
-            }
-
-            return models;
-        }
+        public event Action<int, int, int, int> OnChunkChanged;
         
         public Game1()
         {
@@ -118,61 +54,43 @@ namespace TestRender
 
         protected override void Initialize()
         {
-            _screen = new RenderTarget2D(GraphicsDevice, 1280 / 1, 720 / 1, false,
+            _screen = new RenderTarget2D(GraphicsDevice, 256 / 1, 192 / 1, false,
                 GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
             _camera = new Camera(GraphicsDevice);
 
-            _mapFileMatrix = Utils.ReadMatrix(@"Content\MapFileMatrix.csv");
-            _mapHeightMatrix = ReadNumberMatrixFromFile(@"Content\MapHeightMatrix.csv");
-            _mapObjects = ReadModelMatrix(@"Content\MapObjectMatrix.csv");
-            var chunkHeaders = ChunkHeader.Load(@"Content\Header0411.json");
+            _chunks = Chunk.Load(GraphicsDevice);
             
-            int maxChunksX = 128;
-            int maxChunksY = 128;
+            OnChunkChanged += HandleChunkChange;
             
-            string basePath = @"A:\ModelExporter\Platin\overworldmaps\";
-            //basePath = @"A:\ModelExporter\black2\output_assets\";
-            //basePath = @"A:\ModelExporter\heartgold\output_assets\";
-
-            for (int x = 0; x <= maxChunksX; x++)
-            {
-                for (int y = 0; y <= maxChunksY; y++)
-                {
-                    if (y >= _mapFileMatrix.GetLength(0) || x >= _mapFileMatrix.GetLength(1))
-                    {
-                        continue;
-                    }
-                    string folderName = _mapFileMatrix[y, x];
-                    string fileName = $"{folderName}.glb";
-                    string filePath = Path.Combine(basePath, folderName, fileName);
-
-                    bool result = File.Exists(filePath);
-    
-                    if (result)
-                    {
-                        var chunkHeight = _mapHeightMatrix[y, x];
-                        var gltfFile = GLTFLoader.Load(filePath);
-                        var gameModel = GameModel.From(GraphicsDevice, gltfFile);
-                        gameModel.Translation = new Vector3(x * 512, chunkHeight * 8, y * 512);
-
-                        var chunk = new Chunk();
-                        chunk.X = x;
-                        chunk.Y = y;
-                        chunk.Id = folderName;
-                        chunk.Height = chunkHeight;
-                        chunk.Terrain = gameModel;
-   
-                        _chunks.Add(chunk);
-                    }
-                }
-            }
             base.Initialize();
         }
 
+        private void HandleChunkChange(int oldChunkX, int oldChunkY, int newChunkX, int newChunkY)
+        {
+            // Erstelle den Schlüssel für den neuen Chunk
+            var prevChunk = _chunks.FirstOrDefault(chunk => chunk.X == oldChunkX && chunk.Y == oldChunkY);
+            var currChunk = _chunks.FirstOrDefault(chunk => chunk.X == newChunkX && chunk.Y == newChunkY);
+
+            if (currChunk != null && currChunk.Header != null)
+            {
+                // Prüfe, ob der vorherige Chunk null ist oder ob die Header unterschiedlich sind
+                if (prevChunk == null || prevChunk.Header == null || prevChunk.Header.Id != currChunk.Header.Id)
+                {
+                    if (currChunk.Header.ShowNameTag)
+                    {
+                        Console.WriteLine($"{currChunk.Header.LocationName}");
+                        ShowArea = true;
+                    }
+                }
+            }
+        }
+
+        
         protected override void LoadContent()
         {
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            AreaTexture = Content.Load<Texture2D>("00");
             _effect = Content.Load<Effect>("PBRShader");
             _effect.Parameters["Bones"].SetValue(new Matrix[64]); 
             _font = Content.Load<SpriteFont>("Font");
@@ -265,21 +183,29 @@ namespace TestRender
             // Die Größe eines Chunks
             int chunkSize = 512;
 
-// Position der Kamera
+            // Position der Kamera
             float cameraPosX = _camera.Position.X;
             float cameraPosZ = _camera.Position.Z;
 
-// Berechne die Chunk-Koordinaten, verschoben um die Hälfte der Chunk-Größe
-            _chunkX = (int)((cameraPosX + chunkSize / 2) / chunkSize);
-            _chunkY = (int)((cameraPosZ + chunkSize / 2) / chunkSize);
-            //Console.WriteLine(_camera.Position);
+            // Berechne die Chunk-Koordinaten, verschoben um die Hälfte der Chunk-Größe
+            int newChunkX = (int)((cameraPosX + chunkSize / 2) / chunkSize);
+            int newChunkY = (int)((cameraPosZ + chunkSize / 2) / chunkSize);
+
+            // Prüfe auf Chunk-Wechsel
+            if (newChunkX != _chunkX || newChunkY != _chunkY)
+            {
+                OnChunkChanged?.Invoke(_chunkX, _chunkY, newChunkX, newChunkY);
+                _chunkX = newChunkX;
+                _chunkY = newChunkY;
+            }
+            
             
             base.Update(gameTime);
         }
         
         protected override void Draw(GameTime gameTime)
         {
-            //GraphicsDevice.SetRenderTarget(_screen);
+            GraphicsDevice.SetRenderTarget(_screen);
             GraphicsDevice.Clear(Color.Black);
 
             int[] offsetX = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
@@ -305,11 +231,7 @@ namespace TestRender
                     }
                 }
             }
-            foreach (var building in _mapObjects)
-            {
-                DrawModel(building);
-            }
-            
+
             foreach (var dx in offsetX)
             {
                 foreach (var dy in offsetY)
@@ -331,22 +253,29 @@ namespace TestRender
                     }
                 }
             }
-            
-            foreach (var building in _mapObjects)
-            {
-                DrawModel(building, true);
-            }
-            
-            //GraphicsDevice.SetRenderTarget(null);
-            
+
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            //_spriteBatch.Draw(_screen, GraphicsDevice.Viewport.Bounds, Color.White);
             _spriteBatch.DrawString(_font, _camera.Rotation.ToString(), Vector2.Zero, Color.Red);
             var currentChunk = _chunks.FirstOrDefault(chunk => chunk.X == _chunkX && chunk.Y == _chunkY);
 
             if (currentChunk != null)
+            {
                 _spriteBatch.DrawString(_font, $"{_chunkX}, {_chunkY}, {currentChunk.Id}",
                     new Vector2(0, _font.LineSpacing), Color.Red);
+                
+                if (ShowArea)
+                {
+                    _spriteBatch.Draw(AreaTexture, new Vector2(134 - AreaTexture.Width , 38 - AreaTexture.Height), Color.White);
+                    _spriteBatch.DrawString(_font, currentChunk.Header.LocationName, new Vector2(134 - AreaTexture.Width , 38 - AreaTexture.Height) + new Vector2(8, 7), Color.White);
+                }
+            }
+
+            _spriteBatch.End();
+            
+            GraphicsDevice.SetRenderTarget(null);
+            
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _spriteBatch.Draw(_screen, GraphicsDevice.Viewport.Bounds, Color.White);
             _spriteBatch.End();
             
             base.Draw(gameTime);

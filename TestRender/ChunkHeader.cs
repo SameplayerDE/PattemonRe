@@ -7,6 +7,8 @@ namespace TestRender;
 
 public class ChunkHeader
 {
+    public string Id;
+    
     //Location Info
     public string LocationName;
     public bool ShowNameTag;
@@ -48,6 +50,7 @@ public class ChunkHeader
             var headerId = item["headerId"]?.ToString();
             var chunkHeader = new ChunkHeader
             {
+                Id = headerId,
                 LocationName = item["locationName"]?.ToString(),
                 ShowNameTag = item["showNameTag"]?.ToObject<bool>() ?? false,
                 AreaIcon = item["areaIcon"]?.ToString(),
