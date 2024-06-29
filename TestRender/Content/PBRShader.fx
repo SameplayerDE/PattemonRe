@@ -159,7 +159,7 @@ technique T0
         ZEnable = true;
         FillMode = Solid;
         ZWriteEnable = true;
-        CullMode = None;
+        CullMode = CW;
         AlphaBlendEnable = false;
         PixelShader = compile PS_SHADERMODEL MainPS();
     }
@@ -183,7 +183,7 @@ technique T1
         ZEnable = true;
         FillMode = Solid;
         ZWriteEnable = true;
-        CullMode = None;
+        CullMode = CW;
         AlphaBlendEnable = true; 
         SrcBlend = SrcAlpha; 
         DestBlend = InvSrcAlpha; 

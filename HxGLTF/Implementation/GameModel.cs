@@ -25,6 +25,66 @@ namespace HxGLTF.Implementation
         public bool IsPlaying;
         
         //AnimationPlayerClass
+
+        public void Dispose()
+        {
+            // Freigabe von Ressourcen und Zurücksetzen der Felder
+            if (Nodes != null)
+            {
+                foreach (var node in Nodes)
+                {
+                    //node.Dispose();
+                }
+                Nodes = null;
+            }
+
+            if (Scenes != null)
+            {
+                foreach (var scene in Scenes)
+                {
+                    //scene.Dispose();
+                }
+                Scenes = null;
+            }
+
+            if (Meshes != null)
+            {
+                foreach (var mesh in Meshes)
+                {
+                    mesh.Dispose();
+                }
+                Meshes = null;
+            }
+
+            if (Skins != null)
+            {
+                foreach (var skin in Skins)
+                {
+                    //skin.Dispose();
+                }
+                Skins = null;
+            }
+
+            if (Animations != null)
+            {
+                foreach (var animation in Animations)
+                {
+                    //animation.Dispose();
+                }
+                Animations = null;
+            }
+
+            GlobalTranformation = Matrix.Identity;
+            LocalTranformation = Matrix.Identity;
+            Translation = Vector3.Zero;
+            Scale = Vector3.One;
+            Rotation = Quaternion.Identity;
+
+            _currentAnimationIndex = 0;
+            _nextAnimationIndex = 0;
+            _animationTimer = 0f;
+            IsPlaying = false;
+        }
         
         public void Play(int index)
         {

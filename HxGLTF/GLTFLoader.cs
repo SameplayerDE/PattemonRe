@@ -579,7 +579,14 @@ namespace HxGLTF
                     if (jBaseColorFactor != null)
                     {
                         var rgba = jBaseColorFactor.ToObject<float[]>();
-                        material.BasColorFactor = new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
+                        if (material.Name == "shade")
+                        {
+                            material.BasColorFactor = new Color(0, 0, 0, rgba[3]);
+                        }
+                        else
+                        {
+                            material.BasColorFactor = new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
+                        }
                     }
 
                     var jMetallicFactor = jPbr["metallicFactor"];

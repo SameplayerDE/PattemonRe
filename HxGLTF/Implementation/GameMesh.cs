@@ -6,13 +6,23 @@ namespace HxGLTF.Implementation
     public class GameMeshPrimitives
     {
         public VertexBuffer VertexBuffer;
-        public List<VertexPositionColorNormalTextureBlend[]> MorphTargets;
         public int VertexCount;
         public IndexBuffer IndexBuffer;
         public int IndexCount;
         public bool IsIndexed;
         public GameMaterial Material;
 
+        public void Dispose()
+        {
+            VertexBuffer?.Dispose();
+            VertexBuffer = null;
+
+            IndexBuffer?.Dispose();
+            IndexBuffer = null;
+            
+            Material = null;
+        }
+        
        public static GameMeshPrimitives From(GraphicsDevice graphicsDevice, GLTFFile file, MeshPrimitive primitive)
         {
             var result = new GameMeshPrimitives();
@@ -221,6 +231,20 @@ namespace HxGLTF.Implementation
         public GameMeshPrimitives[] Primitives;
         public float[] Weights;
 
+        public void Dispose()
+        {
+            if (Primitives != null)
+            {
+                foreach (var primitive in Primitives)
+                {
+                    primitive.Dispose();
+                }
+                Primitives = null;
+            }
+
+            Weights = null;
+        }
+        
         public static GameMesh From(GraphicsDevice graphicsDevice, GLTFFile file, Mesh mesh)
         {
             if (mesh == null)

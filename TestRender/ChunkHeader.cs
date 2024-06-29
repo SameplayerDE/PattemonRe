@@ -12,24 +12,22 @@ public class ChunkHeader
     //Location Info
     public string LocationName;
     public bool ShowNameTag;
-    public string AreaIcon;
+    public int AreaIcon;
     public string InternalName;
     
     //Appearance & Sound
     public int MusicDayId;
-    public string MusicDayName;
-    
     public int MusicNightId;
-    public string MusicNightName;
-
     public int WeatherId;
-    public string WeatherName;
     
     //Map Settings
     public bool CanUseFly;
     public bool CanUseRope;
     public bool CanUseRun;
     public bool CanUseBicycle;
+    
+    //Matrix
+    public int MatrixId;
 
     public static Dictionary<string, ChunkHeader> Load(string path)
     {
@@ -53,18 +51,16 @@ public class ChunkHeader
                 Id = headerId,
                 LocationName = item["locationName"]?.ToString(),
                 ShowNameTag = item["showNameTag"]?.ToObject<bool>() ?? false,
-                AreaIcon = item["areaIcon"]?.ToString(),
+                AreaIcon = item["musicDayId"]?.ToObject<int>() ?? 0,
                 InternalName = item["internalName"]?.ToString(),
                 MusicDayId = item["musicDayId"]?.ToObject<int>() ?? 0,
-                MusicDayName = item["musicDayName"]?.ToString(),
                 MusicNightId = item["musicNightId"]?.ToObject<int>() ?? 0,
-                MusicNightName = item["musicNightName"]?.ToString(),
                 WeatherId = item["weatherId"]?.ToObject<int>() ?? 0,
-                WeatherName = item["weatherName"]?.ToString(),
                 CanUseFly = item["canUseFly"]?.ToObject<bool>() ?? false,
                 CanUseRope = item["canUseRope"]?.ToObject<bool>() ?? false,
                 CanUseRun = item["canUseRun"]?.ToObject<bool>() ?? false,
-                CanUseBicycle = item["canUseBicycle"]?.ToObject<bool>() ?? false
+                CanUseBicycle = item["canUseBicycle"]?.ToObject<bool>() ?? false,
+                MatrixId = item["matrixId"]?.ToObject<int>() ?? 0
             };
 
             if (headerId != null)

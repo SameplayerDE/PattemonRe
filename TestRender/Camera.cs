@@ -47,8 +47,8 @@ namespace TestRendering
         public Vector3 Position { get { return _position; } }
         public Vector3 Rotation { get { return _rotation; } }
 
-        public bool EnableMix = true;
-        public float OrthoFactor = 0.009f;
+        public bool EnableMix = false;
+        public float OrthoFactor = 0.000f;
         
         public Camera(GraphicsDevice graphicsDevice)
         {
@@ -60,22 +60,28 @@ namespace TestRendering
         protected void GenerateProjectionMatrix()
         {
             var presentationParameters = GraphicsDevice.PresentationParameters;
-            float aspectRatio = (float)presentationParameters.BackBufferWidth / (float)presentationParameters.BackBufferHeight;
+            var aspectRatio = (float)presentationParameters.BackBufferWidth / (float)presentationParameters.BackBufferHeight;
 
             // Combination of orthographic and perspective
-            float width = 20f;
-            float height = width / aspectRatio;
+            var width = 512f;
+            var height = width / aspectRatio;
 
             _projection = Matrix.CreateOrthographic(width, height, _nearClipPlane, _farClipPlane);
 
             // Add slight perspective effect
-            Matrix perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), aspectRatio, _nearClipPlane, _farClipPlane);
+            
             if (EnableMix)
             {
-                _projection = Matrix.Lerp(_projection, perspective, OrthoFactor); // Adjust 0.1f to control the mix level
+                var perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), aspectRatio, _nearClipPlane, _farClipPlane);
+                _projection = Matrix.Lerp(_projection, perspective, OrthoFactor);
             }
+            //else if (OrthoOnly)
+            //{
+            //    _projection = _projection;
+            //}
             else
             {
+                var perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), aspectRatio, _nearClipPlane, _farClipPlane);
                 _projection = perspective;
             }
         }

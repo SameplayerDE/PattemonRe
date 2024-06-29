@@ -6,145 +6,165 @@ using HxGLTF;
 using HxGLTF.Implementation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static System.Globalization.NumberStyles;
+using Newtonsoft.Json.Linq;
 
 namespace TestRender;
 
+public class Building
+{
+    public Vector3 Position;
+    public string BuildingId;
+    public GameModel Model;
+    
+    public bool IsLoaded => Model != null;
+
+    public void Load(GraphicsDevice graphicsDevice)
+    {
+        var gltfFile = GLTFLoader.Load(@$"A:\ModelExporter\Platin\output_assets\{BuildingId}\{BuildingId}.gltf");
+        var model = GameModel.From(graphicsDevice, gltfFile);
+        model.TranslateTo(Position * 16);
+        Model = model;
+    }
+
+    public void Unload()
+    {
+        Model?.Dispose();
+        Model = null;
+    }
+}
+
 public class Chunk
 {
-    public ChunkHeader Header;
+    //public ChunkHeader Header;
     public string Id;
-    public int X, Y;
-    public int Height;
-    public GameModel Terrain;
-    public List<GameModel> Buildings = [];
+    public List<Building> Buildings;
+    public int[,] Collision = new int[32, 32];
+    //public int X, Y;
+    //public int Height;
+    public GameModel Model;
+    //public List<GameModel> Buildings = [];
 
-    public static List<Chunk> Load(GraphicsDevice graphicsDevice)
+    public bool IsLoaded => Model != null;
+
+    public void Load(GraphicsDevice graphicsDevice)
     {
-
-        var result = new List<Chunk>();
-        
-        var mapFileMatrix = Utils.ReadMatrix(@"Content\MapFileMatrix.csv");
-        var mapHeaderMatrix = Utils.ReadMatrix(@"Content\MapHeaderMatrix.csv");
-        var mapHeightMatrix = ReadNumberMatrixFromFile(@"Content\MapHeightMatrix.csv");
-        var mapObjects = ReadModelMatrix(graphicsDevice, @"Content\MapObjectMatrix.csv");
-        var chunkHeaders = ChunkHeader.Load(@"Content\Header0411.json");
-        
-        int maxChunksX = 128;
-        int maxChunksY = 128;
-            
-        string basePath = @"A:\ModelExporter\Platin\overworldmaps\";
-        //basePath = @"A:\ModelExporter\black2\output_assets\";
-        //basePath = @"A:\ModelExporter\heartgold\output_assets\";
-
-        for (int x = 0; x <= maxChunksX; x++)
+        foreach (var building in Buildings)
         {
-            for (int y = 0; y <= maxChunksY; y++)
-            {
-                if (y >= mapFileMatrix.GetLength(0) || x >= mapFileMatrix.GetLength(1))
-                {
-                    continue;
-                }
-                string folderName = mapFileMatrix[y, x];
-                string headerName = mapHeaderMatrix[y, x];
-                string fileName = $"{folderName}.glb";
-                string filePath = Path.Combine(basePath, folderName, fileName);
-
-                if (File.Exists(filePath))
-                {
-                    var chunkHeight = mapHeightMatrix[y, x];
-                    var gltfFile = GLTFLoader.Load(filePath);
-                    var gameModel = GameModel.From(graphicsDevice, gltfFile);
-                    gameModel.Translation = new Vector3(x * 512, chunkHeight * 8, y * 512);
-
-                    var chunk = new Chunk();
-                    chunk.Header = chunkHeaders.GetValueOrDefault(headerName);
-
-                    if (chunk.Header != null)
-                    {
-                        
-                    }
-                    
-                    chunk.Id = folderName;
-                    chunk.X = x;
-                    chunk.Y = y;
-                    chunk.Id = folderName;
-                    chunk.Height = chunkHeight;
-                    chunk.Terrain = gameModel;
-                    //add only corrects mopdels to this chunk
-   
-                    result.Add(chunk);
-                }
-            }
+            building.Load(graphicsDevice);
         }
         
-        return result;
+        var basePath = @"A:\ModelExporter\Platin\overworldmaps\";
+        string folderName = Id;
+        string fileName = $"{folderName}.glb";
+        string filePath = Path.Combine(basePath, folderName, fileName);
+        
+        if (File.Exists(filePath))
+        {
+            var gltfFile = GLTFLoader.Load(filePath);
+            var gameModel = GameModel.From(graphicsDevice, gltfFile);
+            Model = gameModel;
+        }
+    }
+
+    public void Unload()
+    {
+        foreach (var building in Buildings)
+        {
+            building.Unload();
+        }
+
+        Model?.Dispose();
+        Model = null;
     }
     
-    static int[,] ReadNumberMatrixFromFile(string filePath)
+    public static Chunk Load(GraphicsDevice graphicsDevice, JToken jChunk)
+    {
+        var chunk = new Chunk();
+        
+        var chunkIdToken = jChunk["chunkId"];
+        if (chunkIdToken == null)
         {
-            string[] lines = File.ReadAllLines(filePath);
-            int rows = lines.Length;
-            int cols = lines[0].Split(',').Length;
-
-            int[,] matrix = new int[rows, cols];
-
-            for (int i = 0; i < rows; i++)
+            throw new Exception();
+        }
+        chunk.Id = chunkIdToken.ToString();
+        
+        var chunkPermissionsToken = jChunk["permissions"];
+        if (chunkPermissionsToken != null)
+        {
+            var collisionsToken = chunkPermissionsToken["collisions"];
+            if (collisionsToken != null)
             {
-                string[] values = lines[i].Split(',');
-                for (int j = 0; j < cols; j++)
+                var collisions = collisionsToken.ToObject<string[][]>();
+
+                for (var y = 0; y < collisions.Length; y++)
                 {
-                    if (!string.IsNullOrEmpty(values[j]))
+                    var array = collisions[y];
+                    for (var x = 0; x < array.Length; x++)
                     {
-                        if (int.TryParse(values[j], out int number))
+                        var item = array[x];
+
+                        if (int.TryParse(item, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int value))
                         {
-                            matrix[i, j] = number;
+                            chunk.Collision[y, x] = value;
                         }
                         else
                         {
-                            // Handle invalid number format here if needed
-                            matrix[i, j] = 0; // Default value if conversion fails
+                            chunk.Collision[y, x] = 0;
                         }
                     }
-                    else
-                    {
-                        // Handle empty string or null case
-                        matrix[i, j] = 0; // Default value if string is empty or null
-                    }
                 }
             }
-
-            return matrix;
         }
         
-    static List<GameModel> ReadModelMatrix(GraphicsDevice graphicsDevice, string filePath)
+        var chunkBuildingsToken = jChunk["buildings"];
+        if (chunkBuildingsToken == null)
         {
-            string[] lines = File.ReadAllLines(filePath);
-
-            // Initialisiere die Liste von GameModel-Objekten
-            List<GameModel> models = new List<GameModel>();
-
-            for (int i = 0; i < lines.Length; i++)
-            {
-                string[] values = lines[i].Split(',');
-                if (values.Length == 6)
-                {
-                    if (int.TryParse(values[0], out int cx) &&
-                        int.TryParse(values[1], out int cy) &&
-                        float.TryParse(values[3], Float, CultureInfo.InvariantCulture, out float x) &&
-                        float.TryParse(values[4], Float, CultureInfo.InvariantCulture, out float y) &&
-                        float.TryParse(values[5], Float, CultureInfo.InvariantCulture, out float z))
-                    {
-                        var gltfFile = GLTFLoader.Load(@$"A:\ModelExporter\Platin\output_assets\{values[2]}\{values[2]}.gltf");
-                        var model = GameModel.From(graphicsDevice, gltfFile);
-                        //model.TranslateTo(new Vector3(x, y, z) * 16);
-                        model.TranslateTo(new Vector3(cx * 512, 0, cy * 512) + new Vector3(x, y, z) * 16);
-                        models.Add(model);
-                    }
-                }
-            }
-
-            return models;
+            throw new Exception();
         }
-    
+        chunk.Buildings = [];
+
+        foreach (var jBuilding in chunkBuildingsToken)
+        {
+            if (jBuilding is not { HasValues: true })
+            {
+                continue;
+            }
+            
+            var building = new Building();
+                    
+            var buildingIdToken = jBuilding["id"];
+            if (buildingIdToken == null)
+            {
+                throw new Exception();
+            }
+            building.BuildingId = buildingIdToken.ToString();
+                    
+            var buildingXToken = jBuilding["x"];
+            if (buildingXToken == null)
+            {
+                throw new Exception();
+            }
+            building.Position.X = buildingXToken.Value<float>();
+                    
+            var buildingYToken = jBuilding["y"];
+            if (buildingYToken == null)
+            {
+                throw new Exception();
+            }
+            building.Position.Y = buildingYToken.Value<float>();
+                    
+            var buildingZToken = jBuilding["z"];
+            if (buildingZToken == null)
+            {
+                throw new Exception();
+            }
+            building.Position.Z = buildingZToken.Value<float>();
+            
+            chunk.Buildings.Add(building);
+        }
+        
+        
+        
+        return chunk;
+    }
 }

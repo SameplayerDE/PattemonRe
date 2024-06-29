@@ -1,0 +1,62 @@
+﻿[
+    {
+        "headerId": "0411",
+        "locationName": "Zweiblattdorf",
+        "showNameTag": true,
+        "areaIcon": 2,
+        "internalName": "T01",
+        "musicDayId": 1004,
+        "musicNightId": 1033,
+        "weatherId": 0,
+        "canUseFly": true,
+        "canUseRope": false,
+        "canUseRun": true,
+        "canUseBicycle": true,
+        "matrixId": 0
+    },
+    {
+        "headerId": "0415",
+        "locationName": "Zweiblattdorf",
+        "showNameTag": false,
+        "areaIcon": 2,
+        "internalName": "T01R0202",
+        "musicDayId": 1004,
+        "musicNightId": 1033,
+        "weatherId": 0,
+        "canUseFly": true,
+        "canUseRope": false,
+        "canUseRun": true,
+        "canUseBicycle": true,
+        "matrixId": 129
+    },
+    {
+        "headerId": "0342",
+        "locationName": "Route 201",
+        "showNameTag": true,
+        "areaIcon": 2,
+        "internalName": "R201",
+        "musicDayId": 1021,
+        "musicNightId": 1050,
+        "weatherId": 0,
+        "canUseFly": true,
+        "canUseRope": false,
+        "canUseRun": true,
+        "canUseBicycle": true,
+        "matrixId": 0
+    },
+    {
+        "headerId": "0342",
+        "locationName": "Route 201",
+        "showNameTag": true,
+        "areaIcon": 3,
+        "internalName": "R201",
+        "musicDayId": 1021,
+        "musicNightId": 1050,
+        "weatherId": 0,
+        "canUseFly": true,
+        "canUseRope": false,
+        "canUseRun": true,
+        "canUseBicycle": true,
+        "matrixId": 0
+    }
+]
