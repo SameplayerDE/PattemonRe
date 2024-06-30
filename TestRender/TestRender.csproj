@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HxGLTF\HxGLTF.csproj" />
+    <ProjectReference Include="..\InputLib\InputLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Content\map01_22c\c02_base.png">

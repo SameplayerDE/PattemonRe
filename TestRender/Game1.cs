@@ -2,6 +2,7 @@
 using System.Linq;
 using HxGLTF;
 using HxGLTF.Implementation;
+using InputLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,10 +11,7 @@ using TestRendering;
 namespace TestRender
 {
     public class Game1 : Game
-    {
-        private KeyboardState _prev;
-        private KeyboardState _curr;
-        
+    {   
         private GraphicsDeviceManager _graphicsDeviceManager;
         private SpriteBatch _spriteBatch;
         
@@ -30,8 +28,9 @@ namespace TestRender
         private int _cellX = 0;
         private int _cellY = 0;
         
-        private int _heroX = 0;
-        private int _heroY = 0;
+        private float _heroX = 0;
+        private float _heroHeight = 0;
+        private float _heroY = 0;
         
         public event Action<int, int, int, int> OnChunkChanged;
         
@@ -85,7 +84,6 @@ namespace TestRender
             }
             */
         }
-
         
         protected override void LoadContent()
         {
@@ -94,9 +92,11 @@ namespace TestRender
             _effect = Content.Load<Effect>("PBRShader");
             _effect.Parameters["Bones"].SetValue(new Matrix[64]); 
             _font = Content.Load<SpriteFont>("Font");
-            _camera.Teleport(new Vector3(0.25f, 0.5f, 1f) * 512);
+            _camera.Teleport(new Vector3(0.25f, 1f, 0.5f) * 512);
         }
 
+        private Vector2 CellTarget;
+        
         protected override void Update(GameTime gameTime)
         {
             var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -106,26 +106,25 @@ namespace TestRender
                 return;
             }
 
-            _prev = _curr;
-            _curr = Keyboard.GetState();
+            KeyboardHandler.Update(gameTime);
 
             // Kamera-Rotationen
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            if (KeyboardHandler.IsKeyDown(Keys.Up))
             {
                 _camera.RotateX(-1);
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            if (KeyboardHandler.IsKeyDown(Keys.Down))
             {
                 _camera.RotateX(1);
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            if (KeyboardHandler.IsKeyDown(Keys.Left))
             {
                 _camera.RotateY(1);
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            if (KeyboardHandler.IsKeyDown(Keys.Right))
             {
                 _camera.RotateY(-1);
             }
@@ -133,47 +132,70 @@ namespace TestRender
             // Richtungsvektor initialisieren
             var direction = Vector3.Zero;
 
-            // Richtungssteuerung mit diskreter Bewegung
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                direction += Vector3.Forward;
-            }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            if (!KeyboardHandler.IsKeyDown(Keys.LeftShift))
             {
-                direction += Vector3.Left;
-            }
+                // Richtungssteuerung mit diskreter Bewegung
+                if (KeyboardHandler.IsKeyDownOnce(Keys.W))
+                {
+                    direction += Vector3.Forward;
+                }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                direction += Vector3.Right;
-            }
+                else if (KeyboardHandler.IsKeyDownOnce(Keys.A))
+                {
+                    direction += Vector3.Left;
+                }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                direction += Vector3.Backward;
+                else if (KeyboardHandler.IsKeyDownOnce(Keys.D))
+                {
+                    direction += Vector3.Right;
+                }
+                else if (KeyboardHandler.IsKeyDownOnce(Keys.S))
+                {
+                    direction += Vector3.Backward;
+                }
+                else if (KeyboardHandler.IsKeyDownOnce(Keys.Q))
+                {
+                    direction += Vector3.Down;
+                }
+                else if (KeyboardHandler.IsKeyDownOnce(Keys.E))
+                {
+                    direction += Vector3.Up;
+                }
             }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Q))
+            else
             {
-                direction += Vector3.Down;
-            }
+                // Richtungssteuerung mit diskreter Bewegung
+                if (KeyboardHandler.IsKeyDown(Keys.W))
+                {
+                    direction += Vector3.Forward;
+                }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.E))
-            {
-                direction += Vector3.Up;
+                else if (KeyboardHandler.IsKeyDown(Keys.A))
+                {
+                    direction += Vector3.Left;
+                }
+
+                else if (KeyboardHandler.IsKeyDown(Keys.D))
+                {
+                    direction += Vector3.Right;
+                }
+                else if (KeyboardHandler.IsKeyDown(Keys.S))
+                {
+                    direction += Vector3.Backward;
+                }
             }
 
             // Wenn eine Richtungstaste gedrückt wird, bewege den Spieler
             if (direction != Vector3.Zero)
             {
-                // Normalisiere den Richtungsvektor und multipliziere mit der Schrittgröße (Kachelgröße)
                 direction.Normalize();
-                var stepSize = 1; // Annahme: Kachelgröße ist 16 Einheiten
+                var stepSize = 16;
                 direction *= stepSize;
-
+                CellTarget = new Vector2(_heroX, _heroY) + new Vector2(direction.X, direction.Z);
+                _heroHeight += direction.Y; 
                 // Berechne die neue Position des Helden
-                var newHeroPosition = new Vector3(_heroX, 0, _heroY) + direction;
+                var newHeroPosition = new Vector3(CellTarget.X, 0, CellTarget.Y);
 
                 // Überprüfe, ob die neue Position gültig ist und keine Kollision verursacht
                 var newChunkX = (int)newHeroPosition.X / 512;
@@ -198,8 +220,8 @@ namespace TestRender
                                     if (chunk.Collision[y, x] != 0)
                                     {
                                         // Berechnung der Position des Modells basierend auf Zellenkoordinaten
-                                        float posX = (x * 16); // 16 ist die Zellengröße
-                                        float posZ = (y * 16);
+                                        float posX = (x * 16) + newChunkX * 512; // 16 ist die Zellengröße
+                                        float posZ = (y * 16) + newChunkY * 512;
 
                                         // Prüfe, ob die neue Hero-Position in einer kollidierenden Zelle liegt
                                         if (newHeroPosition.X >= posX && newHeroPosition.X < posX + 16 &&
@@ -220,14 +242,26 @@ namespace TestRender
                             // Wenn keine Kollision detektiert wurde, aktualisiere die Hero-Position
                             if (!collisionDetected)
                             {
-                                _heroX = (int)newHeroPosition.X;
-                                _heroY = (int)newHeroPosition.Z;
+                                _heroX =CellTarget.X;
+                                _heroY = CellTarget.Y;
+                                
+                                
+                                _chunkX = newChunkX;
+                                _chunkY = newChunkY;
                             }
                         }
                     }
                 }
-            }
+                else
+                {
+                    _heroX =CellTarget.X;
+                    _heroY = CellTarget.Y;
 
+                    _chunkX = newChunkX;
+                    _chunkY = newChunkY;
+                }
+            }
+            _camera.Teleport(new Vector3(0f, 0.5f, 0.5f) * 512 + new Vector3(_heroX, _heroHeight, _heroY));
             // Kamera aktualisieren
             _camera.Update(gameTime);
 
@@ -261,9 +295,76 @@ namespace TestRender
             //GraphicsDevice.SetRenderTarget(_screen);
             GraphicsDevice.Clear(Color.Black);
 
-            int[] offsetX = [-1, 0, 1];
-            int[] offsetY = [-1, 0, 1];
+            foreach (var chunkEntry in _world.Combination)
+            {
+                var (targetX, targetY) = chunkEntry.Key;
+                var tuple = chunkEntry.Value;
+
+                var chunkId = tuple.chunkId;
+                var headerId = tuple.headerId;
+
+                if (World.Chunks.TryGetValue(chunkId, out var chunk))
+                {
+                    if (chunk.IsLoaded && chunk.Model != null)
+                    {
+                        DrawModel(chunk.Model,
+                            offset: new Vector3(targetX * 512, tuple.height * 8, targetY * 512) +
+                                    new Vector3(256, 0, 256));
+                        foreach (var building in chunk.Buildings)
+                        {
+                            DrawModel(building.Model,
+                                offset: new Vector3(targetX * 512, tuple.height * 8, targetY * 512) +
+                                        new Vector3(256, 0, 256));
+
+                        }
+                        //for (int y = 0; y < chunk.Collision.GetLength(0); y++)
+                        //{
+                        //    for (int x = 0; x < chunk.Collision.GetLength(1); x++)
+                        //    {
+                        //        if (chunk.Collision[y, x] != 0)
+                        //        {
+                        //            // Berechnung der Position des Modells basierend auf Zellenkoordinaten
+                        //            float posX = (x * 16); // 16 ist die Zellengröße, 8 für die Hälfte der Zelle
+                        //            float posZ = (y * 16) ;
+//
+                        //            // Hier kannst du dein Modell zeichnen
+                        //            DrawModel(_hero, offset: new Vector3(posX, 0, posZ));
+                        //        }
+                        //    }
+                        //}
+                    }
+                }
+            }
             
+            foreach (var chunkEntry in _world.Combination)
+            {
+                var (targetX, targetY) = chunkEntry.Key;
+                var tuple = chunkEntry.Value;
+
+                var chunkId = tuple.chunkId;
+                var headerId = tuple.headerId;
+
+                if (World.Chunks.TryGetValue(chunkId, out var chunk))
+                {
+                    if (chunk.IsLoaded && chunk.Model != null)
+                    {
+                        DrawModel(chunk.Model,
+                            offset: new Vector3(targetX * 512, tuple.height * 8, targetY * 512) +
+                                    new Vector3(256, 0, 256), alpha: true);
+                        foreach (var building in chunk.Buildings)
+                        {
+                            DrawModel(building.Model,
+                                offset: new Vector3(targetX * 512, tuple.height * 8, targetY * 512) +
+                                        new Vector3(256, 0, 256), alpha: true);
+
+                        }
+                    }
+                }
+            }
+            /*
+            int[] offsetX = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+            int[] offsetY = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+
             foreach (var dx in offsetX)
             {
                 foreach (var dy in offsetY)
@@ -275,10 +376,10 @@ namespace TestRender
                     {
                         continue;
                     }
-                    
+
                     var chunkId = tuple.chunkId;
                     var headerId = tuple.headerId;
- 
+
                     if (World.Chunks.TryGetValue(chunkId, out var chunk))// && _world.Headers.TryGetValue(headerId, out var header))
                     {
                         if (chunk.IsLoaded && chunk.Model != null)
@@ -313,9 +414,9 @@ namespace TestRender
                         }
                     }
                 }
-            }
+            }*/
             
-            DrawModel(_hero, offset: new Vector3(_heroX, 0, _heroY));
+            DrawModel(_hero, offset: new Vector3(_heroX + 8f, _heroHeight, _heroY + 8f));
             
             /* foreach (var dx in offsetX)
              {
@@ -357,7 +458,7 @@ namespace TestRender
            
            
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _spriteBatch.DrawString(_font, $"{_chunkX}, {_chunkY}", Vector2.Zero, Color.Red);
+            _spriteBatch.DrawString(_font, $"{_heroX}, {_heroY}", Vector2.Zero, Color.Red);
             _spriteBatch.DrawString(_font, $"{_cellX}, {_cellY}", new Vector2(0, _font.LineSpacing), Color.Red);
            
             if (_world.Combination.TryGetValue((_chunkX, _chunkY), out var targetChunkTuple))
