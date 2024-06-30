@@ -55,7 +55,7 @@ namespace TestRender
                 GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
             _camera = new Camera(GraphicsDevice);
 
-            _world = World.Load(GraphicsDevice, "129");
+            _world = World.Load(GraphicsDevice, "0");
             _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load("A:\\ModelExporter\\Platin\\output_assets\\hero\\hero"));
             
             OnChunkChanged += HandleChunkChange;
@@ -262,6 +262,7 @@ namespace TestRender
                 }
             }
             _camera.Teleport(new Vector3(0f, 0.5f, 0.5f) * 512 + new Vector3(_heroX, _heroHeight, _heroY));
+            _hero.RotateTo(Quaternion.CreateFromRotationMatrix(_camera.RotationMInvX));
             // Kamera aktualisieren
             _camera.Update(gameTime);
 
@@ -416,8 +417,8 @@ namespace TestRender
                 }
             }*/
             
-            DrawModel(_hero, offset: new Vector3(_heroX + 8f, _heroHeight, _heroY + 8f));
-            
+            DrawModel(_hero, offset: new Vector3(_heroX + 8f, _heroHeight, _heroY + 16f));
+            _camera.RotateTo(new Vector3(0.8185586f, (float)Math.PI, 0f));
             /* foreach (var dx in offsetX)
              {
                  foreach (var dy in offsetY)

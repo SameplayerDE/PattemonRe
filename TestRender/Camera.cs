@@ -38,6 +38,7 @@ namespace TestRendering
         public Matrix RotationMXZ { get { return Matrix.Multiply(Matrix.CreateRotationX(_rotation.X), Matrix.CreateRotationZ(_rotation.Z)); } }
         public Matrix RotationMYZ { get { return Matrix.Multiply(Matrix.CreateRotationY(_rotation.Y), Matrix.CreateRotationZ(_rotation.Z)); } }
         public Matrix RotationMX { get { return Matrix.CreateRotationX(_rotation.X); } }
+        public Matrix RotationMInvX { get { return Matrix.CreateRotationX(-_rotation.X); } }
         public Matrix RotationMY { get { return Matrix.CreateRotationY(_rotation.Y); } }
         public Matrix RotationMZ { get { return Matrix.CreateRotationZ(_rotation.Z); } }
 
@@ -48,7 +49,7 @@ namespace TestRendering
         public Vector3 Rotation { get { return _rotation; } }
 
         public bool EnableMix = false;
-        public float OrthoFactor = 0.000f;
+        public float OrthoFactor = 0.00001f;
         
         public Camera(GraphicsDevice graphicsDevice)
         {
@@ -70,7 +71,7 @@ namespace TestRendering
 
             // Add slight perspective effect
             
-            if (EnableMix)
+            if (!EnableMix)
             {
                 var perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), aspectRatio, _nearClipPlane, _farClipPlane);
                 _projection = Matrix.Lerp(_projection, perspective, OrthoFactor);
