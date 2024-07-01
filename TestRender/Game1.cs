@@ -16,24 +16,25 @@ namespace TestRender
         private SpriteBatch _spriteBatch;
         
         private Effect _effect;
+        private Effect _normalEffect;
         private Camera _camera;
         private SpriteFont _font;
         private RenderTarget2D _screen;
         private GameModel _hero;
+        private GameModel _heroShadow;
         private World _world;
         
         private int _chunkX = 0;
         private int _chunkY = 0;
 
-        private int _cellX = 0;
-        private int _cellY = 0;
-        
+        private int _cellX = 5;
+        private int _cellY = 5;
+        private Vector2 CellTarget;
         private float _heroX = 0;
         private float _heroHeight = 0;
         private float _heroY = 0;
-        
-        public event Action<int, int, int, int> OnChunkChanged;
-        
+        private bool _shadow = true;
+
         public Game1()
         {
             _graphicsDeviceManager = new GraphicsDeviceManager(this);
@@ -47,6 +48,12 @@ namespace TestRender
             _graphicsDeviceManager.PreferredBackBufferWidth = 1280;
             
             _graphicsDeviceManager.ApplyChanges();
+            
+            _heroX = _chunkX * 512;
+            _heroX += _cellX * 16;
+            
+            _heroY = _chunkY * 512;
+            _heroY += _cellY * 16;
         }
 
         protected override void Initialize()
@@ -55,34 +62,11 @@ namespace TestRender
                 GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
             _camera = new Camera(GraphicsDevice);
 
-            _world = World.Load(GraphicsDevice, "0");
+            _world = World.Load(GraphicsDevice, "129");
             _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load("A:\\ModelExporter\\Platin\\output_assets\\hero\\hero"));
-            
-            OnChunkChanged += HandleChunkChange;
-            
+            _heroShadow = GameModel.From(GraphicsDevice, GLTFLoader.Load("A:\\ModelExporter\\Platin\\output_assets\\kage.002\\kage"));
+
             base.Initialize();
-        }
-
-        private void HandleChunkChange(int oldChunkX, int oldChunkY, int newChunkX, int newChunkY)
-        {
-            /*
-            // Erstelle den Schlüssel für den neuen Chunk
-            var prevChunk = _chunks.FirstOrDefault(chunk => chunk.X == oldChunkX && chunk.Y == oldChunkY);
-            var currChunk = _chunks.FirstOrDefault(chunk => chunk.X == newChunkX && chunk.Y == newChunkY);
-
-            if (currChunk != null && currChunk.Header != null)
-            {
-                // Prüfe, ob der vorherige Chunk null ist oder ob die Header unterschiedlich sind
-                if (prevChunk == null || prevChunk.Header == null || prevChunk.Header.Id != currChunk.Header.Id)
-                {
-                    if (currChunk.Header.ShowNameTag)
-                    {
-                        Console.WriteLine($"{currChunk.Header.LocationName}");
-                        ShowArea = true;
-                    }
-                }
-            }
-            */
         }
         
         protected override void LoadContent()
@@ -94,9 +78,40 @@ namespace TestRender
             _font = Content.Load<SpriteFont>("Font");
             _camera.Teleport(new Vector3(0.25f, 1f, 0.5f) * 512);
         }
-
-        private Vector2 CellTarget;
         
+        private Vector3 GetDirectionFromInput()
+        {
+            var direction = Vector3.Zero;
+
+            if (KeyboardHandler.IsKeyDownOnce(Keys.Q))
+            {
+                direction += Vector3.Down;
+            }
+            else if (KeyboardHandler.IsKeyDownOnce(Keys.E))
+            {
+                direction += Vector3.Up;
+            }
+
+            if (KeyboardHandler.IsKeyDownOnce(Keys.W))
+            {
+                direction += Vector3.Forward;
+            }
+            else if (KeyboardHandler.IsKeyDownOnce(Keys.A))
+            {
+                direction += Vector3.Left;
+            }
+            else if (KeyboardHandler.IsKeyDownOnce(Keys.D))
+            {
+                direction += Vector3.Right;
+            }
+            else if (KeyboardHandler.IsKeyDownOnce(Keys.S))
+            {
+                direction += Vector3.Backward;
+            }
+
+            return direction;
+        }
+
         protected override void Update(GameTime gameTime)
         {
             var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -108,168 +123,97 @@ namespace TestRender
 
             KeyboardHandler.Update(gameTime);
 
-            // Kamera-Rotationen
-            if (KeyboardHandler.IsKeyDown(Keys.Up))
-            {
-                _camera.RotateX(-1);
-            }
+            var direction = GetDirectionFromInput();
 
-            if (KeyboardHandler.IsKeyDown(Keys.Down))
-            {
-                _camera.RotateX(1);
-            }
-
-            if (KeyboardHandler.IsKeyDown(Keys.Left))
-            {
-                _camera.RotateY(1);
-            }
-
-            if (KeyboardHandler.IsKeyDown(Keys.Right))
-            {
-                _camera.RotateY(-1);
-            }
-
-            // Richtungsvektor initialisieren
-            var direction = Vector3.Zero;
-
-
-            if (!KeyboardHandler.IsKeyDown(Keys.LeftShift))
-            {
-                // Richtungssteuerung mit diskreter Bewegung
-                if (KeyboardHandler.IsKeyDownOnce(Keys.W))
-                {
-                    direction += Vector3.Forward;
-                }
-
-                else if (KeyboardHandler.IsKeyDownOnce(Keys.A))
-                {
-                    direction += Vector3.Left;
-                }
-
-                else if (KeyboardHandler.IsKeyDownOnce(Keys.D))
-                {
-                    direction += Vector3.Right;
-                }
-                else if (KeyboardHandler.IsKeyDownOnce(Keys.S))
-                {
-                    direction += Vector3.Backward;
-                }
-                else if (KeyboardHandler.IsKeyDownOnce(Keys.Q))
-                {
-                    direction += Vector3.Down;
-                }
-                else if (KeyboardHandler.IsKeyDownOnce(Keys.E))
-                {
-                    direction += Vector3.Up;
-                }
-            }
-            else
-            {
-                // Richtungssteuerung mit diskreter Bewegung
-                if (KeyboardHandler.IsKeyDown(Keys.W))
-                {
-                    direction += Vector3.Forward;
-                }
-
-                else if (KeyboardHandler.IsKeyDown(Keys.A))
-                {
-                    direction += Vector3.Left;
-                }
-
-                else if (KeyboardHandler.IsKeyDown(Keys.D))
-                {
-                    direction += Vector3.Right;
-                }
-                else if (KeyboardHandler.IsKeyDown(Keys.S))
-                {
-                    direction += Vector3.Backward;
-                }
-            }
-
-            // Wenn eine Richtungstaste gedrückt wird, bewege den Spieler
             if (direction != Vector3.Zero)
             {
                 direction.Normalize();
                 var stepSize = 16;
-                direction *= stepSize;
-                CellTarget = new Vector2(_heroX, _heroY) + new Vector2(direction.X, direction.Z);
-                _heroHeight += direction.Y; 
-                // Berechne die neue Position des Helden
+                
+                CellTarget = new Vector2(_heroX, _heroY) + new Vector2(direction.X, direction.Z) * stepSize;
+                _heroHeight += direction.Y * stepSize;
+                
+                
                 var newHeroPosition = new Vector3(CellTarget.X, 0, CellTarget.Y);
 
-                // Überprüfe, ob die neue Position gültig ist und keine Kollision verursacht
                 var newChunkX = (int)newHeroPosition.X / 512;
                 var newChunkY = (int)newHeroPosition.Z / 512;
 
-                if (_world.Combination.TryGetValue((newChunkX, newChunkY), out var tuple))
+                var chunk = _world.GetChunkAtPosition(newHeroPosition);
+
+                if (chunk != null)
                 {
-                    var chunkId = tuple.chunkId;
-                    var headerId = tuple.headerId;
-
-                    if (World.Chunks.TryGetValue(chunkId, out var chunk))
+                    var collision = _world.CheckTileCollision(newHeroPosition);
+                    var type = _world.CheckTileType(newHeroPosition);
+                    
+                    if (collision == 0x100)
                     {
-                        if (chunk.IsLoaded && chunk.Model != null)
+                        if (type != 0x00)
                         {
-                            bool collisionDetected = false;
-
-                            // Überprüfe Kollisionen in diesem Chunk
-                            for (int y = 0; y < chunk.Collision.GetLength(0); y++)
+                            Console.WriteLine(type);
+                            Console.WriteLine(direction);
+                            if (type == (byte)TileType.JumpDown)
                             {
-                                for (int x = 0; x < chunk.Collision.GetLength(1); x++)
+                                if (direction == Vector3.Backward)
                                 {
-                                    if (chunk.Collision[y, x] != 0)
-                                    {
-                                        // Berechnung der Position des Modells basierend auf Zellenkoordinaten
-                                        float posX = (x * 16) + newChunkX * 512; // 16 ist die Zellengröße
-                                        float posZ = (y * 16) + newChunkY * 512;
-
-                                        // Prüfe, ob die neue Hero-Position in einer kollidierenden Zelle liegt
-                                        if (newHeroPosition.X >= posX && newHeroPosition.X < posX + 16 &&
-                                            newHeroPosition.Z >= posZ && newHeroPosition.Z < posZ + 16)
-                                        {
-                                            collisionDetected = true;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                if (collisionDetected)
-                                {
-                                    break;
+                                    _heroX = CellTarget.X;
+                                    _heroY = CellTarget.Y + 16;
+                                    _chunkX = newChunkX;
+                                    _chunkY = newChunkY;
+                                    _cellX = (int)(_heroX % 512) / 16;
+                                    _cellY = (int)(_heroY % 512) / 16;
                                 }
                             }
-
-                            // Wenn keine Kollision detektiert wurde, aktualisiere die Hero-Position
-                            if (!collisionDetected)
+                            else if (type == (byte)TileType.TV)
                             {
-                                _heroX =CellTarget.X;
+                                
+                            }
+                            else
+                            {
+                                _heroX = CellTarget.X;
                                 _heroY = CellTarget.Y;
-                                
-                                
                                 _chunkX = newChunkX;
                                 _chunkY = newChunkY;
+                                _cellX = (int)(_heroX % 512) / 16;
+                                _cellY = (int)(_heroY % 512) / 16;
                             }
                         }
                     }
+                    else
+                    {
+                        _heroX = CellTarget.X;
+                        _heroY = CellTarget.Y;
+                        _chunkX = newChunkX;
+                        _chunkY = newChunkY;
+                        _cellX = (int)(_heroX % 512) / 16;
+                        _cellY = (int)(_heroY % 512) / 16;
+                    }
+                    
                 }
                 else
                 {
-                    _heroX =CellTarget.X;
+                    _heroX = CellTarget.X;
                     _heroY = CellTarget.Y;
-
                     _chunkX = newChunkX;
                     _chunkY = newChunkY;
+                    _cellX = (int)(_heroX % 512) / 16;
+                    _cellY = (int)(_heroY % 512) / 16;
                 }
             }
-            _camera.Teleport(new Vector3(0f, 0.5f, 0.5f) * 512 + new Vector3(_heroX, _heroHeight, _heroY));
-            _hero.RotateTo(Quaternion.CreateFromRotationMatrix(_camera.RotationMInvX));
-            // Kamera aktualisieren
-            _camera.Update(gameTime);
+
+            UpdateCamera(gameTime);
 
             base.Update(gameTime);
         }
 
-        
+        private void UpdateCamera(GameTime gameTime)
+        {
+            _camera.Teleport(new Vector3(0f, 0.5f, 0.5f) * 512 + new Vector3(_heroX, _heroHeight, _heroY));
+            _camera.RotateTo(new Vector3(0.8185586f, (float)Math.PI, 0f));
+            _hero.RotateTo(Quaternion.CreateFromRotationMatrix(_camera.RotationMInvX));
+            _camera.Update(gameTime);
+        }
+
         private void UnloadDistantChunks()
         {
             // Sichtbarer Bereich: Hier kann je nach Spiellogik die Sichtweite angepasst werden
@@ -296,7 +240,7 @@ namespace TestRender
             //GraphicsDevice.SetRenderTarget(_screen);
             GraphicsDevice.Clear(Color.Black);
 
-            foreach (var chunkEntry in _world.Combination)
+            /*foreach (var chunkEntry in _world.Combination)
             {
                 var (targetX, targetY) = chunkEntry.Key;
                 var tuple = chunkEntry.Value;
@@ -318,25 +262,25 @@ namespace TestRender
                                         new Vector3(256, 0, 256));
 
                         }
-                        //for (int y = 0; y < chunk.Collision.GetLength(0); y++)
-                        //{
-                        //    for (int x = 0; x < chunk.Collision.GetLength(1); x++)
-                        //    {
-                        //        if (chunk.Collision[y, x] != 0)
-                        //        {
-                        //            // Berechnung der Position des Modells basierend auf Zellenkoordinaten
-                        //            float posX = (x * 16); // 16 ist die Zellengröße, 8 für die Hälfte der Zelle
-                        //            float posZ = (y * 16) ;
-//
-                        //            // Hier kannst du dein Modell zeichnen
-                        //            DrawModel(_hero, offset: new Vector3(posX, 0, posZ));
-                        //        }
-                        //    }
-                        //}
+                        for (int y = 0; y < chunk.Collision.GetLength(0); y++)
+                        {
+                            for (int x = 0; x < chunk.Collision.GetLength(1); x++)
+                            {
+                                if (chunk.Collision[y, x] != 0)
+                                {
+                                    // Berechnung der Position des Modells basierend auf Zellenkoordinaten
+                                    float posX = (x * 16); // 16 ist die Zellengröße, 8 für die Hälfte der Zelle
+                                    float posZ = (y * 16) ;
+
+                                    // Hier kannst du dein Modell zeichnen
+                                    DrawModel(_hero, offset: new Vector3(posX, 0, posZ));
+                                }
+                            }
+                        }
                     }
                 }
             }
-            
+
             foreach (var chunkEntry in _world.Combination)
             {
                 var (targetX, targetY) = chunkEntry.Key;
@@ -361,8 +305,8 @@ namespace TestRender
                         }
                     }
                 }
-            }
-            /*
+            }*/
+            
             int[] offsetX = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
             int[] offsetY = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
 
@@ -393,87 +337,81 @@ namespace TestRender
                                     offset: new Vector3(targetX * 512, tuple.height * 8, targetY * 512) + new Vector3(256, 0, 256));
 
                             }
-                            for (int y = 0; y < chunk.Collision.GetLength(0); y++)
-                            {
-                                for (int x = 0; x < chunk.Collision.GetLength(1); x++)
-                                {
-                                    if (chunk.Collision[y, x] != 0)
-                                    {
-                                        // Berechnung der Position des Modells basierend auf Zellenkoordinaten
-                                        float posX = (x * 16); // 16 ist die Zellengröße, 8 für die Hälfte der Zelle
-                                        float posZ = (y * 16) ;
-
-                                        // Hier kannst du dein Modell zeichnen
-                                        //DrawModel(_hero, offset: new Vector3(posX, 0, posZ));
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            //chunk.Load(GraphicsDevice);
                         }
                     }
                 }
-            }*/
+            }
             
             DrawModel(_hero, offset: new Vector3(_heroX + 8f, _heroHeight, _heroY + 16f));
-            _camera.RotateTo(new Vector3(0.8185586f, (float)Math.PI, 0f));
-            /* foreach (var dx in offsetX)
-             {
-                 foreach (var dy in offsetY)
-                 {
-                     var targetX = _chunkX + dx;
-                     var targetY = _chunkY + dy;
 
-                     if (_world.Combination.TryGetValue((targetX, targetY), out var tuple))
-                     {
-                         var chunkId = tuple.chunkId;
-                         var headerId = tuple.headerId;
-
-                         if (World.Chunks.TryGetValue(chunkId, out var chunk))// && _world.Headers.TryGetValue(headerId, out var header))
-                         {
-                             if (chunk.IsLoaded && chunk.Model != null)
-                             {
-                                 DrawModel(chunk.Model,
-                                     offset: new Vector3(targetX * 512, tuple.height * 8, targetY * 512), alpha: true);
-                                 foreach (var building in chunk.Buildings)
-                                 {
-                                     DrawModel(building.Model,
-                                         offset: new Vector3(targetX * 512, tuple.height * 8, targetY * 512),
-                                         alpha: true);
-
-                                 }
-                             }
-
-                             else
-                             {chunk.Load(GraphicsDevice);
-                                 var task = Task.Run(
-                                     () => {  });
-                             }
-                         }
-                     }
-                 }
-             }*/
-
-           
-           
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _spriteBatch.DrawString(_font, $"{_heroX}, {_heroY}", Vector2.Zero, Color.Red);
-            _spriteBatch.DrawString(_font, $"{_cellX}, {_cellY}", new Vector2(0, _font.LineSpacing), Color.Red);
-           
-            if (_world.Combination.TryGetValue((_chunkX, _chunkY), out var targetChunkTuple))
+            foreach (var dx in offsetX)
             {
-                if (World.Chunks.TryGetValue(targetChunkTuple.chunkId, out var targetChunk))
+                foreach (var dy in offsetY)
                 {
-                    _spriteBatch.DrawString(_font, $"{targetChunk.Collision[_cellY, _cellX]}", new Vector2(0, _font.LineSpacing * 2), Color.Red);
+                    var targetX = _chunkX + dx;
+                    var targetY = _chunkY + dy;
+
+                    if (_world.Combination.TryGetValue((targetX, targetY), out var tuple))
+                    {
+                        var chunkId = tuple.chunkId;
+                        var headerId = tuple.headerId;
+
+                        if (World.Chunks.TryGetValue(chunkId, out var chunk))// && _world.Headers.TryGetValue(headerId, out var header))
+                        {
+                            if (chunk.IsLoaded && chunk.Model != null)
+                            {
+                                DrawModel(chunk.Model,
+                                    offset: new Vector3(targetX * 512, tuple.height * 8, targetY * 512) + new Vector3(256, 0, 256), alpha: true);
+                                foreach (var building in chunk.Buildings)
+                                {
+                                    DrawModel(building.Model,
+                                        offset: new Vector3(targetX * 512, tuple.height * 8, targetY * 512) + new Vector3(256, 0, 256),
+                                        alpha: true);
+
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            else
+            
+            if (_shadow)
             {
-                _spriteBatch.DrawString(_font, $"xx", new Vector2(0, _font.LineSpacing * 2), Color.Red);
+                DrawModel(_heroShadow, offset: new Vector3(_heroX + 8f, _heroHeight - 0.25f, _heroY + 16f),
+                    alpha: true);
             }
+
            
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _spriteBatch.DrawString(_font, $"Chunk: [{_chunkX}, {_chunkY}]", Vector2.Zero, Color.White);
+            _spriteBatch.DrawString(_font, $"Cell: [{_cellX}, {_cellY}]", new Vector2(0, _font.LineSpacing), Color.White);
+            _spriteBatch.DrawString(_font, $"World: [{_heroX}, {_heroY}]", new Vector2(0, _font.LineSpacing * 2), Color.White);
+
+            try
+            {
+                if (_world.Combination.TryGetValue((_chunkX, _chunkY), out var targetChunkTuple))
+                {
+                    if (World.Chunks.TryGetValue(targetChunkTuple.chunkId, out var targetChunk))
+                    {
+                        _spriteBatch.DrawString(_font, $"Collision: [{targetChunk.Collision[_cellY, _cellX]:x2}]",
+                            new Vector2(0, _font.LineSpacing * 4), Color.White);
+                        var name = Enum.GetName(typeof(TileType), targetChunk.Type[_cellY, _cellX]);
+                        _spriteBatch.DrawString(_font, $"Type: [{name}, {targetChunk.Type[_cellY, _cellX]:x2}]",
+                            new Vector2(0, _font.LineSpacing * 5), Color.White);
+                    }
+                }
+                else
+                {
+                    _spriteBatch.DrawString(_font, $"Collision: [!]", new Vector2(0, _font.LineSpacing * 4),
+                        Color.White);
+                    _spriteBatch.DrawString(_font, $"Type: [!]", new Vector2(0, _font.LineSpacing * 5), Color.White);
+                }
+            }
+            catch (Exception e)
+            {
+                
+            }
+
             _spriteBatch.End();
             
             //GraphicsDevice.SetRenderTarget(null);

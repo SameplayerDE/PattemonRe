@@ -163,16 +163,6 @@ technique T0
         AlphaBlendEnable = false;
         PixelShader = compile PS_SHADERMODEL MainPS();
     }
-    //pass P1
-    //{
-    //    VertexShader = compile VS_SHADERMODEL MainVS();
-    //    ZEnable = true;
-    //    FillMode = WireFrame;
-    //    ZWriteEnable = true;
-    //    CullMode = CCW;
-    //    AlphaBlendEnable = false;
-    //    PixelShader = compile PS_SHADERMODEL MainPS();
-    //}
 };
 
 technique T1

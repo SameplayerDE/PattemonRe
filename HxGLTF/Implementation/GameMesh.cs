@@ -218,7 +218,7 @@ namespace HxGLTF.Implementation
 
             // Setzen des VertexBuffers
             var vertexArray = vertexBufferDummy.ToArray();
-            //VertexPositionColorNormalTextureBlend.CalculateNormals(vertexArray);
+            VertexPositionColorNormalTextureBlend.CalculateNormals(vertexArray);
             result.VertexBuffer = new VertexBuffer(graphicsDevice, VertexPositionColorNormalTextureBlend.VertexDeclaration, vertexBufferDummy.Count, BufferUsage.WriteOnly);
             result.VertexBuffer.SetData(vertexArray);
 
