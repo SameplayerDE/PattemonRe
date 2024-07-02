@@ -19,6 +19,12 @@
     <None Update="Content\WorldData\Chunks\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\WorldData\Headers\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\WorldData\Matrices\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\hilda_regular_00.glb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

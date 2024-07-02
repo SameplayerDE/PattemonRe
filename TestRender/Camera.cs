@@ -71,7 +71,7 @@ namespace TestRendering
 
             // Add slight perspective effect
             
-            if (!EnableMix)
+            if (EnableMix)
             {
                 var perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), aspectRatio, _nearClipPlane, _farClipPlane);
                 _projection = Matrix.Lerp(_projection, perspective, OrthoFactor);

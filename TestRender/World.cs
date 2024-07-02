@@ -10,21 +10,21 @@ namespace TestRender;
 public class World
 {
     public static Dictionary<int, Chunk> Chunks = [];
-    public static Dictionary<string, ChunkHeader> Headers = [];
+    public static Dictionary<int, ChunkHeader> Headers = [];
     public static bool IsDataFetched = false;
     
     public Dictionary<(int x, int y), (int chunkId, string headerId, int height)> Combination = [];
 
-    public static World Load(GraphicsDevice graphicsDevice, string mapId)
+    public static World Load(GraphicsDevice graphicsDevice, int mapId)
     {
         var world = new World();
         
-        var json = File.ReadAllText(@$"Content/WorldData/{mapId}.json");
+        var json = File.ReadAllText(@$"Content/WorldData/Matrices/{mapId}.json");
         var jArray = JArray.Parse(json);
         foreach (var jCombination in jArray)
         {
             (int x, int y) key = (jCombination["x"].Value<int>(), jCombination["y"].Value<int>());
-            (int chunkId, string headerId, int height) value = (int.Parse(jCombination["chunkId"].ToString()), jCombination["headerId"].ToString(), jCombination["height"].Value<int>());
+            (int chunkId, string headerId, int height) value = (int.Parse(jCombination["mapId"].ToString()), jCombination["headerId"].ToString(), jCombination["height"].Value<int>());
             world.Combination.Add(key, value);
             
             if (!Chunks.ContainsKey(value.chunkId))
@@ -39,7 +39,14 @@ public class World
         
         if (!IsDataFetched)
         {
-            Headers = ChunkHeader.Load(@"Content/WorldData/Headers.json");
+            for (int i = 0; i < 592; i++)
+            {
+                var headerJson = File.ReadAllText($@"Content/WorldData/Headers/{i}.json");
+                var jHeader = JObject.Parse(headerJson);
+                var header = ChunkHeader.Load(jHeader);
+                Headers.Add(header.Id, header);
+            }
+
             IsDataFetched = true;
         }
         

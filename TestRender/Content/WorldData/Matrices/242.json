@@ -1,0 +1,30 @@
+[
+  {
+    "x": 0,
+    "y": 0,
+    "height": 0,
+    "headerId": -1,
+    "mapId": 580
+  },
+  {
+    "x": 1,
+    "y": 0,
+    "height": 0,
+    "headerId": -1,
+    "mapId": 581
+  },
+  {
+    "x": 0,
+    "y": 1,
+    "height": 0,
+    "headerId": -1,
+    "mapId": 582
+  },
+  {
+    "x": 1,
+    "y": 1,
+    "height": 0,
+    "headerId": -1,
+    "mapId": 583
+  }
+]

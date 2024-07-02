@@ -1,0 +1,44 @@
+[
+  {
+    "x": 0,
+    "y": 0,
+    "height": 0,
+    "headerId": -1,
+    "mapId": 407
+  },
+  {
+    "x": 1,
+    "y": 0,
+    "height": 0,
+    "headerId": -1,
+    "mapId": 408
+  },
+  {
+    "x": 0,
+    "y": 1,
+    "height": 0,
+    "headerId": -1,
+    "mapId": 409
+  },
+  {
+    "x": 1,
+    "y": 1,
+    "height": 0,
+    "headerId": -1,
+    "mapId": 410
+  },
+  {
+    "x": 0,
+    "y": 2,
+    "height": 0,
+    "headerId": -1,
+    "mapId": 411
+  },
+  {
+    "x": 1,
+    "y": 2,
+    "height": 0,
+    "headerId": -1,
+    "mapId": 412
+  }
+]

@@ -24,7 +24,8 @@ namespace HxGLTF.Implementation
             BaseTexture = null,
             BaseColorFactor = Color.White
         };
-        
+
+        public string Name;
         public string AlphaMode;
         public float AlphaCutoff;
         public GameTexture BaseTexture;
@@ -46,6 +47,7 @@ namespace HxGLTF.Implementation
 
             var result = new GameMaterial();
 
+            result.Name = material.Name;
             result.AlphaCutoff = material.AlphaCutoff;
             result.AlphaMode = material.AlphaMode;
             result.BaseColorFactor = material.BasColorFactor;
