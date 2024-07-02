@@ -79,10 +79,12 @@ namespace TestRender
             _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load("A:\\ModelExporter\\Platin\\output_assets\\hero\\hero"));
             _heroShadow = GameModel.From(GraphicsDevice, GLTFLoader.Load("A:\\ModelExporter\\Platin\\output_assets\\kage.002\\kage"));
 
-            _hamabeAnimation = new TextureAnimation("Hamabe", "hamabe", 0.32f, 8, "hamabe_lm");
-            _seaRockAnimation = new TextureAnimation("SeaRock", "searock", 0.64f, 4, "searock_");
-            _seaAnimation = new TextureAnimation("Sea", "sea", 0.32f, 8, "sea_");
+            _hamabeAnimation = new TextureAnimation("Hamabe", "hamabe", 0.32f, 8, ["hamabe_lm"]);
+            _seaRockAnimation = new TextureAnimation("SeaRock", "searock", 0.64f, 4, ["searock_"]);
+            _seaAnimation = new TextureAnimation("Sea", "sea", 0.32f, 8, ["sea_"]);
             
+            _animations.Add(new TextureAnimation("C1_Lamp1", "c1_lamp01", 0.16f, 5, ["c1_lamp01_", "lamp01"], AnimationPlayMode.Bounce, 0.64f));
+            _animations.Add(new TextureAnimation("C1_Lamp2", "c1_lamp02", 0.16f, 5, ["c1_lamp02_", "lamp03"], AnimationPlayMode.Bounce, 0.64f));
             _animations.Add(_hamabeAnimation);
             _animations.Add(_seaRockAnimation);
             _animations.Add(_seaAnimation);
@@ -277,8 +279,8 @@ namespace TestRender
             {
                 foreach (var building in chunk.Value.Buildings)
                 {
-                        building.Model.Update(gameTime);
-                        building.Model.Play(0);
+                    building.Model.Update(gameTime);
+                    building.Model.Play(0);
                 }
             }
             
@@ -677,10 +679,13 @@ namespace TestRender
         {
             foreach (var animation in _animations)
             {
-                if (material.Name.Contains(animation.ForMaterial))
+                foreach (var keyWord in animation.ForMaterial)
                 {
-                    _effect.Parameters["Texture"]?.SetValue(animation.CurrentFrame);
-                    return;
+                    if (material.Name.Contains(keyWord))
+                    {
+                        _effect.Parameters["Texture"]?.SetValue(animation.CurrentFrame);
+                        return;
+                    }
                 }
             }
             if (material.Name.Contains("c3_s03b"))
@@ -697,7 +702,7 @@ namespace TestRender
             }
             else if (material.Name.Contains("c1_fun2"))
             {
-                _effect.Parameters["AnimationSpeed"]?.SetValue(16);
+                _effect.Parameters["AnimationSpeed"]?.SetValue(32);
                 _effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Down);
                 _effect.Parameters["TextureAnimation"]?.SetValue(true);
             }
