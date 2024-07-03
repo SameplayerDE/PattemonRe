@@ -33,6 +33,7 @@ struct VertexShaderOutput
 	float4 Position : SV_POSITION;
 	float2 TextureUVs : TEXCOORD0;
 	float3 Normal : TEXCOORD1;
+	float Depth : TEXCOORD2;
 };
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
@@ -46,6 +47,7 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 	output.Position = mul(position, ViewProjection);
 	output.TextureUVs = textureUVs;
 	output.Normal = normal;
+	output.Depth = output.Position.z / output.Position.w;
 
 	return output;
 }
@@ -79,7 +81,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 	float3 color = DiffuseColor * tex2D(TextureSampler, input.TextureUVs).rgb;
 	float3 output = saturate(color * celShade);
 
-	return float4(output, 1);
+	return float4(input.Depth, input.Depth, input.Depth, 1);
 }
 
 technique BasicColorDrawing

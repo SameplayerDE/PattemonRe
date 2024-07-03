@@ -115,7 +115,7 @@ namespace Survival
             return Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(_fieldOfView),
                 graphicsDevice.Viewport.AspectRatio,
-                0.1f,
+                1f,
                 100f
             );
         }

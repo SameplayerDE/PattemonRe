@@ -46,7 +46,7 @@ public class TextureAnimation
     {
         for (var i = 0; i < FramesCount; i++)
         {
-            var texturePath = $@"{_basePath}\{_fileName}_{i + 1}";
+            var texturePath = $@"Animations\{_basePath}\{_fileName}_{i + 1}";
             Frames.Add(contentManager.Load<Texture2D>(texturePath));
         }
     }

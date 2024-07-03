@@ -23,7 +23,7 @@ public class Building
     {
         var gltfFile = GLTFLoader.Load(@$"A:\ModelExporter\Platin\output_assets\{BuildingName}\{BuildingName}.gltf");
         var model = GameModel.From(graphicsDevice, gltfFile);
-        model.TranslateTo(Position * 16);
+        model.TranslateTo(Position);
         Model = model;
     }
 

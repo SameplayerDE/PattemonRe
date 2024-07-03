@@ -69,7 +69,8 @@ namespace HxGLTF.Implementation
                     {
                         for (var x = 0; x < data.Length; x += 4)
                         {
-                            colors.Add(new Color(data[x], data[x + 1], data[x + 2], data[x + 3]));
+                            var color = new Color(data[x] / 255f, data[x + 1] / 255f, data[x + 2] / 255f, data[x + 3] / 255f);
+                            colors.Add(color);
                         }
                     }
                     
@@ -77,7 +78,8 @@ namespace HxGLTF.Implementation
                     {
                         for (var x = 0; x < data.Length; x += 3)
                         {
-                            colors.Add(new Color(data[x], data[x + 1], data[x + 2], 1));
+                            var color = new Color(data[x] / 255f, data[x + 1] / 255f, data[x + 2] / 255f, 1);
+                            colors.Add(color);
                         }
                     }
 
@@ -152,23 +154,24 @@ namespace HxGLTF.Implementation
                         {
                             for (var x = 0; x < data.Length; x += 4)
                             {
-                                colors.Add(new Color(
-                                    data[i * numberOfComponents + 0],
-                                    data[i * numberOfComponents + 1],
-                                    data[i * numberOfComponents + 2],
-                                    data[i * numberOfComponents + 3]));
+                                var color = new Color(
+                                    data[i * numberOfComponents + 0] / 255f,
+                                    data[i * numberOfComponents + 1] / 255f,
+                                    data[i * numberOfComponents + 2] / 255f,
+                                    data[i * numberOfComponents + 3] / 255f);
+                                colors.Add(color);
                             }
                         }
-                    
                         else if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
                         {
                             for (var x = 0; x < data.Length; x += 3)
                             {
-                                colors.Add(new Color(
-                                    data[i * numberOfComponents + 0],
-                                    data[i * numberOfComponents + 1],
-                                    data[i * numberOfComponents + 2],
-                                    1));
+                                var color = new Color(
+                                    data[i * numberOfComponents + 0] / 255f,
+                                    data[i * numberOfComponents + 1] / 255f,
+                                    data[i * numberOfComponents + 2] / 255f,
+                                    1);
+                                colors.Add(color);
                             }
                         }
                         else if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
@@ -218,7 +221,7 @@ namespace HxGLTF.Implementation
 
             // Setzen des VertexBuffers
             var vertexArray = vertexBufferDummy.ToArray();
-            VertexPositionColorNormalTextureBlend.CalculateNormals(vertexArray);
+            //VertexPositionColorNormalTextureBlend.CalculateNormals(vertexArray);
             result.VertexBuffer = new VertexBuffer(graphicsDevice, VertexPositionColorNormalTextureBlend.VertexDeclaration, vertexBufferDummy.Count, BufferUsage.WriteOnly);
             result.VertexBuffer.SetData(vertexArray);
 

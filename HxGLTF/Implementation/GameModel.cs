@@ -15,7 +15,7 @@ namespace HxGLTF.Implementation
         public Matrix LocalTranformation;
         
         public Vector3 Translation = Vector3.Zero;
-        public Vector3 Scale = Vector3.One;
+        public Vector3 Scale = Vector3.One / 16;
         public Quaternion Rotation = Quaternion.Identity;
         
         private int _currentAnimationIndex;

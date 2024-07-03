@@ -86,6 +86,7 @@ struct VertexShaderOutput
 	float2 TextureCoordinate : TEXCOORD0;
 	float3 LightDirection : TEXCOORD1;
 	float4 WorldPosition : TEXCOORD3;
+    float depth : TEXCOORD4;
 };
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
@@ -120,47 +121,46 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
         //    LeftDown = 0x08,
 
        if (TextureAnimation == true)
-               {
-                   float speedX = Total / TextureDimensions.x * AnimationSpeed;
-                   float speedY = Total / TextureDimensions.y * AnimationSpeed;
-                   if (AnimationDirection == 0x01)
-                   {
-                       textureCoordinate.x += speedX;
-                   }
-                   else if (AnimationDirection == 0x02)
-                   {
-                       textureCoordinate.x -= speedX;
-                   }
-                   else if (AnimationDirection == 0x03)
-                   {
-                       textureCoordinate.y += speedY;
-                   }
-                   else if (AnimationDirection == 0x04)
-                   {
-                       textureCoordinate.y -= speedY;
-                   }
-                   else if (AnimationDirection == 0x05)
-                   {
-                       textureCoordinate.x -= speedX;
-                       textureCoordinate.y += speedY;
-                   }
-                   else if (AnimationDirection == 0x06)
-                   {
-                       textureCoordinate.x -= speedX;
-                       textureCoordinate.y -= speedY;
-                   }
-                   else if (AnimationDirection == 0x07)
-                   {
-                       textureCoordinate.x += speedX;
-                       textureCoordinate.y += speedY;
-                   }
-                   else if (AnimationDirection == 0x08)
-                   {
-                       textureCoordinate.x += speedX;
-                       textureCoordinate.y -= speedY;
-                   }
-               }
-
+       {
+           float speedX = Total / TextureDimensions.x * AnimationSpeed;
+           float speedY = Total / TextureDimensions.y * AnimationSpeed;
+           if (AnimationDirection == 0x01)
+           {
+               textureCoordinate.x += speedX;
+           }
+           else if (AnimationDirection == 0x02)
+           {
+               textureCoordinate.x -= speedX;
+           }
+           else if (AnimationDirection == 0x03)
+           {
+               textureCoordinate.y += speedY;
+           }
+           else if (AnimationDirection == 0x04)
+           {
+               textureCoordinate.y -= speedY;
+           }
+           else if (AnimationDirection == 0x05)
+           {
+               textureCoordinate.x -= speedX;
+               textureCoordinate.y += speedY;
+           }
+           else if (AnimationDirection == 0x06)
+           {
+               textureCoordinate.x -= speedX;
+               textureCoordinate.y -= speedY;
+           }
+           else if (AnimationDirection == 0x07)
+           {
+               textureCoordinate.x += speedX;
+               textureCoordinate.y += speedY;
+           }
+           else if (AnimationDirection == 0x08)
+           {
+               textureCoordinate.x += speedX;
+               textureCoordinate.y -= speedY;
+           }
+       }
     }
     
     if (SkinningEnabled == true)
@@ -183,18 +183,20 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
     output.TextureCoordinate = textureCoordinate;
     output.LightDirection = LightPosition - mul(input.Position, World);
     output.WorldPosition = worldPosition;
-
+    // Anpassung für größeren Bereich
+    float depthRange = 100.0; // Anpassung je nach deiner Kameraweite
+    output.depth = output.Position.z / depthRange;
     return output;
 }
 
-float4 MainPS(VertexShaderOutput input) : COLOR
+float4 MainPS(VertexShaderOutput input) : SV_Target
 {
 
     float4 position = input.Position;
     float3 Normal = input.Normal;
     float3 N = normalize(Normal);
     float3 L = normalize(input.LightDirection);
-    float4 finalColor = input.Color * BaseColorFactor;
+    float4 finalColor = input.Color;// * BaseColorFactor;
 
     if (TextureEnabled == true)
     {
@@ -202,57 +204,22 @@ float4 MainPS(VertexShaderOutput input) : COLOR
         finalColor = finalColor * textureColor;
     }
     
-    //if (NormalMapEnabled == true)
-    //{
-    //    float3 normalMapNormal = tex2D(NormalMapSampler, input.TextureCoordinate).rgb * 2.0 - 1.0;
-    //    normal = normalize(normal + normalMapNormal);
-    //}
-    
-    //if (EmissiveTextureEnabled == true)
-    //{
-    //    finalColor += tex2D(EmissiveTextureSampler, input.TextureCoordinate) * EmissiveColorFactor;
-    //}
-
     float alpha = finalColor.a;
-        
+    
     if (AlphaMode == 1)
     {
         // Mask Mode
-        if (alpha < AlphaCutoff)
+        if (alpha < AlphaCutoff) {
             discard;
-    }
-    else if (AlphaMode == 2)
-    {
-        // Blend Mode
-        finalColor.a = alpha;
+        }
     }
 
-    //float diffuse = saturate(dot(N, L));
-    // if (dot(L, N) < 0.5 && dot(L, N) > 0.25) {
-    //        finalColor.rgb *= 0.9;
-    //    }else if (dot(L, N) < 0.25 && dot(L, N) > 0.0) {
-    //        finalColor.rgb *= 0.7;
-    //    } else if (dot(L, N) < 0.0) {
-    //        finalColor.rgb *= 0.5;
-    //    }
-    // Edge detection (Sobel operator)
-        //float2 texelSize = 1.0 / float2(64, 64);
-        //float4 edgeColor = float4(0.0, 0.0, 0.0, 0.0);
-        //
-        //// Sobel operator weights for edge detection
-        //float2 weightsX = float2(-1, 1);
-        //float2 weightsY = float2(-1, 1);
-        //
-        //float4 color = tex2D(TextureSampler, input.TextureCoordinate);
-        //edgeColor.rgb += weightsX.x * tex2D(TextureSampler, input.TextureCoordinate - texelSize).rgb;
-        //edgeColor.rgb += weightsX.y * tex2D(TextureSampler, input.TextureCoordinate + texelSize).rgb;
-        //edgeColor.rgb += weightsY.x * tex2D(TextureSampler, input.TextureCoordinate - texelSize).rgb;
-        //edgeColor.rgb += weightsY.y * tex2D(TextureSampler, input.TextureCoordinate + texelSize).rgb;
-        //
-        //edgeColor.a = 1.0;
-        //finalColor = lerp(finalColor, edgeColor, 0.1); // Adjust the lerp factor to control the strength of the outline
-    
-        return finalColor;
+    return finalColor;
+}
+
+float4 DepthPS(VertexShaderOutput input) : SV_Target
+{
+    return float4(input.Normal.xyz, 1);
 }
 
 technique T0
@@ -265,7 +232,7 @@ technique T0
         ZWriteEnable = true;
         CullMode = CW;
         AlphaBlendEnable = false;
-        PixelShader = compile PS_SHADERMODEL MainPS();
+        PixelShader = compile PS_SHADERMODEL DepthPS();
     }
 };
 
@@ -278,9 +245,10 @@ technique T1
         FillMode = Solid;
         ZWriteEnable = true;
         CullMode = CW;
+DestBlend = SRCALPHA;
+SrcBlend = ONE;
+
         AlphaBlendEnable = true; 
-        SrcBlend = SrcAlpha; 
-        DestBlend = InvSrcAlpha; 
-        PixelShader = compile PS_SHADERMODEL MainPS();
+        PixelShader = compile PS_SHADERMODEL DepthPS();
     }
 };

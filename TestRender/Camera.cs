@@ -22,8 +22,8 @@ namespace TestRendering
 
         protected float _fov = MathHelper.ToRadians(45);
         protected float _aspectRatio = 1.6f;
-        protected float _nearClipPlane = 0.1f;
-        protected float _farClipPlane = 20000000000f;
+        protected float _nearClipPlane = 1f;
+        protected float _farClipPlane = 5120f;
 
         public Matrix View { get { return _view; } }
         public Matrix Projection { get { return _projection; } }
@@ -82,7 +82,7 @@ namespace TestRendering
             //}
             else
             {
-                var perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), aspectRatio, _nearClipPlane, _farClipPlane);
+                var perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), 4/3, _nearClipPlane, _farClipPlane);
                 _projection = perspective;
             }
         }
