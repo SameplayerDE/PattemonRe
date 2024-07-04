@@ -15,9 +15,6 @@ cbuffer Matrices : register(b0)
     matrix Projection;
 }
 
-float Delta;
-float Total;
-
 cbuffer Constants : register(b1)
 {
     float AlphaCutoff;
@@ -34,10 +31,14 @@ cbuffer Skinning : register(b2) {
     matrix Bones[64];
 }
 
+float Delta;
+float Total;
 uint  AnimationDirection;
 float AnimationSpeed = 1.0;
 float3 LightPosition;
 float3 LightDirection;
+float3 CameraPosition;
+float3 CameraDirection;
 bool TextureAnimation;
 
 float2 TextureDimensions;
@@ -61,11 +62,13 @@ struct VertexShaderOutput
 {
 	float4 Position : SV_POSITION;
 	float4 Color : COLOR0;
-	float4 Normal : TEXCOORD2;
-	float2 TextureCoordinate : TEXCOORD0;
-	float3 LightDirection : TEXCOORD1;
-	float4 WorldPosition : TEXCOORD3;
-    float depth : TEXCOORD4;
+	float2 TextureCoordinate : TEXCOORD1;
+	float4 WorldPosition : TEXCOORD2;
+	float4 ViewPosition : TEXCOORD3;
+	float4 ViewDistance : TEXCOORD4;
+	float4 Normal : TEXCOORD5;
+	float3 LightDirection : TEXCOORD6;
+	float Depth : TEXCOORD7;
 };
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
@@ -79,69 +82,22 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
     if (TextureAnimation == true)
     {
-        // AnimationDirection:
-        // 0x00 = none
-        // 0x01 = PositivX
-        // 0x02 = NegativeX
-        // 0x03 = PositivY
-        // 0x04 = NegativY
-        // 0x05 = PxPy
-        // 0x06 = PxNy
-        // 0x07 = NxPy
-        // 0x08 = NxNy
-
-        //    Right = 0x01,
-        //    Left = 0x02,
-        //    Up = 0x03,
-        //    Down = 0x04,
-        //    RightUp = 0x05,
-        //    RightDown = 0x06,
-        //    LeftUp = 0x07,
-        //    LeftDown = 0x08,
-
-       if (TextureAnimation == true)
-       {
-           float speedX = Total / TextureDimensions.x * AnimationSpeed;
-           float speedY = Total / TextureDimensions.y * AnimationSpeed;
-           if (AnimationDirection == 0x01)
-           {
-               textureCoordinate.x += speedX;
-           }
-           else if (AnimationDirection == 0x02)
-           {
-               textureCoordinate.x -= speedX;
-           }
-           else if (AnimationDirection == 0x03)
-           {
-               textureCoordinate.y += speedY;
-           }
-           else if (AnimationDirection == 0x04)
-           {
-               textureCoordinate.y -= speedY;
-           }
-           else if (AnimationDirection == 0x05)
-           {
-               textureCoordinate.x -= speedX;
-               textureCoordinate.y += speedY;
-           }
-           else if (AnimationDirection == 0x06)
-           {
-               textureCoordinate.x -= speedX;
-               textureCoordinate.y -= speedY;
-           }
-           else if (AnimationDirection == 0x07)
-           {
-               textureCoordinate.x += speedX;
-               textureCoordinate.y += speedY;
-           }
-           else if (AnimationDirection == 0x08)
-           {
-               textureCoordinate.x += speedX;
-               textureCoordinate.y -= speedY;
-           }
-       }
+        float speedX = Total / TextureDimensions.x * AnimationSpeed;
+        float speedY = Total / TextureDimensions.y * AnimationSpeed;
+        
+        switch (AnimationDirection)
+        {
+            case 0x01: textureCoordinate.x += speedX; break;
+            case 0x02: textureCoordinate.x -= speedX; break;
+            case 0x03: textureCoordinate.y += speedY; break;
+            case 0x04: textureCoordinate.y -= speedY; break;
+            case 0x05: textureCoordinate.x -= speedX; textureCoordinate.y += speedY; break;
+            case 0x06: textureCoordinate.x -= speedX; textureCoordinate.y -= speedY; break;
+            case 0x07: textureCoordinate.x += speedX; textureCoordinate.y += speedY; break;
+            case 0x08: textureCoordinate.x += speedX; textureCoordinate.y -= speedY; break;
+        }
     }
-    
+
     if (SkinningEnabled == true)
     {
         matrix skinMatrix = 
@@ -155,42 +111,24 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
     float4 worldPosition = mul(position, World);
     float4 viewPosition = mul(worldPosition, View);
-
-    output.Position = mul(viewPosition, Projection);
-    output.Normal = mul(normal, World);
+    float4 projectionPosition = mul(viewPosition, Projection);
+    
+    output.Position = projectionPosition;
     output.Color = input.Color;
-    output.TextureCoordinate = textureCoordinate;
+    output.Normal = mul(input.Normal, World);
     output.LightDirection = LightPosition - mul(input.Position, World);
+    output.TextureCoordinate = textureCoordinate;
     output.WorldPosition = worldPosition;
-    // Anpassung für größeren Bereich
-    float depthRange = 100.0; // Anpassung je nach deiner Kameraweite
-    output.depth = output.Position.z / depthRange;
+    output.ViewPosition = viewPosition;
+    output.ViewDistance = (worldPosition - float4(CameraPosition, 1));
+    output.Depth = output.Position.z / output.Position.w;
     return output;
 }
 
 float4 MainPS(VertexShaderOutput input) : SV_Target
 {
-
-    // Normal und Lichtvektor normalisieren
-   float3 N = input.Normal;
-   float3 L = normalize(LightDirection);
-
-   // Diffuse Beleuchtung berechnen
-   float diffuse = saturate(dot(N, L));
-
-   // Berechnung der Sättigung der Normals als Durchschnitt der absoluten Werte der Achsen
-   float saturation = (abs(N.x) + abs(N.y) + abs(N.z)) / 3.0;
-   saturation = length(N);
-
-   // Sättigung invertieren, damit niedrigere Werte mehr Licht bekommen
-   float adjustedSaturation = 1.0 - saturation;
-
-   // Diffuse Beleuchtung mit angepasster Sättigung multiplizieren
-   diffuse = lerp(1.0, diffuse, adjustedSaturation);
-    float4 finalColor = input.Color * BaseColorFactor;
-    float ambient = 0.7; // Wert für Umgebungsbeleuchtung (0.0 - 1.0, je nach gewünschter Helligkeit)
+    float4 finalColor = saturate(input.Color * BaseColorFactor);
     
-
     if (TextureEnabled == true)
     {
         float4 textureColor = tex2D(TextureSampler, input.TextureCoordinate);
@@ -201,21 +139,16 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
     
     if (AlphaMode == 1)
     {
-        // Mask Mode
         if (alpha < AlphaCutoff) {
             discard;
-        }
-        
+        }   
     }
 
-    float lighting = max(diffuse, ambient);
-    
-    if (TextureAnimation == true) {
-     return finalColor;
+    if (TextureAnimation == true)
+    {
+        return finalColor;
     }
-    finalColor = finalColor * lighting;
-    finalColor.a = alpha;
-   return float4(saturation, saturation, saturation, 1);
+    return finalColor;
 }
 
 float4 DepthPS(VertexShaderOutput input) : SV_Target

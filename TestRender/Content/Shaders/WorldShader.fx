@@ -22,20 +22,16 @@ cbuffer FogBuffer
     float fogEnd;
 };
 
-float Delta;
-float Total;
-
 cbuffer Constants : register(b1)
 {
     float AlphaCutoff;
     int AlphaMode;
-   
     float4 BaseColorFactor = float4(1.0, 1.0, 1.0, 1.0);
-
     bool TextureEnabled;
 }
 
-
+float Delta;
+float Total;
 uint  AnimationDirection;
 float AnimationSpeed = 1.0;
 float3 LightPosition;
@@ -43,9 +39,6 @@ float3 CameraPosition;
 float3 CameraDirection;
 float3 LightDirection;
 bool TextureAnimation;
-bool Indoor;
-
-bool Fog;
 
 float2 TextureDimensions;
 Texture2D Texture : register(t0);
@@ -119,22 +112,6 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 MainPS(VertexShaderOutput input) : SV_Target
 {
-    //// Normal und Lichtvektor normalisieren
-    //    float3 N = input.Normal;
-    //    float3 L = normalize(LightDirection);
-    //
-    //    // Diffuse Beleuchtung berechnen
-    //    float diffuse = saturate(dot(N, L));
-    //
-    //    // Berechnung der Sättigung der Normals als Durchschnitt der absoluten Werte der Achsen
-    //    float saturation = (abs(N.x) + abs(N.y) + abs(N.z)) / 3.0;
-    //    saturation = length(N);
-    //
-    //    // Sättigung invertieren, damit niedrigere Werte mehr Licht bekommen
-    //    float adjustedSaturation = 1.0 - saturation;
-    //
-    //    // Diffuse Beleuchtung mit angepasster Sättigung multiplizieren
-    //    diffuse = lerp(1.0, diffuse, adjustedSaturation);
     
     float4 finalColor = saturate(input.Color * BaseColorFactor);
 
@@ -148,30 +125,17 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
     
     if (AlphaMode == 1)
     {
-        // Mask Mode
         if (alpha < AlphaCutoff) {
             discard;
         } 
     }
-   //if (Indoor == true) {
-   //    return finalColor;
-   //} 
-   //// Kombiniere diffuse und ambient Beleuchtung
-   //float lighting = max(diffuse, ambient);
-   ////finalColor = finalColor * lighting;
-   //finalColor.a = alpha;
-    if (Fog) {
-        float distance = length(input.ViewDistance.yz);
-        float factor = saturate((distance - fogStart) / (fogEnd - fogStart));
-        finalColor = lerp(finalColor, fogColor, 0.4);
-        finalColor = lerp(finalColor, fogColor, factor);
-    }
+    
     return finalColor;
 }
 
 float4 DepthPS(VertexShaderOutput input) : SV_Target
 {
-    return saturate(float4(input.Normal.xyz, 1) * 2);
+    return saturate(float4(input.Normal.xyz, 1) );
 }
 
 technique T0
