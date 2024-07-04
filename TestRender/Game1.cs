@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using HxGLTF;
 using HxGLTF.Implementation;
 using InputLib;
 using Microsoft.Xna.Framework;
@@ -19,16 +18,14 @@ namespace TestRender
         private GraphicsDeviceManager _graphicsDeviceManager;
         private SpriteBatch _spriteBatch;
         
-        private Effect _effect;
         private Effect _worldShader;
         private Effect _buildingShader;
         private Camera _camera;
         private SpriteFont _font;
         private RenderTarget2D _screen;
-        private GameModel _hero;
-        private GameModel _heroShadow;
         private World _world;
-
+        private WorldTimeManager _timeManager;
+        
         private bool _debugTexture = false;
         
         private TextureAnimation _seaAnimation;
@@ -86,9 +83,7 @@ namespace TestRender
             _camera = new Camera(GraphicsDevice);
 
             _world = World.Load(GraphicsDevice, matrix);
-            _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load("A:\\ModelExporter\\Platin\\output_assets\\hero\\hero"));
-            _heroShadow = GameModel.From(GraphicsDevice, GLTFLoader.Load("A:\\ModelExporter\\Platin\\output_assets\\kage.002\\kage"));
-
+            
             _hamabeAnimation = new TextureAnimation("Hamabe", "hamabe", 0.32f, 8, ["hamabe_lm"]);
             _seaRockAnimation = new TextureAnimation("SeaRock", "searock", 0.16f, 4, ["searock_"]);
             _seaAnimation = new TextureAnimation("Sea", "sea", 0.32f, 8, ["sea_"]);
@@ -97,10 +92,12 @@ namespace TestRender
             _animations.Add(new TextureAnimation("C1_Lamp1", "c1_lamp01", 0.16f, 5, ["c1_lamp01_", "lamp01"], AnimationPlayMode.Bounce, 0.64f));
             _animations.Add(new TextureAnimation("C1_Lamp2", "c1_lamp02", 0.16f, 5, ["c1_lamp02_", "lamp03"], AnimationPlayMode.Bounce, 0.64f));
             _animations.Add(new TextureAnimation("C1_S02_3", "c1_s02_3", 0.32f, 4, ["c1_s02_4"]));
-            _animations.Add(new TextureAnimation("C1_S01_D", "c1_s01_d", 0.32f, 4, ["c1_s01_d"]));
+            _animations.Add(new TextureAnimation("C1_S01_D", "c1_s01_d", 0.08f, 4, ["c1_s01_d"]));
             _animations.Add(_hamabeAnimation);
             _animations.Add(_seaRockAnimation);
             _animations.Add(_seaAnimation);
+
+            _timeManager = new WorldTimeManager();
             
             base.Initialize();
         }
@@ -109,10 +106,8 @@ namespace TestRender
         {
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _effect = Content.Load<Effect>("PBRShader");
             _worldShader = Content.Load<Effect>("Shaders/WorldShader");
             _buildingShader = Content.Load<Effect>("Shaders/BuildingShader");
-            _effect.Parameters["Bones"]?.SetValue(new Matrix[64]); 
             _font = Content.Load<SpriteFont>("Font");
             _camera.Teleport(new Vector3(0.25f, 1f, 0.5f) * 32);
             
@@ -188,8 +183,9 @@ namespace TestRender
             {
                 return;
             }
-            //Animation
-
+            
+            _timeManager.Update(gameTime);
+            
             foreach (var animation in _animations)
             {
                 animation.Update(gameTime);
@@ -205,49 +201,11 @@ namespace TestRender
 
             if (KeyboardHandler.IsKeyDownOnce(Keys.T))
             {
-                _soundEffects[1004].Play();
                 _debugTexture = true;
                 Console.WriteLine("--------------------");
             }
             
-            if (KeyboardHandler.IsKeyDownOnce(Keys.L))
-            {
-                var morningAngle = new Vector3(-0.4f, -1f, -0.2f);
-                var dayAngle = new Vector3(0f, -1f, -0.2f);
-                var noonAngle = new Vector3(0.4f, -1f, -0.2f);
-                var lightPosition = _camera.Position;
-                var lightDirection = new Vector3(0, -1, 0);
-                Console.WriteLine(lightPosition);
-                Console.WriteLine(lightDirection);
-                _worldShader.Parameters["LightPosition"]?.SetValue(lightPosition);
-                _worldShader.Parameters["LightDirection"]?.SetValue(lightDirection);
-                _buildingShader.Parameters["LightPosition"]?.SetValue(lightPosition);
-                _buildingShader.Parameters["LightDirection"]?.SetValue(lightDirection);
-            }
             
-            if (KeyboardHandler.IsKeyDownOnce(Keys.F))
-            {
-                IsFoggy = !IsFoggy;
-            }
-            
-            FogStart = 16f;
-            FogEnd = 32f;
-
-            if (IsFoggy)
-            {
-                // Welt-Shader-Parameter setzen
-                _worldShader.Parameters["fogColor"]?.SetValue(FogColor);
-                _worldShader.Parameters["fogStart"]?.SetValue(FogStart);
-                _worldShader.Parameters["fogEnd"]?.SetValue(FogEnd);
-
-                // Gebäude-Shader-Parameter setzen
-                _buildingShader.Parameters["fogColor"]?.SetValue(FogColor);
-                _buildingShader.Parameters["fogStart"]?.SetValue(FogStart);
-                _buildingShader.Parameters["fogEnd"]?.SetValue(FogEnd);
-            }
-            
-            _worldShader.Parameters["Fog"]?.SetValue(IsFoggy);
-            _worldShader.Parameters["CameraPosition"]?.SetValue(_camera.Position);
             if (KeyboardHandler.IsKeyDownOnce(Keys.PageDown))
             {
                 matrix = Math.Max(matrix - 1, 0);
@@ -612,6 +570,8 @@ namespace TestRender
             _spriteBatch.DrawString(_font, $"Cell: [{_cellX}, {_cellY}]", new Vector2(0, _font.LineSpacing), Color.White);
             _spriteBatch.DrawString(_font, $"World: [{_heroX}, {_heroY}]", new Vector2(0, _font.LineSpacing * 2), Color.White);
             _spriteBatch.DrawString(_font, $"Matrix: [{matrix}]", new Vector2(0, _font.LineSpacing * 3), Color.White);
+            _spriteBatch.DrawString(_font, $"Time of day: [{_timeManager.CurrentPeriod.Name}]", new Vector2(0, _font.LineSpacing * 5), Color.White);
+            _spriteBatch.DrawString(_font, $"Time: [{_timeManager.CurrentTime:hh\\:mm}]", new Vector2(0, _font.LineSpacing * 6), Color.White);
 
             try
             {
@@ -620,17 +580,17 @@ namespace TestRender
                     if (World.Chunks.TryGetValue(targetChunkTuple.chunkId, out var targetChunk))
                     {
                         _spriteBatch.DrawString(_font, $"Collision: [{targetChunk.Collision[_cellY, _cellX]:x2}]",
-                            new Vector2(0, _font.LineSpacing * 4), Color.White);
+                            new Vector2(0, _font.LineSpacing * 10), Color.White);
                         var name = Enum.GetName(typeof(TileType), targetChunk.Type[_cellY, _cellX]);
                         _spriteBatch.DrawString(_font, $"Type: [{name}, {targetChunk.Type[_cellY, _cellX]:x2}]",
-                            new Vector2(0, _font.LineSpacing * 5), Color.White);
+                            new Vector2(0, _font.LineSpacing * 11), Color.White);
                     }
                 }
                 else
                 {
-                    _spriteBatch.DrawString(_font, $"Collision: [!]", new Vector2(0, _font.LineSpacing * 4),
+                    _spriteBatch.DrawString(_font, $"Collision: [!]", new Vector2(0, _font.LineSpacing * 10),
                         Color.White);
-                    _spriteBatch.DrawString(_font, $"Type: [!]", new Vector2(0, _font.LineSpacing * 5), Color.White);
+                    _spriteBatch.DrawString(_font, $"Type: [!]", new Vector2(0, _font.LineSpacing * 11), Color.White);
                 }
             }
             catch (Exception e)

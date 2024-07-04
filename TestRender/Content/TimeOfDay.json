@@ -1,0 +1,35 @@
+﻿[
+    {
+        "from": {
+            "hour": 4,
+            "minute": 0
+        },
+        "to": {
+            "hour": 9,
+            "minute": 59
+        },
+        "name": "Morning"
+    },
+    {
+        "from": {
+            "hour": 10,
+            "minute": 0
+        },
+        "to": {
+            "hour": 19,
+            "minute": 59
+        },
+        "name": "Day"
+    },
+    {
+        "from": {
+            "hour": 20,
+            "minute": 0
+        },
+        "to": {
+            "hour": 3,
+            "minute": 59
+        },
+        "name": "Night"
+    }
+]
