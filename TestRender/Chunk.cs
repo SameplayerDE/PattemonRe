@@ -94,19 +94,34 @@ public class Chunk
         {
             building.Load(graphicsDevice);
         }
-        
+    
         var basePath = @"A:\ModelExporter\Platin\overworldmaps\";
         string folderName = Id.ToString("D4");
-        string fileName = $"{folderName}.glb";
-        string filePath = Path.Combine(basePath, folderName, fileName);
-        
-        if (File.Exists(filePath))
+
+        string[] extensions = new[] { ".glb", ".gltf" };
+        string filePath = null;
+
+        foreach (var ext in extensions)
+        {
+            string fileName = $"{folderName}{ext}";
+            filePath = Path.Combine(basePath, folderName, fileName);
+
+            if (File.Exists(filePath))
+            {
+                break;
+            }
+
+            filePath = null;
+        }
+
+        if (filePath != null)
         {
             var gltfFile = GLTFLoader.Load(filePath);
             var gameModel = GameModel.From(graphicsDevice, gltfFile);
             Model = gameModel;
         }
     }
+
 
     public void Unload()
     {

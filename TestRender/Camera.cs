@@ -64,7 +64,7 @@ namespace TestRendering
             var aspectRatio = (float)presentationParameters.BackBufferWidth / (float)presentationParameters.BackBufferHeight;
 
             // Combination of orthographic and perspective
-            var width = 512f;
+            var width = 32f;
             var height = width / aspectRatio;
 
             _projection = Matrix.CreateOrthographic(width, height, _nearClipPlane, _farClipPlane);

@@ -171,13 +171,24 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 float4 MainPS(VertexShaderOutput input) : SV_Target
 {
 
-    float4 position = input.Position;
-    float3 Normal = input.Normal;
-    float3 N = normalize(Normal);
-    float3 L = normalize(-LightDirection);
-    float diffuse = saturate(dot(N, L));
+    // Normal und Lichtvektor normalisieren
+   float3 N = input.Normal;
+   float3 L = normalize(LightDirection);
+
+   // Diffuse Beleuchtung berechnen
+   float diffuse = saturate(dot(N, L));
+
+   // Berechnung der Sättigung der Normals als Durchschnitt der absoluten Werte der Achsen
+   float saturation = (abs(N.x) + abs(N.y) + abs(N.z)) / 3.0;
+   saturation = length(N);
+
+   // Sättigung invertieren, damit niedrigere Werte mehr Licht bekommen
+   float adjustedSaturation = 1.0 - saturation;
+
+   // Diffuse Beleuchtung mit angepasster Sättigung multiplizieren
+   diffuse = lerp(1.0, diffuse, adjustedSaturation);
     float4 finalColor = input.Color * BaseColorFactor;
-    float ambient = 0.5; // Wert für Umgebungsbeleuchtung (0.0 - 1.0, je nach gewünschter Helligkeit)
+    float ambient = 0.7; // Wert für Umgebungsbeleuchtung (0.0 - 1.0, je nach gewünschter Helligkeit)
     
 
     if (TextureEnabled == true)
@@ -204,7 +215,7 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
     }
     finalColor = finalColor * lighting;
     finalColor.a = alpha;
-    return finalColor;
+   return float4(saturation, saturation, saturation, 1);
 }
 
 float4 DepthPS(VertexShaderOutput input) : SV_Target

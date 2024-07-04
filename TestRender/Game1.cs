@@ -53,6 +53,11 @@ namespace TestRender
         private float _heroY = 0;
         private bool _shadow = true;
 
+        private Vector3 FogColor = Vector3.One;
+        private float FogStart;
+        private float FogEnd;
+        private bool IsFoggy;
+
         public Game1()
         {
             _graphicsDeviceManager = new GraphicsDeviceManager(this);
@@ -91,6 +96,8 @@ namespace TestRender
             _animations.Add(new TextureAnimation("Lakep", "lakep", 0.32f, 4, ["lakep_lm"]));
             _animations.Add(new TextureAnimation("C1_Lamp1", "c1_lamp01", 0.16f, 5, ["c1_lamp01_", "lamp01"], AnimationPlayMode.Bounce, 0.64f));
             _animations.Add(new TextureAnimation("C1_Lamp2", "c1_lamp02", 0.16f, 5, ["c1_lamp02_", "lamp03"], AnimationPlayMode.Bounce, 0.64f));
+            _animations.Add(new TextureAnimation("C1_S02_3", "c1_s02_3", 0.32f, 4, ["c1_s02_4"]));
+            _animations.Add(new TextureAnimation("C1_S01_D", "c1_s01_d", 0.32f, 4, ["c1_s01_d"]));
             _animations.Add(_hamabeAnimation);
             _animations.Add(_seaRockAnimation);
             _animations.Add(_seaAnimation);
@@ -205,8 +212,11 @@ namespace TestRender
             
             if (KeyboardHandler.IsKeyDownOnce(Keys.L))
             {
+                var morningAngle = new Vector3(-0.4f, -1f, -0.2f);
+                var dayAngle = new Vector3(0f, -1f, -0.2f);
+                var noonAngle = new Vector3(0.4f, -1f, -0.2f);
                 var lightPosition = _camera.Position;
-                var lightDirection = new Vector3(0f, -1f, -0.2f);
+                var lightDirection = new Vector3(0, -1, 0);
                 Console.WriteLine(lightPosition);
                 Console.WriteLine(lightDirection);
                 _worldShader.Parameters["LightPosition"]?.SetValue(lightPosition);
@@ -215,15 +225,29 @@ namespace TestRender
                 _buildingShader.Parameters["LightDirection"]?.SetValue(lightDirection);
             }
             
-            if (KeyboardHandler.IsKeyDown(Keys.F))
+            if (KeyboardHandler.IsKeyDownOnce(Keys.F))
             {
-                _worldShader.Parameters["Indoor"]?.SetValue(true);
-            }
-            else
-            {
-                _worldShader.Parameters["Indoor"]?.SetValue(false);
+                IsFoggy = !IsFoggy;
             }
             
+            FogStart = 16f;
+            FogEnd = 32f;
+
+            if (IsFoggy)
+            {
+                // Welt-Shader-Parameter setzen
+                _worldShader.Parameters["fogColor"]?.SetValue(FogColor);
+                _worldShader.Parameters["fogStart"]?.SetValue(FogStart);
+                _worldShader.Parameters["fogEnd"]?.SetValue(FogEnd);
+
+                // Gebäude-Shader-Parameter setzen
+                _buildingShader.Parameters["fogColor"]?.SetValue(FogColor);
+                _buildingShader.Parameters["fogStart"]?.SetValue(FogStart);
+                _buildingShader.Parameters["fogEnd"]?.SetValue(FogEnd);
+            }
+            
+            _worldShader.Parameters["Fog"]?.SetValue(IsFoggy);
+            _worldShader.Parameters["CameraPosition"]?.SetValue(_camera.Position);
             if (KeyboardHandler.IsKeyDownOnce(Keys.PageDown))
             {
                 matrix = Math.Max(matrix - 1, 0);
