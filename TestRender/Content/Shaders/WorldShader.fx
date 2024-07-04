@@ -39,6 +39,7 @@ float3 CameraPosition;
 float3 CameraDirection;
 float3 LightDirection;
 bool TextureAnimation;
+float TimeOfDay = 1;
 
 float2 TextureDimensions;
 Texture2D Texture : register(t0);
@@ -129,7 +130,7 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
             discard;
         } 
     }
-    
+
     return finalColor;
 }
 

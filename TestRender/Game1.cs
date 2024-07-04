@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using HxGLTF.Implementation;
 using InputLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Newtonsoft.Json.Linq;
 using TestRendering;
 
@@ -34,6 +36,8 @@ namespace TestRender
 
         private List<TextureAnimation> _animations = [];
         private Dictionary<int, SoundEffect> _soundEffects = [];
+        private Dictionary<int, Music> _musics = [];
+        private SoundEffectInstance _currentSoundEffectInstance;
         
         private int _chunkX = 5;
         private int _chunkY = 27;
@@ -74,6 +78,8 @@ namespace TestRender
             
             _heroY = _chunkY * 512;
             _heroY += _cellY * 16;
+
+            MediaPlayer.Volume = 0.3f;
         }
 
         protected override void Initialize()
@@ -118,17 +124,38 @@ namespace TestRender
             {
                 try
                 {
-                    var songIdToken = jSong["soundId"];
+                    var songIdToken = jSong["id"];
                     if (songIdToken == null)
                     {
                         throw new Exception();
                     }
-                    var songNameToken = jSong["soundName"];
+                    var songId = songIdToken.Value<int>();
+                    
+                    var songNameToken = jSong["name"];
                     if (songNameToken == null)
                     {
                         throw new Exception();
                     }
-                    _soundEffects.Add(songIdToken.Value<int>(), Content.Load<SoundEffect>($@"Sounds\{songNameToken}"));
+                    var songName = songNameToken.ToString();
+                    
+                    var music = new Music(songId, $@"Audio\Songs\{songName}");
+                    
+                    var songLoopToken = jSong["loop"];
+                    if (songLoopToken != null)
+                    {
+                        var value = songLoopToken.Value<float>();
+                        music.LoopStart = TimeSpan.FromSeconds(value);
+                    }
+                    
+                    var songEndToken = jSong["end"];
+                    if (songEndToken != null)
+                    {
+                        var value = songEndToken.Value<float>();
+                        music.End = TimeSpan.FromSeconds(value);
+                    }
+                    
+                    music.LoadContent(Content);
+                    _musics.Add(songId, music);
                 }
                 catch (Exception e)
                 {
@@ -181,7 +208,13 @@ namespace TestRender
             
             if (!IsActive)
             {
+                MediaPlayer.Pause();
                 return;
+            }
+
+            if (MediaPlayer.State == MediaState.Paused)
+            {
+                MediaPlayer.Resume();
             }
             
             _timeManager.Update(gameTime);
@@ -191,9 +224,11 @@ namespace TestRender
                 animation.Update(gameTime);
             }
             
+            _worldShader.Parameters["TimeOfDay"]?.SetValue(2);
             _worldShader.Parameters["Delta"]?.SetValue(delta);
             _worldShader.Parameters["Total"]?.SetValue((float)gameTime.TotalGameTime.TotalSeconds);
             
+            _buildingShader.Parameters["TimeOfDay"]?.SetValue(2);
             _buildingShader.Parameters["Delta"]?.SetValue(delta);
             _buildingShader.Parameters["Total"]?.SetValue((float)gameTime.TotalGameTime.TotalSeconds);
             
@@ -360,7 +395,6 @@ namespace TestRender
 
                 Direction *= 64;
                 
-
                 _camera.Move(-Direction * delta);
 
                 if (Keyboard.GetState().IsKeyDown(Keys.Up))
@@ -393,11 +427,26 @@ namespace TestRender
                     building.Model.Play(0);
                 }
             }
+
+            if (_musics.TryGetValue(_currentMusicId, out var music))
+            {
+                music.Update(gameTime);
+            }
             
+
             UpdateCamera(gameTime);
 
+            var prevChunkX = _chunkX;
+            var prevChunkY = _chunkY;
             _chunkX = (int)_camera.Position.X / 32;
             _chunkY = (int)_camera.Position.Z / 32;
+
+            if (prevChunkX != _chunkX || prevChunkY != _chunkY)
+            {
+
+                UpdateMusic(new Point(prevChunkX, prevChunkY), new Point(_chunkX, _chunkY));
+
+            }
 
             base.Update(gameTime);
         }
@@ -410,6 +459,89 @@ namespace TestRender
             _camera.Update(gameTime);
         }
 
+        private float _fadeDuration = 1.0f;
+        private int _currentMusicId = -1;
+        private int _currentHeaderId = -1;
+
+        //private async Task FadeOutCurrentSoundEffectAsync()
+        //{
+        //    if (_currentSoundEffectInstance != null)
+        //    {
+        //        float startVolume = _currentSoundEffectInstance.Volume;
+        //        float fadeStep = startVolume / (_fadeDuration * 1000 / 10); // Reduziere Lautstärke alle 10ms
+//
+        //        for (float volume = startVolume; volume > 0; volume -= fadeStep)
+        //        {
+        //            _currentSoundEffectInstance.Volume = volume;
+        //            await Task.Delay(10); // Warte 10ms
+        //        }
+//
+        //        _currentSoundEffectInstance.Stop();
+        //        _currentSoundEffectInstance = null; // Setze die Instanz zurück
+        //    }
+        //}
+
+        //private async Task PlayNewMusicAsync(int soundId)
+        //{
+        //    _currentSoundEffectInstance = _soundEffects[soundId].CreateInstance();
+        //    _currentSoundEffectInstance.Volume = 0f; // Starte mit Lautstärke 0
+        //    _currentSoundEffectInstance.Play();
+//
+        //    float fadeStep = 1.0f / (_fadeDuration * 1000 / 10); // Erhöhe Lautstärke alle 10ms
+//
+        //    for (float volume = 0; volume < 0.3f; volume += fadeStep)
+        //    {
+        //        _currentSoundEffectInstance.Volume = volume;
+        //        _currentSoundEffectInstance.IsLooped = true;
+        //        await Task.Delay(10); // Warte 10ms
+        //    }
+        //}
+
+        public async void UpdateMusic(Point prev, Point curr)
+        {
+            if (prev.X != curr.X || prev.Y != curr.Y)
+            {
+                try
+                {
+                    if (_world.Combination.TryGetValue((_chunkX, _chunkY), out var targetChunkTuple))
+                    {
+                        if (World.Chunks.TryGetValue(targetChunkTuple.chunkId, out var targetChunk))
+                        {
+                            var header = World.Headers[targetChunkTuple.headerId];
+                            var soundId = _timeManager.CurrentPeriod.TimeOfDay == TimeOfDay.Day ? header.MusicDayId : header.MusicNightId;
+                            
+                            // Überprüfe, ob sich die Musik-ID oder Header-ID geändert haben
+                            if (header.Id != _currentHeaderId)
+                            {
+                                if (soundId != _currentMusicId)
+                                {
+                                    //// Fadet die aktuelle Musik aus
+                                    //await FadeOutCurrentSoundEffectAsync();
+//
+                                    //// Starte die neue Musik
+                                    //await PlayNewMusicAsync(soundId);
+
+                                    if (_musics.TryGetValue(soundId, out var music))
+                                    {
+                                        music.Play();
+                                    }
+
+                                    // Aktualisiere die aktuellen IDs
+                                    _currentMusicId = soundId;
+                                    _currentHeaderId = header.Id;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    // Fehlerbehandlung (optional)
+                }
+            }
+        }
+
+        
         private void UnloadDistantChunks()
         {
             // Sichtbarer Bereich: Hier kann je nach Spiellogik die Sichtweite angepasst werden
@@ -566,31 +698,56 @@ namespace TestRender
             _spriteBatch.Draw(_screen, GraphicsDevice.Viewport.Bounds, Color.White);
             //_spriteBatch.Draw(_screen, new Rectangle(0, 0, 256 * 2, 192 * 2), Color.White);
             
-            _spriteBatch.DrawString(_font, $"Chunk: [{_chunkX}, {_chunkY}]", Vector2.Zero, Color.White);
-            _spriteBatch.DrawString(_font, $"Cell: [{_cellX}, {_cellY}]", new Vector2(0, _font.LineSpacing), Color.White);
-            _spriteBatch.DrawString(_font, $"World: [{_heroX}, {_heroY}]", new Vector2(0, _font.LineSpacing * 2), Color.White);
-            _spriteBatch.DrawString(_font, $"Matrix: [{matrix}]", new Vector2(0, _font.LineSpacing * 3), Color.White);
-            _spriteBatch.DrawString(_font, $"Time of day: [{_timeManager.CurrentPeriod.Name}]", new Vector2(0, _font.LineSpacing * 5), Color.White);
-            _spriteBatch.DrawString(_font, $"Time: [{_timeManager.CurrentTime:hh\\:mm}]", new Vector2(0, _font.LineSpacing * 6), Color.White);
-
             try
             {
                 if (_world.Combination.TryGetValue((_chunkX, _chunkY), out var targetChunkTuple))
                 {
                     if (World.Chunks.TryGetValue(targetChunkTuple.chunkId, out var targetChunk))
                     {
+
+                        _spriteBatch.DrawString(_font, $"Chunk: [{_chunkX}, {_chunkY}]", Vector2.Zero, Color.White);
+                        _spriteBatch.DrawString(_font, $"ChunkId: [{targetChunkTuple.chunkId}]",
+                            new Vector2(0, _font.LineSpacing), Color.White);
+                        try
+                        {
+                            _spriteBatch.DrawString(_font,
+                                $"HeaderId: [{targetChunkTuple.headerId}, {World.Headers[targetChunkTuple.headerId].LocationName}]",
+                                new Vector2(0, _font.LineSpacing * 2), Color.White);
+                        }
+                        catch (Exception exception)
+                        {
+                            _spriteBatch.DrawString(_font,
+                                $"HeaderId: [!]",
+                                new Vector2(0, _font.LineSpacing * 2), Color.White);
+                        }
+
+                        _spriteBatch.DrawString(_font, $"World: [{_heroX}, {_heroY}]",
+                            new Vector2(0, _font.LineSpacing * 3), Color.White);
+                        _spriteBatch.DrawString(_font, $"Matrix: [{matrix}]", new Vector2(0, _font.LineSpacing * 4),
+                            Color.White);
+                        _spriteBatch.DrawString(_font, $"Time of day: [{_timeManager.CurrentPeriod.Name}]",
+                            new Vector2(0, _font.LineSpacing * 5), Color.White);
+                        _spriteBatch.DrawString(_font, $"Time: [{_timeManager.CurrentTime:hh\\:mm}]",
+                            new Vector2(0, _font.LineSpacing * 6), Color.White);
+
+
+                        _spriteBatch.DrawString(_font, $"HasPlates: [{targetChunk.Plates.Count > 0}]",
+                            new Vector2(0, _font.LineSpacing * 9), Color.White);
                         _spriteBatch.DrawString(_font, $"Collision: [{targetChunk.Collision[_cellY, _cellX]:x2}]",
                             new Vector2(0, _font.LineSpacing * 10), Color.White);
                         var name = Enum.GetName(typeof(TileType), targetChunk.Type[_cellY, _cellX]);
                         _spriteBatch.DrawString(_font, $"Type: [{name}, {targetChunk.Type[_cellY, _cellX]:x2}]",
                             new Vector2(0, _font.LineSpacing * 11), Color.White);
                     }
-                }
-                else
-                {
-                    _spriteBatch.DrawString(_font, $"Collision: [!]", new Vector2(0, _font.LineSpacing * 10),
-                        Color.White);
-                    _spriteBatch.DrawString(_font, $"Type: [!]", new Vector2(0, _font.LineSpacing * 11), Color.White);
+                    else
+                    {
+                        _spriteBatch.DrawString(_font, $"HasPlates: [!]",
+                            new Vector2(0, _font.LineSpacing * 9), Color.White);
+                        _spriteBatch.DrawString(_font, $"Collision: [!]", new Vector2(0, _font.LineSpacing * 10),
+                            Color.White);
+                        _spriteBatch.DrawString(_font, $"Type: [!]", new Vector2(0, _font.LineSpacing * 11),
+                            Color.White);
+                    }
                 }
             }
             catch (Exception e)
@@ -807,20 +964,24 @@ namespace TestRender
             else if (material.Name.Contains("kemuri"))
             {
                 effect.Parameters["AnimationSpeed"]?.SetValue(32);
-                if ((int)gameTime.TotalGameTime.TotalSeconds % 2 == 0)
-                {
-                    effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
-                }
-                else
-                {
-                    effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Down);
-                }
                 effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Left);
                 effect.Parameters["TextureAnimation"]?.SetValue(true);
             }
             else if (material.Name.Contains("l_lake"))
             {
                 effect.Parameters["AnimationSpeed"]?.SetValue(16);
+                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
+                effect.Parameters["TextureAnimation"]?.SetValue(true);
+            }
+            else if (material.Name.Contains("pool_W"))
+            {
+                effect.Parameters["AnimationSpeed"]?.SetValue(1);
+                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
+                effect.Parameters["TextureAnimation"]?.SetValue(true);
+            }
+            else if (material.Name.Contains("neon0"))
+            {
+                effect.Parameters["AnimationSpeed"]?.SetValue(1);
                 effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
                 effect.Parameters["TextureAnimation"]?.SetValue(true);
             }

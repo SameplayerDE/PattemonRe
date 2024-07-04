@@ -31,32 +31,15 @@ public class ChunkHeader
 
     public static ChunkHeader Load(JToken jHeader)
     {
-        var header = new ChunkHeader();
+        //var header = new ChunkHeader();
+        //
+        //var headerIdToken = jHeader["headerId"];
+        //if (headerIdToken == null)
+        //{
+        //    throw new Exception();
+        //}
+        //header.Id = headerIdToken.Value<int>();
         
-        var headerIdToken = jHeader["headerId"];
-        if (headerIdToken == null)
-        {
-            throw new Exception();
-        }
-        header.Id = headerIdToken.Value<int>();
-
-        return header;
-    }
-
-    public static ChunkHeader Load(string path)
-    {
-        if (!File.Exists(path))
-        {
-            throw new Exception("");
-        }
-        
-        using var reader = new StreamReader(path);
-        var json = reader.ReadToEnd();
-        
-        var jHeader = JToken.Parse(json);
-        
-        var result = new ChunkHeader();
-
         var headerId = jHeader["headerId"]?.ToObject<int>() ?? 0;
         var chunkHeader = new ChunkHeader
         {
@@ -74,7 +57,7 @@ public class ChunkHeader
             CanUseBicycle = jHeader["canUseBicycle"]?.ToObject<bool>() ?? false,
             MatrixId = jHeader["matrixId"]?.ToObject<int>() ?? 0
         };
-        
-        return result;
+
+        return chunkHeader;
     }
 }

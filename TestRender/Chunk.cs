@@ -80,10 +80,10 @@ public class Chunk
 {
     public int Id;
     public string Name;
-    public List<Building> Buildings;
+    public List<Building> Buildings = [];
     public byte[,] Collision = new byte[32, 32];
     public byte[,] Type = new byte[32, 32];
-    public List<ChunkPlate> Plates;
+    public List<ChunkPlate> Plates = [];
     public GameModel Model;
 
     public bool IsLoaded => Model != null;
@@ -240,7 +240,6 @@ public class Chunk
             var platesToken = chunkPermissionsToken["plates"];
             if (platesToken != null)
             {
-                chunk.Plates = [];
                 foreach (var jPlate in platesToken)
                 {
                     if (jPlate is not { HasValues: true })
@@ -258,8 +257,6 @@ public class Chunk
         var chunkBuildingsToken = jChunk["buildings"];
         if (chunkBuildingsToken != null)
         {
-            chunk.Buildings = [];
-
             foreach (var jBuilding in chunkBuildingsToken)
             {
                 if (jBuilding is not { HasValues: true })

@@ -14,7 +14,7 @@ public class World
     public static Dictionary<int, ChunkHeader> Headers = [];
     public static bool IsDataFetched = false;
     
-    public Dictionary<(int x, int y), (int chunkId, string headerId, int height)> Combination = [];
+    public Dictionary<(int x, int y), (int chunkId, int headerId, int height)> Combination = [];
 
     public static World Load(GraphicsDevice graphicsDevice, int mapId)
     {
@@ -25,7 +25,7 @@ public class World
         foreach (var jCombination in jArray)
         {
             (int x, int y) key = (jCombination["x"].Value<int>(), jCombination["y"].Value<int>());
-            (int chunkId, string headerId, int height) value = (int.Parse(jCombination["mapId"].ToString()), jCombination["headerId"].ToString(), jCombination["height"].Value<int>());
+            (int chunkId, int headerId, int height) value = (int.Parse(jCombination["mapId"].ToString()), int.Parse(jCombination["headerId"].ToString()), jCombination["height"].Value<int>());
             world.Combination.Add(key, value);
             
             if (!Chunks.ContainsKey(value.chunkId))

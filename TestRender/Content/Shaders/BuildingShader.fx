@@ -40,6 +40,7 @@ float3 LightDirection;
 float3 CameraPosition;
 float3 CameraDirection;
 bool TextureAnimation;
+float TimeOfDay = 1;
 
 float2 TextureDimensions;
 Texture2D Texture : register(t0);
@@ -144,10 +145,6 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
         }   
     }
 
-    if (TextureAnimation == true)
-    {
-        return finalColor;
-    }
     return finalColor;
 }
 

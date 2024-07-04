@@ -517,6 +517,4614 @@
 /processorParam:TextureFormat=Color
 /build:Animations/SeaRock/searock_4.png
 
+#begin Audio/Songs/A Poke Radar Hit!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/A Poke Radar Hit!.wav
+
+#begin Audio/Songs/A Surprise at the Lake!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/A Surprise at the Lake!.wav
+
+#begin Audio/Songs/Amity Square.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Amity Square.wav
+
+#begin Audio/Songs/Battle Tower.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle Tower.wav
+
+#begin Audio/Songs/Battle! (Azelf_Mesprit_Uxie).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Azelf_Mesprit_Uxie).wav
+
+#begin Audio/Songs/Battle! (Champion).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Champion).wav
+
+#begin Audio/Songs/Battle! (Dialga_Palkia).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Dialga_Palkia).wav
+
+#begin Audio/Songs/Battle! (Elite Four).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Elite Four).wav
+
+#begin Audio/Songs/Battle! (Gym Leader).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Gym Leader).wav
+
+#begin Audio/Songs/Battle! (Legendary Pokemon).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Legendary Pokemon).wav
+
+#begin Audio/Songs/Battle! (Rival).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Rival).wav
+
+#begin Audio/Songs/Battle! (Team Galactic Boss).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Team Galactic Boss).wav
+
+#begin Audio/Songs/Battle! (Team Galactic Commander).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Team Galactic Commander).wav
+
+#begin Audio/Songs/Battle! (Team Galactic).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Team Galactic).wav
+
+#begin Audio/Songs/Battle! (Trainer Battle).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Trainer Battle).wav
+
+#begin Audio/Songs/Battle! (Wild Pokemon).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Wild Pokemon).wav
+
+#begin Audio/Songs/Bicycle.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Bicycle.wav
+
+#begin Audio/Songs/Canalave City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Canalave City (Day).wav
+
+#begin Audio/Songs/Canalave City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Canalave City (Night).wav
+
+#begin Audio/Songs/Captured a Flag Underground!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Captured a Flag Underground!.wav
+
+#begin Audio/Songs/Catastrophe!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Catastrophe!.wav
+
+#begin Audio/Songs/Champion Cynthia.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Champion Cynthia.wav
+
+#begin Audio/Songs/Congratulations on Entering the Hall of Fame!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Congratulations on Entering the Hall of Fame!.wav
+
+#begin Audio/Songs/Congratulations! Your Pokemon Evolved!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Congratulations! Your Pokemon Evolved!.wav
+
+#begin Audio/Songs/Contest Hall.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Contest Hall.wav
+
+#begin Audio/Songs/Contest_ Dress Up.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Contest_ Dress Up.wav
+
+#begin Audio/Songs/Contest_ Results Announcement.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Contest_ Results Announcement.wav
+
+#begin Audio/Songs/Contest_ Winner.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Contest_ Winner.wav
+
+#begin Audio/Songs/Dance_ Difficult.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Dance_ Difficult.wav
+
+#begin Audio/Songs/Dance_ Easy.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Dance_ Easy.wav
+
+#begin Audio/Songs/Dawn.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Dawn.wav
+
+#begin Audio/Songs/Decisive Battle! (Pokemon League).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Decisive Battle! (Pokemon League).wav
+
+#begin Audio/Songs/Deep Within Team Galactic HQ.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Deep Within Team Galactic HQ.wav
+
+#begin Audio/Songs/Ending Theme.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Ending Theme.wav
+
+#begin Audio/Songs/Eterna City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Eterna City (Day).wav
+
+#begin Audio/Songs/Eterna City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Eterna City (Night).wav
+
+#begin Audio/Songs/Eterna Forest.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Eterna Forest.wav
+
+#begin Audio/Songs/Evolution.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Evolution.wav
+
+#begin Audio/Songs/Fight Area (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Fight Area (Day).wav
+
+#begin Audio/Songs/Fight Area (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Fight Area (Night).wav
+
+#begin Audio/Songs/Floaroma Town (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Floaroma Town (Day).wav
+
+#begin Audio/Songs/Floaroma Town (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Floaroma Town (Night).wav
+
+#begin Audio/Songs/Galactic Eterna Building.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Galactic Eterna Building.wav
+
+#begin Audio/Songs/Game Corner.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Game Corner.wav
+
+#begin Audio/Songs/Got an Accessory.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Got an Accessory.wav
+
+#begin Audio/Songs/Great Marsh.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Great Marsh.wav
+
+#begin Audio/Songs/GTS.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/GTS.wav
+
+#begin Audio/Songs/Hall of Fame.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Hall of Fame.wav
+
+#begin Audio/Songs/Hearthome City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Hearthome City (Day).wav
+
+#begin Audio/Songs/Hearthome City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Hearthome City (Night).wav
+
+#begin Audio/Songs/Hurry Along.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Hurry Along.wav
+
+#begin Audio/Songs/Introduction.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Introduction.wav
+
+#begin Audio/Songs/Jubilife City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Jubilife City (Day).wav
+
+#begin Audio/Songs/Jubilife City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Jubilife City (Night).wav
+
+#begin Audio/Songs/Lake Caverns.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Lake Caverns.wav
+
+#begin Audio/Songs/Lake.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Lake.wav
+
+#begin Audio/Songs/Let's Go Together!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Let's Go Together!.wav
+
+#begin Audio/Songs/Level Up!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Level Up!.wav
+
+#begin Audio/Songs/Lucas.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Lucas.wav
+
+#begin Audio/Songs/Move Deleted.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Move Deleted.wav
+
+#begin Audio/Songs/Mt. Coronet.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Mt. Coronet.wav
+
+#begin Audio/Songs/Mystery Gift.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Mystery Gift.wav
+
+#begin Audio/Songs/Nintendo Wi-Fi Connection.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Nintendo Wi-Fi Connection.wav
+
+#begin Audio/Songs/Obtained a Badge!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained a Badge!.wav
+
+#begin Audio/Songs/Obtained a Berry!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained a Berry!.wav
+
+#begin Audio/Songs/Obtained a Key Item!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained a Key Item!.wav
+
+#begin Audio/Songs/Obtained a Poketch App!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained a Poketch App!.wav
+
+#begin Audio/Songs/Obtained a TM!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained a TM!.wav
+
+#begin Audio/Songs/Obtained an Item!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained an Item!.wav
+
+#begin Audio/Songs/Old Chateau.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Old Chateau.wav
+
+#begin Audio/Songs/Opening Movie.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Opening Movie.wav
+
+#begin Audio/Songs/Oreburgh City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Oreburgh City (Day).wav
+
+#begin Audio/Songs/Oreburgh City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Oreburgh City (Night).wav
+
+#begin Audio/Songs/Oreburgh Gate.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Oreburgh Gate.wav
+
+#begin Audio/Songs/Oreburgh Mine.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Oreburgh Mine.wav
+
+#begin Audio/Songs/Poffins.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Poffins.wav
+
+#begin Audio/Songs/Poke Mart.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Poke Mart.wav
+
+#begin Audio/Songs/Pokemon Center (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon Center (Day).wav
+
+#begin Audio/Songs/Pokemon Center (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon Center (Night).wav
+
+#begin Audio/Songs/Pokemon Gym.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon Gym.wav
+
+#begin Audio/Songs/Pokemon Healed.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon Healed.wav
+
+#begin Audio/Songs/Pokemon League (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon League (Day).wav
+
+#begin Audio/Songs/Pokemon League (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon League (Night).wav
+
+#begin Audio/Songs/Rival.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Rival.wav
+
+#begin Audio/Songs/Route 201 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 201 (Day).wav
+
+#begin Audio/Songs/Route 201 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 201 (Night).wav
+
+#begin Audio/Songs/Route 203 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 203 (Day).wav
+
+#begin Audio/Songs/Route 203 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 203 (Night).wav
+
+#begin Audio/Songs/Route 205 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 205 (Day).wav
+
+#begin Audio/Songs/Route 205 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 205 (Night).wav
+
+#begin Audio/Songs/Route 206 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 206 (Day).wav
+
+#begin Audio/Songs/Route 206 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 206 (Night).wav
+
+#begin Audio/Songs/Route 209 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 209 (Day).wav
+
+#begin Audio/Songs/Route 209 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 209 (Night).wav
+
+#begin Audio/Songs/Route 210 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 210 (Day).wav
+
+#begin Audio/Songs/Route 210 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 210 (Night).wav
+
+#begin Audio/Songs/Route 216 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 216 (Day).wav
+
+#begin Audio/Songs/Route 216 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 216 (Night).wav
+
+#begin Audio/Songs/Route 225 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 225 (Day).wav
+
+#begin Audio/Songs/Route 225 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 225 (Night).wav
+
+#begin Audio/Songs/Route 228 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 228 (Day).wav
+
+#begin Audio/Songs/Route 228 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 228 (Night).wav
+
+#begin Audio/Songs/Sandgem Town (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Sandgem Town (Day).wav
+
+#begin Audio/Songs/Sandgem Town (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Sandgem Town (Night).wav
+
+#begin Audio/Songs/Snowpoint City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Snowpoint City (Day).wav
+
+#begin Audio/Songs/Snowpoint City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Snowpoint City (Night).wav
+
+#begin Audio/Songs/Solaceon Town (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Solaceon Town (Day).wav
+
+#begin Audio/Songs/Solaceon Town (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Solaceon Town (Night).wav
+
+#begin Audio/Songs/Spear Pillar.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Spear Pillar.wav
+
+#begin Audio/Songs/Special Report_ _Search for the Red Gyarados!_.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Special Report_ _Search for the Red Gyarados!_.wav
+
+#begin Audio/Songs/Stark Mountain.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Stark Mountain.wav
+
+#begin Audio/Songs/Sunyshore City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Sunyshore City (Day).wav
+
+#begin Audio/Songs/Sunyshore City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Sunyshore City (Night).wav
+
+#begin Audio/Songs/Super Contest!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Super Contest!.wav
+
+#begin Audio/Songs/Surf.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Surf.wav
+
+#begin Audio/Songs/Team Galactic Appears!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Team Galactic Appears!.wav
+
+#begin Audio/Songs/Team Galactic HQ.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Team Galactic HQ.wav
+
+#begin Audio/Songs/The Elite Four Appear!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/The Elite Four Appear!.wav
+
+#begin Audio/Songs/The Legendary Pokemon Appears!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/The Legendary Pokemon Appears!.wav
+
+#begin Audio/Songs/The Pokemon Lab.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/The Pokemon Lab.wav
+
+#begin Audio/Songs/The Underground.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/The Underground.wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Ace Trainer).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Ace Trainer).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Aroma Lady).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Aroma Lady).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Artist).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Artist).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Black Belt).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Black Belt).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Collector).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Collector).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Cyclist).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Cyclist).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Hiker).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Hiker).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Lass).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Lass).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (PI).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (PI).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Sailor).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Sailor).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Twins).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Twins).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Youngster).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Youngster).wav
+
+#begin Audio/Songs/TV Station.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/TV Station.wav
+
+#begin Audio/Songs/Twinleaf Town (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Twinleaf Town (Day).wav
+
+#begin Audio/Songs/Twinleaf Town (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Twinleaf Town (Night).wav
+
+#begin Audio/Songs/Valor Lakefront (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Valor Lakefront (Day).wav
+
+#begin Audio/Songs/Valor Lakefront (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Valor Lakefront (Night).wav
+
+#begin Audio/Songs/Veilstone City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Veilstone City (Day).wav
+
+#begin Audio/Songs/Veilstone City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Veilstone City (Night).wav
+
+#begin Audio/Songs/Victory Road.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory Road.wav
+
+#begin Audio/Songs/Victory! (Champion).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Champion).wav
+
+#begin Audio/Songs/Victory! (Elite Four).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Elite Four).wav
+
+#begin Audio/Songs/Victory! (Gym Leader).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Gym Leader).wav
+
+#begin Audio/Songs/Victory! (Team Galactic).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Team Galactic).wav
+
+#begin Audio/Songs/Victory! (Trainer Battle).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Trainer Battle).wav
+
+#begin Audio/Songs/Victory! (Wild Pokemon).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Wild Pokemon).wav
+
+#begin Audio/Songs/You're a Jackpot Winner!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/You're a Jackpot Winner!.wav
+
+#begin Audio/Songs/You're a Winner!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/You're a Winner!.wav
+
+#begin Audio/Sounds/Absorb part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Absorb part 1.mp3
+
+#begin Audio/Sounds/Absorb part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Absorb part 2.mp3
+
+#begin Audio/Sounds/Absorb.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Absorb.mp3
+
+#begin Audio/Sounds/Acid Armor part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Acid Armor part 1.mp3
+
+#begin Audio/Sounds/Acid Armor part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Acid Armor part 2.mp3
+
+#begin Audio/Sounds/Acid Armor.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Acid Armor.mp3
+
+#begin Audio/Sounds/Acid.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Acid.mp3
+
+#begin Audio/Sounds/Acupressure.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Acupressure.mp3
+
+#begin Audio/Sounds/Aerial Ace.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Aerial Ace.mp3
+
+#begin Audio/Sounds/Aeroblast.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Aeroblast.mp3
+
+#begin Audio/Sounds/Agility.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Agility.mp3
+
+#begin Audio/Sounds/Air Cutter.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Air Cutter.mp3
+
+#begin Audio/Sounds/Air Slash.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Air Slash.mp3
+
+#begin Audio/Sounds/Amnesia.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Amnesia.mp3
+
+#begin Audio/Sounds/Ancient Power.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Ancient Power.mp3
+
+#begin Audio/Sounds/Aqua Jet.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Aqua Jet.mp3
+
+#begin Audio/Sounds/Aqua Ring.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Aqua Ring.mp3
+
+#begin Audio/Sounds/Aqua Tail.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Aqua Tail.mp3
+
+#begin Audio/Sounds/Arm Thrust 1hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Arm Thrust 1hit.mp3
+
+#begin Audio/Sounds/Arm Thrust 2hits.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Arm Thrust 2hits.mp3
+
+#begin Audio/Sounds/Aromatherapy.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Aromatherapy.mp3
+
+#begin Audio/Sounds/Assist.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Assist.mp3
+
+#begin Audio/Sounds/Assurance.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Assurance.mp3
+
+#begin Audio/Sounds/Astonish.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Astonish.mp3
+
+#begin Audio/Sounds/Attack Order.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Attack Order.mp3
+
+#begin Audio/Sounds/Attract.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Attract.mp3
+
+#begin Audio/Sounds/Aura Sphere part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Aura Sphere part 1.mp3
+
+#begin Audio/Sounds/Aura Sphere part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Aura Sphere part 2.mp3
+
+#begin Audio/Sounds/Aura Sphere.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Aura Sphere.mp3
+
+#begin Audio/Sounds/Aurora Beam.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Aurora Beam.mp3
+
+#begin Audio/Sounds/Avalanche.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Avalanche.mp3
+
+#begin Audio/Sounds/Barrage 1hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Barrage 1hit.mp3
+
+#begin Audio/Sounds/Barrage 2hits.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Barrage 2hits.mp3
+
+#begin Audio/Sounds/Barrier.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Barrier.mp3
+
+#begin Audio/Sounds/Baton Pass part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Baton Pass part 1.mp3
+
+#begin Audio/Sounds/Baton Pass part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Baton Pass part 2.mp3
+
+#begin Audio/Sounds/Baton Pass.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Baton Pass.mp3
+
+#begin Audio/Sounds/Beat Up 1hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Beat Up 1hit.mp3
+
+#begin Audio/Sounds/Beat Up 2hits.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Beat Up 2hits.mp3
+
+#begin Audio/Sounds/Belly Drum.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Belly Drum.mp3
+
+#begin Audio/Sounds/Bide part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bide part 1.mp3
+
+#begin Audio/Sounds/Bide part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bide part 2.mp3
+
+#begin Audio/Sounds/Bide.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bide.mp3
+
+#begin Audio/Sounds/Bind turn damage.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bind turn damage.mp3
+
+#begin Audio/Sounds/Bind.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bind.mp3
+
+#begin Audio/Sounds/Bite.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bite.mp3
+
+#begin Audio/Sounds/Blast Burn.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Blast Burn.mp3
+
+#begin Audio/Sounds/Blaze Kick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Blaze Kick.mp3
+
+#begin Audio/Sounds/Blizzard.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Blizzard.mp3
+
+#begin Audio/Sounds/Block.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Block.mp3
+
+#begin Audio/Sounds/Body Slam.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Body Slam.mp3
+
+#begin Audio/Sounds/Bone Club.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bone Club.mp3
+
+#begin Audio/Sounds/Bone Rush 1hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bone Rush 1hit.mp3
+
+#begin Audio/Sounds/Bone Rush 2hits.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bone Rush 2hits.mp3
+
+#begin Audio/Sounds/Bonemerang 1hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bonemerang 1hit.mp3
+
+#begin Audio/Sounds/Bonemerang 2hits.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bonemerang 2hits.mp3
+
+#begin Audio/Sounds/Bounce part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bounce part 1.mp3
+
+#begin Audio/Sounds/Bounce part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bounce part 2.mp3
+
+#begin Audio/Sounds/Bounce.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bounce.mp3
+
+#begin Audio/Sounds/Brave Bird.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Brave Bird.mp3
+
+#begin Audio/Sounds/Brick Break.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Brick Break.mp3
+
+#begin Audio/Sounds/Brine.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Brine.mp3
+
+#begin Audio/Sounds/Bubble Beam part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bubble Beam part 1.mp3
+
+#begin Audio/Sounds/Bubble Beam part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bubble Beam part 2.mp3
+
+#begin Audio/Sounds/Bubble Beam.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bubble Beam.mp3
+
+#begin Audio/Sounds/Bubble.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bubble.mp3
+
+#begin Audio/Sounds/Bug Bite.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bug Bite.mp3
+
+#begin Audio/Sounds/Bug Buzz.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bug Buzz.mp3
+
+#begin Audio/Sounds/Bulk Up.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bulk Up.mp3
+
+#begin Audio/Sounds/Bullet Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bullet Punch.mp3
+
+#begin Audio/Sounds/Bullet Seed.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Bullet Seed.mp3
+
+#begin Audio/Sounds/Calm Mind.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Calm Mind.mp3
+
+#begin Audio/Sounds/Camouflage.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Camouflage.mp3
+
+#begin Audio/Sounds/Captivate.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Captivate.mp3
+
+#begin Audio/Sounds/Charge Beam part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Charge Beam part 1.mp3
+
+#begin Audio/Sounds/Charge Beam part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Charge Beam part 2.mp3
+
+#begin Audio/Sounds/Charge Beam.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Charge Beam.mp3
+
+#begin Audio/Sounds/Charge.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Charge.mp3
+
+#begin Audio/Sounds/Charm.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Charm.mp3
+
+#begin Audio/Sounds/Chatter.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Chatter.mp3
+
+#begin Audio/Sounds/Clamp.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Clamp.mp3
+
+#begin Audio/Sounds/Close Combat.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Close Combat.mp3
+
+#begin Audio/Sounds/Comet Punch 1hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Comet Punch 1hit.mp3
+
+#begin Audio/Sounds/Comet Punch 2hits.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Comet Punch 2hits.mp3
+
+#begin Audio/Sounds/Confuse Ray.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Confuse Ray.mp3
+
+#begin Audio/Sounds/Confusion.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Confusion.mp3
+
+#begin Audio/Sounds/Constrict.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Constrict.mp3
+
+#begin Audio/Sounds/Conversion 2 part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Conversion 2 part 1.mp3
+
+#begin Audio/Sounds/Conversion 2 part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Conversion 2 part 2.mp3
+
+#begin Audio/Sounds/Conversion 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Conversion 2.mp3
+
+#begin Audio/Sounds/Conversion.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Conversion.mp3
+
+#begin Audio/Sounds/Copycat.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Copycat.mp3
+
+#begin Audio/Sounds/Cosmic Power.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Cosmic Power.mp3
+
+#begin Audio/Sounds/Cotton Spore.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Cotton Spore.mp3
+
+#begin Audio/Sounds/Counter.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Counter.mp3
+
+#begin Audio/Sounds/Covet.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Covet.mp3
+
+#begin Audio/Sounds/Crabhammer part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Crabhammer part 1.mp3
+
+#begin Audio/Sounds/Crabhammer part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Crabhammer part 2.mp3
+
+#begin Audio/Sounds/Crabhammer.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Crabhammer.mp3
+
+#begin Audio/Sounds/Cross Chop part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Cross Chop part 1.mp3
+
+#begin Audio/Sounds/Cross Chop part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Cross Chop part 2.mp3
+
+#begin Audio/Sounds/Cross Chop.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Cross Chop.mp3
+
+#begin Audio/Sounds/Cross Poison.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Cross Poison.mp3
+
+#begin Audio/Sounds/Crunch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Crunch.mp3
+
+#begin Audio/Sounds/Crush Claw.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Crush Claw.mp3
+
+#begin Audio/Sounds/Crush Grip.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Crush Grip.mp3
+
+#begin Audio/Sounds/Curse.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Curse.mp3
+
+#begin Audio/Sounds/Cut.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Cut.mp3
+
+#begin Audio/Sounds/Dark Pulse.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dark Pulse.mp3
+
+#begin Audio/Sounds/Dark Void.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dark Void.mp3
+
+#begin Audio/Sounds/Defend Order.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Defend Order.mp3
+
+#begin Audio/Sounds/Defense Curl.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Defense Curl.mp3
+
+#begin Audio/Sounds/Defog.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Defog.mp3
+
+#begin Audio/Sounds/Destiny Bond.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Destiny Bond.mp3
+
+#begin Audio/Sounds/Detect.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Detect.mp3
+
+#begin Audio/Sounds/Dig part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dig part 1.mp3
+
+#begin Audio/Sounds/Dig part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dig part 2.mp3
+
+#begin Audio/Sounds/Dig.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dig.mp3
+
+#begin Audio/Sounds/Disable.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Disable.mp3
+
+#begin Audio/Sounds/Discharge.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Discharge.mp3
+
+#begin Audio/Sounds/Dive part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dive part 1.mp3
+
+#begin Audio/Sounds/Dive part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dive part 2.mp3
+
+#begin Audio/Sounds/Dive.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dive.mp3
+
+#begin Audio/Sounds/Dizzy Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dizzy Punch.mp3
+
+#begin Audio/Sounds/Doom Desire.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Doom Desire.mp3
+
+#begin Audio/Sounds/Double Edge.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Double Edge.mp3
+
+#begin Audio/Sounds/Double Hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Double Hit.mp3
+
+#begin Audio/Sounds/Double Kick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Double Kick.mp3
+
+#begin Audio/Sounds/Double Slap 1hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Double Slap 1hit.mp3
+
+#begin Audio/Sounds/Double Slap 2hits.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Double Slap 2hits.mp3
+
+#begin Audio/Sounds/Double Team.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Double Team.mp3
+
+#begin Audio/Sounds/Draco Meteor part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Draco Meteor part 1.mp3
+
+#begin Audio/Sounds/Draco Meteor part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Draco Meteor part 2.mp3
+
+#begin Audio/Sounds/Draco Meteor.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Draco Meteor.mp3
+
+#begin Audio/Sounds/Dragon Breath.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dragon Breath.mp3
+
+#begin Audio/Sounds/Dragon Claw.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dragon Claw.mp3
+
+#begin Audio/Sounds/Dragon Dance.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dragon Dance.mp3
+
+#begin Audio/Sounds/Dragon Pulse.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dragon Pulse.mp3
+
+#begin Audio/Sounds/Dragon Rage.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dragon Rage.mp3
+
+#begin Audio/Sounds/Dragon Rush.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dragon Rush.mp3
+
+#begin Audio/Sounds/Drain Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Drain Punch.mp3
+
+#begin Audio/Sounds/Dream Eater.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dream Eater.mp3
+
+#begin Audio/Sounds/Drill Peck part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Drill Peck part 1.mp3
+
+#begin Audio/Sounds/Drill Peck part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Drill Peck part 2.mp3
+
+#begin Audio/Sounds/Drill Peck.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Drill Peck.mp3
+
+#begin Audio/Sounds/Dynamic Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Dynamic Punch.mp3
+
+#begin Audio/Sounds/Earth Power.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Earth Power.mp3
+
+#begin Audio/Sounds/Earthquake.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Earthquake.mp3
+
+#begin Audio/Sounds/Egg Bomb.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Egg Bomb.mp3
+
+#begin Audio/Sounds/Embargo.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Embargo.mp3
+
+#begin Audio/Sounds/Ember.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Ember.mp3
+
+#begin Audio/Sounds/Encore.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Encore.mp3
+
+#begin Audio/Sounds/Endeavor.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Endeavor.mp3
+
+#begin Audio/Sounds/Endure.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Endure.mp3
+
+#begin Audio/Sounds/Energy Ball part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Energy Ball part 1.mp3
+
+#begin Audio/Sounds/Energy Ball part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Energy Ball part 2.mp3
+
+#begin Audio/Sounds/Energy Ball.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Energy Ball.mp3
+
+#begin Audio/Sounds/Eruption part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Eruption part 1.mp3
+
+#begin Audio/Sounds/Eruption part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Eruption part 2.mp3
+
+#begin Audio/Sounds/Eruption.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Eruption.mp3
+
+#begin Audio/Sounds/Explosion.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Explosion.mp3
+
+#begin Audio/Sounds/Extrasensory part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Extrasensory part 1.mp3
+
+#begin Audio/Sounds/Extrasensory part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Extrasensory part 2.mp3
+
+#begin Audio/Sounds/Extrasensory.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Extrasensory.mp3
+
+#begin Audio/Sounds/Extreme Speed.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Extreme Speed.mp3
+
+#begin Audio/Sounds/Facade.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Facade.mp3
+
+#begin Audio/Sounds/Fake Out.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fake Out.mp3
+
+#begin Audio/Sounds/Fake Tears.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fake Tears.mp3
+
+#begin Audio/Sounds/False Swipe.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/False Swipe.mp3
+
+#begin Audio/Sounds/Feather Dance.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Feather Dance.mp3
+
+#begin Audio/Sounds/Feint Attack.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Feint Attack.mp3
+
+#begin Audio/Sounds/Feint part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Feint part 1.mp3
+
+#begin Audio/Sounds/Feint part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Feint part 2.mp3
+
+#begin Audio/Sounds/Feint.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Feint.mp3
+
+#begin Audio/Sounds/Fire Blast.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fire Blast.mp3
+
+#begin Audio/Sounds/Fire Fang.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fire Fang.mp3
+
+#begin Audio/Sounds/Fire Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fire Punch.mp3
+
+#begin Audio/Sounds/Fire Spin.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fire Spin.mp3
+
+#begin Audio/Sounds/Fissure.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fissure.mp3
+
+#begin Audio/Sounds/Flail.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Flail.mp3
+
+#begin Audio/Sounds/Flame Wheel.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Flame Wheel.mp3
+
+#begin Audio/Sounds/Flamethrower.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Flamethrower.mp3
+
+#begin Audio/Sounds/Flare Blitz.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Flare Blitz.mp3
+
+#begin Audio/Sounds/Flash Cannon part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Flash Cannon part 1.mp3
+
+#begin Audio/Sounds/Flash Cannon part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Flash Cannon part 2.mp3
+
+#begin Audio/Sounds/Flash Cannon.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Flash Cannon.mp3
+
+#begin Audio/Sounds/Flash.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Flash.mp3
+
+#begin Audio/Sounds/Flatter.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Flatter.mp3
+
+#begin Audio/Sounds/Fling.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fling.mp3
+
+#begin Audio/Sounds/Fly part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fly part 1.mp3
+
+#begin Audio/Sounds/Fly part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fly part 2.mp3
+
+#begin Audio/Sounds/Fly.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fly.mp3
+
+#begin Audio/Sounds/Focus Blast.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Focus Blast.mp3
+
+#begin Audio/Sounds/Focus Energy.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Focus Energy.mp3
+
+#begin Audio/Sounds/Focus Punch part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Focus Punch part 1.mp3
+
+#begin Audio/Sounds/Focus Punch part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Focus Punch part 2.mp3
+
+#begin Audio/Sounds/Focus Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Focus Punch.mp3
+
+#begin Audio/Sounds/Follow Me part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Follow Me part 1.mp3
+
+#begin Audio/Sounds/Follow Me part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Follow Me part 2.mp3
+
+#begin Audio/Sounds/Follow Me.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Follow Me.mp3
+
+#begin Audio/Sounds/Force Palm.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Force Palm.mp3
+
+#begin Audio/Sounds/Foresight.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Foresight.mp3
+
+#begin Audio/Sounds/Frenzy Plant part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Frenzy Plant part 1.mp3
+
+#begin Audio/Sounds/Frenzy Plant part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Frenzy Plant part 2.mp3
+
+#begin Audio/Sounds/Frenzy Plant.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Frenzy Plant.mp3
+
+#begin Audio/Sounds/Frustration.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Frustration.mp3
+
+#begin Audio/Sounds/Fury Attack 1hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fury Attack 1hit.mp3
+
+#begin Audio/Sounds/Fury Attack 2hits.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fury Attack 2hits.mp3
+
+#begin Audio/Sounds/Fury Cutter.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fury Cutter.mp3
+
+#begin Audio/Sounds/Fury Swipes.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Fury Swipes.mp3
+
+#begin Audio/Sounds/Future Sight.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Future Sight.mp3
+
+#begin Audio/Sounds/Gastro Acid.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Gastro Acid.mp3
+
+#begin Audio/Sounds/Giga Drain.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Giga Drain.mp3
+
+#begin Audio/Sounds/Giga Impact.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Giga Impact.mp3
+
+#begin Audio/Sounds/Glare.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Glare.mp3
+
+#begin Audio/Sounds/Grass Knot.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Grass Knot.mp3
+
+#begin Audio/Sounds/Grass Whistle.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Grass Whistle.mp3
+
+#begin Audio/Sounds/Gravity.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Gravity.mp3
+
+#begin Audio/Sounds/Growl.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Growl.mp3
+
+#begin Audio/Sounds/Growth.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Growth.mp3
+
+#begin Audio/Sounds/Grudge.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Grudge.mp3
+
+#begin Audio/Sounds/Guard Swap.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Guard Swap.mp3
+
+#begin Audio/Sounds/Guillotine.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Guillotine.mp3
+
+#begin Audio/Sounds/Gunk Shot part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Gunk Shot part 1.mp3
+
+#begin Audio/Sounds/Gunk Shot part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Gunk Shot part 2.mp3
+
+#begin Audio/Sounds/Gunk Shot.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Gunk Shot.mp3
+
+#begin Audio/Sounds/Gust.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Gust.mp3
+
+#begin Audio/Sounds/Gyro Ball part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Gyro Ball part 1.mp3
+
+#begin Audio/Sounds/Gyro Ball part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Gyro Ball part 2.mp3
+
+#begin Audio/Sounds/Gyro Ball.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Gyro Ball.mp3
+
+#begin Audio/Sounds/Hail turn damage.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hail turn damage.mp3
+
+#begin Audio/Sounds/Hail.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hail.mp3
+
+#begin Audio/Sounds/Hammer Arm.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hammer Arm.mp3
+
+#begin Audio/Sounds/Harden.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Harden.mp3
+
+#begin Audio/Sounds/Haze.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Haze.mp3
+
+#begin Audio/Sounds/Head Smash.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Head Smash.mp3
+
+#begin Audio/Sounds/Headbutt.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Headbutt.mp3
+
+#begin Audio/Sounds/Heal Bell.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Heal Bell.mp3
+
+#begin Audio/Sounds/Heal Block.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Heal Block.mp3
+
+#begin Audio/Sounds/Heal Order.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Heal Order.mp3
+
+#begin Audio/Sounds/Healing Wish part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Healing Wish part 1.mp3
+
+#begin Audio/Sounds/Healing Wish part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Healing Wish part 2.mp3
+
+#begin Audio/Sounds/Healing Wish.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Healing Wish.mp3
+
+#begin Audio/Sounds/Heart Swap.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Heart Swap.mp3
+
+#begin Audio/Sounds/Heat Wave.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Heat Wave.mp3
+
+#begin Audio/Sounds/Helping Hand.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Helping Hand.mp3
+
+#begin Audio/Sounds/Hidden Power part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hidden Power part 1.mp3
+
+#begin Audio/Sounds/Hidden Power part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hidden Power part 2.mp3
+
+#begin Audio/Sounds/Hidden Power.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hidden Power.mp3
+
+#begin Audio/Sounds/High Jump Kick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/High Jump Kick.mp3
+
+#begin Audio/Sounds/Hit Alt Super Effective.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hit Alt Super Effective.mp3
+
+#begin Audio/Sounds/Hit Alt Weak.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hit Alt Weak.mp3
+
+#begin Audio/Sounds/Hit Normal Damage.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hit Normal Damage.mp3
+
+#begin Audio/Sounds/Hit Super Effective.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hit Super Effective.mp3
+
+#begin Audio/Sounds/Hit Weak Not Very Effective.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hit Weak Not Very Effective.mp3
+
+#begin Audio/Sounds/Horn Attack.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Horn Attack.mp3
+
+#begin Audio/Sounds/Horn Drill.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Horn Drill.mp3
+
+#begin Audio/Sounds/Howl.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Howl.mp3
+
+#begin Audio/Sounds/Hydro Cannon.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hydro Cannon.mp3
+
+#begin Audio/Sounds/Hydro Pump.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hydro Pump.mp3
+
+#begin Audio/Sounds/Hyper Beam.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hyper Beam.mp3
+
+#begin Audio/Sounds/Hyper Fang.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hyper Fang.mp3
+
+#begin Audio/Sounds/Hyper Voice.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hyper Voice.mp3
+
+#begin Audio/Sounds/Hypnosis.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Hypnosis.mp3
+
+#begin Audio/Sounds/Ice Ball.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Ice Ball.mp3
+
+#begin Audio/Sounds/Ice Beam.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Ice Beam.mp3
+
+#begin Audio/Sounds/Ice Fang.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Ice Fang.mp3
+
+#begin Audio/Sounds/Ice Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Ice Punch.mp3
+
+#begin Audio/Sounds/Ice Shard part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Ice Shard part 1.mp3
+
+#begin Audio/Sounds/Ice Shard part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Ice Shard part 2.mp3
+
+#begin Audio/Sounds/Ice Shard.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Ice Shard.mp3
+
+#begin Audio/Sounds/Icicle Spear 1hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Icicle Spear 1hit.mp3
+
+#begin Audio/Sounds/Icicle Spear 2hits.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Icicle Spear 2hits.mp3
+
+#begin Audio/Sounds/Icy Wind.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Icy Wind.mp3
+
+#begin Audio/Sounds/Imprison.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Imprison.mp3
+
+#begin Audio/Sounds/In-Battle Faint No Health.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/In-Battle Faint No Health.mp3
+
+#begin Audio/Sounds/In-Battle Heal HP Restore.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/In-Battle Heal HP Restore.mp3
+
+#begin Audio/Sounds/In-Battle Health Low Loop.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/In-Battle Health Low Loop.mp3
+
+#begin Audio/Sounds/In-Battle Health Low.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/In-Battle Health Low.mp3
+
+#begin Audio/Sounds/In-Battle Held Item Activate.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/In-Battle Held Item Activate.mp3
+
+#begin Audio/Sounds/In-Battle Recall Switch Pokeball.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/In-Battle Recall Switch Pokeball.mp3
+
+#begin Audio/Sounds/In-Battle Switch Flee Run.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/In-Battle Switch Flee Run.mp3
+
+#begin Audio/Sounds/Ingrain.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Ingrain.mp3
+
+#begin Audio/Sounds/Iron Defense.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Iron Defense.mp3
+
+#begin Audio/Sounds/Iron Head.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Iron Head.mp3
+
+#begin Audio/Sounds/Iron Tail.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Iron Tail.mp3
+
+#begin Audio/Sounds/Judgment part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Judgment part 1.mp3
+
+#begin Audio/Sounds/Judgment part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Judgment part 2.mp3
+
+#begin Audio/Sounds/Judgment.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Judgment.mp3
+
+#begin Audio/Sounds/Jump Kick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Jump Kick.mp3
+
+#begin Audio/Sounds/Karate Chop.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Karate Chop.mp3
+
+#begin Audio/Sounds/Kinesis.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Kinesis.mp3
+
+#begin Audio/Sounds/Knock Off.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Knock Off.mp3
+
+#begin Audio/Sounds/Last Resort.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Last Resort.mp3
+
+#begin Audio/Sounds/Lava Plume.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Lava Plume.mp3
+
+#begin Audio/Sounds/Leaf Blade.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Leaf Blade.mp3
+
+#begin Audio/Sounds/Leaf Storm.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Leaf Storm.mp3
+
+#begin Audio/Sounds/Leech Life.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Leech Life.mp3
+
+#begin Audio/Sounds/Leech Seed.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Leech Seed.mp3
+
+#begin Audio/Sounds/Leer.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Leer.mp3
+
+#begin Audio/Sounds/Lick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Lick.mp3
+
+#begin Audio/Sounds/Light Screen.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Light Screen.mp3
+
+#begin Audio/Sounds/Lock On.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Lock On.mp3
+
+#begin Audio/Sounds/Lovely Kiss.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Lovely Kiss.mp3
+
+#begin Audio/Sounds/Low Kick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Low Kick.mp3
+
+#begin Audio/Sounds/Lucky Chant.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Lucky Chant.mp3
+
+#begin Audio/Sounds/Lunar Dance part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Lunar Dance part 1.mp3
+
+#begin Audio/Sounds/Lunar Dance part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Lunar Dance part 2.mp3
+
+#begin Audio/Sounds/Lunar Dance.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Lunar Dance.mp3
+
+#begin Audio/Sounds/Luster Purge.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Luster Purge.mp3
+
+#begin Audio/Sounds/Mach Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mach Punch.mp3
+
+#begin Audio/Sounds/Magic Coat.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Magic Coat.mp3
+
+#begin Audio/Sounds/Magical Leaf.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Magical Leaf.mp3
+
+#begin Audio/Sounds/Magma Storm.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Magma Storm.mp3
+
+#begin Audio/Sounds/Magnet Bomb.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Magnet Bomb.mp3
+
+#begin Audio/Sounds/Magnet Rise.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Magnet Rise.mp3
+
+#begin Audio/Sounds/Magnitude.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Magnitude.mp3
+
+#begin Audio/Sounds/Me First.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Me First.mp3
+
+#begin Audio/Sounds/Mean Look.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mean Look.mp3
+
+#begin Audio/Sounds/Meditate.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Meditate.mp3
+
+#begin Audio/Sounds/Mega Drain part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mega Drain part 1.mp3
+
+#begin Audio/Sounds/Mega Drain part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mega Drain part 2.mp3
+
+#begin Audio/Sounds/Mega Drain.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mega Drain.mp3
+
+#begin Audio/Sounds/Mega Kick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mega Kick.mp3
+
+#begin Audio/Sounds/Mega Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mega Punch.mp3
+
+#begin Audio/Sounds/Megahorn.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Megahorn.mp3
+
+#begin Audio/Sounds/Memento.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Memento.mp3
+
+#begin Audio/Sounds/Metal Burst.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Metal Burst.mp3
+
+#begin Audio/Sounds/Metal Claw part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Metal Claw part 1.mp3
+
+#begin Audio/Sounds/Metal Claw part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Metal Claw part 2.mp3
+
+#begin Audio/Sounds/Metal Claw.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Metal Claw.mp3
+
+#begin Audio/Sounds/Metal Sound.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Metal Sound.mp3
+
+#begin Audio/Sounds/Meteor Mash.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Meteor Mash.mp3
+
+#begin Audio/Sounds/Metronome.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Metronome.mp3
+
+#begin Audio/Sounds/Milk Drink.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Milk Drink.mp3
+
+#begin Audio/Sounds/Mimic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mimic.mp3
+
+#begin Audio/Sounds/Mind Reader.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mind Reader.mp3
+
+#begin Audio/Sounds/Minimize.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Minimize.mp3
+
+#begin Audio/Sounds/Miracle Eye.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Miracle Eye.mp3
+
+#begin Audio/Sounds/Mirror Coat.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mirror Coat.mp3
+
+#begin Audio/Sounds/Mirror Shot.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mirror Shot.mp3
+
+#begin Audio/Sounds/Mist Ball part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mist Ball part 1.mp3
+
+#begin Audio/Sounds/Mist Ball part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mist Ball part 2.mp3
+
+#begin Audio/Sounds/Mist Ball.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mist Ball.mp3
+
+#begin Audio/Sounds/Mist.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mist.mp3
+
+#begin Audio/Sounds/Moonlight.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Moonlight.mp3
+
+#begin Audio/Sounds/Morning Sun.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Morning Sun.mp3
+
+#begin Audio/Sounds/Mud Bomb part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mud Bomb part 1.mp3
+
+#begin Audio/Sounds/Mud Bomb part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mud Bomb part 2.mp3
+
+#begin Audio/Sounds/Mud Bomb.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mud Bomb.mp3
+
+#begin Audio/Sounds/Mud Shot.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mud Shot.mp3
+
+#begin Audio/Sounds/Mud Slap.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mud Slap.mp3
+
+#begin Audio/Sounds/Mud Sport part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mud Sport part 1.mp3
+
+#begin Audio/Sounds/Mud Sport part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mud Sport part 2.mp3
+
+#begin Audio/Sounds/Mud Sport.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Mud Sport.mp3
+
+#begin Audio/Sounds/Muddy Water.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Muddy Water.mp3
+
+#begin Audio/Sounds/Nasty Plot.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Nasty Plot.mp3
+
+#begin Audio/Sounds/Natural Gift.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Natural Gift.mp3
+
+#begin Audio/Sounds/Nature Power.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Nature Power.mp3
+
+#begin Audio/Sounds/Needle Arm.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Needle Arm.mp3
+
+#begin Audio/Sounds/Night Shade.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Night Shade.mp3
+
+#begin Audio/Sounds/Night Slash.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Night Slash.mp3
+
+#begin Audio/Sounds/Nightmare.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Nightmare.mp3
+
+#begin Audio/Sounds/Octazooka.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Octazooka.mp3
+
+#begin Audio/Sounds/Odor Sleuth.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Odor Sleuth.mp3
+
+#begin Audio/Sounds/Ominous Wind.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Ominous Wind.mp3
+
+#begin Audio/Sounds/Outrage part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Outrage part 1.mp3
+
+#begin Audio/Sounds/Outrage part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Outrage part 2.mp3
+
+#begin Audio/Sounds/Outrage.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Outrage.mp3
+
+#begin Audio/Sounds/Overheat.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Overheat.mp3
+
+#begin Audio/Sounds/Pain Split.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Pain Split.mp3
+
+#begin Audio/Sounds/Pay Day.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Pay Day.mp3
+
+#begin Audio/Sounds/Payback.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Payback.mp3
+
+#begin Audio/Sounds/Peck.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Peck.mp3
+
+#begin Audio/Sounds/Perish Song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Perish Song.mp3
+
+#begin Audio/Sounds/Petal Dance.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Petal Dance.mp3
+
+#begin Audio/Sounds/Pin Missile 1hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Pin Missile 1hit.mp3
+
+#begin Audio/Sounds/Pin Missile 2hits.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Pin Missile 2hits.mp3
+
+#begin Audio/Sounds/Pluck.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Pluck.mp3
+
+#begin Audio/Sounds/Poison Fang.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Poison Fang.mp3
+
+#begin Audio/Sounds/Poison Gas.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Poison Gas.mp3
+
+#begin Audio/Sounds/Poison Jab.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Poison Jab.mp3
+
+#begin Audio/Sounds/Poison Powder.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Poison Powder.mp3
+
+#begin Audio/Sounds/Poison Sting.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Poison Sting.mp3
+
+#begin Audio/Sounds/Poison Tail.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Poison Tail.mp3
+
+#begin Audio/Sounds/Pound.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Pound.mp3
+
+#begin Audio/Sounds/Powder Snow.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Powder Snow.mp3
+
+#begin Audio/Sounds/Power Gem.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Power Gem.mp3
+
+#begin Audio/Sounds/Power Swap.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Power Swap.mp3
+
+#begin Audio/Sounds/Power Trick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Power Trick.mp3
+
+#begin Audio/Sounds/Power Whip.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Power Whip.mp3
+
+#begin Audio/Sounds/Present.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Present.mp3
+
+#begin Audio/Sounds/Protect.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Protect.mp3
+
+#begin Audio/Sounds/Psybeam.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Psybeam.mp3
+
+#begin Audio/Sounds/Psych Up.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Psych Up.mp3
+
+#begin Audio/Sounds/Psychic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Psychic.mp3
+
+#begin Audio/Sounds/Psycho Boost part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Psycho Boost part 1.mp3
+
+#begin Audio/Sounds/Psycho Boost part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Psycho Boost part 2.mp3
+
+#begin Audio/Sounds/Psycho Boost.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Psycho Boost.mp3
+
+#begin Audio/Sounds/Psycho Cut part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Psycho Cut part 1.mp3
+
+#begin Audio/Sounds/Psycho Cut part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Psycho Cut part 2.mp3
+
+#begin Audio/Sounds/Psycho Cut.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Psycho Cut.mp3
+
+#begin Audio/Sounds/Psycho Shift.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Psycho Shift.mp3
+
+#begin Audio/Sounds/Psywave.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Psywave.mp3
+
+#begin Audio/Sounds/Punishment.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Punishment.mp3
+
+#begin Audio/Sounds/Pursuit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Pursuit.mp3
+
+#begin Audio/Sounds/Quick Attack.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Quick Attack.mp3
+
+#begin Audio/Sounds/Rage.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rage.mp3
+
+#begin Audio/Sounds/Rain Dance.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rain Dance.mp3
+
+#begin Audio/Sounds/Rapid Spin.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rapid Spin.mp3
+
+#begin Audio/Sounds/Razor Leaf.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Razor Leaf.mp3
+
+#begin Audio/Sounds/Razor Wind part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Razor Wind part 1.mp3
+
+#begin Audio/Sounds/Razor Wind part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Razor Wind part 2.mp3
+
+#begin Audio/Sounds/Razor Wind.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Razor Wind.mp3
+
+#begin Audio/Sounds/Recover.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Recover.mp3
+
+#begin Audio/Sounds/Recycle.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Recycle.mp3
+
+#begin Audio/Sounds/Reflect.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Reflect.mp3
+
+#begin Audio/Sounds/Refresh.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Refresh.mp3
+
+#begin Audio/Sounds/Rest.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rest.mp3
+
+#begin Audio/Sounds/Return.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Return.mp3
+
+#begin Audio/Sounds/Revenge.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Revenge.mp3
+
+#begin Audio/Sounds/Reversal part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Reversal part 1.mp3
+
+#begin Audio/Sounds/Reversal part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Reversal part 2.mp3
+
+#begin Audio/Sounds/Reversal.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Reversal.mp3
+
+#begin Audio/Sounds/Roar of Time.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Roar of Time.mp3
+
+#begin Audio/Sounds/Roar.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Roar.mp3
+
+#begin Audio/Sounds/Rock Blast 1hit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rock Blast 1hit.mp3
+
+#begin Audio/Sounds/Rock Blast 2hits.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rock Blast 2hits.mp3
+
+#begin Audio/Sounds/Rock Climb.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rock Climb.mp3
+
+#begin Audio/Sounds/Rock Polish.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rock Polish.mp3
+
+#begin Audio/Sounds/Rock Slide.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rock Slide.mp3
+
+#begin Audio/Sounds/Rock Smash.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rock Smash.mp3
+
+#begin Audio/Sounds/Rock Throw.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rock Throw.mp3
+
+#begin Audio/Sounds/Rock Tomb.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rock Tomb.mp3
+
+#begin Audio/Sounds/Rock Wrecker.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rock Wrecker.mp3
+
+#begin Audio/Sounds/Role Play.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Role Play.mp3
+
+#begin Audio/Sounds/Rolling Kick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rolling Kick.mp3
+
+#begin Audio/Sounds/Rollout.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Rollout.mp3
+
+#begin Audio/Sounds/Roost.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Roost.mp3
+
+#begin Audio/Sounds/Sacred Fire.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sacred Fire.mp3
+
+#begin Audio/Sounds/Safeguard.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Safeguard.mp3
+
+#begin Audio/Sounds/Sand Attack.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sand Attack.mp3
+
+#begin Audio/Sounds/Sand Tomb.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sand Tomb.mp3
+
+#begin Audio/Sounds/Sandstorm.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sandstorm.mp3
+
+#begin Audio/Sounds/Scary Face.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Scary Face.mp3
+
+#begin Audio/Sounds/Scratch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Scratch.mp3
+
+#begin Audio/Sounds/Screech.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Screech.mp3
+
+#begin Audio/Sounds/Secret Power.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Secret Power.mp3
+
+#begin Audio/Sounds/Seed Bomb.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Seed Bomb.mp3
+
+#begin Audio/Sounds/Seed Flare part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Seed Flare part 1.mp3
+
+#begin Audio/Sounds/Seed Flare part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Seed Flare part 2.mp3
+
+#begin Audio/Sounds/Seed Flare.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Seed Flare.mp3
+
+#begin Audio/Sounds/Seismic Toss part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Seismic Toss part 1.mp3
+
+#begin Audio/Sounds/Seismic Toss part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Seismic Toss part 2.mp3
+
+#begin Audio/Sounds/Seismic Toss.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Seismic Toss.mp3
+
+#begin Audio/Sounds/Self Destruct.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Self Destruct.mp3
+
+#begin Audio/Sounds/Shadow Ball.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Shadow Ball.mp3
+
+#begin Audio/Sounds/Shadow Claw.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Shadow Claw.mp3
+
+#begin Audio/Sounds/Shadow Force part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Shadow Force part 1.mp3
+
+#begin Audio/Sounds/Shadow Force part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Shadow Force part 2.mp3
+
+#begin Audio/Sounds/Shadow Force.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Shadow Force.mp3
+
+#begin Audio/Sounds/Shadow Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Shadow Punch.mp3
+
+#begin Audio/Sounds/Shadow Sneak part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Shadow Sneak part 1.mp3
+
+#begin Audio/Sounds/Shadow Sneak part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Shadow Sneak part 2.mp3
+
+#begin Audio/Sounds/Shadow Sneak.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Shadow Sneak.mp3
+
+#begin Audio/Sounds/Sharpen.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sharpen.mp3
+
+#begin Audio/Sounds/Sheer Cold.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sheer Cold.mp3
+
+#begin Audio/Sounds/Shock Wave.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Shock Wave.mp3
+
+#begin Audio/Sounds/Signal Beam.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Signal Beam.mp3
+
+#begin Audio/Sounds/Silver Wind.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Silver Wind.mp3
+
+#begin Audio/Sounds/Sing.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sing.mp3
+
+#begin Audio/Sounds/Sketch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sketch.mp3
+
+#begin Audio/Sounds/Skill Swap.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Skill Swap.mp3
+
+#begin Audio/Sounds/Skull Bash part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Skull Bash part 1.mp3
+
+#begin Audio/Sounds/Skull Bash part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Skull Bash part 2.mp3
+
+#begin Audio/Sounds/Skull Bash.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Skull Bash.mp3
+
+#begin Audio/Sounds/Sky Attack part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sky Attack part 1.mp3
+
+#begin Audio/Sounds/Sky Attack part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sky Attack part 2.mp3
+
+#begin Audio/Sounds/Sky Attack.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sky Attack.mp3
+
+#begin Audio/Sounds/Sky Uppercut.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sky Uppercut.mp3
+
+#begin Audio/Sounds/Slack Off part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Slack Off part 1.mp3
+
+#begin Audio/Sounds/Slack Off part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Slack Off part 2.mp3
+
+#begin Audio/Sounds/Slack Off.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Slack Off.mp3
+
+#begin Audio/Sounds/Slam.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Slam.mp3
+
+#begin Audio/Sounds/Slash.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Slash.mp3
+
+#begin Audio/Sounds/Sleep Powder.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sleep Powder.mp3
+
+#begin Audio/Sounds/Sleep Talk.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sleep Talk.mp3
+
+#begin Audio/Sounds/Sludge Bomb.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sludge Bomb.mp3
+
+#begin Audio/Sounds/Sludge.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sludge.mp3
+
+#begin Audio/Sounds/Smelling Salts.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Smelling Salts.mp3
+
+#begin Audio/Sounds/Smog.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Smog.mp3
+
+#begin Audio/Sounds/Smokescreen.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Smokescreen.mp3
+
+#begin Audio/Sounds/Snatch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Snatch.mp3
+
+#begin Audio/Sounds/Snore.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Snore.mp3
+
+#begin Audio/Sounds/Soft-Boiled.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Soft-Boiled.mp3
+
+#begin Audio/Sounds/Solar Beam part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Solar Beam part 1.mp3
+
+#begin Audio/Sounds/Solar Beam part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Solar Beam part 2.mp3
+
+#begin Audio/Sounds/Solar Beam.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Solar Beam.mp3
+
+#begin Audio/Sounds/Sonic Boom.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sonic Boom.mp3
+
+#begin Audio/Sounds/Spacial Rend part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spacial Rend part 1.mp3
+
+#begin Audio/Sounds/Spacial Rend part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spacial Rend part 2.mp3
+
+#begin Audio/Sounds/Spacial Rend.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spacial Rend.mp3
+
+#begin Audio/Sounds/Spark part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spark part 1.mp3
+
+#begin Audio/Sounds/Spark part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spark part 2.mp3
+
+#begin Audio/Sounds/Spark.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spark.mp3
+
+#begin Audio/Sounds/Spider Web.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spider Web.mp3
+
+#begin Audio/Sounds/Spike Cannon.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spike Cannon.mp3
+
+#begin Audio/Sounds/Spikes.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spikes.mp3
+
+#begin Audio/Sounds/Spit Up.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spit Up.mp3
+
+#begin Audio/Sounds/Spite.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spite.mp3
+
+#begin Audio/Sounds/Splash.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Splash.mp3
+
+#begin Audio/Sounds/Spore.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Spore.mp3
+
+#begin Audio/Sounds/Stat Fall Down.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Stat Fall Down.mp3
+
+#begin Audio/Sounds/Stat Rise Up.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Stat Rise Up.mp3
+
+#begin Audio/Sounds/Status Burned.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Status Burned.mp3
+
+#begin Audio/Sounds/Status Confused.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Status Confused.mp3
+
+#begin Audio/Sounds/Status Frozen.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Status Frozen.mp3
+
+#begin Audio/Sounds/Status Paralyzed.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Status Paralyzed.mp3
+
+#begin Audio/Sounds/Status Poisoned.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Status Poisoned.mp3
+
+#begin Audio/Sounds/Status Sleep.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Status Sleep.mp3
+
+#begin Audio/Sounds/Stealth Rock.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Stealth Rock.mp3
+
+#begin Audio/Sounds/Steel Wing.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Steel Wing.mp3
+
+#begin Audio/Sounds/Stockpile.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Stockpile.mp3
+
+#begin Audio/Sounds/Stomp.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Stomp.mp3
+
+#begin Audio/Sounds/Stone Edge.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Stone Edge.mp3
+
+#begin Audio/Sounds/Strength part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Strength part 1.mp3
+
+#begin Audio/Sounds/Strength part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Strength part 2.mp3
+
+#begin Audio/Sounds/Strength.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Strength.mp3
+
+#begin Audio/Sounds/String Shot.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/String Shot.mp3
+
+#begin Audio/Sounds/Struggle.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Struggle.mp3
+
+#begin Audio/Sounds/Stun Spore.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Stun Spore.mp3
+
+#begin Audio/Sounds/Submission.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Submission.mp3
+
+#begin Audio/Sounds/Substitute.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Substitute.mp3
+
+#begin Audio/Sounds/Sucker Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sucker Punch.mp3
+
+#begin Audio/Sounds/Sunny Day.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sunny Day.mp3
+
+#begin Audio/Sounds/Super Fang.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Super Fang.mp3
+
+#begin Audio/Sounds/Superpower part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Superpower part 1.mp3
+
+#begin Audio/Sounds/Superpower part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Superpower part 2.mp3
+
+#begin Audio/Sounds/Superpower.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Superpower.mp3
+
+#begin Audio/Sounds/Supersonic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Supersonic.mp3
+
+#begin Audio/Sounds/Surf.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Surf.mp3
+
+#begin Audio/Sounds/Swagger.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Swagger.mp3
+
+#begin Audio/Sounds/Swallow.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Swallow.mp3
+
+#begin Audio/Sounds/Sweet Kiss.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sweet Kiss.mp3
+
+#begin Audio/Sounds/Sweet Scent.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Sweet Scent.mp3
+
+#begin Audio/Sounds/Swift.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Swift.mp3
+
+#begin Audio/Sounds/Switcheroo.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Switcheroo.mp3
+
+#begin Audio/Sounds/Swords Dance.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Swords Dance.mp3
+
+#begin Audio/Sounds/Synthesis.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Synthesis.mp3
+
+#begin Audio/Sounds/Tackle.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Tackle.mp3
+
+#begin Audio/Sounds/Tail Glow.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Tail Glow.mp3
+
+#begin Audio/Sounds/Tail Whip.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Tail Whip.mp3
+
+#begin Audio/Sounds/Tailwind part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Tailwind part 1.mp3
+
+#begin Audio/Sounds/Tailwind part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Tailwind part 2.mp3
+
+#begin Audio/Sounds/Tailwind.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Tailwind.mp3
+
+#begin Audio/Sounds/Take Down.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Take Down.mp3
+
+#begin Audio/Sounds/Taunt.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Taunt.mp3
+
+#begin Audio/Sounds/Teeter Dance.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Teeter Dance.mp3
+
+#begin Audio/Sounds/Teleport.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Teleport.mp3
+
+#begin Audio/Sounds/Thief.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Thief.mp3
+
+#begin Audio/Sounds/Thrash.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Thrash.mp3
+
+#begin Audio/Sounds/Thunder Fang.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Thunder Fang.mp3
+
+#begin Audio/Sounds/Thunder Punch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Thunder Punch.mp3
+
+#begin Audio/Sounds/Thunder Shock.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Thunder Shock.mp3
+
+#begin Audio/Sounds/Thunder Wave.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Thunder Wave.mp3
+
+#begin Audio/Sounds/Thunder.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Thunder.mp3
+
+#begin Audio/Sounds/Thunderbolt part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Thunderbolt part 1.mp3
+
+#begin Audio/Sounds/Thunderbolt part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Thunderbolt part 2.mp3
+
+#begin Audio/Sounds/Thunderbolt.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Thunderbolt.mp3
+
+#begin Audio/Sounds/Tickle.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Tickle.mp3
+
+#begin Audio/Sounds/Torment part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Torment part 1.mp3
+
+#begin Audio/Sounds/Torment part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Torment part 2.mp3
+
+#begin Audio/Sounds/Torment.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Torment.mp3
+
+#begin Audio/Sounds/Toxic Spikes.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Toxic Spikes.mp3
+
+#begin Audio/Sounds/Toxic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Toxic.mp3
+
+#begin Audio/Sounds/Transform.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Transform.mp3
+
+#begin Audio/Sounds/Tri Attack part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Tri Attack part 1.mp3
+
+#begin Audio/Sounds/Tri Attack part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Tri Attack part 2.mp3
+
+#begin Audio/Sounds/Tri Attack.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Tri Attack.mp3
+
+#begin Audio/Sounds/Trick Room.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Trick Room.mp3
+
+#begin Audio/Sounds/Trick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Trick.mp3
+
+#begin Audio/Sounds/Triple Kick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Triple Kick.mp3
+
+#begin Audio/Sounds/Trump Card.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Trump Card.mp3
+
+#begin Audio/Sounds/Twineedle.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Twineedle.mp3
+
+#begin Audio/Sounds/Twister.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Twister.mp3
+
+#begin Audio/Sounds/Uproar.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Uproar.mp3
+
+#begin Audio/Sounds/U-turn.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/U-turn.mp3
+
+#begin Audio/Sounds/Vacuum Wave.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Vacuum Wave.mp3
+
+#begin Audio/Sounds/Vice Grip.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Vice Grip.mp3
+
+#begin Audio/Sounds/Vine Whip.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Vine Whip.mp3
+
+#begin Audio/Sounds/Vital Throw.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Vital Throw.mp3
+
+#begin Audio/Sounds/Volt Tackle part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Volt Tackle part 1.mp3
+
+#begin Audio/Sounds/Volt Tackle part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Volt Tackle part 2.mp3
+
+#begin Audio/Sounds/Volt Tackle.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Volt Tackle.mp3
+
+#begin Audio/Sounds/Wake Up Slap.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Wake Up Slap.mp3
+
+#begin Audio/Sounds/Water Gun.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Water Gun.mp3
+
+#begin Audio/Sounds/Water Pulse.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Water Pulse.mp3
+
+#begin Audio/Sounds/Water Sport.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Water Sport.mp3
+
+#begin Audio/Sounds/Water Spout.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Water Spout.mp3
+
+#begin Audio/Sounds/Waterfall.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Waterfall.mp3
+
+#begin Audio/Sounds/Weather Ball part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Weather Ball part 1.mp3
+
+#begin Audio/Sounds/Weather Ball part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Weather Ball part 2.mp3
+
+#begin Audio/Sounds/Weather Ball.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Weather Ball.mp3
+
+#begin Audio/Sounds/Whirlpool.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Whirlpool.mp3
+
+#begin Audio/Sounds/Whirlwind.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Whirlwind.mp3
+
+#begin Audio/Sounds/Will O Wisp.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Will O Wisp.mp3
+
+#begin Audio/Sounds/Wing Attack.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Wing Attack.mp3
+
+#begin Audio/Sounds/Wish.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Wish.mp3
+
+#begin Audio/Sounds/Withdraw.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Withdraw.mp3
+
+#begin Audio/Sounds/Wood Hammer.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Wood Hammer.mp3
+
+#begin Audio/Sounds/Worry Seed.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Worry Seed.mp3
+
+#begin Audio/Sounds/Wrap.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Wrap.mp3
+
+#begin Audio/Sounds/Wring Out.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Wring Out.mp3
+
+#begin Audio/Sounds/X-Scissor.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/X-Scissor.mp3
+
+#begin Audio/Sounds/Yawn.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Yawn.mp3
+
+#begin Audio/Sounds/Zap Cannon part 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Zap Cannon part 1.mp3
+
+#begin Audio/Sounds/Zap Cannon part 2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Zap Cannon part 2.mp3
+
+#begin Audio/Sounds/Zap Cannon.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Zap Cannon.mp3
+
+#begin Audio/Sounds/Zen Headbutt.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Sounds/Zen Headbutt.mp3
+
 #begin Font.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -541,16 +5149,4 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/WorldShader.fx
-
-#begin Sounds/Sandgem Town (Day).wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Sandgem Town (Day).wav
-
-#begin Sounds/Twinleaf Town (Day).wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Twinleaf Town (Day).wav
 
