@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
@@ -10,6 +11,10 @@ namespace TestRender;
 
 public class World
 {
+
+    public const int ChunkWx = 32;
+    public const int ChunkWy = 32;
+    
     public static Dictionary<int, Chunk> Chunks = [];
     public static Dictionary<int, ChunkHeader> Headers = [];
     public static bool IsDataFetched = false;
@@ -58,8 +63,8 @@ public class World
     {
         try
         {
-            var chunkX = (int)position.X / 512;
-            var chunkY = (int)position.Z / 512;
+            var chunkX = (int)position.X / ChunkWx;
+            var chunkY = (int)position.Z / ChunkWy;
 
             if (!Combination.TryGetValue((chunkX, chunkY), out var tuple))
             {
@@ -164,5 +169,79 @@ public class World
             Console.WriteLine($"Error in CheckTileType: {ex.Message}");
             return 0x00;
         }
+    }
+
+    public ChunkPlate[] GetChunkPlateAtPosition(Vector3 position)
+    {
+        var chunk = GetChunkAtPosition(position);
+        if (chunk == null)
+        {
+            return [];
+        }
+
+        if (chunk.Plates.Count == 0)
+        {
+            return [];
+        }
+        
+        var x = (int)position.X;
+        var y = (int)position.Y;
+        var z = (int)position.Z;
+
+        var result = new List<ChunkPlate>();
+
+        foreach (var plate in chunk.Plates.Where(plate => plate.Z == z))
+        {
+            var minX = plate.X;
+            var minY = plate.Y;
+            var maxX = minX + plate.Wx;
+            var maxY = minY + plate.Wy;
+
+            if (x >= minX && x < maxX && y >= minY && y < maxY)
+            {
+                result.Add(plate);
+            }
+        }
+
+        return result.ToArray();
+    }
+    
+    public ChunkPlate[] GetChunkPlateUnderPosition(Vector3 position)
+    {
+        var chunk = GetChunkAtPosition(position);
+        if (chunk == null)
+        {
+            return [];
+        }
+
+        if (chunk.Plates.Count == 0)
+        {
+            return [];
+        }
+        
+        var localX = (int)position.X % ChunkWx;
+        var localY = (int)position.Z % ChunkWy;
+        var localZ = (int)position.Y;
+
+        var result = new List<ChunkPlate>();
+
+        foreach (var plate in chunk.Plates)
+        {
+            var minX = plate.X;
+            var minY = plate.Y;
+            var maxX = minX + plate.Wx;
+            var maxY = minY + plate.Wy;
+
+            if (localX >= minX && localX < maxX && localY >= minY && localY < maxY)
+            {
+                if (localZ >= plate.Z)
+                {
+                    result.Add(plate);
+                }
+            }
+        }
+        
+        result.Sort((p1, p2) => p2.Z.CompareTo(p1.Z));
+        return result.ToArray();
     }
 }

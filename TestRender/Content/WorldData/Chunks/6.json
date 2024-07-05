@@ -3,6 +3,17 @@
   "mapName": "map04_26c",
   "buildings": [],
   "permissions": {
+    "plates": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "wx": 32,
+        "wy": 32,
+        "ax": 0,
+        "ay": 0
+      }
+    ],
     "collisions": [
       [
         128,

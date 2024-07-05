@@ -59,6 +59,8 @@ namespace TestRender
         private float FogEnd;
         private bool IsFoggy;
 
+        private bool _plateMove = false;
+        
         public Game1()
         {
             _graphicsDeviceManager = new GraphicsDeviceManager(this);
@@ -239,8 +241,38 @@ namespace TestRender
                 _debugTexture = true;
                 Console.WriteLine("--------------------");
             }
-            
-            
+
+            if (KeyboardHandler.IsKeyDownOnce(Keys.P))
+            {
+                _plateMove = !_plateMove;
+            }
+
+            if (_plateMove)
+            {
+                var result = _world.GetChunkPlateUnderPosition(_camera.Position);
+                if (result.Length >= 1)
+                {
+                    var plate = result[0];
+
+                    // Get camera position relative to chunk top-left corner
+                    var localX = (_camera.Position.X % World.ChunkWx) - plate.X;
+                    var localZ = (_camera.Position.Z % World.ChunkWy) - plate.Y;
+
+                    // Get height at camera position considering angles
+                    var height = plate.GetHeightAt((int)localX, (int)localZ);
+
+                    if (height >= 0)
+                    {
+                        Console.WriteLine($"Height under camera: {height}");
+                        _camera.Teleport(new Vector3(_camera.Position.X, height + 16f, _camera.Position.Z));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Camera position is outside the ChunkPlate");
+                    }
+                }
+            }
+
             if (KeyboardHandler.IsKeyDownOnce(Keys.PageDown))
             {
                 matrix = Math.Max(matrix - 1, 0);
@@ -393,7 +425,7 @@ namespace TestRender
             if (Keyboard.GetState().IsKeyUp(Keys.LeftShift))
             {
 
-                Direction *= 64;
+                Direction *= 8;
                 
                 _camera.Move(-Direction * delta);
 
@@ -444,7 +476,7 @@ namespace TestRender
             if (prevChunkX != _chunkX || prevChunkY != _chunkY)
             {
 
-                UpdateMusic(new Point(prevChunkX, prevChunkY), new Point(_chunkX, _chunkY));
+                //UpdateMusic(new Point(prevChunkX, prevChunkY), new Point(_chunkX, _chunkY));
 
             }
 
@@ -729,7 +761,6 @@ namespace TestRender
                             new Vector2(0, _font.LineSpacing * 5), Color.White);
                         _spriteBatch.DrawString(_font, $"Time: [{_timeManager.CurrentTime:hh\\:mm}]",
                             new Vector2(0, _font.LineSpacing * 6), Color.White);
-
 
                         _spriteBatch.DrawString(_font, $"HasPlates: [{targetChunk.Plates.Count > 0}]",
                             new Vector2(0, _font.LineSpacing * 9), Color.White);
