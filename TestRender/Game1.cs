@@ -259,12 +259,12 @@ namespace TestRender
                     var localZ = (_camera.Position.Z % World.ChunkWy) - plate.Y;
 
                     // Get height at camera position considering angles
-                    var height = plate.GetHeightAt((int)localX, (int)localZ);
+                    var height = plate.GetHeightAt(localX, localZ);
 
                     if (height >= 0)
                     {
                         Console.WriteLine($"Height under camera: {height}");
-                        _camera.Teleport(new Vector3(_camera.Position.X, height + 16f, _camera.Position.Z));
+                        _camera.Teleport(new Vector3(_camera.Position.X, height + 4f, _camera.Position.Z));
                     }
                     else
                     {
@@ -425,7 +425,7 @@ namespace TestRender
             if (Keyboard.GetState().IsKeyUp(Keys.LeftShift))
             {
 
-                Direction *= 8;
+                Direction *= 1;
                 
                 _camera.Move(-Direction * delta);
 

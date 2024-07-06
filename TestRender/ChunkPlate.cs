@@ -10,9 +10,8 @@ public class ChunkPlate
     public int Wx, Wy; //wdith x , heigh y
     public float Ax, Ay; // angle alon x, angle along y
 
-    public float GetHeightAt(int x, int y)
+    public float GetHeightAt(float x, float y)
     {
-        // Check if the point is within the ChunkPlate boundaries
         if (x < 0 || x >= Wx || y < 0 || y >= Wy)
         {
             return -1;
@@ -22,20 +21,31 @@ public class ChunkPlate
         {
             return Z;
         }
+
+        if (Ax == 0 && Ay != 0)
+        {
+            var maxHeight = Wy * (float)Math.Sin(Ay);
+            var percentage = y / (float)Wy;
+            return Z + (percentage * maxHeight);
+        }
+
+        if (Ay == 0 && Ax != 0)
+        {
+            var maxHeight = Wx * (float)Math.Sin(Ax);
+            var percentage = x / (float)Wx;
+            return Z + (percentage * maxHeight);
+        }
         
+        if (Ax != 0 && Ay != 0)
+        {
+            var maxHeightX = Wx * (float)Math.Sin(Ax);
+            var maxHeightY = Wy * (float)Math.Sin(Ay);
+            var percentageX = x / (float)Wx;
+            var percentageY = y / (float)Wy;
+            return Z + (percentageX * maxHeightX) + (percentageY * maxHeightY);
+        }
 
-        // Rotate coordinates based on angles (considering TopLeft as origin)
-        var rotatedX = x * Math.Cos(Ax) - y * Math.Sin(Ay);
-        var rotatedY = x * Math.Sin(Ax) + y * Math.Cos(Ay);
-
-        // Calculate height changes due to rotations
-        var heightChangeX = rotatedX * Math.Tan(Ax);
-        var heightChangeY = rotatedY * Math.Tan(Ay);
-
-        // Combine height changes and base height
-        var height = Z + heightChangeX + heightChangeY;
-        // Clamp the height to prevent negative values
-        return (float)Math.Max(height, 0);
+        return Z;
     }
     
     public static ChunkPlate From(JToken jChunkPlate)
