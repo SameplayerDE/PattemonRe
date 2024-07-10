@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using PatteLib.World;
 using HxGLTF.Implementation;
 using InputLib;
 using Microsoft.Xna.Framework;
@@ -19,7 +19,8 @@ namespace TestRender
     {   
         private GraphicsDeviceManager _graphicsDeviceManager;
         private SpriteBatch _spriteBatch;
-        
+
+        private BasicEffect _basicEffect;
         private Effect _worldShader;
         private Effect _buildingShader;
         private Camera _camera;
@@ -75,11 +76,12 @@ namespace TestRender
             
             _graphicsDeviceManager.ApplyChanges();
             
-            _heroX = _chunkX * 512;
+            _heroX = _chunkX * 32;
             _heroX += _cellX * 16;
             
-            _heroY = _chunkY * 512;
+            _heroY = _chunkY * 32;
             _heroY += _cellY * 16;
+
 
             MediaPlayer.Volume = 0.3f;
         }
@@ -90,6 +92,9 @@ namespace TestRender
                 GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
             _camera = new Camera(GraphicsDevice);
 
+            Building.SetPath(@"A:\ModelExporter\Platin\output_assets");
+            Chunk.SetFilePath(@"A:\ModelExporter\Platin\overworldmaps");
+            
             _world = World.Load(GraphicsDevice, matrix);
             
             _hamabeAnimation = new TextureAnimation("Hamabe", "hamabe", 0.32f, 8, ["hamabe_lm"]);
@@ -116,8 +121,8 @@ namespace TestRender
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _worldShader = Content.Load<Effect>("Shaders/WorldShader");
             _buildingShader = Content.Load<Effect>("Shaders/BuildingShader");
+            _basicEffect = new BasicEffect(GraphicsDevice);
             _font = Content.Load<SpriteFont>("Font");
-            _camera.Teleport(new Vector3(0.25f, 1f, 0.5f) * 32);
             
             var songJson = File.ReadAllText($@"Content/SoundData.json");
             var jSongArray = JArray.Parse(songJson);
@@ -249,7 +254,7 @@ namespace TestRender
 
             if (_plateMove)
             {
-                var result = _world.GetChunkPlateUnderPosition(_camera.Position);
+                var result = _world.GetChunkPlateUnderPosition(new Vector3(_camera.Position.X, _camera.Position.Y, _camera.Position.Z));
                 if (result.Length >= 1)
                 {
                     var plate = result[0];
@@ -261,10 +266,11 @@ namespace TestRender
                     // Get height at camera position considering angles
                     var height = plate.GetHeightAt(localX, localZ);
 
+                    Console.WriteLine($"Height under camera: {height}");
+                    
                     if (height >= 0)
                     {
-                        Console.WriteLine($"Height under camera: {height}");
-                        _camera.Teleport(new Vector3(_camera.Position.X, height + 4f, _camera.Position.Z));
+                        _camera.Teleport(new Vector3(_camera.Position.X, height, _camera.Position.Z));
                     }
                     else
                     {
@@ -425,7 +431,7 @@ namespace TestRender
             if (Keyboard.GetState().IsKeyUp(Keys.LeftShift))
             {
 
-                Direction *= 1;
+                Direction *= 4;
                 
                 _camera.Move(-Direction * delta);
 
@@ -595,15 +601,81 @@ namespace TestRender
             }
         }
         
+        private Color GetPlateColor(float ax, float ay)
+        {
+            if (ax == 0 && ay == 0)
+            {
+                return Color.Purple; // no angle
+            }
+             if (ax == -45 && ay == 0)
+            {
+                return Color.Red; // up
+            }
+             if (ax == 45 && ay == 0)
+            {
+                return Color.Blue; // down
+            }
+             if (ax == 0 && ay == -45)
+            {
+                return Color.Yellow; // left
+            }
+             if (ax == 0 && ay == 45)
+            {
+                return Color.Green; // right
+            }
+
+            throw new Exception();
+        }
+        
+        private void DrawPlateQuad(GameTime gameTime, BasicEffect effect, Vector3 position, Vector3 scale, float rotationX, float rotationY, Color color)
+        {
+            // Define the vertices of the quad
+            VertexPositionColor[] vertices = new VertexPositionColor[4];
+            vertices[0].Position = new Vector3(0, 0, 0); // Bottom-left
+            vertices[1].Position = new Vector3(1, 0, 0);  // Bottom-right
+            vertices[2].Position = new Vector3(0, 0, 1);  // Top-left
+            vertices[3].Position = new Vector3(1, 0, 1);   // Top-right
+
+            // Apply the color
+            for (var i = 0; i < vertices.Length; i++)
+            {
+                vertices[i].Color = GetPlateColor(rotationX, rotationY);
+            }
+
+            // Apply the transformations
+            Matrix worldMatrix = Matrix.CreateScale(scale) *
+                                 Matrix.CreateRotationX(MathHelper.ToRadians(-rotationX)) *
+                                 Matrix.CreateRotationZ(MathHelper.ToRadians(rotationY)) *
+                                 Matrix.CreateTranslation(position);
+
+            effect.World = worldMatrix;
+            effect.View = _camera.View;
+            effect.Projection = _camera.Projection;
+            effect.VertexColorEnabled = true;
+            
+            //effect.Parameters["World"].SetValue(worldMatrix);
+            //effect.Parameters["View"].SetValue(_camera.View);
+            //effect.Parameters["Projection"].SetValue(_camera.Projection);
+
+            foreach (var pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+
+                GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertices, 0, 2);
+            }
+        }
+        
         protected override void Draw(GameTime gameTime)
         {
             if (!IsActive)
             {
                 return;
             }
+
             GraphicsDevice.SetRenderTarget(_screen);
             GraphicsDevice.Clear(Color.Black);
-
+            
+            
             foreach (var chunkEntry in _world.Combination)
             {
                 var (targetX, targetY) = chunkEntry.Key;
@@ -639,6 +711,12 @@ namespace TestRender
 
                 if (World.Chunks.TryGetValue(chunkId, out var chunk))
                 {
+                    
+                    //foreach (var plate in chunk.Plates)
+                    //{
+                    //    DrawPlateQuad(gameTime, _basicEffect, new Vector3(plate.X, plate.Z, plate.Y) + new Vector3(targetX * 32, tuple.height / 2f, targetY * 32), new Vector3(plate.Wx, 0, plate.Wy), plate.Ax, plate.Ay, Color.White);
+                    //}
+                    
                     if (chunk.IsLoaded && chunk.Model != null)
                     {
                         DrawModel(gameTime, _worldShader, chunk.Model,
@@ -766,7 +844,7 @@ namespace TestRender
                             new Vector2(0, _font.LineSpacing * 9), Color.White);
                         _spriteBatch.DrawString(_font, $"Collision: [{targetChunk.Collision[_cellY, _cellX]:x2}]",
                             new Vector2(0, _font.LineSpacing * 10), Color.White);
-                        var name = Enum.GetName(typeof(TileType), targetChunk.Type[_cellY, _cellX]);
+                        var name = Enum.GetName(typeof(ChunkTileType), targetChunk.Type[_cellY, _cellX]);
                         _spriteBatch.DrawString(_font, $"Type: [{name}, {targetChunk.Type[_cellY, _cellX]:x2}]",
                             new Vector2(0, _font.LineSpacing * 11), Color.White);
                     }
@@ -933,6 +1011,11 @@ namespace TestRender
             {
                 var material = primitive.Material;
 
+                if (material.Name == "shade")
+                {
+                    Console.WriteLine(material.BaseColorFactor.ToString());
+                }
+                
                 if (_debugTexture)
                 {
                     Console.WriteLine(material.Name);
@@ -1014,6 +1097,12 @@ namespace TestRender
             {
                 effect.Parameters["AnimationSpeed"]?.SetValue(1);
                 effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
+                effect.Parameters["TextureAnimation"]?.SetValue(true);
+            }
+            else if (material.Name.Contains("leag_yuka03"))
+            {
+                effect.Parameters["AnimationSpeed"]?.SetValue(42);
+                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
                 effect.Parameters["TextureAnimation"]?.SetValue(true);
             }
         }

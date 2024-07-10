@@ -50,6 +50,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HxGLTF\HxGLTF.csproj" />
     <ProjectReference Include="..\InputLib\InputLib.csproj" />
+    <ProjectReference Include="..\PatteLib\PatteLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Content\map01_22c\c02_base.png">
@@ -131,6 +132,9 @@
   <ItemGroup>
     <Folder Include="Content\Audio\Sounds\" />
     <Folder Include="Content\WorldData\Chunks\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".config\dotnet-tools.json" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

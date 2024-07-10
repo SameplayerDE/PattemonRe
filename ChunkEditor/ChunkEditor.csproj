@@ -10,12 +10,8 @@
         <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
-        <EmbeddedResource Include="Icon.ico">
-            <LogicalName>Icon.ico</LogicalName>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Icon.bmp">
-            <LogicalName>Icon.bmp</LogicalName>
-        </EmbeddedResource>
+        <EmbeddedResource Include="Icon.ico"/>
+        <EmbeddedResource Include="Icon.bmp"/>
     </ItemGroup>
     <ItemGroup>
         <MonoGameContentReference Include="Content\Content.mgcb"/>
@@ -24,17 +20,14 @@
         <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Emgu.CV" Version="4.9.0.5494" />
-        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641"/>
-        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641"/>
-        <PackageReference Include="System.Drawing.Common" Version="9.0.0-preview.5.24306.5" />
-        <PackageReference Include="Tesseract" Version="5.2.0" />
-        <PackageReference Include="Tesseract.Drawing" Version="5.2.0" />
+        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+        <PackageReference Include="TextCopy" Version="6.2.1" />
     </ItemGroup>
     <ItemGroup>
-      <None Update="Content\pokemon-dp-pro.ttf">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+      <ProjectReference Include="..\HxGLTF\HxGLTF.csproj" />
+      <ProjectReference Include="..\InputLib\InputLib.csproj" />
+      <ProjectReference Include="..\PatteLib\PatteLib.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Content Include=".config\dotnet-tools.json" />

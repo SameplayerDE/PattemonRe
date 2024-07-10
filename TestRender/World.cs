@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Media;
+using PatteLib.World;
 using Newtonsoft.Json.Linq;
 
 namespace TestRender;
@@ -223,6 +223,8 @@ public class World
         var localY = (int)position.Z % ChunkWy;
         var localZ = (int)position.Y;
 
+        Console.WriteLine(localZ);
+        
         var result = new List<ChunkPlate>();
 
         foreach (var plate in chunk.Plates)

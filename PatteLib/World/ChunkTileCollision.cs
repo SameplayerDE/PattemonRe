@@ -1,6 +1,6 @@
-﻿namespace TestRender;
+﻿namespace PatteLib.World;
 
-public enum CollisionType
+public enum ChunkTileCollision
 {
     Walkable = 0x00,
     GrassSound = 0x04,

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using HxGLTF;
+﻿using HxGLTF;
 using HxGLTF.Implementation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 
-namespace TestRender;
+namespace PatteLib.World;
 
 public class Building
 {
+    public static string Path;
+    private static bool _isPathSet;
     public Vector3 Position;
     public string BuildingName;
     public int BuildingId;
@@ -19,9 +17,19 @@ public class Building
     
     public bool IsLoaded => Model != null;
 
+    public static void SetPath(string path)
+    {
+        Path = path;
+        _isPathSet = true;
+    }
+    
     public void Load(GraphicsDevice graphicsDevice)
     {
-        var gltfFile = GLTFLoader.Load(@$"A:\ModelExporter\Platin\output_assets\{BuildingName}\{BuildingName}.gltf");
+        if (!_isPathSet)
+        {
+            throw new Exception("");
+        }
+        var gltfFile = GLTFLoader.Load(@$"{Path}\{BuildingName}\{BuildingName}.gltf");
         var model = GameModel.From(graphicsDevice, gltfFile);
         model.TranslateTo(Position);
         Model = model;
@@ -74,10 +82,44 @@ public class Building
 
         return building;
     }
+    
+    public JToken Save()
+    {
+        var jBuilding = new JObject
+        {
+            ["name"] = BuildingName,
+            ["id"] = BuildingId,
+            ["x"] = Position.X,
+            ["y"] = Position.Y,
+            ["z"] = Position.Z
+        };
+
+        return jBuilding;
+    }
+    
+    public static JToken Save(Building building)
+    {
+        var jBuilding = new JObject
+        {
+            ["name"] = building.BuildingName,
+            ["id"] = building.BuildingId,
+            ["x"] = building.Position.X,
+            ["y"] = building.Position.Y,
+            ["z"] = building.Position.Z
+        };
+
+        return jBuilding;
+    }
+    
 }
 
 public class Chunk
 {
+    public static int Wx = 32;
+    public static int Wy = 32;
+    public static string FilePath;
+    private static bool _isPathSet;
+    
     public int Id;
     public string Name;
     public List<Building> Buildings = [];
@@ -88,14 +130,25 @@ public class Chunk
 
     public bool IsLoaded => Model != null;
 
+    public static void SetFilePath(string path)
+    {
+        FilePath = path;
+        _isPathSet = true;
+    }
+    
     public void Load(GraphicsDevice graphicsDevice)
     {
+        if (!_isPathSet)
+        {
+            throw new Exception("");
+        }
+        
         foreach (var building in Buildings)
         {
             building.Load(graphicsDevice);
         }
     
-        var basePath = @"A:\ModelExporter\Platin\overworldmaps\";
+        var basePath = $@"{FilePath}";
         string folderName = Id.ToString("D4");
 
         string[] extensions = new[] { ".glb", ".gltf" };
@@ -134,12 +187,6 @@ public class Chunk
         Model = null;
     }
     
-    /// <summary>
-    /// Überprüft die Kollision einer Zelle an den angegebenen Koordinaten.
-    /// </summary>
-    /// <param name="x">Die X-Koordinate der Zelle.</param>
-    /// <param name="y">Die Y-Koordinate der Zelle.</param>
-    /// <returns>Der Kollisionswert der Zelle.</returns>
     public byte CheckCellCollision(int x, int y)
     {
         try
@@ -156,13 +203,7 @@ public class Chunk
             return 0x00;
         }
     }
-
-    /// <summary>
-    /// Überprüft den Typ einer Zelle an den angegebenen Koordinaten.
-    /// </summary>
-    /// <param name="x">Die X-Koordinate der Zelle.</param>
-    /// <param name="y">Die Y-Koordinate der Zelle.</param>
-    /// <returns>Der Typwert der Zelle.</returns>
+    
     public byte CheckCellType(int x, int y)
     {
         try
@@ -179,6 +220,95 @@ public class Chunk
             return 0x00;
         }
     }
+    
+    public ChunkPlate[] GetChunkPlateUnderPosition(Vector3 position)
+    {
+
+        if (Plates.Count == 0)
+        {
+            return [];
+        }
+        
+        var localX = (int)position.X;
+        var localY = (int)position.Z;
+        var localZ = (int)position.Y;
+
+        var result = new List<ChunkPlate>();
+
+        foreach (var plate in Plates)
+        {
+            var minX = plate.X;
+            var minY = plate.Y;
+            var maxX = minX + plate.Wx;
+            var maxY = minY + plate.Wy;
+
+            if (localX >= minX && localX < maxX && localY >= minY && localY < maxY)
+            {
+                if (localZ >= plate.Z)
+                {
+                    result.Add(plate);
+                }
+            }
+        }
+        
+        result.Sort((p1, p2) => p2.Z.CompareTo(p1.Z));
+        return result.ToArray();
+    }
+
+    public static JToken Save(Chunk chunk)
+    {
+        var jChunk = new JObject
+        {
+            ["mapId"] = chunk.Id,
+            ["mapName"] = chunk.Name
+        };
+
+        var jBuildingArray = new JArray();
+        foreach (var jBuilding in chunk.Buildings.Select(building => building.Save()))
+        {
+            jBuildingArray.Add(jBuilding);
+        }
+        
+        jChunk.Add("buildings", jBuildingArray);
+        
+        var jPermissions = new JObject();
+        
+        var jCollisions = new JArray();
+        for (var y = 0; y < chunk.Collision.GetLength(0); y++)
+        {
+            var innerArray = new JArray();
+            for (var x = 0; x < chunk.Collision.GetLength(1); x++)
+            {
+                innerArray.Add(chunk.Collision[y, x]);
+            } 
+            jCollisions.Add(innerArray);
+        } 
+        jPermissions.Add("collisions", jCollisions);
+        
+        var jTypes = new JArray();
+        for (var y = 0; y < chunk.Type.GetLength(0); y++)
+        {
+            var innerArray = new JArray();
+            for (var x = 0; x < chunk.Type.GetLength(1); x++)
+            {
+                innerArray.Add(chunk.Type[y, x]);
+            } 
+            jTypes.Add(innerArray);
+        } 
+        jPermissions.Add("types", jTypes);
+        
+        var jPlates = new JArray();
+        foreach (var plate in chunk.Plates)
+        {
+            jPlates.Add(plate.Save());
+        }
+        jPermissions.Add("plates", jPlates);
+        
+        jChunk.Add("permissions", jPermissions);
+        
+        return jChunk;
+    }
+    
     
     public static Chunk Load(GraphicsDevice graphicsDevice, JToken jChunk)
     {
