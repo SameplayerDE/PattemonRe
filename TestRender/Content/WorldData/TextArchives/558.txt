@@ -1,0 +1,11 @@
+﻿Und damit beenden wir unsere\nSondersendung “Frag Professor Eibe!”\fIhr Jubelstadt TV!\r
+Wir sehen uns nächste Woche. Gleiche\nWelle, gleiche Stelle!
+Der Fernseher ist ein\nGeschenk von Mutter.
+Der X-Knopf öffnet\ndas Menü.
+Das ist eine Wii-Konsole! Ihr Controller\nist eine Wii-Fernbedienung!
+{PlayerName} liest die Informationen.\rGrundwissen über Pokémon...\rMenschen und Pokémon leben in\ndieser Welt Seite an Seite.\rDiejenigen, die mit Pokémon an Kämpfen\nteilnehmen, nennt man Pokémon-Trainer.
+{RivalName}: Da bist du ja!\r
+Hey, {PlayerName}! Hast du das gerade\nim TV gesehen? Klar hast du!\rProfessor Eibe ist dieser superwichtige\nTyp, der Pokémon erforscht, oder?\rAlso muss er doch säckeweise\nPokémon zu Hause haben!\rWir müssen ihn nur fragen und er\ngibt uns welche ab, bestimmt!!!\r
+Heeey! Ist das ein neuer PC?!?\r
+{RivalName}: Öh... Wo war ich\nstehengeblieben?\r
+Oh ja... richtig! Also, wir gehen zu\nProfessor Eibe und holen uns Pokémon.\rIch warte dann mal draußen.\rMach schon, {PlayerName}! Komm nicht\nzu spät, sonst musst du Strafe zahlen!\r

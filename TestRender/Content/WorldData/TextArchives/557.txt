@@ -1,0 +1,42 @@
+﻿Mutter: {PlayerName}!\r{RivalName} ist schon weg.\rIch weiß nicht, was er vorhat, aber er\nist ziemlich schnell hinausgesaust!\r
+Mutter: Du weißt doch, wie\nungeduldig \v0103ぁ\x0000\x0000 ist.\rBevor ich ihn nach der Bedeutung fragen\nkonnte, war er auch schon wieder weg.
+Mutter: Mach’s gut, \v0103ぁ\x0000\x0000!\nPass gut auf dich auf!
+Mutter: Aber \v0103ぁ\x0000\x0000...\nEr möchte dich immer dabeihaben.
+Mutter: {PlayerName}!\nGeh nicht ins hohe Gras!\rWilde Pokémon könnten dich angreifen,\nwenn du durch hohes Gras gehst.\rDas wäre nicht schlimm, wenn du ein\neigenes Pokémon dabeihättest, aber...\rPass auf dich auf, Liebling!
+Mutter: Was ist denn, Schatz?\nWartet \v0103ぁ\x0000\x0000 nicht auf dich?
+Mutter: Was ist denn los, Schatz?\r...\rDu liebes bisschen!\nDas hast du alles erlebt?!?\rDu und \v0103ぁ\x0000\x0000 könnt von Glück\nreden, dass ihr auf Professor Eibe\fgetroffen seid.\rIch möchte mir gar nicht vorstellen,\nwas sonst geschehen wäre...\rWer weiß, wozu wilde Pokémon alles\nin der Lage sind!\r\v0103ぁ\x0001\x0000, ich denke, du solltest\nProfessor Eibe einen Besuch abstatten.\rEr lebt doch in Sandgemme, oder?\rDa du jetzt nicht mehr ohne Pokémon\ndastehst, ist das hohe Gras auch nicht\fmehr so gefährlich.\r
+Oh, ich habe hier noch etwas für dich!\nHier, \v0103ぁ\x0000\x0000, zieh die an.\r
+\v0103ぁ\x0000\x0000 erhält\n\vFF00\x0001\x0001Turbotreter\vFF00\x0001\x0000!
+Nach Sandgemme zu gehen ist schon ein\nAbenteuer für sich, nicht wahr?\rMit diesen Turbotretern kommst du viel\nschneller von einem Ort zum anderen.\rSo... Ich lese dir vor, wie du sie\nverwendest...\r“Halte den B-Knopf gedrückt\nund renne schneller als je zuvor!\rZieh deine Turbotreter an und\ngehe neue Abenteuerwege!”\rNa, das ist doch mehr als praktisch!
+Mutter: Ich lese dir vor, wie du die\nTurbotreter verwendest...\r“Halte den B-Knopf gedrückt\nund renne schneller als je zuvor!\rZieh deine Turbotreter an und\ngehe neue Abenteuerwege!”\rNa, das ist doch mehr als praktisch!
+Mutter: Willkommen zu Hause,\n\v0103ぁ\x0000\x0000.\rGeht es dir und den Pokémon gut?\rEs ist noch früh am Morgen.\nRuh dich doch noch etwas aus.\r
+Mutter: Willkommen zu Hause,\n\v0103ぁ\x0000\x0000.\rGeht es dir und den Pokémon gut?\nRuh dich doch etwas aus.\r
+Mutter: Willkommen zu Hause,\n\v0103ぁ\x0000\x0000.\rGeht es dir und den Pokémon gut?\rIch habe gerade Abendessen gemacht.\nRuh dich doch noch etwas aus.\r
+Mutter: Willkommen zu Hause,\n\v0103ぁ\x0000\x0000.\rGeht es dir und den Pokémon gut?\rEs ist mitten in der Nacht.\nRuh dich doch noch etwas aus.\r
+Mutter: Was ist denn, \v0103ぁ\x0000\x0000?\r...\rNein, Professor Eibe hat dir so eine\nwichtige Aufgabe anvertraut!\rOh, Schatz, viel Glück!\nIch stehe hinter dir!\rOh, richtig! \v0103ぁ\x0000\x0000, ich\nhabe etwas für dich.\r
+Das ist ein Tagebuch. Hier werden die\nEreignisse eines jeden Tages\faufgeschrieben.\rSo kannst du immer nachlesen, was\ndu zuletzt alles erlebt und getan hast.\r
+Wow, eine Reise voller Abenteuer...\nIch beneide dich, Kind!\rUnd du bist nicht allein.\nDu hast Pokémon dabei.\fIch wäre so gerne an deiner Stelle!\r
+Ich mache nur Spaß, Schatz!\nWirklich, \v0103ぁ\x0000\x0000!\rIch bleibe hier und du gehst und\ngenießt dein Abenteuer!\rDenn wenn du neue Dinge erlebst\nund neue Sachen lernst...\fDann bin ich auch glücklich.\r...Aber komm ab und zu nach Hause.\rDenn ich würde gerne all die Pokémon\nsehen, die du gefangen hast.\r
+Mutter von \v0103ぁ\x0001\x0000: Tut mir leid,\naber ist mein kleiner \v0103ぁ\x0001\x0000 hier?\r
+Mutter: Oh...\nNein, ist er nicht...\r
+Mutter von \v0103ぁ\x0001\x0000: Oh...\nDann ist er wohl schon aufgebrochen...\fWas mache ich denn jetzt nur?\rDer Junge rief nur, dass er zu einem\nAbenteuer aufbrechen würde und\fweg war er.\rEr ist dickköpfig und rücksichtslos...\nDabei wollte ich, dass er das hier\fmitnimmt...\r
+Mutter: Mach dir keine Sorgen.\n\v0103ぁ\x0000\x0000 wird ihm das bringen.\r
+Das machst du doch, nicht\nwahr, \v0103ぁ\x0000\x0000?\r
+Mutter von \v0103ぁ\x0001\x0000: Oh, wirklich?\nDas würdest du für mich tun?\r\v0103ぁ\x0000\x0000, dann bring dies bitte\n\v0103ぁ\x0001\x0000.\r
+Mutter von \v0103ぁ\x0001\x0000: Oh, wirklich?\nDas würdest du für mich tun?\r\v0103ぁ\x0000\x0000, dann bring dies bitte\n\v0103ぁ\x0001\x0000.\r
+Mutter von \v0103ぁ\x0001\x0000: Ich muss kurz\nüberlegen...\rSo, wie ich meinen Jungen kenne,\nist er bestimmt direkt nach Jubelstadt\fgegangen...\rBitte bring das meinem \v0103ぁ\x0001\x0000.\r
+Mutter: Mach’s gut, \v0103ぁ\x0000\x0000!\nGenieß dein Abenteuer!\r
+Mutter: Mach’s gut, \v0103ぁ\x0000\x0000!\nUnd komm mich ab und zu mal besuchen!
+MC: Hallo, alle zusammen!\rHier ist die Zusammenfassung\ndes Wettbewerbs!\rDer Gewinner des heutigen\nAnmut-Wettbewerbs der\fNormal-Klasse ist...\rIrina, die mit einem atemberaubend\nanmutigen Pokémon angetreten ist!\rDas war’s für heute von uns!\nBis zum nächsten Mal!
+MC: Hallo, alle zusammen!\rHier ist die Zusammenfassung\ndes Wettbewerbs!\rDer Gewinner des heutigen\nKlugheits-Wettbewerbs der\fNormal-Klasse ist...\rMartin, der mit einem vor Klugheit\nsprühenden Pokémon angetreten ist!\rDas war’s für heute von uns!\nBis zum nächsten Mal!
+MC: Hallo, alle zusammen!\rHier ist die Zusammenfassung\ndes Wettbewerbs!\rDer Gewinner des heutigen\nStärke-Wettbewerbs der\fNormal-Klasse ist...\rPatrick, der mit einem unglaublich\nstarken Pokémon angetreten ist!\rDas war’s für heute von uns!\nBis zum nächsten Mal!
+Im Kühlschrank steht Mamas\nLieblingsdessert.
+Mamas Küche ist supersauber.\nMan kann sich im Boden spiegeln!
+Hier kocht Mama all die leckeren\nSachen.
+Mutter: \v0103ぁ\x0000\x0000!\r\v0103ぁ\x0001\x0000 war vor kurzem hier und\nhat nach dir gesucht.\rEr meinte, du solltest unbedingt\nnach Blizzach kommen und das\fSchiff dort nehmen.\rUnd wie immer hatte ich keine Zeit ihn\nzu fragen, was er damit meint, da er\fwieder wegrannte wie ein geölter Blitz.
+Mutter: \v0103ぁ\x0000\x0000!\r\v0103ぁ\x0001\x0000 war vor kurzem hier und\nhat nach dir gesucht.\rEr meinte, du solltest unbedingt nach\nBlizzach kommen und dort ein Schiff\fnehmen.\rUnd wie immer hatte ich keine Zeit ihn\nzu fragen, was er damit meint, da er\fwieder wegrannte wie ein geölter Blitz.\rAber wie geht es dir, Kind?\rKommst du gut voran mit der Aufgabe,\ndie Professor Eibe dir anvertraut hat?
+Mutter: \v0103ぁ\x0000\x0000!\rIhr macht euch nicht schlecht, du und\ndein Pokémon-Team! Nichts kann euch\faufhalten!
+Mutter: \v0103ぁ\x0000\x0000.\rHör mir gut zu. Behandle deine\nPokémon immer mit Güte.\rDeine Pokémon arbeiten schwer, und\nnicht für sich, sondern für dich!
+Mutter: \v0103ぁ\x0000\x0000.\rWenn ich dich sehe, muss ich\nimmer an deinen Vater denken.\rIhr seid euch wirklich sehr ähnlich!
+Mutter: Wenn du nicht da bist, besuche\nich gern die Mutter von \v0103ぁ\x0001\x0000.\rOch, wir reden über alles Mögliche.\rNa ja... Eigentlich reden wir immer nur\nüber euch beide.
+Mutter: \v0103ぁ\x0000\x0000, geht es dir gut?\rWenn ich mir die Nachrichten ansehe,\nbin ich gleich ganz besorgt...\rAber dir geht es gut, ja? Nun ja...\nDu bist ja auch nie allein.

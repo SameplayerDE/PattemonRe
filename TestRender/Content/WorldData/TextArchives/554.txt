@@ -1,0 +1,15 @@
+﻿§bBumms!!!§r\r
+{RivalName}: Was?!? Wie?!?\nOh, hey, {PlayerName}!\rHey! Ich gehe zu Professor Eibe!\nUnd du kommst mit! Beeil dich!\r
+{RivalName}: Argh!\nHab was vergessen!\r
+Hiya, {PlayerName}.\n{RivalName} hat dich gesucht.\rIch glaube, er ist nach Hause gegangen.\nWarum gehst du nicht zu ihm?\r
+Hiya, {PlayerName}.\n{RivalName} hat dich gesucht.\rIch glaube, er ist nach Hause gegangen.\nWarum gehst du nicht zu ihm?
+Hiya, {PlayerName}.\nSuchst du {RivalName}?\rEr hat sich vor einiger Zeit\naus dem Staub gemacht.\rAber weit ist er bestimmt noch nicht\ngekommen. Du holst ihn sicher ein.
+{RivalName}? Der ist vor einiger Zeit\nganz eilig hier vorbeigerannt.\r...Er ist sogar in mich reingelaufen.\nDas hat echt wehgetan! ...Aua.\rDer Junge wird langsam erwachsen.
+Jeder macht sich auf und sucht das\nAbenteuer. Und wächst daran...
+Es stimmt schon, dass wilde Pokémon\nab und an Menschen angreifen...\rAber sie öffnen sich den Menschen\nauch, so dass man sich mit ihnen\fanfreunden kann.
+Oh! Ein Pokémon!!!\nIhr beiden seht gut zusammen aus!
+Oh, echt? Du hilfst, den Pokédex\nzu vervollständigen?\rDann wirst du mit Pokémon\ndurch die weite Region reisen!\rDas hört sich nach viel Spaß an!\nDa werd ich richtig neidisch... Seufz...
+Die neue Technologie haut\nmich glatt aus den Latschen!\rIch meine, du kannst mit Leuten auf der\nGANZEN Welt spielen! Und das drahtlos!
+Zweiblattdorf\nFrische und Freiheit!
+Haus von {PlayerName}
+Haus von {RivalName}

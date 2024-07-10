@@ -1,0 +1,4 @@
+﻿{RivalName}: ...Ich nehme besser auch\nmeinen Beutel und mein Tagebuch mit...\r
+Oh, hey, {PlayerName}!\rIch warte auf der Straße auf dich!\r10 Millionen $ Strafe, wenn du zu\nspät kommst!\r
+Das ist eine Wii-Konsole! Ihr Controller\nist eine Wii-Fernbedienung!
+\v0103ぁ\x0000\x0000 liest die Informationen.\rRegel Nr. 1 für Abenteurer:\nÖffne das Menü mit dem X-Knopf. \rRegel Nr. 2 für Abenteurer:\nSpeichere den Fortschritt mit SICHERN. \rMehr steht da nicht...

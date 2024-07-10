@@ -1,0 +1,6 @@
+﻿Mutter von {RivalName}: Oh, hi,\n{PlayerName}.\rDu suchst bestimmt {RivalName}?\rEr war kurz verschwunden und ist\ndann wieder nach Hause gekommen.\rDer Junge kann einfach nicht still\nsitzen.\fWas er jetzt wohl wieder vorhat?
+Mutter von {RivalName}: Oh, hi,\n{PlayerName}.\rDu suchst bestimmt {RivalName}?\rEr war kurz verschwunden und ist\ndann wieder nach Hause gekommen.\rDer Junge kann einfach nicht still\nsitzen.\fWas er jetzt wohl wieder vorhat?
+Mutter von {RivalName}: Dieses Kind\nist, wie üblich, wieder losgerannt.\rIch denke, du müsstest ihn jetzt\nauf Route 201 antreffen können.\rKann einfach nicht still sitzen,\nder Junge. Wo er jetzt wohl hin will?
+Mutter von {RivalName}: {RivalName}\nsollte jetzt bei Route 201 sein.\rEr kann einfach nicht still sitzen.\nWo er jetzt wohl hin will?
+Mutter von {RivalName}: Oh, du hast\ndich also auch mit einem Pokémon\fangefreundet.
+Mutter von {RivalName}: {RivalName}\nist losgestürmt wie eine Rakete.\rEr meinte, er wolle der größte Trainer\naller Zeiten werden...\rOb er wohl irgendwann mal still sitzen\nkann? Das würde mich echt wundern.
