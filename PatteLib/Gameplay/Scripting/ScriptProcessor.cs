@@ -1,0 +1,114 @@
+﻿namespace PatteLib.Gameplay.Scripting;
+
+public class ScriptProcessor
+{
+    private Dictionary<string, List<ICommand>> _sections = [];
+    private Dictionary<int, int> _variables = [];
+    private bool _comparisonResult;
+    private Stack<(string, int)> _callStack = []; //section, pointer
+    private int _pointer;
+    private string _section;
+    private bool _sectionEnded;
+    
+    public void ParseScript(string[] script)
+    {
+        List<ICommand> currentSectionCommands = null;
+
+        foreach (var line in script)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+            if (line.EndsWith(":"))
+            {
+                string sectionName = line.TrimEnd(':');
+                currentSectionCommands = new List<ICommand>();
+                _sections[sectionName] = currentSectionCommands;
+            }
+            else if (currentSectionCommands != null)
+            {
+                try
+                {
+                    currentSectionCommands.Add(CommandFactory.CreateCommand(line));
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+    }
+
+    public void ExecuteSection(string sectionName)
+    {
+        sectionName = sectionName.Replace("#", " ");
+        _section = sectionName;
+        if (_sections.TryGetValue(sectionName, out var commands))
+        {
+            _sectionEnded = false;
+            while (_pointer < commands.Count && !_sectionEnded)
+            {
+                commands[_pointer].Execute(this);
+                _pointer++;
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Section {sectionName} not found");
+        }
+    }
+
+    public int GetVariable(int address)
+    {
+        return _variables.TryGetValue(address, out var value) ? value : 0;
+    }
+
+    public void SetVariable(int address, int value)
+    {
+        _variables[address] = value;
+    }
+
+    public bool GetComparisonResult()
+    {
+        return _comparisonResult;
+    }
+
+    public void SetComparisonResult(bool result)
+    {
+        _comparisonResult = result;
+    }
+
+    public void EndCurrentSection()
+    {
+        _sectionEnded = true;
+    }
+
+    public void JumpToSection(string sectionName)
+    {
+        _pointer = 0;
+        ExecuteSection(sectionName);
+    }
+
+    public void CallSection(string sectionName)
+    {
+        _callStack.Push((_section, _pointer));
+        _pointer = 0;
+        ExecuteSection(sectionName);
+    }
+
+    public void ReturnFromFunction()
+    {
+        if (_callStack.Count > 0)
+        {
+            var (returnSection, returnPointer) = _callStack.Pop();
+            _pointer = returnPointer;
+            _pointer++;
+            ExecuteSection(returnSection);
+        }
+        else
+        {
+            Console.WriteLine("Error: Call stack is empty, cannot return from function.");
+        }
+    }
+}

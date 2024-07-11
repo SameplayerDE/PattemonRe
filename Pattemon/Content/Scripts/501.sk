@@ -1,0 +1,18 @@
+﻿Script 1:
+	Print 0x40F4
+	CompareVarValue 0x40F4 0
+	CallIf EQUAL Function#1
+	Print 0x40A4
+	CompareVarValue 0x40A4 4
+	CallIf EQUAL Function#2
+	CompareVarValue 0x40A4 6
+	CallIf EQUAL Function#3
+Jump Function#2
+
+Function 1:
+	Print Hallo
+Return
+
+Function 2:
+	Print Hurensohn
+End
