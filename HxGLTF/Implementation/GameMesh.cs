@@ -11,7 +11,8 @@ namespace HxGLTF.Implementation
         public int IndexCount;
         public bool IsIndexed;
         public GameMaterial Material;
-
+        public Vector3 LocalPosition;
+        
         public void Dispose()
         {
             VertexBuffer?.Dispose();
@@ -35,8 +36,6 @@ namespace HxGLTF.Implementation
             var uvs = new List<Vector2>();
             var joints = new List<Vector4>();
             var w = new List<Vector4>();
-
-   
             
             foreach (var attribute in primitive.Attributes)
             {
@@ -204,6 +203,27 @@ namespace HxGLTF.Implementation
                 }
             }
 
+            if (position.Count > 0)
+            {
+                var centerPosition = Vector3.Zero;
+                foreach (var pos in position)
+                {
+                    // Debug: Ausgabe der Positionen
+                    //Console.WriteLine($"Position: {pos}");
+
+                    // Berücksichtige die Skalierung
+                    Vector3 scaledPosition = pos / 16;
+                    centerPosition += scaledPosition;
+                }
+                centerPosition /= position.Count;
+
+                // Debug: Ausgabe der berechneten Center-Position
+                //Console.WriteLine($"Center Position: {centerPosition}");
+
+                result.LocalPosition = centerPosition; // Setze die berechnete Position
+            }
+
+            
             var vertexBufferDummy = new List<VertexPositionColorNormalTextureBlend>();
 
             // Hier fügen wir die gesammelten Positionen, Normalen und Texturkoordinaten in die _positions-Liste ein

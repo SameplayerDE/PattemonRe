@@ -21,7 +21,7 @@ cbuffer Constants : register(b1)
     int AlphaMode;
     
     float4 BaseColorFactor = float4(1.0, 1.0, 1.0, 1.0);
-
+	float4 AdditionalColorFactor = float4(1.0, 1.0, 1.0, 1.0);
     bool TextureEnabled;
     bool SkinningEnabled;
 }
@@ -128,7 +128,7 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 MainPS(VertexShaderOutput input) : SV_Target
 {
-    float4 finalColor = saturate(input.Color * BaseColorFactor);
+    float4 finalColor = saturate(input.Color * BaseColorFactor * AdditionalColorFactor);
     
     if (TextureEnabled == true)
     {

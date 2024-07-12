@@ -1,18 +1,12 @@
 ﻿Script 1:
 	Print 0x40F4
-	CompareVarValue 0x40F4 0
-	CallIf EQUAL Function#1
-	Print 0x40A4
-	CompareVarValue 0x40A4 4
-	CallIf EQUAL Function#2
-	CompareVarValue 0x40A4 6
-	CallIf EQUAL Function#3
-Jump Function#2
+	CompareVarValue 0x40F4 1
+	CallIf NOT_EQUAL Function#1
+End
 
 Function 1:
 	Print Hallo
+	IncrementVar 0x0 1
+	CompareVarValue 0x0 5
+	CallIf NOT_EQUAL Function#1
 Return
-
-Function 2:
-	Print Hurensohn
-End

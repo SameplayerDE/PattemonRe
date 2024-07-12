@@ -5,7 +5,7 @@ public class ScriptProcessor
     private Dictionary<string, List<ICommand>> _sections = [];
     private Dictionary<int, int> _variables = [];
     private bool _comparisonResult;
-    private Stack<(string, int)> _callStack = []; //section, pointer
+    private Stack<(string section, int pointer)> _callStack = [];
     private int _pointer;
     private string _section;
     private bool _sectionEnded;

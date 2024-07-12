@@ -1,0 +1,61 @@
+﻿Professor: Na, wen haben wir denn da!\rDu bist \v0103ぁ\x0000\x0000, nicht wahr?\rSchauen wir uns doch einmal dein\nPokémon an.\r
+...\rHmm...\nVerstehe, ja...\rDieses Pokémon scheint ziemlich\nglücklich zu sein.\r
+Was ist das?\rDein Pokémon hat sich\nbereits entwickelt?!?\r
+Hmmm!\rEs war also kein Fehler, \v0100ぁ\x0000\x0000\nin deine Obhut zu geben!\r
+Professor: Würdest du ihm denn gern\neinen Spitznamen geben?
+Professor: Hmm. Ah so... Bist du denn\nmit dem Spitznamen zufrieden?
+Professor: Als ich euch dabei ertappte,\nwie ihr beide ohne Pokémon in das hohe\fGras gehen wolltet, war ich schockiert.\rDass Kinder immer so ungestüm sind!\rAber du hattest mich schnell\numgestimmt.\rSo schnell entstand die Verbindung\nzwischen dir und deinem Pokémon...\rEs erfüllt mich mit Stolz, auf dich\ngetroffen zu sein.\rUnd sicherlich ergeht es \v0100ぁ\x0000\x0000\nnicht anders.\rDeswegen möchte ich dich bitten, dich\nimmer gut um \v0100ぁ\x0000\x0000 zu kümmern.\r
+Lucia: Es macht mich froh zu sehen,\nwie freundlich du zu dem Pokémon bist!\rWenn du das nicht wärst, müsste ich...\nOh, ich kann das gar nicht aussprechen!\r
+Lucius: Junge, bin ich froh, dass du\nnett zu dem Pokémon bist.\rAndernfalls müsste ich...\nAh, ich mag gar nicht daran denken.\r
+Professor: Äh-häm! Kommen wir zum\neigentlichen Thema zurück.\rIch möchte, dass du etwas für\nmich tust.\r
+Zunächst einmal möchte ich mich\nnoch einmal vorstellen.\rWie du weißt, lautet mein Name Eibe.\nIch studiere Pokémon.\rAls Erstes möchte ich genau wissen,\nwelche Arten von Pokémon in\fSinnoh leben.\rUm das herauszufinden, muss man\nmithilfe des Pokédex Daten sammeln.\rUnd hier kommst du ins Spiel.\rIch möchte dir diesen Pokédex geben.\nKannst du damit Daten über die Pokémon\fin Sinnoh für mich sammeln?
+Eibe: ...\r...\r...\r...\rIch kann hier stundenlang schweigend\nstehen. Ich bin sehr geduldig.\rIch frage dich noch einmal,\n\v0103ぁ\x0000\x0000.\rIch möchte dir diesen Pokédex\nanvertrauen.\rWirst du damit Daten über die Pokémon\nin Sinnoh für mich sammeln?
+Eibe: Hm!\rGut geantwortet!\r
+{PlayerName} hat den\n\vFF00\x0001\x0001Pokédex\vFF00\x0001\x0000 erhalten!
+Eibe: Dieser Pokédex ist ein\nHightechgerät.\rEr speichert automatisch Daten aller\nPokémon-Arten, auf die du triffst.\r\v0103ぁ\x0000\x0000! Ich möchte dich bitten,\nüberallhin zu gehen und alle Arten\fvon Pokémon dieser Region zu finden!\r
+Lucia: Ich habe auch einen!\r
+Lucius: Ich habe den gleichen\nPokédex wie du.\r
+Eibe: Als du zusammen mit deinem Pokémon\nüber die Route 201 gegangen bist, wie\fhast du dich da gefühlt?\rIch bin bereits 60 Jahre alt.\rUnd ich bin immer noch ganz aufgeregt,\nwenn ich in der Nähe von Pokémon bin.\rDu musst wissen, es gibt unzählige\nPokémon auf dieser Welt.\rUnd das bedeutet auch, dass dich\nan unzähligen Orten Nervenkitzel\ferwartet!\rUnd nun geh!\r\v0103ぁ\x0000\x0000, dein großes\nAbenteuer beginnt!\r
+Eibe: Nun geh schon!\r\v0103ぁ\x0000\x0000, das Abenteuer wartet\nauf dich!
+Lucia: Mein erstes Pokémon war\n\v0100ぁ\x0001\x0000!\rHättest du dich auf Route 201 für\n\v0100ぁ\x0001\x0000 entschieden, hätten wir\fjetzt das gleiche Pokémon!\rIch meine, deine Wahl war schon okay...\rIch bin übrigens Lucia.\rIch helfe dem Professor bei\nder Erstellung des Pokédex.\rWir beide, du und ich,\nsind uns also ähnlich.\rIch bin dir nur ein paar Schritte\nvoraus, das ist alles.\rIch freue mich schon, dir das\nein oder andere zu erklären.\rEs freut mich wirklich, dich\nkennenzulernen, \v0103ぁ\x0000\x0000!\r
+Lucius: Der Professor hat mich um Hilfe\ngebeten, daher werde ich ebenfalls\fausziehen, um den Pokédex zu füllen.\rSo haben wir beide, du und ich,\ndasselbe Ziel.\rIch werde dir später noch das ein oder\nandere erklären, einverstanden?\r
+Ich bin der Vater von \v0103ぁ\x0000\x0000.\rUnd ich werde euch mit Freuden bei\neurer Aufgabe unterstützen.\rHahaha. Äh...\nIch bin mir sicher, wir können\funs auf dich verlassen!
+Professor Eibe hat einen neuen Pokédex\nentwickelt, als er zusammen mit einem\fProfessor aus Kanto gearbeitet hat!\rOh, ich bin übrigens Roxana.\rUnd es ist eine große Freude,\nAssistentin des Professors zu sein!
+Regel Nr. 1 für Abenteurer:\nÖffne das Menü mit dem X-Knopf.
+Regel Nr. 2 für Abenteurer:\nSpeichere den Fortschritt mit SICHERN.
+Es ist voll mit Büchern über Pokémon.
+Das sind Referenzmaterialien zu und\nForschungsberichte über Pokémon.
+Eibe: Ah, \v0103ぁ\x0000\x0000!\rWillst du mir deinen Fortschritt\nmit dem Pokédex zeigen?\r
+Hmm...\rDu hast \v0134ぁ\x0000\x0000 Pokémon gesehen.\r
+Was ist denn los?\rJetzt sag nicht, du hast erst so wenige\ngesehen, dass es sich nicht lohnt,\fmir den Pokédex zu zeigen?!?
+Ausgezeichnete Arbeit, \v0103ぁ\x0000\x0000!\rDein Pokédex enthält alle Pokémon\nder Sinnoh-Region.\rDas hilft mir auch bei meinen Studien zu\nder Entwicklung der Pokémon...\r
+Eibe: Ah! \v0103ぁ\x0000\x0000! Ich habe schon\nauf dich gewartet!\rDu hast jede Art von Pokémon\nin der Region Sinnoh gesehen!\rDas wird mir bei meinem Studium der\nEntwicklung der Pokémon eine\funbezahlbare Hilfe sein...\r
+Eich: Ich grüße Sie, Professor Eibe!\nWir haben uns lange nicht gesehen!\rIch sage Ihnen, Sinnoh ist wirklich\nweit von Kanto entfernt.\rAber Sie werden mir zustimmen: Wenn\nman die Gelegenheit hat, neue Pokémon\fzu sehen, ist kein Weg zu weit.\r
+Eibe: Oh! Na, wenn das nicht mein alter\nKollege Professor Eich ist!\rIch hätte es wissen müssen, dass der\nExperte für Pokémon schlechthin den\fWeg auf sich nimmt!\rWir haben doch immer gescherzt: “Wo\nPokémon sind, da findet man auch Eich!”\rSchön, dass sich das nicht geändert\nhat!\r
+Professor Eich, ich möchte Ihnen meinen\nNeuzugang im Labor vorstellen.\rDieses junge Wesen hat jede Seite des\nSinnoh-Pokédex für mich gefüllt.\r
+Eich: Ah, ja. Freut mich sehr!\rDu hast schon mitbekommen,\ndass ich Eich heiße.\rProfessor Eibe hat mir in der letzten\nZeit viele gute Dinge über dich\fberichtet.\rEr überschlägt sich fast vor Lob für\ndiesen fantastischen, jungen Trainer.\rUnd wie ich sehe, wirst du dem gerecht. \nNein! Du bist sogar noch besser!\rUnd du hast ein ausgesprochenes\nGefühl für das richtige Timing.\rWeißt du, ich habe Professor Eibe\nauch versprochen, etwas mitzubringen.\rEr wollte nämlich, dass ich den\nNationalen Pokédex mitbringe.\rUnd da du jetzt schon einmal hier bist,\nwerde ich deinen Pokédex mit dem\fNationalen Modus aufrüsten.\rSchließlich gibt es noch viel, viel mehr\nPokémon auf dieser Welt zu entdecken!\r
+Der Pokédex von \v0103ぁ\x0000\x0000 wurde mit\ndem Nationalen Modus ausgerüstet!\r
+Eich: Ich fürchte, es wird nicht einfach\nsein, den Nationalen Pokédex zu\fvervollständigen.\rAber ich bin überzeugt davon, dass\ndu dich ehrlich anstrengen wirst,\funs zu helfen!\r
+Eibe: Nur keine Angst, \v0103ぁ\x0000\x0000\nwird die Aufgabe bestens erledigen.\rÜbrigens, mein alter Freund, was\nverschlägt Sie eigentlich in diese\fRegion?\r
+Eich: Nun... Ich habe gehört, dass\nder Park der Freunde nun\foffen sein soll.\rWenn ich mich nicht irre, liegt\ner am Ende der Route 221.\rDieser Park zieht jede Art von Pokémon\nan, sie kommen aus jeder Region.\rIch bin hier, um im Park der Freunde\nnach dem Rechten zu sehen.\r
+\v0103ぁ\x0000\x0000, du solltest unbedingt\ndem Park der Freunde einen Besuch\fabstatten.\rOje, wenn ich jetzt nicht lossprinte,\nkomme ich zu spät zu einem Termin!\rEs war toll, dich kennenzulernen!\nTschüss!\r
+\v0103ぁ\x0000\x0000, du solltest unbedingt\ndem Park der Freunde einen Besuch\fabstatten.\rOje, wenn ich jetzt nicht lossprinte,\nkomme ich zu spät zu einem Termin!\rEs war toll, dich kennenzulernen!\nTschüss!\r
+Eibe: Und da geht er hin.\nWie immer in Eile...\r
+Nun gut, \v0103ぁ\x0000\x0000...\rDu hast den Pokédex vervollständigt,\ndaher habe ich hier ein Geschenk\ffür dich.\r
+Eibe: Dies ist ein Pokémon Radar\noder auch Pokéradar.\rDieses Gerät zeigt dir, wo sich im\nhohen Gras Pokémon befinden.\rIch habe es entwickelt, damit meine\nAssistenten es leichter haben,\rden Sinnoh-Pokédex zu erstellen,\naber das hast du ja schon gemeistert!\rIch denke, es wird dir helfen, den\nNationalen Pokédex zu vervollständigen.
+Eibe: Die Welt ist so groß.\rDa draußen gibt es noch viel mehr\nPokémon.\rUnd das bedeutet, dass Nervenkitzel\nund Spaß für dich so schnell kein\fEnde finden werden!
+\v0103ぁ\x0000\x0000 sieht sich den PC an.\rAuf dem Monitor kann man viele Fachbe-\ngriffe und wissenschaftliche Dinge\flesen, die gar nicht zu verstehen sind.
+Die Forschungsunterlagen sind\nsorgsam geordnet und verstaut.
+Der Kühlschrank ist voller\nSüßigkeiten. Oh, lecker...
+Das ist doch wirklich mal was!\rStell dir vor... Jede Art von Pokémon,\ndie in Sinnoh lebt, wird aufgezeichnet!\rUnd dann haben wir da \v0103ぁ\x0000\x0000...\rDu bist dem Professor bei seinen\nForschungen über die Entwicklung von\fPokémon eine echte Hilfe!!!
+Ja, das stimmt.\rProfessor Eibe hat das Pokédex-System\nzusammen mit Professor Eich entwickelt.\rProfessor Eich ist jünger als\nProfessor Eibe.
+Eibe: \v0103ぁ\x0001\x0000!\nDu bist wieder hier!\rUnd ich... ich bin sprachlos!\rDu hast es geschafft!\nDu hast es wirklich geschafft!\rNoch nie in meinen sechzig Lebensjahren\nhat mein Herz so laut geschlagen wie\fheute!\r
+Lucia: Der Professor hat eine Menge\nDinge überprüft, nachdem du weg\fwarst.\rEr hat sich große Sorgen um dich\ngemacht, \v0103ぁ\x0001\x0000...\rEr hat sogar Bekannte um Hilfe gebeten\nund jetzt...\r\v0103ぁ\x0001\x0000, ich bin so froh, dich in\nSicherheit zu sehen!\rWillkommen zurück!\r
+Lucius: Nachdem du weggegangen\nwarst, hat der Professor eine Menge\fDinge überprüft...\rEr hat sich echt große Sorgen\ngemacht, \v0103ぁ\x0001\x0000.\rDann hat er sich mit einer Menge\nLeute in Verbindung gesetzt, um\fHilfe zu holen...\rAber du hast sie gar nicht benötigt,\n\v0103ぁ\x0001\x0000.\rIch bin so froh, dich in einem Stück\nzu sehen!\r
+Eibe: Oh ja, da war noch etwas,\ndas ich dir sagen wollte.\rDie drei Pokémon der Seen sind offenbar\nan ihre Ursprungsorte zurückgekehrt.\rUnd nun erzähl. Wie ist es dir ergangen?\nDer Pokédex...?\rOh, du hast \v0134ぁ\x0001\x0000 Einträge!\n...Und wie viele Orden hast du?\rSag bloß! Sieben Stück! Da bleibt ja\nnur noch die Arena von Sonnewik.\rSo weit bist du schon gekommen, wieso\ngehst du nicht noch nach Sonnewik und\fholst dir dort den Orden?\rDu kannst auch die Pokémon Liga\nherausfordern!\rSo erweiterst du deinen\nHorizont wie nie zuvor.\rUnd bedenke nur die neuen Pokémon,\ndenen du auf deinen Wegen begegnest!
+Eibe: Oh, ja, \v0103ぁ\x0000\x0000.\rSolltest du Cynthia begegnen,\nbestelle ihr bitte Grüße von mir.
+                                                     
+                                                           
+                                                         
+...Dein Genie wirft mich um!\rSelten zuvor habe ich mich so\ninspiriert von jemandem gefühlt!\rIst es nicht wunderbar, am Leben\nzu sein?
+Als der Professor mir von den\nGeschehnissen berichtete, liefen\fmir kalte Schauer über den Rücken.\rDoch war er sich ganz sicher, dass du\ndie Sache in Ordnung bringen würdest.\rIch habe fest an dich geglaubt, und nun\nbist du hier!

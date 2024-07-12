@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Threading;
+using HxGLTF;
 using PatteLib.World;
 using HxGLTF.Implementation;
 using InputLib;
@@ -11,6 +15,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Newtonsoft.Json.Linq;
+using PatteLib.Graphics;
 using TestRendering;
 
 namespace TestRender
@@ -28,8 +33,16 @@ namespace TestRender
         private RenderTarget2D _screen;
         private World _world;
         private WorldTimeManager _timeManager;
+        private Texture2D _pixel;
+        private ImageFont _imageFont;
+        private ImageFontRenderer _fontRenderer;
+
+        private GameModel _hero;
         
         private bool _debugTexture = false;
+        private Stopwatch _stopwatch = new Stopwatch();
+        private TimeSpan _debugDuration = TimeSpan.Zero;
+        private string _currentMaterial;
         
         private TextureAnimation _seaAnimation;
         private TextureAnimation _hamabeAnimation;
@@ -76,23 +89,23 @@ namespace TestRender
             
             _graphicsDeviceManager.ApplyChanges();
             
-            _heroX = _chunkX * 32;
+            _heroX = _chunkX * Chunk.Wx;
             _heroX += _cellX * 16;
             
             _heroY = _chunkY * 32;
             _heroY += _cellY * 16;
-
 
             MediaPlayer.Volume = 0.3f;
         }
 
         protected override void Initialize()
         {
-            _screen = new RenderTarget2D(GraphicsDevice, 256 * 4, 192 * 4, false,
+            _screen = new RenderTarget2D(GraphicsDevice, 256 * 2, 192 * 2, false,
                 GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
             _camera = new Camera(GraphicsDevice);
 
-            Building.SetPath(@"A:\ModelExporter\Platin\output_assets");
+            Building.SetPath(@"A:\ModelExporter\Platin\export_output\output_assets");
+            //Building.SetPath(@"A:\ModelExporter\Platin\output_assets");
             Chunk.SetFilePath(@"A:\ModelExporter\Platin\overworldmaps");
             
             _world = World.Load(GraphicsDevice, matrix);
@@ -123,7 +136,15 @@ namespace TestRender
             _buildingShader = Content.Load<Effect>("Shaders/BuildingShader");
             _basicEffect = new BasicEffect(GraphicsDevice);
             _font = Content.Load<SpriteFont>("Font");
+            _pixel = new Texture2D(GraphicsDevice, 1, 1);
+            _pixel.SetData(new[] { Color.White });
+            _imageFont = ImageFont.Load(GraphicsDevice, @"Content/Font.json");
+            _fontRenderer = new ImageFontRenderer(_spriteBatch, GraphicsDevice, _imageFont);
+
+            _hero = GameModel.From(GraphicsDevice,
+                GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\hero\hero"));
             
+            _camera.Teleport(109, 32, 890);
             var songJson = File.ReadAllText($@"Content/SoundData.json");
             var jSongArray = JArray.Parse(songJson);
 
@@ -254,14 +275,14 @@ namespace TestRender
 
             if (_plateMove)
             {
-                var result = _world.GetChunkPlateUnderPosition(new Vector3(_camera.Position.X, _camera.Position.Y, _camera.Position.Z));
+                var result = _world.GetChunkPlateUnderPosition(new Vector3(_heroX, _heroHeight, _heroY));
                 if (result.Length >= 1)
                 {
                     var plate = result[0];
 
                     // Get camera position relative to chunk top-left corner
-                    var localX = (_camera.Position.X % World.ChunkWx) - plate.X;
-                    var localZ = (_camera.Position.Z % World.ChunkWy) - plate.Y;
+                    var localX = (_heroX % World.ChunkWx) - plate.X;
+                    var localZ = (_heroY % World.ChunkWy) - plate.Y;
 
                     // Get height at camera position considering angles
                     var height = plate.GetHeightAt(localX, localZ);
@@ -270,7 +291,8 @@ namespace TestRender
                     
                     if (height >= 0)
                     {
-                        _camera.Teleport(new Vector3(_camera.Position.X, height, _camera.Position.Z));
+                        //_camera.Teleport(new Vector3(_camera.Position.X, height, _camera.Position.Z));
+                        _heroHeight = height;
                     }
                     else
                     {
@@ -294,21 +316,21 @@ namespace TestRender
                 _world = World.Load(GraphicsDevice, matrix);
             }
             
-            /*var direction = GetDirectionFromInput();
+            var direction = GetDirectionFromInput();
 
             if (direction != Vector3.Zero)
             {
                 direction.Normalize();
-                var stepSize = 16;
+                var stepSize = 0.1f;
 
                 CellTarget = new Vector2(_heroX, _heroY) + new Vector2(direction.X, direction.Z) * stepSize;
                 _heroHeight += direction.Y * stepSize;
 
 
                 var newHeroPosition = new Vector3(CellTarget.X, 0, CellTarget.Y);
-
-                var newChunkX = (int)newHeroPosition.X / 512;
-                var newChunkY = (int)newHeroPosition.Z / 512;
+                
+                var newChunkX = (int)newHeroPosition.X / Chunk.Wx;
+                var newChunkY = (int)newHeroPosition.Z / Chunk.Wy;
 
                 var chunk = _world.GetChunkAtPosition(newHeroPosition);
 
@@ -317,25 +339,27 @@ namespace TestRender
                     var collision = _world.CheckTileCollision(newHeroPosition);
                     var type = _world.CheckTileType(newHeroPosition);
 
-                    if (collision == 0x100)
+                    Console.WriteLine(collision);
+                    
+                    if (collision == 0x80)
                     {
                         if (type != 0x00)
                         {
                             Console.WriteLine(type);
                             Console.WriteLine(direction);
-                            if (type == (byte)TileType.JumpDown)
+                            if (type == (byte)ChunkTileType.JumpDown)
                             {
                                 if (direction == Vector3.Backward)
                                 {
                                     _heroX = CellTarget.X;
-                                    _heroY = CellTarget.Y + 16;
+                                    _heroY = CellTarget.Y + 1;
                                     _chunkX = newChunkX;
                                     _chunkY = newChunkY;
-                                    _cellX = (int)(_heroX % 512) / 16;
-                                    _cellY = (int)(_heroY % 512) / 16;
+                                    _cellX = (int)(_heroX % 32) / 16;
+                                    _cellY = (int)(_heroY % 32) / 16;
                                 }
                             }
-                            else if (type == (byte)TileType.TV)
+                            else if (type == (byte)ChunkTileType.TV)
                             {
 
                             }
@@ -345,8 +369,8 @@ namespace TestRender
                                 _heroY = CellTarget.Y;
                                 _chunkX = newChunkX;
                                 _chunkY = newChunkY;
-                                _cellX = (int)(_heroX % 512) / 16;
-                                _cellY = (int)(_heroY % 512) / 16;
+                                _cellX = (int)(_heroX % 32) / 16;
+                                _cellY = (int)(_heroY % 32) / 16;
                             }
                         }
                     }
@@ -359,10 +383,10 @@ namespace TestRender
                             _chunkY = 27;
                             _cellX = 15;
                             _cellY = 15;
-                            _heroX = _chunkX * 512;
+                            _heroX = _chunkX * 32;
                             _heroX += _cellX * 16;
 
-                            _heroY = _chunkY * 512;
+                            _heroY = _chunkY * 32;
                             _heroY += _cellY * 16;
                         }
                         else
@@ -371,8 +395,8 @@ namespace TestRender
                             _heroY = CellTarget.Y;
                             _chunkX = newChunkX;
                             _chunkY = newChunkY;
-                            _cellX = (int)(_heroX % 512) / 16;
-                            _cellY = (int)(_heroY % 512) / 16;
+                            _cellX = (int)(_heroX % 32) / 16;
+                            _cellY = (int)(_heroY % 32) / 16;
                         }
                     }
                 }
@@ -385,8 +409,8 @@ namespace TestRender
                     _cellX = (int)(_heroX % 512) / 16;
                     _cellY = (int)(_heroY % 512) / 16;
                 }
-            }*/
-
+            }
+/*
             Vector3 Direction = new Vector3();
 
             if (Keyboard.GetState().IsKeyDown(Keys.W))
@@ -456,7 +480,7 @@ namespace TestRender
                 }
 
             }
-            
+*/            
             foreach (var chunk in World.Chunks)
             {
                 foreach (var building in chunk.Value.Buildings)
@@ -491,9 +515,11 @@ namespace TestRender
 
         private void UpdateCamera(GameTime gameTime)
         {
-            //_camera.Teleport(new Vector3(0f, 0.5f, 0.5f) * 512 + new Vector3(_heroX, _heroHeight, _heroY));
-            //_camera.RotateTo(new Vector3(0.8185586f, (float)Math.PI, 0f));
-            //_hero.RotateTo(Quaternion.CreateFromRotationMatrix(_camera.RotationMInvX));
+            _camera.LookAt(new Vector3(_heroX, _heroHeight, _heroY));
+            _camera.Teleport(new Vector3(0f, 0.5f, 0.5f) * 32 + new Vector3(_heroX, _heroHeight, _heroY));
+            _camera.RotateTo(new Vector3(0.8185586f, (float)Math.PI, 0f));
+            
+            _hero.RotateTo(Quaternion.CreateFromRotationMatrix(_camera.RotationMInvX));
             _camera.Update(gameTime);
         }
 
@@ -607,19 +633,19 @@ namespace TestRender
             {
                 return Color.Purple; // no angle
             }
-             if (ax == -45 && ay == 0)
+            if (ax == -45 && ay == 0)
             {
                 return Color.Red; // up
             }
-             if (ax == 45 && ay == 0)
+            if (ax == 45 && ay == 0)
             {
                 return Color.Blue; // down
             }
-             if (ax == 0 && ay == -45)
+            if (ax == 0 && ay == -45)
             {
                 return Color.Yellow; // left
             }
-             if (ax == 0 && ay == 45)
+            if (ax == 0 && ay == 45)
             {
                 return Color.Green; // right
             }
@@ -675,7 +701,7 @@ namespace TestRender
             GraphicsDevice.SetRenderTarget(_screen);
             GraphicsDevice.Clear(Color.Black);
             
-            
+            /*
             foreach (var chunkEntry in _world.Combination)
             {
                 var (targetX, targetY) = chunkEntry.Key;
@@ -708,32 +734,26 @@ namespace TestRender
 
                 var chunkId = tuple.chunkId;
                 var headerId = tuple.headerId;
+                var worldOffset = new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) + new Vector3(16, 0, 16);
 
+                
                 if (World.Chunks.TryGetValue(chunkId, out var chunk))
                 {
-                    
-                    //foreach (var plate in chunk.Plates)
-                    //{
-                    //    DrawPlateQuad(gameTime, _basicEffect, new Vector3(plate.X, plate.Z, plate.Y) + new Vector3(targetX * 32, tuple.height / 2f, targetY * 32), new Vector3(plate.Wx, 0, plate.Wy), plate.Ax, plate.Ay, Color.White);
-                    //}
-                    
                     if (chunk.IsLoaded && chunk.Model != null)
                     {
                         DrawModel(gameTime, _worldShader, chunk.Model,
-                            offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
-                                    new Vector3(16, 0, 16), alpha: true);
+                            offset: worldOffset, alpha: true);
                         foreach (var building in chunk.Buildings)
                         {
                             DrawModel(gameTime, _buildingShader, building.Model,
-                                offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
-                                        new Vector3(16, 0, 16), alpha: true);
+                                offset: worldOffset, alpha: true);
                         }
                     }
                 }
             }
-            /*
-            int[] offsetX = [-1, 0, 1];
-            int[] offsetY = [-1, 0, 1];
+            */
+            int[] offsetX = [-2, -1, 0, 1, 2];
+            int[] offsetY = [-2, -1, 0, 1, 2];
 
             foreach (var dx in offsetX)
             {
@@ -750,18 +770,18 @@ namespace TestRender
                     var chunkId = tuple.chunkId;
                     var headerId = tuple.headerId;
 
+                    var worldOffset = new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) + new Vector3(16, 0, 16);
+                    
                     if (World.Chunks.TryGetValue(chunkId, out var chunk))// && _world.Headers.TryGetValue(headerId, out var header))
                     {
                         if (chunk.IsLoaded && chunk.Model != null)
                         {
+                            var buildingsWithDistance = new List<(Building building, float Distance)>();
                             DrawModel(gameTime, _worldShader, chunk.Model,
-                                offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
-                                        new Vector3(16, 0, 16), alpha: false);
+                                offset: worldOffset, alpha: false);
                             foreach (var building in chunk.Buildings)
                             {
-                                DrawModel(gameTime, _buildingShader, building.Model,
-                                    offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
-                                            new Vector3(16, 0, 16), alpha: false);
+                                DrawModel(gameTime, _buildingShader, building.Model, offset: worldOffset, alpha: false);
                             }
                         }
                     }
@@ -780,34 +800,52 @@ namespace TestRender
                         var chunkId = tuple.chunkId;
                         var headerId = tuple.headerId;
 
+                        var worldOffset = new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) + new Vector3(16, 0, 16);
+
                         if (World.Chunks.TryGetValue(chunkId, out var chunk))// && _world.Headers.TryGetValue(headerId, out var header))
                         {
                             if (chunk.IsLoaded && chunk.Model != null)
                             {
                                 DrawModel(gameTime, _worldShader, chunk.Model,
-                                    offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
-                                            new Vector3(16, 0, 16), alpha: true);
+                                    offset: worldOffset, alpha: true);
                                 foreach (var building in chunk.Buildings)
                                 {
-                                    DrawModel(gameTime, _buildingShader, building.Model,
-                                        offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
-                                                new Vector3(16, 0, 16), alpha: true);
+                                    DrawModel(gameTime, _buildingShader, building.Model, offset: worldOffset, alpha: true);
+                                    
+                                    var screenPos = PatteLib.Utils.WorldToScreen(worldOffset + building.Position, _camera.View, _camera.Projection, GraphicsDevice.Viewport);
+                                    
+                                    if (KeyboardHandler.IsKeyDown(Keys.J))
+                                    {
+                                        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                                        _spriteBatch.Draw(_pixel, new Rectangle(screenPos.ToPoint(), _imageFont.MeasureString(building.BuildingName, 2)), Color.White * 0.5f);
+                                        _fontRenderer.DrawText(building.BuildingName, screenPos, Color.White, 2); 
+                                        //_spriteBatch.DrawString(_font, building.BuildingName, screenPos, Color.White);
+                                        _spriteBatch.End();
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }*/
-
-           
-
+            }
+            DrawModel(gameTime, _buildingShader, _hero, offset: new Vector3(_heroX + 0, _heroHeight, _heroY + 0.5f));
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _fontRenderer.DrawText("hero", PatteLib.Utils.WorldToScreen(new Vector3(_heroX, _heroHeight, _heroY), _camera.View, _camera.Projection, GraphicsDevice.Viewport), Color.White, 2); 
+            //_spriteBatch.DrawString(_font, building.BuildingName, screenPos, Color.White);
+            _spriteBatch.End();
+            
+            
+            var scale = 5;
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _fontRenderer.DrawText($"Chunk: [{_chunkX}, {_chunkY}]", Vector2.Zero, Color.White, 1);
+            _fontRenderer.DrawText($"World: [{_camera.Position.X}, {_camera.Position.Z}]", new Vector2(0, _imageFont.LineHeight * 1), Color.White);
+            _spriteBatch.End();
             
             GraphicsDevice.SetRenderTarget(null);
-            
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, depthStencilState: DepthStencilState.DepthRead, blendState: BlendState.AlphaBlend, sortMode: SpriteSortMode.Deferred);
+           
+            _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
             _spriteBatch.Draw(_screen, GraphicsDevice.Viewport.Bounds, Color.White);
-            //_spriteBatch.Draw(_screen, new Rectangle(0, 0, 256 * 2, 192 * 2), Color.White);
-            
+            /*
             try
             {
                 if (_world.Combination.TryGetValue((_chunkX, _chunkY), out var targetChunkTuple))
@@ -815,9 +853,8 @@ namespace TestRender
                     if (World.Chunks.TryGetValue(targetChunkTuple.chunkId, out var targetChunk))
                     {
 
-                        _spriteBatch.DrawString(_font, $"Chunk: [{_chunkX}, {_chunkY}]", Vector2.Zero, Color.White);
-                        _spriteBatch.DrawString(_font, $"ChunkId: [{targetChunkTuple.chunkId}]",
-                            new Vector2(0, _font.LineSpacing), Color.White);
+                       _spriteBatch.DrawString(_font, $"ChunkId: [{targetChunkTuple.chunkId}]", new Vector2(0, _font.LineSpacing), Color.White);
+            
                         try
                         {
                             _spriteBatch.DrawString(_font,
@@ -831,8 +868,7 @@ namespace TestRender
                                 new Vector2(0, _font.LineSpacing * 2), Color.White);
                         }
 
-                        _spriteBatch.DrawString(_font, $"World: [{_heroX}, {_heroY}]",
-                            new Vector2(0, _font.LineSpacing * 3), Color.White);
+                        
                         _spriteBatch.DrawString(_font, $"Matrix: [{matrix}]", new Vector2(0, _font.LineSpacing * 4),
                             Color.White);
                         _spriteBatch.DrawString(_font, $"Time of day: [{_timeManager.CurrentPeriod.Name}]",
@@ -863,7 +899,7 @@ namespace TestRender
             {
                 
             }
-            
+            */
             _spriteBatch.End();
             if (_debugTexture)
             {
@@ -872,7 +908,7 @@ namespace TestRender
 
             base.Draw(gameTime);
         }
-
+        
         private void DrawModel(GameTime gameTime, Effect effect, GameModel model, bool alpha = false, Vector3 offset = default)
         {
             foreach (var scene in model.Scenes)
@@ -944,7 +980,19 @@ namespace TestRender
                 effect.Parameters["SkinningEnabled"]?.SetValue(false);
             }
 
+            //Todo: Fix Sorting
+   
+            //var primitivesWithDistance = new List<(GameMeshPrimitives Primitive, float Distance)>();
+            //foreach (var primitive in mesh.Primitives)
+            //{
+            //    var distance = Vector3.Distance(new Vector3(_camera.Position.X, _camera.Position.Y, _camera.Position.Z), primitive.LocalPosition);
+            //    primitivesWithDistance.Add((primitive, distance));
+            //}
+            //var sortedPrimitives = primitivesWithDistance.OrderByDescending(p => p.Distance)
+            //    .Select(p => p.Primitive).ToList();
+
             foreach (var primitive in mesh.Primitives)
+            //foreach (var primitive in sortedPrimitives)
             {
                 if (ShouldSkipPrimitive(primitive, effect, alpha, ref alphaMode))
                 {
@@ -1010,11 +1058,6 @@ namespace TestRender
             if (primitive.Material != null)
             {
                 var material = primitive.Material;
-
-                if (material.Name == "shade")
-                {
-                    Console.WriteLine(material.BaseColorFactor.ToString());
-                }
                 
                 if (_debugTexture)
                 {
@@ -1023,6 +1066,7 @@ namespace TestRender
                 
                 effect.Parameters["EmissiveColorFactor"]?.SetValue(material.EmissiveFactor.ToVector4());
                 effect.Parameters["BaseColorFactor"]?.SetValue(material.BaseColorFactor.ToVector4());
+                effect.Parameters["AdditionalColorFactor"]?.SetValue(Color.White.ToVector4());
                 effect.Parameters["AlphaCutoff"]?.SetValue(material.AlphaCutoff);
 
                 if (material.HasTexture)
@@ -1032,9 +1076,18 @@ namespace TestRender
                     effect.Parameters["Texture"]?.SetValue(material.BaseTexture.Texture);
                     effect.Parameters["TextureAnimation"]?.SetValue(false);
                     SetTextureAnimation(gameTime, material, effect);
+                    SetTextureEffects(gameTime, material, effect);
 
                     GraphicsDevice.SamplerStates[0] = material.BaseTexture.Sampler.SamplerState;
                 }
+            }
+        }
+
+        private void SetTextureEffects(GameTime gameTime, GameMaterial material, Effect effect)
+        {
+            if (material.Name.Contains("window") || material.Name.Contains("h_mado"))
+            {
+                effect.Parameters["AdditionalColorFactor"]?.SetValue(Color.Yellow.ToVector4());
             }
         }
 

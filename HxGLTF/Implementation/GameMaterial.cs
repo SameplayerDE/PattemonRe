@@ -135,10 +135,8 @@ namespace HxGLTF.Implementation
                 {
                     string imagePath = Path.IsPathRooted(image.Uri) ? image.Uri : Path.Combine(Path.GetDirectoryName(file.Path), image.Uri);
 
-                    using (var stream = File.OpenRead(imagePath))
-                    {
-                        texture = Texture2D.FromStream(graphicsDevice, stream);
-                    }
+                    using var stream = File.OpenRead(imagePath);
+                    texture = Texture2D.FromStream(graphicsDevice, stream);
                 }
                 else if (image.BufferView != null)
                 {

@@ -37,28 +37,54 @@ public class CommandFactory
                     return new CompareVarValueCommand(compAddress, compVal);
                 }
                 throw new ArgumentException("Invalid CompareVarValue command: not enough arguments.");
+            case "IncrementVar":
+                if (parts.Length == 3)
+                {
+                    // Extrahiere die Adresse und den Wert aus parts[1] und parts[2]
+                    string addressStr = parts[1];
+                    string valueStr = parts[2];
+
+                    // Konvertiere die hexadezimale Adresse in eine Dezimalzahl
+                    int compAddress = Convert.ToInt32(addressStr.StartsWith("0x") ? addressStr.Substring(2) : addressStr, 16);
+
+                    // Konvertiere den Wert in eine Dezimalzahl
+                    int incVal;
+                    if (!int.TryParse(valueStr, out incVal))
+                    {
+                        throw new ArgumentException("Invalid CompareVarValue command: value is not a valid integer.");
+                    }
+
+                    return new IncrementVarCommand(compAddress, incVal);
+                }
+                throw new ArgumentException("Invalid CompareVarValue command: not enough arguments.");
             case "CallIf":
                 if (parts.Length == 3)
                 {
                     return new CallIfCommand(parts[1], parts[2]);
                 }
                 throw new ArgumentException("Invalid CallIf command");
+            case "Call":
+                if (parts.Length == 2)
+                {
+                    return new CallCommand(parts[1]);
+                }
+                throw new ArgumentException("Invalid Call command");
             case "JumpIf":
                 if (parts.Length == 3)
                 {
                     return new JumpIfCommand(parts[1], parts[2]);
                 }
                 throw new ArgumentException("Invalid JumpIf command");
-            case "End":
-                return new EndCommand();
-            case "Return":
-                return new ReturnCommand();
             case "Jump":
                 if (parts.Length == 2)
                 {
                     return new JumpCommand(parts[1]);
                 }
                 throw new ArgumentException("Invalid Jump command");
+            case "End":
+                return new EndCommand();
+            case "Return":
+                return new ReturnCommand();
             case "Print":
                 if (parts.Length == 2)
                 {

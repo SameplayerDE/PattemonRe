@@ -21,6 +21,7 @@ public class ChunkPlate
             return Z;
         }
     
+        const double tolerance = 0.0;
         if (Ax == 0 && Ay != 0)
         {
             var maxHeight = Wx * (float)Math.Tan(MathHelper.ToRadians(Ay));
@@ -32,7 +33,7 @@ public class ChunkPlate
             };
 
             // Adjust percentage to be exactly 1 if very close to boundary
-            if (Math.Abs(1 - percentage) < 0.1)  // adjust the threshold as needed
+            if (Math.Abs(1 - percentage) < tolerance)  // adjust the threshold as needed
             {
                 percentage = 1;
             }
@@ -51,7 +52,7 @@ public class ChunkPlate
             };
 
             // Adjust percentage to be exactly 1 if very close to boundary
-            if (Math.Abs(1 - percentage) < 0.1)  // adjust the threshold as needed
+            if (Math.Abs(1 - percentage) < tolerance)  // adjust the threshold as needed
             {
                 percentage = 1;
             }

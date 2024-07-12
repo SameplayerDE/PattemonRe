@@ -1,0 +1,30 @@
+﻿Lucia: Ach! Da bist du ja!\nBitte, komm mal mit!\fDer Professor wartet!\r
+Das ist es!\nDas ist unser Pokémon-Labor!\rWir gehen einfach durch diese Tür und...\r
+Lucius: Hi! Ich habe schon auf dich\ngewartet! Bitte, komm mal mit!\fDer Prof möchte dich gerne sprechen!\r
+Siehst du? Das ist unser\nPokémon-Labor.\rWir gehen einfach durch diese Tür und...\r
+\vFF01\x0001ｃBumms!!!\vFF01\x0001コ\r
+\v0103ぁ\x0000\x0000: Was zum...\rOh, du bist das, \v0103ぁ\x0001\x0000!\rDieser alte Mann... Er ist gar nicht\nunheimlich, aber er steht voll neben\fden Schuhen!\rAch, was soll’s, \v0103ぁ\x0001\x0000.\nIch mach mich vom Acker. Bis dann!\r
+Lucia: Wow, was war das denn?!?\rDu hast aber einen ungeduldigen Freund.\rNun, wie dem auch sei...\nGehen wir hinein.\r
+Lucius: Was war das denn?!?\rDein Freund scheint es ja immer\nsehr eilig zu haben.\rNun, wie dem auch sei...\nGehen wir hinein.\r
+\vFF01\x0001ｃ\v0103ぁ\x0000\x0000!\vFF01\x0001コ\r
+Eibe: Ich habe hier ein praktisches\nItem. Du solltest es mitnehmen.\r
+Eibe: Das ist eine Technische Maschine.\nSie enthält die Attacke Rückkehr.\rDie Verwendung einer Technischen\nMaschine, oder TM, bringt einem\fPokémon sofort eine Attacke bei.\rBedenke aber, dass eine Technische\nMaschine nur einmal verwendet\fwerden kann.\rDie Attacke Rückkehr gewinnt an Kraft,\nwenn sich die Freundschaft zwischen\fdir und dem Pokémon verbessert.\rEs obliegt natürlich deiner freien\nEntscheidung, ob du sie einsetzen\fmöchtest oder nicht.\rIch überlasse die Entscheidung\ndir und wünsche dir eine Reise\fvoller Abenteuer!\r
+Lucia: Klasse! Ich wusste gar nicht,\ndass der Professor Technische\fMaschinen hat.\rVielleicht war er in jüngeren Jahren\nselbst ein Trainer?\r
+Lucius: Na, wenn das nicht... Der\nProfessor hat Technische Maschinen?\rAls Nächstes erzählt er noch, dass er\nselbst gekämpft hat, als er jung war.\r
+Nun gut, \v0103ぁ\x0001\x0000. Betrachte mich\nals deinen Mentorin.\rIch habe schließlich mehr Erfahrung als\ndu, und außerdem bin ich die Assistentin\fdes Professors.\rMir nach!\r
+Dieses Gebäude mit dem roten\nDach ist das Pokémon-Center.\rPokémon, die im Kampf verletzt\nwurden, werden hier geheilt.\rIn den meisten Städten findest\ndu ein Pokémon-Center.\r
+Das Gebäude mit dem blauen Dach dort\nist der Pokémon-Supermarkt.\rDort kannst du Items und Medizin\nkaufen und verkaufen.\r\v0103ぁ\x0000\x0000, du fängst gerade erst an\nals Trainer, daher wirst du noch nicht\fviele Dinge kaufen können.\rAber das sollte dich nicht stören!\r
+Oh, fast hätte ich es vergessen!\n\v0103ぁ\x0000\x0000...\rMusst du nicht deinen Eltern Bescheid\ngeben, dass du Professor Eibe bei der\fErstellung des Pokédex hilfst?\rDu wirst weit reisen und daher solltest\ndu ihnen Bescheid sagen, finde ich.\rAber bevor du das tust, heile zuerst\ndein Pokémon im Pokémon-Center.\rDamit wird dein Weg sicherer.\nAber jetzt muss ich los! Mach’s gut!\r
+Hey, \v0103ぁ\x0001\x0000! Ich möchte dir\nmal ein paar Dinge zeigen!\fFolge mir unauffällig!\r
+Dieses Gebäude mit dem roten Dach\nist das Pokémon-Center.\rPokémon, die im Kampf verletzt\nwurden, werden hier geheilt.\rIn den meisten Städten findest du\nein Pokémon-Center.\r
+Das Gebäude mit dem blauen Dach dort\nist der Pokémon-Supermarkt.\rDort kannst du Items und Medizin\nkaufen und verkaufen.\r\v0103ぁ\x0000\x0000, du fängst gerade erst an\nals Trainer, daher wirst du noch nicht\fviele Dinge kaufen können.\rAber das sollte dich nicht stören!\r
+Oh, fast hätte ich es vergessen!\n\v0103ぁ\x0000\x0000...\rMusst du nicht deinen Eltern Bescheid\ngeben, dass du Professor Eibe bei der\fErstellung des Pokédex hilfst?\rDu wirst weit reisen und daher solltest\ndu ihnen Bescheid sagen, finde ich.\rAber bevor du das tust, heile zuerst\ndein Pokémon im Pokémon-Center.\rDamit wird dein Weg sicherer.\nAber jetzt muss ich los! Mach’s gut!\r
+WOW!\nPokémon sind so cool!\rDu kannst sie in Kämpfen einsetzen\nund damit stärker machen!\rOh, ich hätte auch so gerne welche!\nWäre das cooool!!!
+Das Ding da...\rDas ist ein Pokédex, stimmt’s?!?\rAb jetzt wirst du die\nunterschiedlichsten Pokémon sehen!\rDu Glückspilz!\n
+Damit ich nicht vergesse, was bisher\npassiert ist, speichere ich besser...\rSo!\nNun kann ich ein Päuschen machen.
+Professor Eibe ist zurückgekommen!\rEs ist schon einige Jahre her, dass er\ndiesen Ort verlassen hat.\rEr soll seine Forschungen an anderen\nOrten betrieben haben.
+Sandgemme\nOrt des Sandes!
+Pokémon-Labor
+Haus von \v0103ぁ\x0000\x0000
+Pokémon-Supermarkt\nWir erfüllen alle Item-Wünsche!
+Pokémon-Center\nErfrische deine Pokémon!

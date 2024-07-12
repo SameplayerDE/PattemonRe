@@ -14,25 +14,26 @@ public class World
 
     public const int ChunkWx = 32;
     public const int ChunkWy = 32;
-    
+
     public static Dictionary<int, Chunk> Chunks = [];
     public static Dictionary<int, ChunkHeader> Headers = [];
     public static bool IsDataFetched = false;
-    
+
     public Dictionary<(int x, int y), (int chunkId, int headerId, int height)> Combination = [];
 
     public static World Load(GraphicsDevice graphicsDevice, int mapId)
     {
         var world = new World();
-        
+
         var json = File.ReadAllText(@$"Content/WorldData/Matrices/{mapId}.json");
         var jArray = JArray.Parse(json);
         foreach (var jCombination in jArray)
         {
             (int x, int y) key = (jCombination["x"].Value<int>(), jCombination["y"].Value<int>());
-            (int chunkId, int headerId, int height) value = (int.Parse(jCombination["mapId"].ToString()), int.Parse(jCombination["headerId"].ToString()), jCombination["height"].Value<int>());
+            (int chunkId, int headerId, int height) value = (int.Parse(jCombination["mapId"].ToString()),
+                int.Parse(jCombination["headerId"].ToString()), jCombination["height"].Value<int>());
             world.Combination.Add(key, value);
-            
+
             if (!Chunks.ContainsKey(value.chunkId))
             {
                 var chunkJson = File.ReadAllText($@"Content/WorldData/Chunks/{value.chunkId}.json");
@@ -42,7 +43,7 @@ public class World
                 Chunks.Add(chunk.Id, chunk);
             }
         }
-        
+
         if (!IsDataFetched)
         {
             for (int i = 0; i < 592; i++)
@@ -55,10 +56,10 @@ public class World
 
             IsDataFetched = true;
         }
-        
+
         return world;
     }
-    
+
     public Chunk GetChunkAtPosition(Vector3 position)
     {
         try
@@ -70,6 +71,7 @@ public class World
             {
                 throw new KeyNotFoundException($"Chunk at ({chunkX}, {chunkY}) not found in Combination dictionary.");
             }
+
             var chunkId = tuple.chunkId;
 
             if (!Chunks.TryGetValue(chunkId, out var chunk))
@@ -90,18 +92,19 @@ public class World
             return null; // Rückgabewert für Fehlerfall
         }
     }
-    
+
     public byte CheckTileCollision(Vector3 position)
     {
         try
         {
-            var chunkX = (int)position.X / 512;
-            var chunkY = (int)position.Z / 512;
+            var chunkX = (int)position.X / 32;
+            var chunkY = (int)position.Z / 32;
 
             if (!Combination.TryGetValue((chunkX, chunkY), out var tuple))
             {
                 throw new KeyNotFoundException($"Chunk at ({chunkX}, {chunkY}) not found in Combination dictionary.");
             }
+
             var chunkId = tuple.chunkId;
 
             if (!Chunks.TryGetValue(chunkId, out var chunk))
@@ -114,12 +117,14 @@ public class World
                 throw new InvalidOperationException($"Chunk {chunkId} is not loaded or has a null model.");
             }
 
-            var cellX = (int)(position.X % 512) / 16;
-            var cellY = (int)(position.Z % 512) / 16;
-
-            if (cellX < 0 || cellX >= chunk.Collision.GetLength(1) || cellY < 0 || cellY >= chunk.Collision.GetLength(0))
+            var cellX = (int)(position.X % 32);
+            var cellY = (int)(position.Z % 32);
+            
+            if (cellX < 0 || cellX >= chunk.Collision.GetLength(1) || cellY < 0 ||
+                cellY >= chunk.Collision.GetLength(0))
             {
-                throw new IndexOutOfRangeException($"Cell coordinates ({cellX}, {cellY}) are out of bounds for chunk {chunkId}.");
+                throw new IndexOutOfRangeException(
+                    $"Cell coordinates ({cellX}, {cellY}) are out of bounds for chunk {chunkId}.");
             }
 
             return chunk.Collision[cellY, cellX];
@@ -135,13 +140,14 @@ public class World
     {
         try
         {
-            var chunkX = (int)position.X / 512;
-            var chunkY = (int)position.Z / 512;
+            var chunkX = (int)position.X / 32;
+            var chunkY = (int)position.Z / 32;
 
             if (!Combination.TryGetValue((chunkX, chunkY), out var tuple))
             {
                 throw new KeyNotFoundException($"Chunk at ({chunkX}, {chunkY}) not found in Combination dictionary.");
             }
+
             var chunkId = tuple.chunkId;
 
             if (!Chunks.TryGetValue(chunkId, out var chunk))
@@ -154,12 +160,13 @@ public class World
                 throw new InvalidOperationException($"Chunk {chunkId} is not loaded or has a null model.");
             }
 
-            var cellX = (int)(position.X % 512) / 16;
-            var cellY = (int)(position.Z % 512) / 16;
+            var cellX = (int)(position.X % 32);
+            var cellY = (int)(position.Z % 32);
 
             if (cellX < 0 || cellX >= chunk.Type.GetLength(1) || cellY < 0 || cellY >= chunk.Type.GetLength(0))
             {
-                throw new IndexOutOfRangeException($"Cell coordinates ({cellX}, {cellY}) are out of bounds for chunk {chunkId}.");
+                throw new IndexOutOfRangeException(
+                    $"Cell coordinates ({cellX}, {cellY}) are out of bounds for chunk {chunkId}.");
             }
 
             return chunk.Type[cellY, cellX];
@@ -183,7 +190,7 @@ public class World
         {
             return [];
         }
-        
+
         var x = (int)position.X;
         var y = (int)position.Y;
         var z = (int)position.Z;
@@ -205,7 +212,7 @@ public class World
 
         return result.ToArray();
     }
-    
+
     public ChunkPlate[] GetChunkPlateUnderPosition(Vector3 position)
     {
         var chunk = GetChunkAtPosition(position);
@@ -218,32 +225,14 @@ public class World
         {
             return [];
         }
-        
+
+
         var localX = (int)position.X % ChunkWx;
         var localY = (int)position.Z % ChunkWy;
-        var localZ = (int)position.Y;
+        var localZ = position.Y;
 
         Console.WriteLine(localZ);
-        
-        var result = new List<ChunkPlate>();
 
-        foreach (var plate in chunk.Plates)
-        {
-            var minX = plate.X;
-            var minY = plate.Y;
-            var maxX = minX + plate.Wx;
-            var maxY = minY + plate.Wy;
-
-            if (localX >= minX && localX < maxX && localY >= minY && localY < maxY)
-            {
-                if (localZ >= plate.Z)
-                {
-                    result.Add(plate);
-                }
-            }
-        }
-        
-        result.Sort((p1, p2) => p2.Z.CompareTo(p1.Z));
-        return result.ToArray();
+        return chunk.GetChunkPlateUnderPosition(new Vector3(localX, localZ, localY));
     }
 }

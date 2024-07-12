@@ -115,16 +115,16 @@ public class Building
 
 public class Chunk
 {
-    public static int Wx = 32;
-    public static int Wy = 32;
+    public const int Wx = 32;
+    public const int Wy = 32;
     public static string FilePath;
     private static bool _isPathSet;
     
     public int Id;
     public string Name;
     public List<Building> Buildings = [];
-    public byte[,] Collision = new byte[32, 32];
-    public byte[,] Type = new byte[32, 32];
+    public byte[,] Collision = new byte[Wy, Wx];
+    public byte[,] Type = new byte[Wy, Wx];
     public List<ChunkPlate> Plates = [];
     public GameModel Model;
 
@@ -223,15 +223,15 @@ public class Chunk
     
     public ChunkPlate[] GetChunkPlateUnderPosition(Vector3 position)
     {
-
         if (Plates.Count == 0)
         {
-            return [];
+            return new ChunkPlate[0];
         }
-        
+    
         var localX = (int)position.X;
         var localY = (int)position.Z;
-        var localZ = (int)position.Y;
+        var localZ = position.Y;
+        const double tolerance = 0.5;
 
         var result = new List<ChunkPlate>();
 
@@ -244,16 +244,17 @@ public class Chunk
 
             if (localX >= minX && localX < maxX && localY >= minY && localY < maxY)
             {
-                if (localZ >= plate.Z)
+                if (localZ >= plate.Z - tolerance)
                 {
                     result.Add(plate);
                 }
             }
         }
-        
+    
         result.Sort((p1, p2) => p2.Z.CompareTo(p1.Z));
         return result.ToArray();
     }
+
 
     public static JToken Save(Chunk chunk)
     {
@@ -308,7 +309,6 @@ public class Chunk
         
         return jChunk;
     }
-    
     
     public static Chunk Load(GraphicsDevice graphicsDevice, JToken jChunk)
     {

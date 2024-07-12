@@ -6,7 +6,6 @@ namespace TestRendering
 {
     public class Camera
     {
-
         protected GraphicsDevice GraphicsDevice { get; set; }
 
         protected Matrix _view;
@@ -33,24 +32,14 @@ namespace TestRendering
         public Vector3 Right { get { return _right; } }
         public Vector3 Forward { get { return _forward; } }
 
-        public Matrix RotationMXYZ { get { return Matrix.Multiply(Matrix.Multiply(Matrix.CreateRotationX(_rotation.X), Matrix.CreateRotationY(_rotation.Y)), Matrix.CreateRotationZ(_rotation.Z)); } }
-        public Matrix RotationMXY { get { return Matrix.Multiply(Matrix.CreateRotationX(_rotation.X), Matrix.CreateRotationY(_rotation.Y)); } }
-        public Matrix RotationMXZ { get { return Matrix.Multiply(Matrix.CreateRotationX(_rotation.X), Matrix.CreateRotationZ(_rotation.Z)); } }
-        public Matrix RotationMYZ { get { return Matrix.Multiply(Matrix.CreateRotationY(_rotation.Y), Matrix.CreateRotationZ(_rotation.Z)); } }
-        public Matrix RotationMX { get { return Matrix.CreateRotationX(_rotation.X); } }
-        public Matrix RotationMInvX { get { return Matrix.CreateRotationX(-_rotation.X); } }
-        public Matrix RotationMY { get { return Matrix.CreateRotationY(_rotation.Y); } }
-        public Matrix RotationMZ { get { return Matrix.CreateRotationZ(_rotation.Z); } }
-
+        public Matrix RotationMXYZ { get { return Matrix.CreateRotationX(_rotation.X) * Matrix.CreateRotationY(_rotation.Y) * Matrix.CreateRotationZ(_rotation.Z); } }
         public float RotationX { get { return _rotation.X; } set { _rotation.X = value; } }
         public float RotationY { get { return _rotation.Y; } set { _rotation.Y = value; } }
         public float RotationZ { get { return _rotation.Z; } set { _rotation.Z = value; } }
+        public Matrix RotationMInvX { get { return Matrix.CreateRotationX(-_rotation.X); } }
         public Vector3 Position { get { return _position; } }
         public Vector3 Rotation { get { return _rotation; } }
 
-        public bool EnableMix = false;
-        public float OrthoFactor = 0.00001f;
-        
         public Camera(GraphicsDevice graphicsDevice)
         {
             GraphicsDevice = graphicsDevice;
@@ -63,36 +52,9 @@ namespace TestRendering
             var presentationParameters = GraphicsDevice.PresentationParameters;
             var aspectRatio = (float)presentationParameters.BackBufferWidth / (float)presentationParameters.BackBufferHeight;
 
-            // Combination of orthographic and perspective
-            var width = 32f;
-            var height = width / aspectRatio;
-
-            _projection = Matrix.CreateOrthographic(width, height, _nearClipPlane, _farClipPlane);
-
-            // Add slight perspective effect
-            
-            if (EnableMix)
-            {
-                var perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), aspectRatio, _nearClipPlane, _farClipPlane);
-                _projection = Matrix.Lerp(_projection, perspective, OrthoFactor);
-            }
-            //else if (OrthoOnly)
-            //{
-            //    _projection = _projection;
-            //}
-            else
-            {
-                var perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f), 4/3, _nearClipPlane, _farClipPlane);
-                _projection = perspective;
-            }
+            _projection = Matrix.CreatePerspectiveFieldOfView(_fov, aspectRatio, _nearClipPlane, _farClipPlane);
         }
 
-        
-        public void Move(float x, float y, float z)
-        {
-            Move(new Vector3(x, y, z));
-        }
-        
         public void Move(Vector3 translation)
         {
             _translation += translation;
@@ -102,55 +64,35 @@ namespace TestRendering
         {
             _position = position;
         }
-
-        public void Look(Vector3 rotation)
+        
+        public void Teleport(float x, float y, float z)
         {
-            _rotation = rotation;
+            Teleport(new Vector3(x, y, z));
         }
 
         public void RotateBy(Vector3 rotation)
         {
             _rotation += rotation;
         }
-        
+
         public void RotateTo(Vector3 rotation)
         {
             _rotation = rotation;
         }
 
-        public void RotateX(float x)
+        public void LookAt(Vector3 target)
         {
-            _rotation.X += MathHelper.ToRadians(x);
-            RotationX = Math.Clamp(RotationX, MathHelper.ToRadians(-89.9f), MathHelper.ToRadians(89.9f));
+            _direction = target;
+            _view = Matrix.CreateLookAt(_position, _direction, _up);
         }
 
-        public void RotateZ(float z)
-        {
-            _rotation.Z += MathHelper.ToRadians(z);
-        }
-
-        public void RotateY(float y)
-        {
-            _rotation.Y += MathHelper.ToRadians(y);
-            if (RotationY < 0) RotationY += MathHelper.ToRadians(360);
-        }
-
-        private float accumulatedTime = 0.0f;
         public virtual void Update(GameTime gameTime)
         {
-            var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _translation = Vector3.Transform(_translation, RotationMY);
+            _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_rotation.Y, _rotation.X, _rotation.Z));
             _position += _translation;
             _translation = Vector3.Zero;
 
-            Vector3 forward = Vector3.Transform(Forward, RotationMXY);
-            _direction = _position + forward;
-
-            _view = Matrix.CreateLookAt(_position, _direction, _up);
-            
-
-            GenerateProjectionMatrix();
+            _view = Matrix.CreateLookAt(_position, _position + Vector3.Transform(_forward, Matrix.CreateFromYawPitchRoll(_rotation.Y, _rotation.X, _rotation.Z)), _up);
         }
-        
     }
 }
