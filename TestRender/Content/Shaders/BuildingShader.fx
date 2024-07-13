@@ -28,7 +28,7 @@ cbuffer Constants : register(b1)
 
 cbuffer Skinning : register(b2) {
     uint NumberOfBones;
-    matrix Bones[64];
+    matrix Bones[180];
 }
 
 float Delta;

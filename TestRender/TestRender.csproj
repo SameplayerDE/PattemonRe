@@ -137,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Audio\Sounds\" />
+    <Folder Include="Content\Overworlds\" />
     <Folder Include="Content\WorldData\Chunks\" />
   </ItemGroup>
   <ItemGroup>

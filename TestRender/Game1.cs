@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Threading;
 using HxGLTF;
-using PatteLib.World;
 using HxGLTF.Implementation;
 using InputLib;
 using Microsoft.Xna.Framework;
@@ -16,6 +13,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Newtonsoft.Json.Linq;
 using PatteLib.Graphics;
+using PatteLib.World;
 using TestRendering;
 
 namespace TestRender
@@ -100,7 +98,7 @@ namespace TestRender
 
         protected override void Initialize()
         {
-            _screen = new RenderTarget2D(GraphicsDevice, 256 * 2, 192 * 2, false,
+            _screen = new RenderTarget2D(GraphicsDevice, 256 * 4, 192 * 4, false,
                 GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
             _camera = new Camera(GraphicsDevice);
 
@@ -141,10 +139,11 @@ namespace TestRender
             _imageFont = ImageFont.Load(GraphicsDevice, @"Content/Font.json");
             _fontRenderer = new ImageFontRenderer(_spriteBatch, GraphicsDevice, _imageFont);
 
-            _hero = GameModel.From(GraphicsDevice,
-                GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\hero\hero"));
+            //_hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\hero\hero"));
+            // _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\FireFox Download\autumn_bushranger"));
+            _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\FireFox Download\fortnite_guild_includes_poki_emote\scene"));
             
-            _camera.Teleport(109, 32, 890);
+            //_camera.Teleport(109, 32, 890);
             var songJson = File.ReadAllText($@"Content/SoundData.json");
             var jSongArray = JArray.Parse(songJson);
 
@@ -273,6 +272,8 @@ namespace TestRender
                 _plateMove = !_plateMove;
             }
 
+            
+            /*
             if (_plateMove)
             {
                 var result = _world.GetChunkPlateUnderPosition(new Vector3(_heroX, _heroHeight, _heroY));
@@ -288,7 +289,7 @@ namespace TestRender
                     var height = plate.GetHeightAt(localX, localZ);
 
                     Console.WriteLine($"Height under camera: {height}");
-                    
+
                     if (height >= 0)
                     {
                         //_camera.Teleport(new Vector3(_camera.Position.X, height, _camera.Position.Z));
@@ -315,7 +316,7 @@ namespace TestRender
             {
                 _world = World.Load(GraphicsDevice, matrix);
             }
-            
+
             var direction = GetDirectionFromInput();
 
             if (direction != Vector3.Zero)
@@ -328,7 +329,7 @@ namespace TestRender
 
 
                 var newHeroPosition = new Vector3(CellTarget.X, 0, CellTarget.Y);
-                
+
                 var newChunkX = (int)newHeroPosition.X / Chunk.Wx;
                 var newChunkY = (int)newHeroPosition.Z / Chunk.Wy;
 
@@ -340,8 +341,8 @@ namespace TestRender
                     var type = _world.CheckTileType(newHeroPosition);
 
                     Console.WriteLine(collision);
-                    
-                    if (collision == 0x80)
+
+                    if (collision == 0x800)
                     {
                         if (type != 0x00)
                         {
@@ -410,7 +411,7 @@ namespace TestRender
                     _cellY = (int)(_heroY % 512) / 16;
                 }
             }
-/*
+*/
             Vector3 Direction = new Vector3();
 
             if (Keyboard.GetState().IsKeyDown(Keys.W))
@@ -455,7 +456,7 @@ namespace TestRender
             if (Keyboard.GetState().IsKeyUp(Keys.LeftShift))
             {
 
-                Direction *= 4;
+                Direction *= 64;
                 
                 _camera.Move(-Direction * delta);
 
@@ -480,7 +481,13 @@ namespace TestRender
                 }
 
             }
-*/            
+
+            UpdateCamera(gameTime);
+            
+            
+            _hero.Update(gameTime);
+            _hero.Play(0);
+            
             foreach (var chunk in World.Chunks)
             {
                 foreach (var building in chunk.Value.Buildings)
@@ -489,12 +496,12 @@ namespace TestRender
                     building.Model.Play(0);
                 }
             }
-
+/*
             if (_musics.TryGetValue(_currentMusicId, out var music))
             {
                 music.Update(gameTime);
             }
-            
+
 
             UpdateCamera(gameTime);
 
@@ -509,15 +516,15 @@ namespace TestRender
                 //UpdateMusic(new Point(prevChunkX, prevChunkY), new Point(_chunkX, _chunkY));
 
             }
-
+*/
             base.Update(gameTime);
         }
 
         private void UpdateCamera(GameTime gameTime)
         {
-            _camera.LookAt(new Vector3(_heroX, _heroHeight, _heroY));
-            _camera.Teleport(new Vector3(0f, 0.5f, 0.5f) * 32 + new Vector3(_heroX, _heroHeight, _heroY));
-            _camera.RotateTo(new Vector3(0.8185586f, (float)Math.PI, 0f));
+            //_camera.LookAt(new Vector3(_heroX, _heroHeight, _heroY));
+            //camera.Teleport(new Vector3(0f, 0.5f, 0.5f) * 32 + new Vector3(_heroX, _heroHeight, _heroY));
+            //_camera.RotateTo(new Vector3(0.8185586f, (float)Math.PI, 0f));
             
             _hero.RotateTo(Quaternion.CreateFromRotationMatrix(_camera.RotationMInvX));
             _camera.Update(gameTime);
@@ -698,10 +705,10 @@ namespace TestRender
                 return;
             }
 
-            GraphicsDevice.SetRenderTarget(_screen);
+            //GraphicsDevice.SetRenderTarget(_screen);
             GraphicsDevice.Clear(Color.Black);
             
-            /*
+            
             foreach (var chunkEntry in _world.Combination)
             {
                 var (targetX, targetY) = chunkEntry.Key;
@@ -736,7 +743,7 @@ namespace TestRender
                 var headerId = tuple.headerId;
                 var worldOffset = new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) + new Vector3(16, 0, 16);
 
-                
+
                 if (World.Chunks.TryGetValue(chunkId, out var chunk))
                 {
                     if (chunk.IsLoaded && chunk.Model != null)
@@ -751,7 +758,8 @@ namespace TestRender
                     }
                 }
             }
-            */
+            
+            /*
             int[] offsetX = [-2, -1, 0, 1, 2];
             int[] offsetY = [-2, -1, 0, 1, 2];
 
@@ -771,7 +779,7 @@ namespace TestRender
                     var headerId = tuple.headerId;
 
                     var worldOffset = new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) + new Vector3(16, 0, 16);
-                    
+
                     if (World.Chunks.TryGetValue(chunkId, out var chunk))// && _world.Headers.TryGetValue(headerId, out var header))
                     {
                         if (chunk.IsLoaded && chunk.Model != null)
@@ -811,14 +819,14 @@ namespace TestRender
                                 foreach (var building in chunk.Buildings)
                                 {
                                     DrawModel(gameTime, _buildingShader, building.Model, offset: worldOffset, alpha: true);
-                                    
+
                                     var screenPos = PatteLib.Utils.WorldToScreen(worldOffset + building.Position, _camera.View, _camera.Projection, GraphicsDevice.Viewport);
-                                    
+
                                     if (KeyboardHandler.IsKeyDown(Keys.J))
                                     {
                                         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                                         _spriteBatch.Draw(_pixel, new Rectangle(screenPos.ToPoint(), _imageFont.MeasureString(building.BuildingName, 2)), Color.White * 0.5f);
-                                        _fontRenderer.DrawText(building.BuildingName, screenPos, Color.White, 2); 
+                                        _fontRenderer.DrawText("§0Hallo §rHallo §cPokedex", screenPos);
                                         //_spriteBatch.DrawString(_font, building.BuildingName, screenPos, Color.White);
                                         _spriteBatch.End();
                                     }
@@ -827,24 +835,25 @@ namespace TestRender
                         }
                     }
                 }
-            }
-            DrawModel(gameTime, _buildingShader, _hero, offset: new Vector3(_heroX + 0, _heroHeight, _heroY + 0.5f));
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _fontRenderer.DrawText("hero", PatteLib.Utils.WorldToScreen(new Vector3(_heroX, _heroHeight, _heroY), _camera.View, _camera.Projection, GraphicsDevice.Viewport), Color.White, 2); 
+            }*/
+            DrawModel(gameTime, _buildingShader, _hero);
+            //DrawModel(gameTime, _buildingShader, _hero, offset: new Vector3(_heroX + 0, _heroHeight, _heroY + 0.5f));
+            //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            //_fontRenderer.DrawText("hero", PatteLib.Utils.WorldToScreen(new Vector3(_heroX, _heroHeight, _heroY), _camera.View, _camera.Projection, GraphicsDevice.Viewport), Color.White, 2); 
             //_spriteBatch.DrawString(_font, building.BuildingName, screenPos, Color.White);
-            _spriteBatch.End();
+            //_spriteBatch.End();
             
             
-            var scale = 5;
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _fontRenderer.DrawText($"Chunk: [{_chunkX}, {_chunkY}]", Vector2.Zero, Color.White, 1);
-            _fontRenderer.DrawText($"World: [{_camera.Position.X}, {_camera.Position.Z}]", new Vector2(0, _imageFont.LineHeight * 1), Color.White);
-            _spriteBatch.End();
+            // var scale = 5;
+            // _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            //_fontRenderer.DrawText($"Chunk: [{_chunkX}, {_chunkY}]", Vector2.Zero, Color.White, 1);
+            //_fontRenderer.DrawText($"World: [{_camera.Position.X}, {_camera.Position.Z}]", new Vector2(0, _imageFont.LineHeight * 1), Color.White);
+            //_spriteBatch.End();
             
-            GraphicsDevice.SetRenderTarget(null);
+            //GraphicsDevice.SetRenderTarget(null);
            
-            _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
-            _spriteBatch.Draw(_screen, GraphicsDevice.Viewport.Bounds, Color.White);
+            //_spriteBatch.Begin(samplerState: SamplerState.PointWrap);
+            //_spriteBatch.Draw(_screen, GraphicsDevice.Viewport.Bounds, Color.White);
             /*
             try
             {
@@ -854,7 +863,7 @@ namespace TestRender
                     {
 
                        _spriteBatch.DrawString(_font, $"ChunkId: [{targetChunkTuple.chunkId}]", new Vector2(0, _font.LineSpacing), Color.White);
-            
+
                         try
                         {
                             _spriteBatch.DrawString(_font,
@@ -868,7 +877,7 @@ namespace TestRender
                                 new Vector2(0, _font.LineSpacing * 2), Color.White);
                         }
 
-                        
+
                         _spriteBatch.DrawString(_font, $"Matrix: [{matrix}]", new Vector2(0, _font.LineSpacing * 4),
                             Color.White);
                         _spriteBatch.DrawString(_font, $"Time of day: [{_timeManager.CurrentPeriod.Name}]",
@@ -897,10 +906,10 @@ namespace TestRender
             }
             catch (Exception e)
             {
-                
+
             }
             */
-            _spriteBatch.End();
+            //_spriteBatch.End();
             if (_debugTexture)
             {
                 _debugTexture = false;
@@ -959,7 +968,7 @@ namespace TestRender
                 if (model.Skins is { Length: > 0 })
                 {
                     var skin = model.Skins[0];
-                    if (skin.JointMatrices.Length > 128)
+                    if (skin.JointMatrices.Length > 180)
                     {
                         effect.Parameters["SkinningEnabled"]?.SetValue(false);
                     }
@@ -992,7 +1001,7 @@ namespace TestRender
             //    .Select(p => p.Primitive).ToList();
 
             foreach (var primitive in mesh.Primitives)
-            //foreach (var primitive in sortedPrimitives)
+                //foreach (var primitive in sortedPrimitives)
             {
                 if (ShouldSkipPrimitive(primitive, effect, alpha, ref alphaMode))
                 {
