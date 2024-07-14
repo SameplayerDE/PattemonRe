@@ -70,8 +70,8 @@ namespace ChunkEditor
 
         protected override void Initialize()
         {
-            Building.SetPath(@"A:\ModelExporter\Platin\output_assets");
-            Chunk.SetFilePath(@"A:\ModelExporter\Platin\overworldmaps");
+            Building.RootDirectory = @"A:\ModelExporter\Platin\output_assets";
+            Chunk.RootDirectory = @"A:\ModelExporter\Platin\overworldmaps";
             
             var chunkSize = 32;
             
