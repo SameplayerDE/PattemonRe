@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PatteLib.World;
 using Newtonsoft.Json.Linq;
+using PatteLib.Data;
+using PatteLib.Gameplay;
 
 namespace TestRender;
 
@@ -16,8 +18,6 @@ public class World
     public const int ChunkWy = 32;
 
     public static Dictionary<int, Chunk> Chunks = [];
-    public static Dictionary<int, ChunkHeader> Headers = [];
-    public static bool IsDataFetched = false;
 
     public Dictionary<(int x, int y), (int chunkId, int headerId, int height)> Combination = [];
 
@@ -43,19 +43,7 @@ public class World
                 Chunks.Add(chunk.Id, chunk);
             }
         }
-
-        if (!IsDataFetched)
-        {
-            for (int i = 0; i < 592; i++)
-            {
-                var headerJson = File.ReadAllText($@"Content/WorldData/Headers/{i}.json");
-                var jHeader = JObject.Parse(headerJson);
-                var header = ChunkHeader.Load(jHeader);
-                Headers.Add(header.Id, header);
-            }
-
-            IsDataFetched = true;
-        }
+        
 
         return world;
     }

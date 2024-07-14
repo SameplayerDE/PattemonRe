@@ -16,6 +16,9 @@
     <None Update="Content\WorldData\Chunks\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Localisation\de\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\WorldData\Headers\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -55,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HxGLTF\HxGLTF.csproj" />
+    <ProjectReference Include="..\HxLocal\HxLocal.csproj" />
     <ProjectReference Include="..\InputLib\InputLib.csproj" />
     <ProjectReference Include="..\PatteLib\PatteLib.csproj" />
   </ItemGroup>

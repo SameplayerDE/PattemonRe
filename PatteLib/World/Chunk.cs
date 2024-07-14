@@ -8,28 +8,21 @@ namespace PatteLib.World;
 
 public class Building
 {
-    public static string Path;
-    private static bool _isPathSet;
+    public static string RootDirectory = string.Empty;
     public Vector3 Position;
     public string BuildingName;
     public int BuildingId;
     public GameModel Model;
     
     public bool IsLoaded => Model != null;
-
-    public static void SetPath(string path)
-    {
-        Path = path;
-        _isPathSet = true;
-    }
     
     public void Load(GraphicsDevice graphicsDevice)
     {
-        if (!_isPathSet)
+        if (string.IsNullOrEmpty(RootDirectory))
         {
-            throw new Exception("");
+            throw new Exception();
         }
-        var gltfFile = GLTFLoader.Load(@$"{Path}\{BuildingName}\{BuildingName}.gltf");
+        var gltfFile = GLTFLoader.Load(@$"{RootDirectory}\{BuildingName}\{BuildingName}.gltf");
         var model = GameModel.From(graphicsDevice, gltfFile);
         model.TranslateTo(Position);
         Model = model;
@@ -117,7 +110,7 @@ public class Chunk
 {
     public const int Wx = 32;
     public const int Wy = 32;
-    public static string FilePath;
+    public static string RootDirectory = string.Empty;
     private static bool _isPathSet;
     
     public int Id;
@@ -129,18 +122,12 @@ public class Chunk
     public GameModel Model;
 
     public bool IsLoaded => Model != null;
-
-    public static void SetFilePath(string path)
-    {
-        FilePath = path;
-        _isPathSet = true;
-    }
     
     public void Load(GraphicsDevice graphicsDevice)
     {
-        if (!_isPathSet)
+        if (string.IsNullOrEmpty(RootDirectory))
         {
-            throw new Exception("");
+            throw new Exception();
         }
         
         foreach (var building in Buildings)
@@ -148,7 +135,7 @@ public class Chunk
             building.Load(graphicsDevice);
         }
     
-        var basePath = $@"{FilePath}";
+        var basePath = $@"{RootDirectory}";
         string folderName = Id.ToString("D4");
 
         string[] extensions = new[] { ".glb", ".gltf" };

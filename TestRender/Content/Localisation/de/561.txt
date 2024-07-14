@@ -2,8 +2,8 @@
 Das ist es!\nDas ist unser Pokémon-Labor!\rWir gehen einfach durch diese Tür und...\r
 Lucius: Hi! Ich habe schon auf dich\ngewartet! Bitte, komm mal mit!\fDer Prof möchte dich gerne sprechen!\r
 Siehst du? Das ist unser\nPokémon-Labor.\rWir gehen einfach durch diese Tür und...\r
-\vFF01\x0001ｃBumms!!!\vFF01\x0001コ\r
-\v0103ぁ\x0000\x0000: Was zum...\rOh, du bist das, \v0103ぁ\x0001\x0000!\rDieser alte Mann... Er ist gar nicht\nunheimlich, aber er steht voll neben\fden Schuhen!\rAch, was soll’s, \v0103ぁ\x0001\x0000.\nIch mach mich vom Acker. Bis dann!\r
+§lBumms!!!§r\r
+{RivalName}: Was zum...\rOh, du bist das, {PlayerName}!\rDieser alte Mann... Er ist gar nicht\nunheimlich, aber er steht voll neben\fden Schuhen!\rAch, was soll’s, \v0103ぁ\x0001\x0000.\nIch mach mich vom Acker. Bis dann!\r
 Lucia: Wow, was war das denn?!?\rDu hast aber einen ungeduldigen Freund.\rNun, wie dem auch sei...\nGehen wir hinein.\r
 Lucius: Was war das denn?!?\rDein Freund scheint es ja immer\nsehr eilig zu haben.\rNun, wie dem auch sei...\nGehen wir hinein.\r
 \vFF01\x0001ｃ\v0103ぁ\x0000\x0000!\vFF01\x0001コ\r

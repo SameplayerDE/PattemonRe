@@ -1,44 +1,110 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
-namespace PatteLib.Graphics
+namespace PatteLib.Graphics;
+
+public enum ImageFontRenderCommandType
 {
-    public class ImageFontRenderer
+    Space,
+    ChangeScale,
+    ChangeTint,
+    Reset,
+    Character
+}
+
+public class ImageFontRenderCommand
+{
+    public ImageFontRenderCommandType Type;
+    public char Character;
+    public int Sx, Sy;
+    public Color Tint;
+}
+
+public class ImageFontRenderer
+{
+    private ImageFont _font;
+    private GraphicsDevice _graphicsDevice;
+    private SpriteBatch _spriteBatch;
+
+    private Queue<ImageFontRenderCommand> _renderQueue = [];
+    
+    public ImageFontRenderer(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, ImageFont font)
     {
-        private ImageFont _font;
-        private SpriteBatch _spriteBatch;
+        _graphicsDevice = graphicsDevice;
+        _spriteBatch = spriteBatch;
+        SetFont(font);
+    }
 
-        public ImageFontRenderer(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, ImageFont font)
+    public void SetFont(ImageFont font)
+    {
+        _font = font;
+    }
+    
+    public void DrawText(string text, Vector2 position)
+    {
+        DrawText(text, position, Color.White, 1, 1);
+    }
+
+    public void DrawText(string text, Vector2 position, Color tint)
+    {
+        DrawText(text, position, tint, 1, 1);
+    }
+
+    public void DrawText(string text, Vector2 position, Color tint, int sx, int sy)
+    {
+        Vector2 currentPosition = position;
+        Color currentTint = tint;
+        int scaleX = sx;
+        int scaleY = sy;
+        int currentSX = 1;
+        int currentSY = 1;
+
+        _renderQueue.Clear();
+        ProcessText(text);
+
+        while (_renderQueue.Count > 0)
         {
-            _spriteBatch = spriteBatch;
-            _font = font;
-        }
+            var command = _renderQueue.Dequeue();
 
-        public void DrawText(string text, Vector2 position)
-        {
-            DrawText(text, position, Color.White, 1, 1);
-        }
-
-        public void DrawText(string text, Vector2 position, Color tint)
-        {
-            DrawText(text, position, tint, 1, 1);
-        }
-
-        public void DrawText(string text, Vector2 position, Color tint, int sx, int sy)
-        {
-            Vector2 currentPosition = position;
-            Color currentTint = tint;
-            int currentSX = sx;
-            int currentSY = sy;
-
-            Queue<(char charToDraw, int scaleX, int scaleY, Color colorTint)> renderQueue = new Queue<(char, int, int, Color)>();
-
-            for (int i = 0; i < text.Length; i++)
+            if (command.Type == ImageFontRenderCommandType.Character)
             {
-                char character = text[i];
+                var charInfo = _font.GetChar(command.Character);
+                if (charInfo.HasValue)
+                {
+                    DrawCharacter(_spriteBatch, command.Character, currentPosition, currentTint, currentSX * scaleX, currentSY * scaleY);
+                    currentPosition.X += charInfo.Value.w * currentSX * scaleX; // Advance position based on character width and scale
+                }
+            }
+            if (command.Type == ImageFontRenderCommandType.Space)
+            {
+                currentPosition.X += _font.SpaceWidth * currentSX * scaleX;
+            }
+            if (command.Type == ImageFontRenderCommandType.ChangeTint)
+            {
+                currentTint = command.Tint;
+            }
+            if (command.Type == ImageFontRenderCommandType.ChangeScale)
+            {
+                currentSX = command.Sx;
+                currentSY = command.Sy;
+            }
+            if (command.Type == ImageFontRenderCommandType.Reset)
+            {
+                currentSX = command.Sx;
+                currentSY = command.Sy;
+                currentTint = command.Tint;
+            }
+        }
+    }
 
-                if (character == '§' && i + 1 < text.Length)
+    private void ProcessText(string text)
+    {
+        for (var i = 0; i < text.Length; i++)
+        {
+            var character = text[i];
+            switch (character)
+            {
+                case '§' when i + 1 < text.Length:
                 {
                     i++;
                     var command = text[i];
@@ -46,103 +112,162 @@ namespace PatteLib.Graphics
                     switch (command)
                     {
                         case 'l':
-                            currentSX = 1;
-                            currentSY = 2;
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeScale,
+                                Sx = 1,
+                                Sy = 2
+                            });
                             break;
                         case 'r':
-                            currentTint = Color.White;
-                            currentSX = 1;
-                            currentSY = 1;
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.Reset,
+                                Sx = 1,
+                                Sy = 1,
+                                Tint = Color.White
+                            });
                             break;
                         case 'a':
-                            currentTint = new Color(170, 255, 0); // Hellgrün
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(170, 255, 0)
+                            });
                             break;
                         case 'b':
-                            currentTint = new Color(0, 255, 255); // Aqua
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(0, 255, 255)
+                            });
                             break;
                         case 'c':
-                            currentTint = new Color(255, 85, 85); // Hellrot/Pink
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(255, 85, 85)
+                            });
                             break;
                         case 'd':
-                            currentTint = new Color(255, 85, 255); // Hellpurpur
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(255, 85, 255)
+                            });
                             break;
                         case 'e':
-                            currentTint = new Color(255, 255, 85); // Gelb
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(255, 255, 85)
+                            });
                             break;
                         case 'f':
-                            currentTint = new Color(255, 255, 255); // Weiß
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(255, 255, 255)
+                            });
                             break;
                         case '0':
-                            currentTint = new Color(0, 0, 0); // Schwarz
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(0, 0, 0)
+                            });
                             break;
                         case '1':
-                            currentTint = new Color(0, 0, 170); // Dunkelblau
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(0, 0, 170)
+                            });
                             break;
                         case '2':
-                            currentTint = new Color(0, 170, 0); // Dunkelgrün
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(0, 170, 0)
+                            });
                             break;
                         case '3':
-                            currentTint = new Color(0, 170, 170); // Dunkelaqua
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(0, 170, 170)
+                            });
                             break;
                         case '4':
-                            currentTint = new Color(170, 0, 0); // Dunkelrot
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(170, 0, 0)
+                            });
                             break;
                         case '5':
-                            currentTint = new Color(170, 0, 170); // Lila
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(170, 0, 170)
+                            });
                             break;
                         case '6':
-                            currentTint = new Color(255, 170, 0); // Gold
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(255, 170, 0)
+                            });
                             break;
                         case '7':
-                            currentTint = new Color(170, 170, 170); // Grau
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(170, 170, 170)
+                            });
                             break;
                         case '8':
-                            currentTint = new Color(85, 85, 85); // Dunkelgrau
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(85, 85, 85)
+                            });
                             break;
                         case '9':
-                            currentTint = new Color(85, 85, 255); // Blau
+                            _renderQueue.Enqueue(new ImageFontRenderCommand()
+                            {
+                                Type = ImageFontRenderCommandType.ChangeTint,
+                                Tint = new Color(85, 85, 255)
+                            });
                             break;
                     }
-                }
 
-                else if (character == ' ')
-                {
-                    renderQueue.Enqueue((' ', currentSX, currentSY, currentTint));
+                    break;
                 }
-                else
-                {
-                    renderQueue.Enqueue((character, currentSX, currentSY, currentTint));
-                }
-            }
-
-            while (renderQueue.Count > 0)
-            {
-                var (charToDraw, scaleX, scaleY, colorTint) = renderQueue.Dequeue();
-
-                if (charToDraw == ' ')
-                {
-                    currentPosition.X += _font.SpaceWidth * currentSX;
-                }
-                else if (_font.HasChar(charToDraw))
-                {
-                    var charInfo = _font.GetChar(charToDraw);
-                    if (charInfo.HasValue)
+                case ' ':
+                    _renderQueue.Enqueue(new ImageFontRenderCommand()
                     {
-                        DrawCharacter(_spriteBatch, charToDraw, currentPosition, colorTint, scaleX, scaleY);
-                        currentPosition.X += charInfo.Value.w * scaleX; // Advance position based on character width and scale
-                    }
-                }
+                        Type = ImageFontRenderCommandType.Space
+                    });
+                    break;
+                default:
+                    _renderQueue.Enqueue(new ImageFontRenderCommand()
+                    {
+                        Type = ImageFontRenderCommandType.Character,
+                        Character = character
+                    });
+                    break;
             }
         }
-
-        private void DrawCharacter(SpriteBatch spriteBatch, char character, Vector2 position, Color tint, int sx, int sy)
+    }
+    
+    private void DrawCharacter(SpriteBatch spriteBatch, char character, Vector2 position, Color tint, int sx, int sy)
+    {
+        if (_font.HasChar(character))
         {
-            if (_font.HasChar(character))
-            {
-                var charInfo = _font.GetChar(character) ?? throw new Exception();
-                Rectangle sourceRect = new Rectangle(charInfo.x, charInfo.y, charInfo.w, charInfo.h);
-                spriteBatch.Draw(_font.Texture, position, sourceRect, tint, 0f, Vector2.Zero, new Vector2(sx, sy), SpriteEffects.None, 0f);
-            }
+            var charInfo = _font.GetChar(character) ?? throw new Exception();
+            Rectangle sourceRect = new Rectangle(charInfo.x, charInfo.y, charInfo.w, charInfo.h);
+            spriteBatch.Draw(_font.Texture, position, sourceRect, tint, 0f, Vector2.Zero, new Vector2(sx, sy), SpriteEffects.None, 0f);
         }
     }
 }

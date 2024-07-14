@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using HxGLTF;
 using HxGLTF.Implementation;
+using HxLocal;
 using InputLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -12,311 +13,252 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Newtonsoft.Json.Linq;
+using PatteLib.Data;
+using PatteLib.Gameplay;
 using PatteLib.Graphics;
 using PatteLib.World;
 using TestRendering;
 
-namespace TestRender
-{
-    public class Game1 : Game
-    {   
-        private GraphicsDeviceManager _graphicsDeviceManager;
-        private SpriteBatch _spriteBatch;
+namespace TestRender;
 
-        private BasicEffect _basicEffect;
-        private Effect _worldShader;
-        private Effect _buildingShader;
-        private Camera _camera;
-        private SpriteFont _font;
-        private RenderTarget2D _screen;
-        private World _world;
-        private WorldTimeManager _timeManager;
-        private Texture2D _pixel;
-        private ImageFont _imageFont;
-        private ImageFontRenderer _fontRenderer;
+public class Game1 : Game
+{   
+    private GraphicsDeviceManager _graphicsDeviceManager;
+    private SpriteBatch _spriteBatch;
 
-        private GameModel _hero;
+    public HeaderManager HeaderManager;
+    
+    private BasicEffect _basicEffect;
+    private Effect _worldShader;
+    private Effect _buildingShader;
+    private Camera _camera;
+    private World _world;
+    private WorldTimeManager _timeManager;
+    private Texture2D _pixel;
+    private ImageFont _imageFont;
+    private ImageFontRenderer _fontRenderer;
+
+    private Texture2D _textBox;
+    private GameModel _hero;
+    
+    private List<TextureAnimation> _animations = [];
+    private Dictionary<int, SoundEffect> _soundEffects = [];
+    private Dictionary<int, Music> _musics = [];
+    private SoundEffectInstance _currentSoundEffectInstance;
+    
+    private int _matrix = 0;
+    private bool _debugTexture = false;
+
+    public Game1()
+    {
+        _graphicsDeviceManager = new GraphicsDeviceManager(this);
+        Content.RootDirectory = @"Content";
+        IsMouseVisible = true;
+            
+        IsFixedTimeStep = true;
+        TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
+
+        _graphicsDeviceManager.PreferredBackBufferHeight = 960;
+        _graphicsDeviceManager.PreferredBackBufferWidth = 1280;
+            
+        _graphicsDeviceManager.ApplyChanges();
+
+        MediaPlayer.Volume = 0.3f;
+    }
+
+    protected override void Initialize()
+    {
+        _timeManager = new WorldTimeManager();
         
-        private bool _debugTexture = false;
-        private Stopwatch _stopwatch = new Stopwatch();
-        private TimeSpan _debugDuration = TimeSpan.Zero;
-        private string _currentMaterial;
-        
-        private TextureAnimation _seaAnimation;
-        private TextureAnimation _hamabeAnimation;
-        private TextureAnimation _seaRockAnimation;
+        Localisation.RootDirectory = @"Content\Localisation";
+        Localisation.SetLanguage("de");
+        Localisation.LoadData("561.txt");
 
-        private List<TextureAnimation> _animations = [];
-        private Dictionary<int, SoundEffect> _soundEffects = [];
-        private Dictionary<int, Music> _musics = [];
-        private SoundEffectInstance _currentSoundEffectInstance;
+        HeaderManager = new HeaderManager();
+        HeaderManager.RootDirectory = @"Content\WorldData\Headers";
+        HeaderManager.Load(GraphicsDevice);
         
-        private int _chunkX = 5;
-        private int _chunkY = 27;
-
-        private int _cellX = 5;
-        private int _cellY = 5;
+        Building.RootDirectory = @"A:\ModelExporter\Platin\output_assets";
+        Chunk.RootDirectory = @"A:\ModelExporter\Platin\overworldmaps";
         
-        private Vector2 CellTarget;
+        _camera = new Camera(GraphicsDevice);
 
-        private int matrix = 0;
+        _world = World.Load(GraphicsDevice, _matrix);
         
-        private float _heroX = 0;
-        private float _heroHeight = 0;
-        private float _heroY = 0;
-        private bool _shadow = true;
-
-        private Vector3 FogColor = Vector3.One;
-        private float FogStart;
-        private float FogEnd;
-        private bool IsFoggy;
-
-        private bool _plateMove = false;
+        _animations.Add(new TextureAnimation("Lakep", "lakep", 0.32f, 4, ["lakep_lm"]));
+        _animations.Add(new TextureAnimation("C1_Lamp1", "c1_lamp01", 0.16f, 5, ["c1_lamp01_", "lamp01"], AnimationPlayMode.Bounce, 0.64f));
+        _animations.Add(new TextureAnimation("C1_Lamp2", "c1_lamp02", 0.16f, 5, ["c1_lamp02_", "lamp03"], AnimationPlayMode.Bounce, 0.64f));
+        _animations.Add(new TextureAnimation("C1_S02_3", "c1_s02_3", 0.32f, 4, ["c1_s02_4"]));
+        _animations.Add(new TextureAnimation("C1_S01_D", "c1_s01_d", 0.08f, 4, ["c1_s01_d"]));
+        _animations.Add(new TextureAnimation("Hamabe", "hamabe", 0.32f, 8, ["hamabe_lm"]));
+        _animations.Add(new TextureAnimation("SeaRock", "searock", 0.16f, 4, ["searock_"]));
+        _animations.Add(new TextureAnimation("Sea", "sea", 0.32f, 8, ["sea_"]));
         
-        public Game1()
+        base.Initialize();
+    }
+        
+    protected override void LoadContent()
+    {
+        // ReSharper disable once HeapView.ObjectAllocation.Evident
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        _worldShader = Content.Load<Effect>("Shaders/WorldShader");
+        _buildingShader = Content.Load<Effect>("Shaders/BuildingShader");
+        _basicEffect = new BasicEffect(GraphicsDevice);
+        _pixel = new Texture2D(GraphicsDevice, 1, 1);
+        _pixel.SetData(new[] { Color.White });
+        _imageFont = ImageFont.Load(GraphicsDevice, @"Content/Font.json");
+        _fontRenderer = new ImageFontRenderer(GraphicsDevice, _spriteBatch, _imageFont);
+
+        _textBox = Content.Load<Texture2D>("textbox");
+        
+        _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\hero\hero"));
+        // _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\FireFox Download\autumn_bushranger"));
+        //_hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\FireFox Download\fortnite_guild_includes_poki_emote\scene"));
+            
+        //_camera.Teleport(109, 32, 890);
+        var songJson = File.ReadAllText($@"Content/SoundData.json");
+        var jSongArray = JArray.Parse(songJson);
+
+        foreach (var jSong in jSongArray)
         {
-            _graphicsDeviceManager = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-            
-            IsFixedTimeStep = true;
-            TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
-
-            _graphicsDeviceManager.PreferredBackBufferHeight = 960;
-            _graphicsDeviceManager.PreferredBackBufferWidth = 1280;
-            
-            _graphicsDeviceManager.ApplyChanges();
-            
-            _heroX = _chunkX * Chunk.Wx;
-            _heroX += _cellX * 16;
-            
-            _heroY = _chunkY * 32;
-            _heroY += _cellY * 16;
-
-            MediaPlayer.Volume = 0.3f;
-        }
-
-        protected override void Initialize()
-        {
-            _screen = new RenderTarget2D(GraphicsDevice, 256 * 4, 192 * 4, false,
-                GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
-            _camera = new Camera(GraphicsDevice);
-
-            Building.SetPath(@"A:\ModelExporter\Platin\export_output\output_assets");
-            //Building.SetPath(@"A:\ModelExporter\Platin\output_assets");
-            Chunk.SetFilePath(@"A:\ModelExporter\Platin\overworldmaps");
-            
-            _world = World.Load(GraphicsDevice, matrix);
-            
-            _hamabeAnimation = new TextureAnimation("Hamabe", "hamabe", 0.32f, 8, ["hamabe_lm"]);
-            _seaRockAnimation = new TextureAnimation("SeaRock", "searock", 0.16f, 4, ["searock_"]);
-            _seaAnimation = new TextureAnimation("Sea", "sea", 0.32f, 8, ["sea_"]);
-            
-            _animations.Add(new TextureAnimation("Lakep", "lakep", 0.32f, 4, ["lakep_lm"]));
-            _animations.Add(new TextureAnimation("C1_Lamp1", "c1_lamp01", 0.16f, 5, ["c1_lamp01_", "lamp01"], AnimationPlayMode.Bounce, 0.64f));
-            _animations.Add(new TextureAnimation("C1_Lamp2", "c1_lamp02", 0.16f, 5, ["c1_lamp02_", "lamp03"], AnimationPlayMode.Bounce, 0.64f));
-            _animations.Add(new TextureAnimation("C1_S02_3", "c1_s02_3", 0.32f, 4, ["c1_s02_4"]));
-            _animations.Add(new TextureAnimation("C1_S01_D", "c1_s01_d", 0.08f, 4, ["c1_s01_d"]));
-            _animations.Add(_hamabeAnimation);
-            _animations.Add(_seaRockAnimation);
-            _animations.Add(_seaAnimation);
-
-            _timeManager = new WorldTimeManager();
-            
-            base.Initialize();
-        }
-        
-        protected override void LoadContent()
-        {
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _worldShader = Content.Load<Effect>("Shaders/WorldShader");
-            _buildingShader = Content.Load<Effect>("Shaders/BuildingShader");
-            _basicEffect = new BasicEffect(GraphicsDevice);
-            _font = Content.Load<SpriteFont>("Font");
-            _pixel = new Texture2D(GraphicsDevice, 1, 1);
-            _pixel.SetData(new[] { Color.White });
-            _imageFont = ImageFont.Load(GraphicsDevice, @"Content/Font.json");
-            _fontRenderer = new ImageFontRenderer(_spriteBatch, GraphicsDevice, _imageFont);
-
-            //_hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\hero\hero"));
-            // _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\FireFox Download\autumn_bushranger"));
-            _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\FireFox Download\fortnite_guild_includes_poki_emote\scene"));
-            
-            //_camera.Teleport(109, 32, 890);
-            var songJson = File.ReadAllText($@"Content/SoundData.json");
-            var jSongArray = JArray.Parse(songJson);
-
-            foreach (var jSong in jSongArray)
+            try
             {
-                try
+                var songIdToken = jSong["id"];
+                if (songIdToken == null)
                 {
-                    var songIdToken = jSong["id"];
-                    if (songIdToken == null)
-                    {
-                        throw new Exception();
-                    }
-                    var songId = songIdToken.Value<int>();
-                    
-                    var songNameToken = jSong["name"];
-                    if (songNameToken == null)
-                    {
-                        throw new Exception();
-                    }
-                    var songName = songNameToken.ToString();
-                    
-                    var music = new Music(songId, $@"Audio\Songs\{songName}");
-                    
-                    var songLoopToken = jSong["loop"];
-                    if (songLoopToken != null)
-                    {
-                        var value = songLoopToken.Value<float>();
-                        music.LoopStart = TimeSpan.FromSeconds(value);
-                    }
-                    
-                    var songEndToken = jSong["end"];
-                    if (songEndToken != null)
-                    {
-                        var value = songEndToken.Value<float>();
-                        music.End = TimeSpan.FromSeconds(value);
-                    }
-                    
-                    music.LoadContent(Content);
-                    _musics.Add(songId, music);
+                    throw new Exception();
                 }
-                catch (Exception e)
+                var songId = songIdToken.Value<int>();
+                    
+                var songNameToken = jSong["name"];
+                if (songNameToken == null)
                 {
-                    // ignored
+                    throw new Exception();
                 }
+                var songName = songNameToken.ToString();
+                    
+                var music = new Music(songId, $@"Audio\Songs\{songName}");
+                    
+                var songLoopToken = jSong["loop"];
+                if (songLoopToken != null)
+                {
+                    var value = songLoopToken.Value<float>();
+                    music.LoopStart = TimeSpan.FromSeconds(value);
+                }
+                    
+                var songEndToken = jSong["end"];
+                if (songEndToken != null)
+                {
+                    var value = songEndToken.Value<float>();
+                    music.End = TimeSpan.FromSeconds(value);
+                }
+                    
+                music.LoadContent(Content);
+                _musics.Add(songId, music);
             }
-            
-            foreach (var animation in _animations)
+            catch (Exception e)
             {
-                animation.LoadContent(Content);
+                // ignored
             }
         }
+            
+        foreach (var animation in _animations)
+        {
+            animation.LoadContent(Content);
+        }
+    }
         
-        private Vector3 GetDirectionFromInput()
+    private Vector3 GetDirectionFromInput()
+    {
+        var direction = Vector3.Zero;
+
+        if (KeyboardHandler.IsKeyDown(Keys.Q))
         {
-            var direction = Vector3.Zero;
-
-            if (KeyboardHandler.IsKeyDown(Keys.Q))
-            {
-                direction += Vector3.Down;
-            }
-            else if (KeyboardHandler.IsKeyDown(Keys.E))
-            {
-                direction += Vector3.Up;
-            }
-
-            if (KeyboardHandler.IsKeyDown(Keys.W))
-            {
-                direction += Vector3.Forward;
-            }
-            else if (KeyboardHandler.IsKeyDown(Keys.A))
-            {
-                direction += Vector3.Left;
-            }
-            else if (KeyboardHandler.IsKeyDown(Keys.D))
-            {
-                direction += Vector3.Right;
-            }
-            else if (KeyboardHandler.IsKeyDown(Keys.S))
-            {
-                direction += Vector3.Backward;
-            }
-
-            return direction;
+            direction += Vector3.Down;
+        }
+        else if (KeyboardHandler.IsKeyDown(Keys.E))
+        {
+            direction += Vector3.Up;
         }
 
-        protected override void Update(GameTime gameTime)
+        if (KeyboardHandler.IsKeyDown(Keys.W))
         {
-            var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            direction += Vector3.Forward;
+        }
+        else if (KeyboardHandler.IsKeyDown(Keys.A))
+        {
+            direction += Vector3.Left;
+        }
+        else if (KeyboardHandler.IsKeyDown(Keys.D))
+        {
+            direction += Vector3.Right;
+        }
+        else if (KeyboardHandler.IsKeyDown(Keys.S))
+        {
+            direction += Vector3.Backward;
+        }
+
+        return direction;
+    }
+
+    protected override void Update(GameTime gameTime)
+    {
+        var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
             
-            if (!IsActive)
-            {
-                MediaPlayer.Pause();
-                return;
-            }
+        if (!IsActive)
+        {
+            MediaPlayer.Pause();
+            return;
+        }
 
-            if (MediaPlayer.State == MediaState.Paused)
-            {
-                MediaPlayer.Resume();
-            }
+        if (MediaPlayer.State == MediaState.Paused)
+        {
+            MediaPlayer.Resume();
+        }
             
-            _timeManager.Update(gameTime);
+        _timeManager.Update(gameTime);
             
-            foreach (var animation in _animations)
-            {
-                animation.Update(gameTime);
-            }
+        foreach (var animation in _animations)
+        {
+            animation.Update(gameTime);
+        }
             
-            _worldShader.Parameters["TimeOfDay"]?.SetValue(2);
-            _worldShader.Parameters["Delta"]?.SetValue(delta);
-            _worldShader.Parameters["Total"]?.SetValue((float)gameTime.TotalGameTime.TotalSeconds);
+        _worldShader.Parameters["TimeOfDay"]?.SetValue(2);
+        _worldShader.Parameters["Delta"]?.SetValue(delta);
+        _worldShader.Parameters["Total"]?.SetValue((float)gameTime.TotalGameTime.TotalSeconds);
             
-            _buildingShader.Parameters["TimeOfDay"]?.SetValue(2);
-            _buildingShader.Parameters["Delta"]?.SetValue(delta);
-            _buildingShader.Parameters["Total"]?.SetValue((float)gameTime.TotalGameTime.TotalSeconds);
+        _buildingShader.Parameters["TimeOfDay"]?.SetValue(2);
+        _buildingShader.Parameters["Delta"]?.SetValue(delta);
+        _buildingShader.Parameters["Total"]?.SetValue((float)gameTime.TotalGameTime.TotalSeconds);
             
-            KeyboardHandler.Update(gameTime);
+        KeyboardHandler.Update(gameTime);
 
-            if (KeyboardHandler.IsKeyDownOnce(Keys.T))
-            {
-                _debugTexture = true;
-                Console.WriteLine("--------------------");
-            }
+        if (KeyboardHandler.IsKeyDownOnce(Keys.T))
+        {
+            _debugTexture = true;
+            Console.WriteLine("--------------------");
+        }
 
-            if (KeyboardHandler.IsKeyDownOnce(Keys.P))
-            {
-                _plateMove = !_plateMove;
-            }
+        if (KeyboardHandler.IsKeyDownOnce(Keys.P))
+        {
+            Localisation.Reload();
+        }
 
-            
-            /*
-            if (_plateMove)
-            {
-                var result = _world.GetChunkPlateUnderPosition(new Vector3(_heroX, _heroHeight, _heroY));
-                if (result.Length >= 1)
-                {
-                    var plate = result[0];
+        if (KeyboardHandler.IsKeyDownOnce(Keys.PageDown))
+        {
+            _matrix = Math.Max(_matrix - 1, 0);
+        }
 
-                    // Get camera position relative to chunk top-left corner
-                    var localX = (_heroX % World.ChunkWx) - plate.X;
-                    var localZ = (_heroY % World.ChunkWy) - plate.Y;
+        if (KeyboardHandler.IsKeyDownOnce(Keys.PageUp))
+        {
+            _matrix = Math.Min(_matrix + 1, 288);
+        }
 
-                    // Get height at camera position considering angles
-                    var height = plate.GetHeightAt(localX, localZ);
-
-                    Console.WriteLine($"Height under camera: {height}");
-
-                    if (height >= 0)
-                    {
-                        //_camera.Teleport(new Vector3(_camera.Position.X, height, _camera.Position.Z));
-                        _heroHeight = height;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Camera position is outside the ChunkPlate");
-                    }
-                }
-            }
-
-            if (KeyboardHandler.IsKeyDownOnce(Keys.PageDown))
-            {
-                matrix = Math.Max(matrix - 1, 0);
-            }
-
-            if (KeyboardHandler.IsKeyDownOnce(Keys.PageUp))
-            {
-                matrix = Math.Min(matrix + 1, 288);
-            }
-
-            if (KeyboardHandler.IsKeyDownOnce(Keys.Space))
-            {
-                _world = World.Load(GraphicsDevice, matrix);
-            }
-
+        if (KeyboardHandler.IsKeyDownOnce(Keys.Space))
+        {
+            _world = World.Load(GraphicsDevice, _matrix);
+        }
+/*
             var direction = GetDirectionFromInput();
 
             if (direction != Vector3.Zero)
@@ -412,369 +354,230 @@ namespace TestRender
                 }
             }
 */
-            Vector3 Direction = new Vector3();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                Direction += Vector3.Forward;
-            }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                Direction += Vector3.Left;
-            }
+        UpdateCamera(gameTime);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
+        foreach (var chunk in World.Chunks)
+        {
+            foreach (var building in chunk.Value.Buildings)
             {
-                Direction += Vector3.Right;
+                building.Model.Update(gameTime);
+                building.Model.Play(0);
             }
+        }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                Direction += Vector3.Backward;
-            }
+        base.Update(gameTime);
+    }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Q))
-            {
-                Direction -= Vector3.Down;
-            }
+    private void UpdateCamera(GameTime gameTime)
+    {
+        var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        Vector3 Direction = new Vector3();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.E))
-            {
-                Direction -= Vector3.Up;
-            }
+        if (Keyboard.GetState().IsKeyDown(Keys.W))
+        {
+            Direction += Vector3.Forward;
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.A))
+        {
+            Direction += Vector3.Left;
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.D))
+        {
+            Direction += Vector3.Right;
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.S))
+        {
+            Direction += Vector3.Backward;
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.Q))
+        {
+            Direction -= Vector3.Down;
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.E))
+        {
+            Direction -= Vector3.Up;
+        }
             
-            if (Keyboard.GetState().IsKeyDown(Keys.O))
-            {
-                _camera.EnableMix = true;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.P))
-            {
-                _camera.EnableMix = false;
-            }
+        if (Keyboard.GetState().IsKeyDown(Keys.O))
+        {
+            _camera.EnableMix = true;
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.P))
+        {
+            _camera.EnableMix = false;
+        }
 
-            if (Keyboard.GetState().IsKeyUp(Keys.LeftShift))
-            {
+        if (Keyboard.GetState().IsKeyUp(Keys.LeftShift))
+        {
 
-                Direction *= 64;
+            Direction *= 64;
                 
-                _camera.Move(-Direction * delta);
+            _camera.Move(-Direction * delta);
 
-                if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                {
-                    _camera.RotateX(-1);
-                }
-
-                if (Keyboard.GetState().IsKeyDown(Keys.Down))
-                {
-                    _camera.RotateX(1);
-                }
-
-                if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                {
-                    _camera.RotateY(1);
-                }
-
-                if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                {
-                    _camera.RotateY(-1);
-                }
-
-            }
-
-            UpdateCamera(gameTime);
-            
-            
-            _hero.Update(gameTime);
-            _hero.Play(0);
-            
-            foreach (var chunk in World.Chunks)
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
-                foreach (var building in chunk.Value.Buildings)
-                {
-                    building.Model.Update(gameTime);
-                    building.Model.Play(0);
-                }
+                _camera.RotateX(-1);
             }
-/*
-            if (_musics.TryGetValue(_currentMusicId, out var music))
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-                music.Update(gameTime);
+                _camera.RotateX(1);
             }
 
-
-            UpdateCamera(gameTime);
-
-            var prevChunkX = _chunkX;
-            var prevChunkY = _chunkY;
-            _chunkX = (int)_camera.Position.X / 32;
-            _chunkY = (int)_camera.Position.Z / 32;
-
-            if (prevChunkX != _chunkX || prevChunkY != _chunkY)
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-
-                //UpdateMusic(new Point(prevChunkX, prevChunkY), new Point(_chunkX, _chunkY));
-
+                _camera.RotateY(1);
             }
-*/
-            base.Update(gameTime);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                _camera.RotateY(-1);
+            }
+
+        }
+        _camera.Update(gameTime);
+    }
+
+    protected override void Draw(GameTime gameTime)
+    {
+        if (!IsActive)
+        {
+            return;
+        }
+        
+        GraphicsDevice.Clear(Color.Black);
+            
+        DrawWorld(gameTime, _world);
+        DrawModel(gameTime, _buildingShader, _hero);
+        
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        _spriteBatch.Draw(_textBox, Vector2.Zero, Color.White);
+        var text = Localisation.GetLine((int)(gameTime.TotalGameTime.TotalSeconds / 10 % Localisation.Count));
+        text = text.Replace("\\r", "");
+        text = text.Replace("\\f", "");
+        var lines = text.Split("\\n");
+        for (var i = 0; i < lines.Length; i++)
+        {
+            _fontRenderer.DrawText(lines[i], new Vector2(14, 10 + _imageFont.LineHeight * i));
+        }
+        _spriteBatch.End();
+
+        if (_debugTexture)
+        {
+            _debugTexture = false;
         }
 
-        private void UpdateCamera(GameTime gameTime)
+        base.Draw(gameTime);
+    }
+
+    private void DrawWorld(GameTime gameTime, World world)
+    {
+        foreach (var chunkEntry in world.Combination)
         {
-            //_camera.LookAt(new Vector3(_heroX, _heroHeight, _heroY));
-            //camera.Teleport(new Vector3(0f, 0.5f, 0.5f) * 32 + new Vector3(_heroX, _heroHeight, _heroY));
-            //_camera.RotateTo(new Vector3(0.8185586f, (float)Math.PI, 0f));
-            
-            _hero.RotateTo(Quaternion.CreateFromRotationMatrix(_camera.RotationMInvX));
-            _camera.Update(gameTime);
-        }
+            var (targetX, targetY) = chunkEntry.Key;
+            var tuple = chunkEntry.Value;
 
-        private float _fadeDuration = 1.0f;
-        private int _currentMusicId = -1;
-        private int _currentHeaderId = -1;
+            var chunkId = tuple.chunkId;
+            var headerId = tuple.headerId;
 
-        //private async Task FadeOutCurrentSoundEffectAsync()
-        //{
-        //    if (_currentSoundEffectInstance != null)
-        //    {
-        //        float startVolume = _currentSoundEffectInstance.Volume;
-        //        float fadeStep = startVolume / (_fadeDuration * 1000 / 10); // Reduziere Lautstärke alle 10ms
-//
-        //        for (float volume = startVolume; volume > 0; volume -= fadeStep)
-        //        {
-        //            _currentSoundEffectInstance.Volume = volume;
-        //            await Task.Delay(10); // Warte 10ms
-        //        }
-//
-        //        _currentSoundEffectInstance.Stop();
-        //        _currentSoundEffectInstance = null; // Setze die Instanz zurück
-        //    }
-        //}
-
-        //private async Task PlayNewMusicAsync(int soundId)
-        //{
-        //    _currentSoundEffectInstance = _soundEffects[soundId].CreateInstance();
-        //    _currentSoundEffectInstance.Volume = 0f; // Starte mit Lautstärke 0
-        //    _currentSoundEffectInstance.Play();
-//
-        //    float fadeStep = 1.0f / (_fadeDuration * 1000 / 10); // Erhöhe Lautstärke alle 10ms
-//
-        //    for (float volume = 0; volume < 0.3f; volume += fadeStep)
-        //    {
-        //        _currentSoundEffectInstance.Volume = volume;
-        //        _currentSoundEffectInstance.IsLooped = true;
-        //        await Task.Delay(10); // Warte 10ms
-        //    }
-        //}
-
-        public async void UpdateMusic(Point prev, Point curr)
-        {
-            if (prev.X != curr.X || prev.Y != curr.Y)
+            if (World.Chunks.TryGetValue(chunkId, out var chunk))
             {
-                try
+                if (chunk.IsLoaded && chunk.Model != null)
                 {
-                    if (_world.Combination.TryGetValue((_chunkX, _chunkY), out var targetChunkTuple))
+                    DrawModel(gameTime, _worldShader, chunk.Model,
+                        offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
+                                new Vector3(16, 0, 16));
+                    foreach (var building in chunk.Buildings)
                     {
-                        if (World.Chunks.TryGetValue(targetChunkTuple.chunkId, out var targetChunk))
-                        {
-                            var header = World.Headers[targetChunkTuple.headerId];
-                            var soundId = _timeManager.CurrentPeriod.TimeOfDay == TimeOfDay.Day ? header.MusicDayId : header.MusicNightId;
-                            
-                            // Überprüfe, ob sich die Musik-ID oder Header-ID geändert haben
-                            if (header.Id != _currentHeaderId)
-                            {
-                                if (soundId != _currentMusicId)
-                                {
-                                    //// Fadet die aktuelle Musik aus
-                                    //await FadeOutCurrentSoundEffectAsync();
-//
-                                    //// Starte die neue Musik
-                                    //await PlayNewMusicAsync(soundId);
-
-                                    if (_musics.TryGetValue(soundId, out var music))
-                                    {
-                                        music.Play();
-                                    }
-
-                                    // Aktualisiere die aktuellen IDs
-                                    _currentMusicId = soundId;
-                                    _currentHeaderId = header.Id;
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    // Fehlerbehandlung (optional)
-                }
-            }
-        }
-
-        
-        private void UnloadDistantChunks()
-        {
-            // Sichtbarer Bereich: Hier kann je nach Spiellogik die Sichtweite angepasst werden
-            int visibleRangeX = 1;
-            int visibleRangeY = 1;
-
-            // Entlade Chunks außerhalb des sichtbaren Bereichs
-            foreach (var chunkEntry in _world.Combination.ToList()) // ToList(), um während des Iterierens zu ändern
-            {
-                var ((x, y), (chunkId, headerId, height)) = chunkEntry;
-
-                if (Math.Abs(x - _chunkX) > visibleRangeX || Math.Abs(y - _chunkY) > visibleRangeY)
-                {
-                    if (World.Chunks.TryGetValue(chunkId, out var chunk))
-                    {
-                        chunk.Unload();
-                    }
-                }
-            }
-        }
-        
-        private Color GetPlateColor(float ax, float ay)
-        {
-            if (ax == 0 && ay == 0)
-            {
-                return Color.Purple; // no angle
-            }
-            if (ax == -45 && ay == 0)
-            {
-                return Color.Red; // up
-            }
-            if (ax == 45 && ay == 0)
-            {
-                return Color.Blue; // down
-            }
-            if (ax == 0 && ay == -45)
-            {
-                return Color.Yellow; // left
-            }
-            if (ax == 0 && ay == 45)
-            {
-                return Color.Green; // right
-            }
-
-            throw new Exception();
-        }
-        
-        private void DrawPlateQuad(GameTime gameTime, BasicEffect effect, Vector3 position, Vector3 scale, float rotationX, float rotationY, Color color)
-        {
-            // Define the vertices of the quad
-            VertexPositionColor[] vertices = new VertexPositionColor[4];
-            vertices[0].Position = new Vector3(0, 0, 0); // Bottom-left
-            vertices[1].Position = new Vector3(1, 0, 0);  // Bottom-right
-            vertices[2].Position = new Vector3(0, 0, 1);  // Top-left
-            vertices[3].Position = new Vector3(1, 0, 1);   // Top-right
-
-            // Apply the color
-            for (var i = 0; i < vertices.Length; i++)
-            {
-                vertices[i].Color = GetPlateColor(rotationX, rotationY);
-            }
-
-            // Apply the transformations
-            Matrix worldMatrix = Matrix.CreateScale(scale) *
-                                 Matrix.CreateRotationX(MathHelper.ToRadians(-rotationX)) *
-                                 Matrix.CreateRotationZ(MathHelper.ToRadians(rotationY)) *
-                                 Matrix.CreateTranslation(position);
-
-            effect.World = worldMatrix;
-            effect.View = _camera.View;
-            effect.Projection = _camera.Projection;
-            effect.VertexColorEnabled = true;
-            
-            //effect.Parameters["World"].SetValue(worldMatrix);
-            //effect.Parameters["View"].SetValue(_camera.View);
-            //effect.Parameters["Projection"].SetValue(_camera.Projection);
-
-            foreach (var pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-
-                GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertices, 0, 2);
-            }
-        }
-        
-        protected override void Draw(GameTime gameTime)
-        {
-            if (!IsActive)
-            {
-                return;
-            }
-
-            //GraphicsDevice.SetRenderTarget(_screen);
-            GraphicsDevice.Clear(Color.Black);
-            
-            
-            foreach (var chunkEntry in _world.Combination)
-            {
-                var (targetX, targetY) = chunkEntry.Key;
-                var tuple = chunkEntry.Value;
-
-                var chunkId = tuple.chunkId;
-                var headerId = tuple.headerId;
-
-                if (World.Chunks.TryGetValue(chunkId, out var chunk))
-                {
-                    if (chunk.IsLoaded && chunk.Model != null)
-                    {
-                        DrawModel(gameTime, _worldShader, chunk.Model,
+                        DrawModel(gameTime, _buildingShader, building.Model,
                             offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
                                     new Vector3(16, 0, 16));
-                        foreach (var building in chunk.Buildings)
-                        {
-                            DrawModel(gameTime, _buildingShader, building.Model,
-                                offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
-                                        new Vector3(16, 0, 16));
-                        }
                     }
                 }
             }
+        }
 
-            foreach (var chunkEntry in _world.Combination)
+        foreach (var chunkEntry in world.Combination)
+        {
+            var (targetX, targetY) = chunkEntry.Key;
+            var tuple = chunkEntry.Value;
+
+            var chunkId = tuple.chunkId;
+            var headerId = tuple.headerId;
+            var worldOffset = new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) + new Vector3(16, 0, 16);
+
+
+            if (World.Chunks.TryGetValue(chunkId, out var chunk))
             {
-                var (targetX, targetY) = chunkEntry.Key;
-                var tuple = chunkEntry.Value;
+                if (chunk.IsLoaded && chunk.Model != null)
+                {
+                    DrawModel(gameTime, _worldShader, chunk.Model,
+                        offset: worldOffset, alpha: true);
+                    foreach (var building in chunk.Buildings)
+                    {
+                        DrawModel(gameTime, _buildingShader, building.Model,
+                            offset: worldOffset, alpha: true);
+                    }
+                }
+            }
+        }
+    }
+
+    private void DrawWorldSmart(GameTime gameTime, World world)
+    {
+        /*
+        int[] offsetX = [-2, -1, 0, 1, 2];
+        int[] offsetY = [-2, -1, 0, 1, 2];
+
+        foreach (var dx in offsetX)
+        {
+            foreach (var dy in offsetY)
+            {
+                var targetX = _chunkX + dx;
+                var targetY = _chunkY + dy;
+
+                if (!_world.Combination.TryGetValue((targetX, targetY), out var tuple))
+                {
+                    continue;
+                }
 
                 var chunkId = tuple.chunkId;
                 var headerId = tuple.headerId;
+
                 var worldOffset = new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) + new Vector3(16, 0, 16);
 
-
-                if (World.Chunks.TryGetValue(chunkId, out var chunk))
+                if (World.Chunks.TryGetValue(chunkId, out var chunk))// && _world.Headers.TryGetValue(headerId, out var header))
                 {
                     if (chunk.IsLoaded && chunk.Model != null)
                     {
+                        var buildingsWithDistance = new List<(Building building, float Distance)>();
                         DrawModel(gameTime, _worldShader, chunk.Model,
-                            offset: worldOffset, alpha: true);
+                            offset: worldOffset, alpha: false);
                         foreach (var building in chunk.Buildings)
                         {
-                            DrawModel(gameTime, _buildingShader, building.Model,
-                                offset: worldOffset, alpha: true);
+                            DrawModel(gameTime, _buildingShader, building.Model, offset: worldOffset, alpha: false);
                         }
                     }
                 }
             }
-            
-            /*
-            int[] offsetX = [-2, -1, 0, 1, 2];
-            int[] offsetY = [-2, -1, 0, 1, 2];
+        }
 
-            foreach (var dx in offsetX)
+        foreach (var dx in offsetX)
+        {
+            foreach (var dy in offsetY)
             {
-                foreach (var dy in offsetY)
+                var targetX = _chunkX + dx;
+                var targetY = _chunkY + dy;
+
+                if (_world.Combination.TryGetValue((targetX, targetY), out var tuple))
                 {
-                    var targetX = _chunkX + dx;
-                    var targetY = _chunkY + dy;
-
-                    if (!_world.Combination.TryGetValue((targetX, targetY), out var tuple))
-                    {
-                        continue;
-                    }
-
                     var chunkId = tuple.chunkId;
                     var headerId = tuple.headerId;
 
@@ -784,389 +587,278 @@ namespace TestRender
                     {
                         if (chunk.IsLoaded && chunk.Model != null)
                         {
-                            var buildingsWithDistance = new List<(Building building, float Distance)>();
                             DrawModel(gameTime, _worldShader, chunk.Model,
-                                offset: worldOffset, alpha: false);
+                                offset: worldOffset, alpha: true);
                             foreach (var building in chunk.Buildings)
                             {
-                                DrawModel(gameTime, _buildingShader, building.Model, offset: worldOffset, alpha: false);
-                            }
-                        }
-                    }
-                }
-            }
+                                DrawModel(gameTime, _buildingShader, building.Model, offset: worldOffset, alpha: true);
 
-            foreach (var dx in offsetX)
-            {
-                foreach (var dy in offsetY)
-                {
-                    var targetX = _chunkX + dx;
-                    var targetY = _chunkY + dy;
+                                var screenPos = PatteLib.Utils.WorldToScreen(worldOffset + building.Position, _camera.View, _camera.Projection, GraphicsDevice.Viewport);
 
-                    if (_world.Combination.TryGetValue((targetX, targetY), out var tuple))
-                    {
-                        var chunkId = tuple.chunkId;
-                        var headerId = tuple.headerId;
-
-                        var worldOffset = new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) + new Vector3(16, 0, 16);
-
-                        if (World.Chunks.TryGetValue(chunkId, out var chunk))// && _world.Headers.TryGetValue(headerId, out var header))
-                        {
-                            if (chunk.IsLoaded && chunk.Model != null)
-                            {
-                                DrawModel(gameTime, _worldShader, chunk.Model,
-                                    offset: worldOffset, alpha: true);
-                                foreach (var building in chunk.Buildings)
+                                if (KeyboardHandler.IsKeyDown(Keys.J))
                                 {
-                                    DrawModel(gameTime, _buildingShader, building.Model, offset: worldOffset, alpha: true);
-
-                                    var screenPos = PatteLib.Utils.WorldToScreen(worldOffset + building.Position, _camera.View, _camera.Projection, GraphicsDevice.Viewport);
-
-                                    if (KeyboardHandler.IsKeyDown(Keys.J))
-                                    {
-                                        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                                        _spriteBatch.Draw(_pixel, new Rectangle(screenPos.ToPoint(), _imageFont.MeasureString(building.BuildingName, 2)), Color.White * 0.5f);
-                                        _fontRenderer.DrawText("§0Hallo §rHallo §cPokedex", screenPos);
-                                        //_spriteBatch.DrawString(_font, building.BuildingName, screenPos, Color.White);
-                                        _spriteBatch.End();
-                                    }
+                                    _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                                    _spriteBatch.Draw(_pixel, new Rectangle(screenPos.ToPoint(), _imageFont.MeasureString(building.BuildingName, 2)), Color.White * 0.5f);
+                                    _fontRenderer.DrawText("§0Hallo §rHallo §cPokedex", screenPos);
+                                    //_spriteBatch.DrawString(_font, building.BuildingName, screenPos, Color.White);
+                                    _spriteBatch.End();
                                 }
                             }
                         }
                     }
                 }
-            }*/
-            DrawModel(gameTime, _buildingShader, _hero);
-            //DrawModel(gameTime, _buildingShader, _hero, offset: new Vector3(_heroX + 0, _heroHeight, _heroY + 0.5f));
-            //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            //_fontRenderer.DrawText("hero", PatteLib.Utils.WorldToScreen(new Vector3(_heroX, _heroHeight, _heroY), _camera.View, _camera.Projection, GraphicsDevice.Viewport), Color.White, 2); 
-            //_spriteBatch.DrawString(_font, building.BuildingName, screenPos, Color.White);
-            //_spriteBatch.End();
-            
-            
-            // var scale = 5;
-            // _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            //_fontRenderer.DrawText($"Chunk: [{_chunkX}, {_chunkY}]", Vector2.Zero, Color.White, 1);
-            //_fontRenderer.DrawText($"World: [{_camera.Position.X}, {_camera.Position.Z}]", new Vector2(0, _imageFont.LineHeight * 1), Color.White);
-            //_spriteBatch.End();
-            
-            //GraphicsDevice.SetRenderTarget(null);
-           
-            //_spriteBatch.Begin(samplerState: SamplerState.PointWrap);
-            //_spriteBatch.Draw(_screen, GraphicsDevice.Viewport.Bounds, Color.White);
-            /*
-            try
-            {
-                if (_world.Combination.TryGetValue((_chunkX, _chunkY), out var targetChunkTuple))
-                {
-                    if (World.Chunks.TryGetValue(targetChunkTuple.chunkId, out var targetChunk))
-                    {
-
-                       _spriteBatch.DrawString(_font, $"ChunkId: [{targetChunkTuple.chunkId}]", new Vector2(0, _font.LineSpacing), Color.White);
-
-                        try
-                        {
-                            _spriteBatch.DrawString(_font,
-                                $"HeaderId: [{targetChunkTuple.headerId}, {World.Headers[targetChunkTuple.headerId].LocationName}]",
-                                new Vector2(0, _font.LineSpacing * 2), Color.White);
-                        }
-                        catch (Exception exception)
-                        {
-                            _spriteBatch.DrawString(_font,
-                                $"HeaderId: [!]",
-                                new Vector2(0, _font.LineSpacing * 2), Color.White);
-                        }
-
-
-                        _spriteBatch.DrawString(_font, $"Matrix: [{matrix}]", new Vector2(0, _font.LineSpacing * 4),
-                            Color.White);
-                        _spriteBatch.DrawString(_font, $"Time of day: [{_timeManager.CurrentPeriod.Name}]",
-                            new Vector2(0, _font.LineSpacing * 5), Color.White);
-                        _spriteBatch.DrawString(_font, $"Time: [{_timeManager.CurrentTime:hh\\:mm}]",
-                            new Vector2(0, _font.LineSpacing * 6), Color.White);
-
-                        _spriteBatch.DrawString(_font, $"HasPlates: [{targetChunk.Plates.Count > 0}]",
-                            new Vector2(0, _font.LineSpacing * 9), Color.White);
-                        _spriteBatch.DrawString(_font, $"Collision: [{targetChunk.Collision[_cellY, _cellX]:x2}]",
-                            new Vector2(0, _font.LineSpacing * 10), Color.White);
-                        var name = Enum.GetName(typeof(ChunkTileType), targetChunk.Type[_cellY, _cellX]);
-                        _spriteBatch.DrawString(_font, $"Type: [{name}, {targetChunk.Type[_cellY, _cellX]:x2}]",
-                            new Vector2(0, _font.LineSpacing * 11), Color.White);
-                    }
-                    else
-                    {
-                        _spriteBatch.DrawString(_font, $"HasPlates: [!]",
-                            new Vector2(0, _font.LineSpacing * 9), Color.White);
-                        _spriteBatch.DrawString(_font, $"Collision: [!]", new Vector2(0, _font.LineSpacing * 10),
-                            Color.White);
-                        _spriteBatch.DrawString(_font, $"Type: [!]", new Vector2(0, _font.LineSpacing * 11),
-                            Color.White);
-                    }
-                }
             }
-            catch (Exception e)
-            {
-
-            }
-            */
-            //_spriteBatch.End();
-            if (_debugTexture)
-            {
-                _debugTexture = false;
-            }
-
-            base.Draw(gameTime);
-        }
-        
-        private void DrawModel(GameTime gameTime, Effect effect, GameModel model, bool alpha = false, Vector3 offset = default)
+        }*/
+    }
+    
+    private void DrawModel(GameTime gameTime, Effect effect, GameModel model, bool alpha = false, Vector3 offset = default)
+    {
+        foreach (var scene in model.Scenes)
         {
-            foreach (var scene in model.Scenes)
+            foreach (var nodeIndex in scene.Nodes)
             {
-                foreach (var nodeIndex in scene.Nodes)
-                {
-                    var node = model.Nodes[nodeIndex];
-                    DrawNode(gameTime, effect, model, node, alpha, offset);
-                }
+                var node = model.Nodes[nodeIndex];
+                DrawNode(gameTime, effect, model, node, alpha, offset);
             }
         }
+    }
 
-        private void DrawNode(GameTime gameTime, Effect effect, GameModel model, GameNode node, bool alpha = false, Vector3 offset = default)
+    private void DrawNode(GameTime gameTime, Effect effect, GameModel model, GameNode node, bool alpha = false, Vector3 offset = default)
+    {
+            
+        //skinnig here?
+            
+        if (node.HasMesh)
         {
+            //DrawMesh(node, gameModel.Meshes[node.MeshIndex]);
+            DrawMesh(gameTime, effect, model, node, node.Mesh, alpha, offset);
+        }
             
-            //skinnig here?
-            
-            if (node.HasMesh)
+        if (node.HasChildren)
+        {
+            foreach (var child in node.Children)
             {
-                //DrawMesh(node, gameModel.Meshes[node.MeshIndex]);
-                DrawMesh(gameTime, effect, model, node, node.Mesh, alpha, offset);
-            }
-            
-            if (node.HasChildren)
-            {
-                foreach (var child in node.Children)
-                {
-                    DrawNode(gameTime, effect, model, node.Model.Nodes[child], alpha, offset);
-                }
+                DrawNode(gameTime, effect, model, node.Model.Nodes[child], alpha, offset);
             }
         }
+    }
 
-        private void DrawMesh(GameTime gameTime, Effect effect, GameModel model, GameNode node, GameMesh mesh, bool alpha = false, Vector3 offset = default)
+    private void DrawMesh(GameTime gameTime, Effect effect, GameModel model, GameNode node, GameMesh mesh, bool alpha = false, Vector3 offset = default)
+    {
+        var alphaMode = 0;
+
+        var worldMatrix = Matrix.CreateScale(model.Scale) *
+                          Matrix.CreateFromQuaternion(model.Rotation) *
+                          Matrix.CreateTranslation(model.Translation) *
+                          Matrix.CreateTranslation(offset);
+
+        effect.Parameters["World"].SetValue(node.GlobalTransform * worldMatrix);
+        effect.Parameters["View"].SetValue(_camera.View);
+        effect.Parameters["Projection"].SetValue(_camera.Projection);
+
+        if (model.IsPlaying)
         {
-            var alphaMode = 0;
-
-            var worldMatrix = Matrix.CreateScale(model.Scale) *
-                              Matrix.CreateFromQuaternion(model.Rotation) *
-                              Matrix.CreateTranslation(model.Translation) *
-                              Matrix.CreateTranslation(offset);
-
-            effect.Parameters["World"].SetValue(node.GlobalTransform * worldMatrix);
-            effect.Parameters["View"].SetValue(_camera.View);
-            effect.Parameters["Projection"].SetValue(_camera.Projection);
-
-            if (model.IsPlaying)
+            if (model.Skins is { Length: > 0 })
             {
-                if (model.Skins is { Length: > 0 })
+                var skin = model.Skins[0];
+                if (skin.JointMatrices.Length > 180)
                 {
-                    var skin = model.Skins[0];
-                    if (skin.JointMatrices.Length > 180)
-                    {
-                        effect.Parameters["SkinningEnabled"]?.SetValue(false);
-                    }
-                    else
-                    {
-                        effect.Parameters["Bones"]?.SetValue(skin.JointMatrices);
-                        effect.Parameters["NumberOfBones"]?.SetValue(skin.JointMatrices.Length);
-                        effect.Parameters["SkinningEnabled"]?.SetValue(true);
-                    }
+                    effect.Parameters["SkinningEnabled"]?.SetValue(false);
                 }
                 else
                 {
-                    effect.Parameters["SkinningEnabled"]?.SetValue(false);
+                    effect.Parameters["Bones"]?.SetValue(skin.JointMatrices);
+                    effect.Parameters["NumberOfBones"]?.SetValue(skin.JointMatrices.Length);
+                    effect.Parameters["SkinningEnabled"]?.SetValue(true);
                 }
             }
             else
             {
                 effect.Parameters["SkinningEnabled"]?.SetValue(false);
             }
+        }
+        else
+        {
+            effect.Parameters["SkinningEnabled"]?.SetValue(false);
+        }
 
-            //Todo: Fix Sorting
+        //Todo: Fix Sorting
    
-            //var primitivesWithDistance = new List<(GameMeshPrimitives Primitive, float Distance)>();
-            //foreach (var primitive in mesh.Primitives)
-            //{
-            //    var distance = Vector3.Distance(new Vector3(_camera.Position.X, _camera.Position.Y, _camera.Position.Z), primitive.LocalPosition);
-            //    primitivesWithDistance.Add((primitive, distance));
-            //}
-            //var sortedPrimitives = primitivesWithDistance.OrderByDescending(p => p.Distance)
-            //    .Select(p => p.Primitive).ToList();
+        //var primitivesWithDistance = new List<(GameMeshPrimitives Primitive, float Distance)>();
+        //foreach (var primitive in mesh.Primitives)
+        //{
+        //    var distance = Vector3.Distance(new Vector3(_camera.Position.X, _camera.Position.Y, _camera.Position.Z), primitive.LocalPosition);
+        //    primitivesWithDistance.Add((primitive, distance));
+        //}
+        //var sortedPrimitives = primitivesWithDistance.OrderByDescending(p => p.Distance)
+        //    .Select(p => p.Primitive).ToList();
 
-            foreach (var primitive in mesh.Primitives)
-                //foreach (var primitive in sortedPrimitives)
+        foreach (var primitive in mesh.Primitives)
+            //foreach (var primitive in sortedPrimitives)
+        {
+            if (ShouldSkipPrimitive(primitive, effect, alpha, ref alphaMode))
             {
-                if (ShouldSkipPrimitive(primitive, effect, alpha, ref alphaMode))
-                {
-                    continue;
-                }
+                continue;
+            }
 
-                SetPrimitiveMaterialParameters(gameTime, primitive, effect);
+            SetPrimitiveMaterialParameters(gameTime, primitive, effect);
 
-                foreach (var pass in effect.Techniques[Math.Max(alphaMode - 1, 0)].Passes)
-                {
-                    pass.Apply();
-                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0,
-                        primitive.VertexBuffer.VertexCount / 3);
-                }
+            foreach (var pass in effect.Techniques[Math.Max(alphaMode - 1, 0)].Passes)
+            {
+                pass.Apply();
+                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0,
+                    primitive.VertexBuffer.VertexCount / 3);
             }
         }
+    }
 
-        private bool ShouldSkipPrimitive(GameMeshPrimitives primitive, Effect effect, bool alpha, ref int alphaMode)
+    private bool ShouldSkipPrimitive(GameMeshPrimitives primitive, Effect effect, bool alpha, ref int alphaMode)
+    {
+        if (primitive.Material != null)
         {
-            if (primitive.Material != null)
+            var material = primitive.Material;
+
+            switch (material.AlphaMode)
             {
-                var material = primitive.Material;
-
-                switch (material.AlphaMode)
-                {
-                    case "OPAQUE":
-                        if (alpha)
-                        {
-                            return true;
-                        }
-                        alphaMode = 0;
-                        break;
-                    case "MASK":
-                        if (alpha)
-                        {
-                            return true;
-                        }
-                        alphaMode = 1;
-                        break;
-                    case "BLEND":
-                        if (!alpha)
-                        {
-                            return true;
-                        }
-                        alphaMode = 2;
-                        break;
-                }
-
-                effect.Parameters["AlphaMode"]?.SetValue(alphaMode);
-            }
-            return false;
-        }
-
-        private void SetPrimitiveMaterialParameters(GameTime gameTime, GameMeshPrimitives primitive, Effect effect)
-        {
-            GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
-
-            effect.Parameters["TextureEnabled"]?.SetValue(false);
-            effect.Parameters["NormalMapEnabled"]?.SetValue(false);
-            effect.Parameters["OcclusionMapEnabled"]?.SetValue(false);
-            effect.Parameters["EmissiveTextureEnabled"]?.SetValue(false);
-
-            if (primitive.Material != null)
-            {
-                var material = primitive.Material;
-                
-                if (_debugTexture)
-                {
-                    Console.WriteLine(material.Name);
-                }
-                
-                effect.Parameters["EmissiveColorFactor"]?.SetValue(material.EmissiveFactor.ToVector4());
-                effect.Parameters["BaseColorFactor"]?.SetValue(material.BaseColorFactor.ToVector4());
-                effect.Parameters["AdditionalColorFactor"]?.SetValue(Color.White.ToVector4());
-                effect.Parameters["AlphaCutoff"]?.SetValue(material.AlphaCutoff);
-
-                if (material.HasTexture)
-                {
-                    effect.Parameters["TextureEnabled"]?.SetValue(true);
-                    effect.Parameters["TextureDimensions"]?.SetValue(material.BaseTexture.Texture.Bounds.Size.ToVector2());
-                    effect.Parameters["Texture"]?.SetValue(material.BaseTexture.Texture);
-                    effect.Parameters["TextureAnimation"]?.SetValue(false);
-                    SetTextureAnimation(gameTime, material, effect);
-                    SetTextureEffects(gameTime, material, effect);
-
-                    GraphicsDevice.SamplerStates[0] = material.BaseTexture.Sampler.SamplerState;
-                }
-            }
-        }
-
-        private void SetTextureEffects(GameTime gameTime, GameMaterial material, Effect effect)
-        {
-            if (material.Name.Contains("window") || material.Name.Contains("h_mado"))
-            {
-                effect.Parameters["AdditionalColorFactor"]?.SetValue(Color.Yellow.ToVector4());
-            }
-        }
-
-        private void SetTextureAnimation(GameTime gameTime, GameMaterial material, Effect effect)
-        {
-            foreach (var animation in _animations)
-            {
-                foreach (var keyWord in animation.ForMaterial)
-                {
-                    if (material.Name.Contains(keyWord))
+                case "OPAQUE":
+                    if (alpha)
                     {
-                        effect.Parameters["Texture"]?.SetValue(animation.CurrentFrame);
-                        return;
+                        return true;
                     }
+                    alphaMode = 0;
+                    break;
+                case "MASK":
+                    if (alpha)
+                    {
+                        return true;
+                    }
+                    alphaMode = 1;
+                    break;
+                case "BLEND":
+                    if (!alpha)
+                    {
+                        return true;
+                    }
+                    alphaMode = 2;
+                    break;
+            }
+
+            effect.Parameters["AlphaMode"]?.SetValue(alphaMode);
+        }
+        return false;
+    }
+
+    private void SetPrimitiveMaterialParameters(GameTime gameTime, GameMeshPrimitives primitive, Effect effect)
+    {
+        GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
+
+        effect.Parameters["TextureEnabled"]?.SetValue(false);
+        effect.Parameters["NormalMapEnabled"]?.SetValue(false);
+        effect.Parameters["OcclusionMapEnabled"]?.SetValue(false);
+        effect.Parameters["EmissiveTextureEnabled"]?.SetValue(false);
+
+        if (primitive.Material != null)
+        {
+            var material = primitive.Material;
+                
+            if (_debugTexture)
+            {
+                Console.WriteLine(material.Name);
+            }
+                
+            effect.Parameters["EmissiveColorFactor"]?.SetValue(material.EmissiveFactor.ToVector4());
+            effect.Parameters["BaseColorFactor"]?.SetValue(material.BaseColorFactor.ToVector4());
+            effect.Parameters["AdditionalColorFactor"]?.SetValue(Color.White.ToVector4());
+            effect.Parameters["AlphaCutoff"]?.SetValue(material.AlphaCutoff);
+
+            if (material.HasTexture)
+            {
+                effect.Parameters["TextureEnabled"]?.SetValue(true);
+                effect.Parameters["TextureDimensions"]?.SetValue(material.BaseTexture.Texture.Bounds.Size.ToVector2());
+                effect.Parameters["Texture"]?.SetValue(material.BaseTexture.Texture);
+                effect.Parameters["TextureAnimation"]?.SetValue(false);
+                SetTextureAnimation(gameTime, material, effect);
+                SetTextureEffects(gameTime, material, effect);
+
+                GraphicsDevice.SamplerStates[0] = material.BaseTexture.Sampler.SamplerState;
+            }
+        }
+    }
+
+    private void SetTextureEffects(GameTime gameTime, GameMaterial material, Effect effect)
+    {
+        if (material.Name.Contains("window") || material.Name.Contains("h_mado"))
+        {
+            effect.Parameters["AdditionalColorFactor"]?.SetValue(Color.Yellow.ToVector4());
+        }
+    }
+
+    private void SetTextureAnimation(GameTime gameTime, GameMaterial material, Effect effect)
+    {
+        foreach (var animation in _animations)
+        {
+            foreach (var keyWord in animation.ForMaterial)
+            {
+                if (material.Name.Contains(keyWord))
+                {
+                    effect.Parameters["Texture"]?.SetValue(animation.CurrentFrame);
+                    return;
                 }
             }
-            if (material.Name.Contains("c3_s03b"))
-            {
-                effect.Parameters["AnimationSpeed"]?.SetValue(16);
-                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
-                effect.Parameters["TextureAnimation"]?.SetValue(true);
-            }
-            else if (material.Name.Contains("taki"))
-            {
-                effect.Parameters["AnimationSpeed"]?.SetValue(16);
-                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Down);
-                effect.Parameters["TextureAnimation"]?.SetValue(true);
-            }
-            else if (material.Name.Contains("c1_fun2"))
-            {
-                effect.Parameters["AnimationSpeed"]?.SetValue(32);
-                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Down);
-                effect.Parameters["TextureAnimation"]?.SetValue(true);
-            }
-            else if (material.Name.Contains("mag_smoke"))
-            {
-                effect.Parameters["AnimationSpeed"]?.SetValue(16);
-                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
-                effect.Parameters["TextureAnimation"]?.SetValue(true);
-            }
-            else if (material.Name.Contains("kemuri"))
-            {
-                effect.Parameters["AnimationSpeed"]?.SetValue(32);
-                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Left);
-                effect.Parameters["TextureAnimation"]?.SetValue(true);
-            }
-            else if (material.Name.Contains("l_lake"))
-            {
-                effect.Parameters["AnimationSpeed"]?.SetValue(16);
-                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
-                effect.Parameters["TextureAnimation"]?.SetValue(true);
-            }
-            else if (material.Name.Contains("pool_W"))
-            {
-                effect.Parameters["AnimationSpeed"]?.SetValue(1);
-                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
-                effect.Parameters["TextureAnimation"]?.SetValue(true);
-            }
-            else if (material.Name.Contains("neon0"))
-            {
-                effect.Parameters["AnimationSpeed"]?.SetValue(1);
-                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
-                effect.Parameters["TextureAnimation"]?.SetValue(true);
-            }
-            else if (material.Name.Contains("leag_yuka03"))
-            {
-                effect.Parameters["AnimationSpeed"]?.SetValue(42);
-                effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
-                effect.Parameters["TextureAnimation"]?.SetValue(true);
-            }
+        }
+        if (material.Name.Contains("c3_s03b"))
+        {
+            effect.Parameters["AnimationSpeed"]?.SetValue(16);
+            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
+            effect.Parameters["TextureAnimation"]?.SetValue(true);
+        }
+        else if (material.Name.Contains("taki"))
+        {
+            effect.Parameters["AnimationSpeed"]?.SetValue(16);
+            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Down);
+            effect.Parameters["TextureAnimation"]?.SetValue(true);
+        }
+        else if (material.Name.Contains("c1_fun2"))
+        {
+            effect.Parameters["AnimationSpeed"]?.SetValue(32);
+            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Down);
+            effect.Parameters["TextureAnimation"]?.SetValue(true);
+        }
+        else if (material.Name.Contains("mag_smoke"))
+        {
+            effect.Parameters["AnimationSpeed"]?.SetValue(16);
+            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
+            effect.Parameters["TextureAnimation"]?.SetValue(true);
+        }
+        else if (material.Name.Contains("kemuri"))
+        {
+            effect.Parameters["AnimationSpeed"]?.SetValue(32);
+            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Left);
+            effect.Parameters["TextureAnimation"]?.SetValue(true);
+        }
+        else if (material.Name.Contains("l_lake"))
+        {
+            effect.Parameters["AnimationSpeed"]?.SetValue(16);
+            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
+            effect.Parameters["TextureAnimation"]?.SetValue(true);
+        }
+        else if (material.Name.Contains("pool_W"))
+        {
+            effect.Parameters["AnimationSpeed"]?.SetValue(1);
+            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
+            effect.Parameters["TextureAnimation"]?.SetValue(true);
+        }
+        else if (material.Name.Contains("neon0"))
+        {
+            effect.Parameters["AnimationSpeed"]?.SetValue(1);
+            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
+            effect.Parameters["TextureAnimation"]?.SetValue(true);
+        }
+        else if (material.Name.Contains("leag_yuka03"))
+        {
+            effect.Parameters["AnimationSpeed"]?.SetValue(42);
+            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
+            effect.Parameters["TextureAnimation"]?.SetValue(true);
         }
     }
 }

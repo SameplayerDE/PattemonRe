@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChunkEditor", "ChunkEditor\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatteLib", "PatteLib\PatteLib.csproj", "{63C0C816-F422-4613-ABA5-C8D6945ECE94}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HxLocal", "HxLocal\HxLocal.csproj", "{99A62E0B-375E-4F60-9FAF-E78957050D71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{63C0C816-F422-4613-ABA5-C8D6945ECE94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63C0C816-F422-4613-ABA5-C8D6945ECE94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63C0C816-F422-4613-ABA5-C8D6945ECE94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99A62E0B-375E-4F60-9FAF-E78957050D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99A62E0B-375E-4F60-9FAF-E78957050D71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99A62E0B-375E-4F60-9FAF-E78957050D71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99A62E0B-375E-4F60-9FAF-E78957050D71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

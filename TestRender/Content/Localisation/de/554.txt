@@ -1,4 +1,4 @@
-﻿§bBumms!!!§r\r
+﻿§lBumms!!!§r\r
 {RivalName}: Was?!? Wie?!?\nOh, hey, {PlayerName}!\rHey! Ich gehe zu Professor Eibe!\nUnd du kommst mit! Beeil dich!\r
 {RivalName}: Argh!\nHab was vergessen!\r
 Hiya, {PlayerName}.\n{RivalName} hat dich gesucht.\rIch glaube, er ist nach Hause gegangen.\nWarum gehst du nicht zu ihm?\r

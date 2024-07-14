@@ -11,7 +11,7 @@ public class ImageFont
     public int CharCount => _characters.Count;
     public int SpaceWidth = 4;
     public int TabWidth = 8;
-    public int LineHeight = 12;
+    public int LineHeight = 19;
 
     public ImageFont(Texture2D texture)
     {
