@@ -27,6 +27,7 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
 
     public HeaderManager HeaderManager;
+    public TextArchiveManager TextArchiveManager;
     
     private BasicEffect _basicEffect;
     private Effect _worldShader;
@@ -70,13 +71,18 @@ public class Game1 : Game
     {
         _timeManager = new WorldTimeManager();
         
+        
         Localisation.RootDirectory = @"Content\Localisation";
         Localisation.SetLanguage("de");
         Localisation.LoadData("561.txt");
 
         HeaderManager = new HeaderManager();
         HeaderManager.RootDirectory = @"Content\WorldData\Headers";
-        HeaderManager.Load(GraphicsDevice);
+        HeaderManager.Load();
+
+        TextArchiveManager = new TextArchiveManager();
+        TextArchiveManager.RootDirectory = @"Content\Localisation\de";
+        TextArchiveManager.Load(561);
         
         Building.RootDirectory = @"A:\ModelExporter\Platin\output_assets";
         Chunk.RootDirectory = @"A:\ModelExporter\Platin\overworldmaps";
@@ -242,6 +248,9 @@ public class Game1 : Game
         if (KeyboardHandler.IsKeyDownOnce(Keys.P))
         {
             Localisation.Reload();
+            TextArchiveManager.Dispose();
+            TextArchiveManager.Load(561);
+            TextArchiveManager.Load(412);
         }
 
         if (KeyboardHandler.IsKeyDownOnce(Keys.PageDown))
@@ -459,14 +468,22 @@ public class Game1 : Game
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _spriteBatch.Draw(_textBox, Vector2.Zero, Color.White);
-        var text = Localisation.GetLine((int)(gameTime.TotalGameTime.TotalSeconds / 10 % Localisation.Count));
-        text = text.Replace("\\r", "");
-        text = text.Replace("\\f", "");
-        var lines = text.Split("\\n");
-        for (var i = 0; i < lines.Length; i++)
+        try
         {
-            _fontRenderer.DrawText(lines[i], new Vector2(14, 10 + _imageFont.LineHeight * i));
+            var text = TextArchiveManager.GetLine(1, (int)(gameTime.TotalGameTime.TotalSeconds % Localisation.Count));
+            text = text.Replace("\\r", "");
+            text = text.Replace("\\f", "");
+            var lines = text.Split("\\n");
+            for (var i = 0; i < lines.Length; i++)
+            {
+                _fontRenderer.DrawText(lines[i], new Vector2(14, 10 + _imageFont.LineHeight * i));
+            }
         }
+        catch (Exception ex)
+        {
+            // ignored
+        }
+
         _spriteBatch.End();
 
         if (_debugTexture)

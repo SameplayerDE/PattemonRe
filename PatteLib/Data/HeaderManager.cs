@@ -11,7 +11,7 @@ public class HeaderManager
     private Dictionary<int, ChunkHeader> _headers = [];
     public static string RootDirectory = string.Empty;
     
-    public void Load(GraphicsDevice graphicsDevice)
+    public void Load()
     {
         if (string.IsNullOrEmpty(RootDirectory))
         {
