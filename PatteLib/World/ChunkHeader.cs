@@ -25,6 +25,7 @@ public class ChunkHeader
     
     //Matrix
     public int MatrixId;
+    public int EventFileId;
 
     public static ChunkHeader Load(JToken jHeader)
     {
@@ -52,7 +53,8 @@ public class ChunkHeader
             CanUseRope = jHeader["canUseRope"]?.ToObject<bool>() ?? false,
             CanUseRun = jHeader["canUseRun"]?.ToObject<bool>() ?? false,
             CanUseBicycle = jHeader["canUseBicycle"]?.ToObject<bool>() ?? false,
-            MatrixId = jHeader["matrixId"]?.ToObject<int>() ?? 0
+            MatrixId = jHeader["matrixId"]?.ToObject<int>() ?? 0,
+            EventFileId = jHeader["eventFileId"]?.ToObject<int>() ?? 0
         };
 
         return chunkHeader;

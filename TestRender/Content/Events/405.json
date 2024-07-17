@@ -1,0 +1,77 @@
+﻿{
+    "id": 405,
+    "entities": [
+        {
+            "id": 0,
+            "cx": 19,
+            "cy": 21,
+            "cz": 5,
+            "mx": 5,
+            "my": 20,
+            "flag": 0,
+            "execute": 5,
+            "sprite": 12,
+            "orientation": 1
+        },
+        {
+            "id": 1,
+            "cx": 10,
+            "cy": 5,
+            "cz": 5,
+            "mx": 5,
+            "my": 20,
+            "flag": 0,
+            "execute": 4,
+            "sprite": 6,
+            "orientation": 3
+        },
+        {
+            "id": 2,
+            "cx": 16,
+            "cy": 16,
+            "cz": 5,
+            "mx": 5,
+            "my": 20,
+            "flag": 0,
+            "execute": 3,
+            "sprite": 3,
+            "orientation": 1
+        },
+        {
+            "id": 3,
+            "cx": 10,
+            "cy": 19,
+            "cz": 5,
+            "mx": 5,
+            "my": 20,
+            "flag": 0,
+            "execute": 11,
+            "sprite": 13,
+            "orientation": 1
+        },
+        {
+            "id": 4,
+            "cx": 23,
+            "cy": 11,
+            "cz": 5,
+            "mx": 5,
+            "my": 20,
+            "flag": 0,
+            "execute": 6,
+            "sprite": 6,
+            "orientation": 2
+        },
+        {
+            "id": 12,
+            "cx": 6,
+            "cy": 10,
+            "cz": 5,
+            "mx": 5,
+            "my": 20,
+            "flag": 0,
+            "execute": 7,
+            "sprite": 52,
+            "orientation": 1
+        }
+    ]
+}

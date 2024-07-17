@@ -19,6 +19,10 @@ public class HeaderManager
         }
         for (var i = 0; i < 592; i++)
         {
+            if (i == 426)
+            {
+                
+            }
             var path = Path.Combine(RootDirectory, $"{i}.json");
             var headerJson = File.ReadAllText(path);
             var jHeader = JObject.Parse(headerJson);

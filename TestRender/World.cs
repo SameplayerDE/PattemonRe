@@ -43,8 +43,6 @@ public class World
                 Chunks.Add(chunk.Id, chunk);
             }
         }
-        
-
         return world;
     }
 

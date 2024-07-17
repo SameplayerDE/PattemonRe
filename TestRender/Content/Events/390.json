@@ -1,0 +1,85 @@
+﻿{
+    "id": 390,
+    "entities": [
+        {
+            "id": 0,
+            "cx": 23,
+            "cy": 14,
+            "cz": 1,
+            "mx": 3,
+            "my": 27,
+            "flag": 0,
+            "execute": 6,
+            "sprite": 12,
+            "orientation": 2
+        },
+        {
+            "id": 1,
+            "cx": 12,
+            "cy": 25,
+            "cz": 1,
+            "mx": 3,
+            "my": 27,
+            "flag": 0,
+            "execute": 5,
+            "sprite": 19,
+            "orientation": 0
+        },
+        {
+            "id": 2,
+            "cx": 9,
+            "cy": 11,
+            "cz": 1,
+            "mx": 3,
+            "my": 27,
+            "flag": 372,
+            "execute": 0,
+            "sprite": 148,
+            "orientation": 1
+        },
+        {
+            "id": 3,
+            "cx": 12,
+            "cy": 5,
+            "cz": 0,
+            "mx": 3,
+            "my": 27,
+            "flag": 0,
+            "execute": 3,
+            "sprite": 10,
+            "orientation": 2
+        }
+    ],
+    "triggers": [
+        {
+            "id": 0,
+            "cx": 12,
+            "cy": 3,
+            "cz": 0, 
+            "mx": 3,
+            "my": 27,
+            "wx": 8,
+            "wy": 1,
+            "logic": {
+                "watch": 16496,
+                "expect": 1,
+                "execute": 4
+            }
+        },
+        {
+            "id": 1,
+            "cx": 9,
+            "cy": 12,
+            "cz": 0,
+            "mx": 3,
+            "my": 27,
+            "wx": 1,
+            "wy": 1,
+            "logic": {
+                "watch": 16614,
+                "expect": 0,
+                "execute": 2
+            }
+        }
+    ]
+}
