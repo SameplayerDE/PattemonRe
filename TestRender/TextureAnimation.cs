@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using PatteLib.Graphics;
 
 namespace TestRender;
 
@@ -13,42 +14,41 @@ public enum AnimationPlayMode
     EaseIn
 }
 
-public class TextureAnimation
+public class TextureAnimation : SpriteCollection
 {
-    private string _basePath;
-    private string _fileName;
     public string[] ForMaterial;
-    public List<Texture2D> Frames = new List<Texture2D>();
     public TimeSpan FrameDuration;
     public TimeSpan BounceWaitDuration;
     public TimeSpan AnimationTimer;
     public TimeSpan BounceWaitTimer;
     public int FrameIndex = 0;
-    public int FramesCount;
+    public int FramesCount => _count;
     public AnimationPlayMode PlayMode;
     private bool _isReversing = false;
     private bool _isWaiting = false;
 
-    public Texture2D CurrentFrame => Frames[FrameIndex];
-
-    public TextureAnimation(string path, string fileName, float frameDuration, int count, string[] @for, AnimationPlayMode playMode = AnimationPlayMode.Linear, float bounceWaitDuration = 0.5f)
+    public Texture2D CurrentFrame => Sprites[FrameIndex];
+    
+    public TextureAnimation(IServiceProvider serviceProvider, string path, string fileName, float frameDuration, int count, string[] @for, AnimationPlayMode playMode = AnimationPlayMode.Linear, float bounceWaitDuration = 0.5f) : base(serviceProvider)
     {
         ForMaterial = @for;
         _basePath = path;
+        _count = count;
         _fileName = fileName;
         FrameDuration = TimeSpan.FromSeconds(frameDuration);
         BounceWaitDuration = TimeSpan.FromSeconds(bounceWaitDuration);
-        FramesCount = count;
+        
         PlayMode = playMode;
     }
 
-    public void LoadContent(ContentManager contentManager)
+    public void Load()
     {
-        for (var i = 0; i < FramesCount; i++)
-        {
-            var texturePath = $@"Animations\{_basePath}\{_fileName}_{i + 1}";
-            Frames.Add(contentManager.Load<Texture2D>(texturePath));
-        }
+        Load(_basePath, _fileName, _count);
+       //for (var i = 0; i < FramesCount; i++)
+       //{
+       //    var texturePath = $@"Animations\{_basePath}\{_fileName}_{i + 1}";
+       //    Frames.Add(contentManager.Load<Texture2D>(texturePath));
+       //}
     }
 
     public void Update(GameTime gameTime)

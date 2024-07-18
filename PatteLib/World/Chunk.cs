@@ -161,8 +161,7 @@ public class Chunk
             Model = gameModel;
         }
     }
-
-
+    
     public void Unload()
     {
         foreach (var building in Buildings)
@@ -241,8 +240,7 @@ public class Chunk
         result.Sort((p1, p2) => p2.Z.CompareTo(p1.Z));
         return result.ToArray();
     }
-
-
+    
     public static JToken Save(Chunk chunk)
     {
         var jChunk = new JObject

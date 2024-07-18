@@ -1,6 +1,6 @@
 ﻿namespace PatteLib.Gameplay;
 
-public enum OverworldType
+public enum OverWorldType
 {
     None,
     Trainer,

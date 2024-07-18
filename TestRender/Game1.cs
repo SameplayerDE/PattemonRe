@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using HxGLTF;
 using HxGLTF.Implementation;
 using HxLocal;
 using InputLib;
@@ -14,7 +11,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Newtonsoft.Json.Linq;
 using PatteLib.Data;
-using PatteLib.Gameplay;
 using PatteLib.Graphics;
 using PatteLib.World;
 using TestRendering;
@@ -40,10 +36,11 @@ public class Game1 : Game
     private ImageFontRenderer _fontRenderer;
 
     private Texture2D _textBox;
-    private GameModel _hero;
-    private Texture2D _woman1;
-    private EventContainer _eventFile;
-    private VertexPositionTexture[] _vertices;
+    private float _frameCount = 0;
+
+    private Dictionary<int, Texture2D> _sprites = [];
+    private VertexBuffer _vertexBuffer;
+    private IndexBuffer _indexBuffer;
     
     private List<TextureAnimation> _animations = [];
     private Dictionary<int, SoundEffect> _soundEffects = [];
@@ -73,9 +70,6 @@ public class Game1 : Game
     protected override void Initialize()
     {
         _timeManager = new WorldTimeManager();
-
-        _eventFile = EventContainerLoader.Load(@"Content\Events\405.json");
-        _vertices = new VertexPositionTexture[4];
         
         Localisation.RootDirectory = @"Content\Localisation";
         Localisation.SetLanguage("de");
@@ -96,14 +90,35 @@ public class Game1 : Game
 
         _world = World.Load(GraphicsDevice, _matrix);
         
-        _animations.Add(new TextureAnimation("Lakep", "lakep", 0.32f, 4, ["lakep_lm"]));
-        _animations.Add(new TextureAnimation("C1_Lamp1", "c1_lamp01", 0.16f, 5, ["c1_lamp01_", "lamp01"], AnimationPlayMode.Bounce, 0.64f));
-        _animations.Add(new TextureAnimation("C1_Lamp2", "c1_lamp02", 0.16f, 5, ["c1_lamp02_", "lamp03"], AnimationPlayMode.Bounce, 0.64f));
-        _animations.Add(new TextureAnimation("C1_S02_3", "c1_s02_3", 0.32f, 4, ["c1_s02_4"]));
-        _animations.Add(new TextureAnimation("C1_S01_D", "c1_s01_d", 0.08f, 4, ["c1_s01_d"]));
-        _animations.Add(new TextureAnimation("Hamabe", "hamabe", 0.32f, 8, ["hamabe_lm"]));
-        _animations.Add(new TextureAnimation("SeaRock", "searock", 0.16f, 4, ["searock_"]));
-        _animations.Add(new TextureAnimation("Sea", "sea", 0.32f, 8, ["sea_"]));
+        _animations.Add(new TextureAnimation(Services, "Content/Animations/Lakep", "lakep", 0.32f, 4, ["lakep_lm"]));
+        _animations.Add(new TextureAnimation(Services, "Content/Animations/C1_Lamp1", "c1_lamp01", 0.16f, 5, ["c1_lamp01_", "lamp01"], AnimationPlayMode.Bounce, 0.64f));
+        _animations.Add(new TextureAnimation(Services, "Content/Animations/C1_Lamp2", "c1_lamp02", 0.16f, 5, ["c1_lamp02_", "lamp03"], AnimationPlayMode.Bounce, 0.64f));
+        _animations.Add(new TextureAnimation(Services, "Content/Animations/C1_S02_3", "c1_s02_3", 0.32f, 4, ["c1_s02_4"]));
+        _animations.Add(new TextureAnimation(Services, "Content/Animations/C1_S01_D", "c1_s01_d", 0.08f, 4, ["c1_s01_d"]));
+        _animations.Add(new TextureAnimation(Services, "Content/Animations/Hamabe", "hamabe", 0.32f, 8, ["hamabe_lm"]));
+        _animations.Add(new TextureAnimation(Services, "Content/Animations/SeaRock", "searock", 0.16f, 4, ["searock_"]));
+        _animations.Add(new TextureAnimation(Services, "Content/Animations/Sea", "sea", 0.32f, 8, ["sea_"]));
+        
+        var vertices = new VertexPositionTexture[4];
+        
+        vertices[0].Position = new Vector3(-0.5f, -0.5f, 0f);
+        vertices[1].Position = new Vector3( 0.5f, -0.5f, 0f);
+        vertices[2].Position = new Vector3( 0.5f,  0.5f, 0f);
+        vertices[3].Position = new Vector3(-0.5f,  0.5f, 0f);
+
+        vertices[0].TextureCoordinate = new Vector2(0, 1);
+        vertices[1].TextureCoordinate = new Vector2(1, 1);
+        vertices[2].TextureCoordinate = new Vector2(1, 0);
+        vertices[3].TextureCoordinate = new Vector2(0, 0);
+        
+        var indices = new short[] { 0, 1, 2, 0, 3, 2 };
+
+        _vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionTexture), vertices.Length, BufferUsage.WriteOnly);
+        _vertexBuffer.SetData(vertices);
+        
+        _indexBuffer = new IndexBuffer(GraphicsDevice, typeof(short), indices.Length, BufferUsage.WriteOnly);
+        _indexBuffer.SetData(indices);
+
         
         base.Initialize();
     }
@@ -121,13 +136,20 @@ public class Game1 : Game
         _fontRenderer = new ImageFontRenderer(GraphicsDevice, _spriteBatch, _imageFont);
 
         _textBox = Content.Load<Texture2D>("textbox");
-        _woman1 = Content.Load<Texture2D>("Sprites/woman1/woman1_5");
+
+        var woman1SpriteCollection = new SpriteCollection(Services);
+        woman1SpriteCollection.Load("Content/Sprites/woman1", "woman1", 16);
         
-        _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\hero\hero"));
-        // _hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\FireFox Download\autumn_bushranger"));
-        //_hero = GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\FireFox Download\fortnite_guild_includes_poki_emote\scene"));
-            
-        //_camera.Teleport(109, 32, 890);
+        var man2SpriteCollection = new SpriteCollection(Services);
+        man2SpriteCollection.Load("Content/Sprites/man2", "man2", 16);
+        
+        var rivalSpriteCollection = new SpriteCollection(Services);
+        rivalSpriteCollection.Load("Content/Sprites/rival", "rivel", 16);
+        
+        AppContext.OverWorldSprites.Add(12, woman1SpriteCollection);
+        AppContext.OverWorldSprites.Add(10, man2SpriteCollection);
+        AppContext.OverWorldSprites.Add(148, rivalSpriteCollection);
+
         var songJson = File.ReadAllText($@"Content/SoundData.json");
         var jSongArray = JArray.Parse(songJson);
 
@@ -176,7 +198,7 @@ public class Game1 : Game
             
         foreach (var animation in _animations)
         {
-            animation.LoadContent(Content);
+            animation.Load();
         }
     }
         
@@ -369,8 +391,7 @@ public class Game1 : Game
                 }
             }
 */
-
-
+        _frameCount += delta;
         UpdateCamera(gameTime);
 
         foreach (var chunk in World.Chunks)
@@ -462,28 +483,8 @@ public class Game1 : Game
 
     private void DrawSprite(GameTime gameTime, AlphaTestEffect effect, Vector3 position, Vector3 scale, Vector3 rotation, Texture2D texture)
     {
-        var vertices = new VertexPositionTexture[4];
-        
-        vertices[0].Position = new Vector3(-0.5f, -0.5f, 0f);
-        vertices[1].Position = new Vector3( 0.5f, -0.5f, 0f);
-        vertices[2].Position = new Vector3( 0.5f,  0.5f, 0f);
-        vertices[3].Position = new Vector3(-0.5f,  0.5f, 0f);
-
-        vertices[0].TextureCoordinate = new Vector2(0, 1);
-        vertices[1].TextureCoordinate = new Vector2(1, 1);
-        vertices[2].TextureCoordinate = new Vector2(1, 0);
-        vertices[3].TextureCoordinate = new Vector2(0, 0);
-        
-        var indices = new short[] { 0, 1, 2, 0, 3, 2 };
-
-        var vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionTexture), vertices.Length, BufferUsage.WriteOnly);
-        vertexBuffer.SetData(vertices);
-        
-        var indexBuffer = new IndexBuffer(GraphicsDevice, typeof(short), indices.Length, BufferUsage.WriteOnly);
-        indexBuffer.SetData(indices);
         
         var worldMatrix = Matrix.CreateScale(scale) *
-                          
                           Matrix.CreateRotationX(rotation.X) *
                           Matrix.CreateRotationY(rotation.Y) *
                           Matrix.CreateTranslation(position);
@@ -499,8 +500,8 @@ public class Game1 : Game
         //effect.Parameters["View"].SetValue(_camera.View);
         //effect.Parameters["Projection"].SetValue(_camera.Projection);
 
-        GraphicsDevice.SetVertexBuffer(vertexBuffer);
-        GraphicsDevice.Indices = indexBuffer;
+        GraphicsDevice.SetVertexBuffer(_vertexBuffer);
+        GraphicsDevice.Indices = _indexBuffer;
         
         // Draw the sprite with indices
         foreach (var pass in effect.CurrentTechnique.Passes)
@@ -519,9 +520,6 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.Black);
             
         DrawWorld(gameTime, _world);
-        DrawModel(gameTime, _buildingShader, _hero);
-
-
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _spriteBatch.Draw(_textBox, Vector2.Zero, Color.White);
@@ -561,37 +559,46 @@ public class Game1 : Game
             var chunkId = tuple.chunkId;
             var headerId = tuple.headerId;
             
-            if (chunkId == 32)
+            if (headerId != 0)
             {
                 var header = HeaderManager.GetHeaderById(headerId);
-            
-                if (headerId != 0)
+
+                try
                 {
-                    try
-                    {
                         
-                        //Console.WriteLine(header.LocationName + " : " + headerId);
-                        var eventFile = EventContainerLoader.Load($@"Content\Events\{header.EventFileId}.json");
-                        if (eventFile == null)
-                        {
-                            return;
-                        }
+                    //Console.WriteLine(header.LocationName + " : " + headerId);
+                    var eventFile = EventContainerLoader.Load($@"Content\Events\{header.EventFileId}.json");
+                    if (eventFile != null)
+                    {
                         foreach (var entity in eventFile.Overworlds)
                         {
-                            var worldPosition = new Vector3(entity.MatrixX, 0, entity.MatrixY) * 32;
-                            var chunkPosition = new Vector3(entity.ChunkX, entity.ChunkZ + 1, entity.ChunkY);
-                            worldPosition += chunkPosition;
-                            var position = PatteLib.Utils.WorldToScreen(worldPosition, _camera.View, _camera.Projection,
-                                GraphicsDevice.Viewport);
-                            DrawSprite(gameTime, _basicEffect, worldPosition + new Vector3(0.5f, 0, 0.5f),
-                                new Vector3(1, 1, 1) * 2, _camera.Rotation, _woman1);
-                            //_spriteBatch.Draw(_woman1, position, null, Color.White, 0f, new Vector2(16, 16), 1f, SpriteEffects.None, 0f);
+                            var sprite = 12;
+                            if (AppContext.OverWorldSprites.ContainsKey(entity.EntryId))
+                            {
+                                sprite = entity.EntryId;
+                            }
+
+                            var frameIndex = (int)(_frameCount % 16);
+
+                            if (AppContext.OverWorldSprites[sprite].Has(frameIndex))
+                            {
+
+                                var worldPosition = new Vector3(entity.MatrixX, 0, entity.MatrixY) * 32;
+                                var chunkPosition = new Vector3(entity.ChunkX, entity.ChunkZ + 1, entity.ChunkY);
+                                worldPosition += chunkPosition;
+                                var position = PatteLib.Utils.WorldToScreen(worldPosition, _camera.View,
+                                    _camera.Projection,
+                                    GraphicsDevice.Viewport);
+                                DrawSprite(gameTime, _basicEffect, worldPosition + new Vector3(0.5f, 0, 0.5f),
+                                    new Vector3(1, 1, 1) * 2, _camera.Rotation,
+                                    AppContext.OverWorldSprites[sprite].Get(frameIndex));
+                            }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        //ignore
-                    }
+                }
+                catch (Exception ex)
+                {
+                    //ignore
                 }
             }
             
@@ -637,8 +644,6 @@ public class Game1 : Game
                     }
                 }
             }
-
-            
         }
     }
 
@@ -806,7 +811,6 @@ public class Game1 : Game
         //    .Select(p => p.Primitive).ToList();
 
         foreach (var primitive in mesh.Primitives)
-            //foreach (var primitive in sortedPrimitives)
         {
             if (ShouldSkipPrimitive(primitive, effect, alpha, ref alphaMode))
             {

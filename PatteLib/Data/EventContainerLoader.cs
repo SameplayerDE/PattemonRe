@@ -71,7 +71,7 @@ public static class EventContainerLoader
             var sprite = jEntityToken["sprite"].Value<int>();
             var execute = jEntityToken["execute"].Value<int>();
             
-            result.Overworlds.Add(new Overworld()
+            result.Overworlds.Add(new OverWorld()
             {
                 Id = id,
                 MatrixX = mx,
