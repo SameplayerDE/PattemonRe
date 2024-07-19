@@ -1,9 +1,11 @@
-﻿namespace PatteLib.Gameplay.Scripting;
+﻿using PatteLib.Data;
+
+namespace PatteLib.Gameplay.Scripting;
 
 public class ScriptProcessor
 {
     private Dictionary<string, List<ICommand>> _sections = [];
-    private Dictionary<int, int> _variables = [];
+
     private bool _comparisonResult;
     private Stack<(string section, int pointer)> _callStack = [];
     private int _pointer;
@@ -61,12 +63,12 @@ public class ScriptProcessor
 
     public int GetVariable(int address)
     {
-        return _variables.TryGetValue(address, out var value) ? value : 0;
+        return MemoryContext.GetVariable(address);
     }
 
     public void SetVariable(int address, int value)
     {
-        _variables[address] = value;
+        MemoryContext.SetVariable(address, value);
     }
 
     public bool GetComparisonResult()

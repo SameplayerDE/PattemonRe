@@ -68,7 +68,7 @@ public class WorldTimeManager
             }
             if (CurrentPeriod.Name != period.Name)
             {
-                var previousPeriod = CurrentPeriod;
+                TimePeriod previousPeriod = CurrentPeriod;
                 CurrentPeriod = period;
                 OnTimePeriodChanged(previousPeriod, CurrentPeriod);
             }

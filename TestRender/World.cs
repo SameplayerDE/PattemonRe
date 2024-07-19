@@ -45,6 +45,27 @@ public class World
         }
         return world;
     }
+    
+    public static World LoadByHeader(GraphicsDevice graphicsDevice, int headerId)
+    {
+        var world = new World();
+
+        AppContext.CurrentHeaderId = headerId;
+        
+        var json = File.ReadAllText(@$"Content/WorldData/Headers/{headerId}.json");
+        var jHeader = JObject.Parse(json);
+        var header = ChunkHeader.Load(jHeader);
+
+        AppContext.CurrentEventContainer = EventContainerLoader.Load($@"A:\ModelExporter\Platin\event_files\{header.EventFileId}.json");
+        
+        Console.WriteLine(header.EventFileId);
+        
+        var matrixId = header.MatrixId;
+
+        world = Load(graphicsDevice, matrixId);
+        
+        return world;
+    }
 
     public Chunk GetChunkAtPosition(Vector3 position)
     {

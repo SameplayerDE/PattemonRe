@@ -95,7 +95,7 @@ namespace ChunkEditor
             _gridTexture = new Texture2D(GraphicsDevice, 1, 1);
             _gridTexture.SetData(new[] { Color.White });
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 100; i < 200; i++)
             {
                 var chunkJson = File.ReadAllText($@"A:\Coding\Survival\TestRender\Content\WorldData\Chunks\{i}.json");
                 var jChunk = JObject.Parse(chunkJson);

@@ -16,8 +16,4 @@
       <ProjectReference Include="..\HxGLTF\HxGLTF.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Audio\" />
-    </ItemGroup>
-
 </Project>

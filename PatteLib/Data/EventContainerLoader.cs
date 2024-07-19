@@ -25,7 +25,6 @@ public static class EventContainerLoader
         {
             foreach (var jTriggerToken in (JArray)jTriggers)
             {
-                var id = jTriggerToken["id"].Value<int>();
                 var cx = jTriggerToken["cx"].Value<int>();
                 var cy = jTriggerToken["cy"].Value<int>();
                 var cz = jTriggerToken["cz"].Value<int>();
@@ -33,13 +32,12 @@ public static class EventContainerLoader
                 var my = jTriggerToken["my"].Value<int>();
                 var wx = jTriggerToken["wx"].Value<int>();
                 var wy = jTriggerToken["wy"].Value<int>();
-                var watch = jTriggerToken["logic"]["watch"].Value<int>();
-                var expect = jTriggerToken["logic"]["expect"].Value<int>();
-                var execute = jTriggerToken["logic"]["execute"].Value<int>();
+                var watch = jTriggerToken["watch"].Value<int>();
+                var expect = jTriggerToken["expect"].Value<int>();
+                var execute = jTriggerToken["execute"].Value<int>();
 
                 result.Triggers.Add(new Trigger()
                 {
-                    Id = id,
                     MatrixX = mx,
                     MatrixY = my,
                     ChunkX = cx,
@@ -60,16 +58,18 @@ public static class EventContainerLoader
 
         foreach (var jEntityToken in (JArray)jEventToken["entities"])
         {
-            var id = jEntityToken["id"].Value<int>();
+            
             var cx = jEntityToken["cx"].Value<int>();
             var cy = jEntityToken["cy"].Value<int>();
             var cz = jEntityToken["cz"].Value<int>();
             var mx = jEntityToken["mx"].Value<int>();
             var my = jEntityToken["my"].Value<int>();
             
+            var id = jEntityToken["id"].Value<int>();
             var flag = jEntityToken["flag"].Value<int>();
             var sprite = jEntityToken["sprite"].Value<int>();
             var execute = jEntityToken["execute"].Value<int>();
+            var is3D = jEntityToken["is3D"].Value<bool>();
             
             result.Overworlds.Add(new OverWorld()
             {
@@ -81,7 +81,8 @@ public static class EventContainerLoader
                 ChunkZ = cz,
                 Flag = flag,
                 EntryId = sprite,
-                Script = execute
+                Script = execute,
+                Is3D = is3D
             });
         }
         

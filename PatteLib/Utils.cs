@@ -24,5 +24,22 @@ public class Utils
     
         return new Vector2(screenPosition.X, screenPosition.Y);
     }
-
+    
+    public static double Q412ToDouble(int q412Value)
+    {
+        bool isNegative = (q412Value & (1 << 15)) != 0;
+        
+        int absoluteValue = isNegative ? ~q412Value + 1 : q412Value;
+        
+        int integerPart = absoluteValue >> 12;
+        int fractionalPart = absoluteValue & ((1 << 12) - 1);
+        
+        const double fractionalScale = 1.0 / (1 << 12);
+        double scaledFractionalPart = fractionalPart * fractionalScale;
+        
+        double usableNumber = integerPart + scaledFractionalPart;
+        
+        return isNegative ? -usableNumber : usableNumber;
+    }
+    
 }

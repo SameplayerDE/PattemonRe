@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PatteLib;
 
 namespace TestRendering
 {
@@ -54,6 +55,7 @@ namespace TestRendering
         public Camera(GraphicsDevice graphicsDevice)
         {
             GraphicsDevice = graphicsDevice;
+            //RotateX(MathHelper.ToDegrees((float)Utils.Q412ToDouble(-10750)));
             _position = new Vector3(0, 0, 0);
             GenerateProjectionMatrix();
         }
@@ -62,6 +64,10 @@ namespace TestRendering
         {
             var presentationParameters = GraphicsDevice.PresentationParameters;
             var aspectRatio = (float)presentationParameters.BackBufferWidth / (float)presentationParameters.BackBufferHeight;
+            
+            var width = 32 * 42f;
+            var height = width / aspectRatio;
+            //_projection = Matrix.CreateOrthographic(width, height, _nearClipPlane, _farClipPlane);
             
             var perspective = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70f), aspectRatio, _nearClipPlane, _farClipPlane);
             _projection = perspective;

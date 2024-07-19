@@ -6,6 +6,7 @@ public class OverWorld : EventEntity
     public int Flag; // flag 
     public int Script; // script to trigger
     public int EntryId; // sprites and animations
+    public bool Is3D;
     public OverWorldType Type;
     public Orientation Orientation;
     public MovementPattern MovementPattern;

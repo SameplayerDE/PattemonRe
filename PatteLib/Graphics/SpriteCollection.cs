@@ -10,6 +10,8 @@ public class SpriteCollection : IDisposable
     public int Id;
     public ContentManager ContentManager;
     public Dictionary<int, Texture2D> Sprites = [];
+
+    public int Count => _count;
     
     protected string _basePath;
     protected string _fileName;
@@ -25,10 +27,18 @@ public class SpriteCollection : IDisposable
         _basePath = path;
         _fileName = fileName;
         _count = count;
-        for (var i = 0; i < count; i++)
+        if (count == 1)
         {
-            var texturePath = $@"{_basePath}\{_fileName}_{i + 1}";
-            Sprites.Add(i, ContentManager.Load<Texture2D>(texturePath));
+            var texturePath = $@"{_basePath}\{_fileName}";
+            Sprites.Add(0, ContentManager.Load<Texture2D>(texturePath));
+        }
+        else
+        {
+            for (var i = 0; i < count; i++)
+            {
+                var texturePath = $@"{_basePath}\{_fileName}_{i + 1}";
+                Sprites.Add(i, ContentManager.Load<Texture2D>(texturePath));
+            }
         }
     }
 

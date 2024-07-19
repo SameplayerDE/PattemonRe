@@ -5342,6 +5342,30 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/man2/man2_9.png
 
+#begin Sprites/missing/missing.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/missing/missing.png
+
+#begin Sprites/monstarball/monstarball.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/monstarball/monstarball.png
+
 #begin Sprites/pl_boy01_c/pl_boy01c_1.png
 /importer:TextureImporter
 /processor:TextureProcessor

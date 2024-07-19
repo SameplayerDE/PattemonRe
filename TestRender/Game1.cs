@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using HxGLTF;
 using HxGLTF.Implementation;
 using HxLocal;
 using InputLib;
@@ -34,6 +35,9 @@ public class Game1 : Game
     private Texture2D _pixel;
     private ImageFont _imageFont;
     private ImageFontRenderer _fontRenderer;
+    private RenderTarget2D _4k;
+    private RenderTarget2D _alphaPassTarget;
+    private RenderTarget2D _defaultPassTarget;
 
     private Texture2D _textBox;
     private float _frameCount = 0;
@@ -46,7 +50,8 @@ public class Game1 : Game
     private Dictionary<int, SoundEffect> _soundEffects = [];
     private Dictionary<int, Music> _musics = [];
     private SoundEffectInstance _currentSoundEffectInstance;
-    
+
+    private Point _preferredDimensions = new Point(1280, 980);
     private int _matrix = 0;
     private bool _debugTexture = false;
 
@@ -57,7 +62,7 @@ public class Game1 : Game
         IsMouseVisible = true;
             
         IsFixedTimeStep = true;
-        TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
+        TargetElapsedTime = TimeSpan.FromSeconds(1d / 120d);
 
         _graphicsDeviceManager.PreferredBackBufferHeight = 960;
         _graphicsDeviceManager.PreferredBackBufferWidth = 1280;
@@ -70,6 +75,13 @@ public class Game1 : Game
     protected override void Initialize()
     {
         _timeManager = new WorldTimeManager();
+
+        _4k = new RenderTarget2D(GraphicsDevice, 1280 * 10, 960 * 10, false,
+            GraphicsDevice.PresentationParameters.BackBufferFormat,
+            DepthFormat.Depth24);
+        
+        _alphaPassTarget = new RenderTarget2D(GraphicsDevice, _preferredDimensions.X, _preferredDimensions.Y, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
+        _defaultPassTarget = new RenderTarget2D(GraphicsDevice, _preferredDimensions.X, _preferredDimensions.Y, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
         
         Localisation.RootDirectory = @"Content\Localisation";
         Localisation.SetLanguage("de");
@@ -87,8 +99,10 @@ public class Game1 : Game
         Chunk.RootDirectory = @"A:\ModelExporter\Platin\overworldmaps";
         
         _camera = new Camera(GraphicsDevice);
+        _camera.Teleport(29 * 32 + (8 * 16), 100, 29 * 32);
+        _camera.RotateY(-90);
 
-        _world = World.Load(GraphicsDevice, _matrix);
+        _world = World.LoadByHeader(GraphicsDevice, _matrix);
         
         _animations.Add(new TextureAnimation(Services, "Content/Animations/Lakep", "lakep", 0.32f, 4, ["lakep_lm"]));
         _animations.Add(new TextureAnimation(Services, "Content/Animations/C1_Lamp1", "c1_lamp01", 0.16f, 5, ["c1_lamp01_", "lamp01"], AnimationPlayMode.Bounce, 0.64f));
@@ -101,10 +115,10 @@ public class Game1 : Game
         
         var vertices = new VertexPositionTexture[4];
         
-        vertices[0].Position = new Vector3(-0.5f, -0.5f, 0f);
-        vertices[1].Position = new Vector3( 0.5f, -0.5f, 0f);
-        vertices[2].Position = new Vector3( 0.5f,  0.5f, 0f);
-        vertices[3].Position = new Vector3(-0.5f,  0.5f, 0f);
+        vertices[0].Position = new Vector3(-0.5f, 0f, 0f);
+        vertices[1].Position = new Vector3( 0.5f, 0f, 0f);
+        vertices[2].Position = new Vector3( 0.5f, 1f, 0f);
+        vertices[3].Position = new Vector3(-0.5f, 1f, 0f);
 
         vertices[0].TextureCoordinate = new Vector2(0, 1);
         vertices[1].TextureCoordinate = new Vector2(1, 1);
@@ -146,9 +160,24 @@ public class Game1 : Game
         var rivalSpriteCollection = new SpriteCollection(Services);
         rivalSpriteCollection.Load("Content/Sprites/rival", "rivel", 16);
         
+        var pokeballSpriteCollection = new SpriteCollection(Services);
+        pokeballSpriteCollection.Load("Content/Sprites/monstarball", "monstarball", 1);
+        
+        var missingCollection = new SpriteCollection(Services);
+        missingCollection.Load("Content/Sprites/missing", "missing", 1);
+        
         AppContext.OverWorldSprites.Add(12, woman1SpriteCollection);
         AppContext.OverWorldSprites.Add(10, man2SpriteCollection);
+        AppContext.OverWorldSprites.Add(87, pokeballSpriteCollection);
         AppContext.OverWorldSprites.Add(148, rivalSpriteCollection);
+        AppContext.OverWorldSprites.Add(-1, missingCollection);
+        
+        AppContext.OverWorldModels.Add(91, GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\board_a\board_a")));
+        AppContext.OverWorldModels.Add(92, GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\board_b\board_b")));
+        AppContext.OverWorldModels.Add(93, GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\board_c\board_c")));
+        AppContext.OverWorldModels.Add(94, GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\board_d\board_d")));
+        AppContext.OverWorldModels.Add(95, GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\board_e\board_e")));
+        AppContext.OverWorldModels.Add(96, GameModel.From(GraphicsDevice, GLTFLoader.Load(@"A:\ModelExporter\Platin\output_assets\board_f\board_f")));
 
         var songJson = File.ReadAllText($@"Content/SoundData.json");
         var jSongArray = JArray.Parse(songJson);
@@ -293,7 +322,7 @@ public class Game1 : Game
 
         if (KeyboardHandler.IsKeyDownOnce(Keys.Space))
         {
-            _world = World.Load(GraphicsDevice, _matrix);
+            _world = World.LoadByHeader(GraphicsDevice, _matrix);
         }
 /*
             var direction = GetDirectionFromInput();
@@ -398,8 +427,9 @@ public class Game1 : Game
         {
             foreach (var building in chunk.Value.Buildings)
             {
-                building.Model.Update(gameTime);
-                building.Model.Play(0);
+                //building.Model.Update(gameTime);
+                //building.Model.Play(0);
+                building.Model.Stop();
             }
         }
 
@@ -450,33 +480,37 @@ public class Game1 : Game
             _camera.EnableMix = false;
         }
 
-        if (Keyboard.GetState().IsKeyUp(Keys.LeftShift))
+        if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
         {
-
             Direction *= 64;
-                
-            _camera.Move(-Direction * delta);
+        }
+        else
+        {
+            Direction *= 4;
+        }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
-            {
-                _camera.RotateX(-1);
-            }
+        _camera.Move(-Direction * delta);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
-            {
-                _camera.RotateX(1);
-            }
+        var turnSpeed = 32 * delta;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
-                _camera.RotateY(1);
-            }
+        if (Keyboard.GetState().IsKeyDown(Keys.Up))
+        {
+            _camera.RotateX(-turnSpeed);
+        }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
-                _camera.RotateY(-1);
-            }
+        if (Keyboard.GetState().IsKeyDown(Keys.Down))
+        {
+            _camera.RotateX(turnSpeed);
+        }
 
+        if (Keyboard.GetState().IsKeyDown(Keys.Left))
+        {
+            _camera.RotateY(turnSpeed);
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.Right))
+        {
+            _camera.RotateY(-turnSpeed);
         }
         _camera.Update(gameTime);
     }
@@ -517,11 +551,20 @@ public class Game1 : Game
         {
             return;
         }
-        GraphicsDevice.Clear(Color.Black);
-            
-        DrawWorld(gameTime, _world);
         
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        GraphicsDevice.SetRenderTarget(_defaultPassTarget);
+        GraphicsDevice.Clear(Color.Transparent);
+        DrawWorld(gameTime, _world);
+        //GraphicsDevice.SetRenderTarget(_alphaPassTarget);
+        //GraphicsDevice.Clear(Color.Transparent);
+        
+        //Exit();
+        GraphicsDevice.SetRenderTarget(null);
+        GraphicsDevice.Clear(Color.Black);
+
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp, depthStencilState: DepthStencilState.Default, blendState: BlendState.AlphaBlend);
+        _spriteBatch.Draw(_defaultPassTarget, new Rectangle(0, 0, 1280, 960), Color.White);
+        //_spriteBatch.Draw(_alphaPassTarget, new Rectangle(0, 0, 1280, 960), Color.White);
         _spriteBatch.Draw(_textBox, Vector2.Zero, Color.White);
         try
         {
@@ -543,13 +586,14 @@ public class Game1 : Game
 
         if (_debugTexture)
         {
+            _4k.SaveAsPng(File.Create("output.png"), _4k.Width, _4k.Height);
             _debugTexture = false;
         }
-
+        
         base.Draw(gameTime);
     }
 
-    private void DrawWorld(GameTime gameTime, World world)
+    private void DrawWorld(GameTime gameTime, World world, bool alphaPass = false)
     {
         foreach (var chunkEntry in world.Combination)
         {
@@ -558,49 +602,8 @@ public class Game1 : Game
 
             var chunkId = tuple.chunkId;
             var headerId = tuple.headerId;
-            
-            if (headerId != 0)
-            {
-                var header = HeaderManager.GetHeaderById(headerId);
 
-                try
-                {
-                        
-                    //Console.WriteLine(header.LocationName + " : " + headerId);
-                    var eventFile = EventContainerLoader.Load($@"Content\Events\{header.EventFileId}.json");
-                    if (eventFile != null)
-                    {
-                        foreach (var entity in eventFile.Overworlds)
-                        {
-                            var sprite = 12;
-                            if (AppContext.OverWorldSprites.ContainsKey(entity.EntryId))
-                            {
-                                sprite = entity.EntryId;
-                            }
-
-                            var frameIndex = (int)(_frameCount % 16);
-
-                            if (AppContext.OverWorldSprites[sprite].Has(frameIndex))
-                            {
-
-                                var worldPosition = new Vector3(entity.MatrixX, 0, entity.MatrixY) * 32;
-                                var chunkPosition = new Vector3(entity.ChunkX, entity.ChunkZ + 1, entity.ChunkY);
-                                worldPosition += chunkPosition;
-                                var position = PatteLib.Utils.WorldToScreen(worldPosition, _camera.View,
-                                    _camera.Projection,
-                                    GraphicsDevice.Viewport);
-                                DrawSprite(gameTime, _basicEffect, worldPosition + new Vector3(0.5f, 0, 0.5f),
-                                    new Vector3(1, 1, 1) * 2, _camera.Rotation,
-                                    AppContext.OverWorldSprites[sprite].Get(frameIndex));
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //ignore
-                }
-            }
+            var distance = Vector2.Distance(new Vector2(targetX, targetY), (new Vector2(_camera.Position.X, _camera.Position.Z) / 32).ToPoint().ToVector2());
             
             if (World.Chunks.TryGetValue(chunkId, out var chunk))
             {
@@ -608,19 +611,17 @@ public class Game1 : Game
                 {
                     DrawModel(gameTime, _worldShader, chunk.Model,
                         offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
-                                new Vector3(16, 0, 16));
+                                new Vector3(16, 0, 16), alpha: false);
                     foreach (var building in chunk.Buildings)
                     {
                         DrawModel(gameTime, _buildingShader, building.Model,
                             offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
-                                    new Vector3(16, 0, 16));
+                                    new Vector3(16, 0, 16), alpha: false);
                     }
                 }
             }
-
-
         }
-
+        
         foreach (var chunkEntry in world.Combination)
         {
             var (targetX, targetY) = chunkEntry.Key;
@@ -628,19 +629,135 @@ public class Game1 : Game
 
             var chunkId = tuple.chunkId;
             var headerId = tuple.headerId;
-            var worldOffset = new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) + new Vector3(16, 0, 16);
+
+            var distance = Vector2.Distance(new Vector2(targetX, targetY), (new Vector2(_camera.Position.X, _camera.Position.Z) / 32).ToPoint().ToVector2());
+
+            if (headerId == -1)
+            {
+                headerId = AppContext.CurrentHeaderId;
+            }
             
+            if (headerId > 0 && distance < 1)
+            {
+                var header = HeaderManager.GetHeaderById(headerId);
+                if (distance < 1)
+                {
+                    Console.WriteLine(("Distance to " + new Vector2(targetX, targetY) + " : " + distance));
+                    Console.WriteLine(header.LocationName + " : " + headerId);
+                }
+                try
+                {
+                    
+                    //var eventFile = EventContainerLoader.Load($@"A:\ModelExporter\Platin\event_files\{header.EventFileId}.json");
+                    var eventFile = AppContext.CurrentEventContainer;
+                    if (eventFile != null)
+                    {
+                        foreach (var entity in eventFile.Overworlds)
+                        {
+
+                            if (entity.Script == 0xFFFF)
+                            {
+                                //continue;
+                            }
+                            else
+                            {
+                                if (entity.Flag != 0)
+                                {
+                                    if (MemoryContext.GetFlag(entity.Flag) != 1)
+                                    {
+                                        continue;
+                                    }
+                                }
+                            }
+
+                            var worldPosition = new Vector3(entity.MatrixX, 0, entity.MatrixY) * 32;
+                            var chunkPosition = new Vector3(entity.ChunkX, entity.ChunkZ, entity.ChunkY);
+
+                            var chunkPlate = world.GetChunkAtPosition(worldPosition)
+                                .GetNearestChunkPlate(chunkPosition);
+                            var height = 0f;
+                            if (chunkPlate != null)
+                            {
+                                height = chunkPlate.GetHeightAt(entity.ChunkX, entity.ChunkY);
+                            }
+                            else
+                            {
+                                height = 1;
+                            }
+                            chunkPosition.Y = height;
+                            worldPosition += chunkPosition;
+                            
+                            if (entity.Is3D)
+                            {
+                                var model = 92;
+                                if (AppContext.OverWorldModels.ContainsKey(entity.EntryId))
+                                {
+                                    model = entity.EntryId;
+                                }
+
+                                DrawModel(gameTime, _buildingShader, AppContext.OverWorldModels[model], false,
+                                    offset: worldPosition - new Vector3(-0.5f, 1, -0.5f));
+                                DrawModel(gameTime, _buildingShader, AppContext.OverWorldModels[model], true,
+                                    offset: worldPosition - new Vector3(-0.5f, 1, -0.5f));
+                            }
+                            else
+                            {
+
+                                var sprite = -1;
+                                if (AppContext.OverWorldSprites.ContainsKey(entity.EntryId))
+                                {
+                                    sprite = entity.EntryId;
+                                }
+
+                                var frameIndex = (int)(_frameCount % 16);
+                                var collection = AppContext.OverWorldSprites[sprite];
+
+                                frameIndex %= collection.Count;
+
+                                if (collection.Has(frameIndex))
+                                {
+                                    var texture = collection.Get(frameIndex);
+                                    var scale = texture.Width / 16;
+
+                                   
+                                    var position = PatteLib.Utils.WorldToScreen(worldPosition, _camera.View,
+                                        _camera.Projection,
+                                        GraphicsDevice.Viewport);
+                                    DrawSprite(gameTime, _basicEffect, worldPosition + new Vector3(0.5f, -1, 0.5f),
+                                        new Vector3(1, 1, 1) * scale, _camera.Rotation, texture);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
             
+        }
+        
+        foreach (var chunkEntry in world.Combination)
+        {
+            var (targetX, targetY) = chunkEntry.Key;
+            var tuple = chunkEntry.Value;
+
+            var chunkId = tuple.chunkId;
+            var headerId = tuple.headerId;
+
             if (World.Chunks.TryGetValue(chunkId, out var chunk))
             {
                 if (chunk.IsLoaded && chunk.Model != null)
                 {
                     DrawModel(gameTime, _worldShader, chunk.Model,
-                        offset: worldOffset, alpha: true);
+                        offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
+                                new Vector3(16, 0, 16), alpha: true);
                     foreach (var building in chunk.Buildings)
                     {
                         DrawModel(gameTime, _buildingShader, building.Model,
-                            offset: worldOffset, alpha: true);
+                            offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
+                                    new Vector3(16, 0, 16), alpha: true);
                     }
                 }
             }
@@ -879,7 +996,7 @@ public class Game1 : Game
                 
             if (_debugTexture)
             {
-                Console.WriteLine(material.Name);
+                //Console.WriteLine(material.Name);
             }
                 
             effect.Parameters["EmissiveColorFactor"]?.SetValue(material.EmissiveFactor.ToVector4());

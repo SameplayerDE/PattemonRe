@@ -339,10 +339,10 @@ namespace HxGLTF.Implementation
             }
         }
 
-        public void Draw(GraphicsDevice graphicsDevice, Effect effect, Matrix world, Matrix view, Matrix projection)
-        {
-            
-        }
+        //public void Draw(GraphicsDevice graphicsDevice, Effect effect, Matrix world, Matrix view, Matrix projection)
+        //{
+        //    
+        //}
         
         public static GameModel From(GraphicsDevice graphicsDevice, GLTFFile file)
         {

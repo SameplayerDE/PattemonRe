@@ -207,6 +207,43 @@ public class Chunk
         }
     }
     
+    public ChunkPlate GetNearestChunkPlate(Vector3 position)
+    {
+        if (Plates.Count == 0)
+        {
+            return null;
+        }
+
+        var localX = (int)position.X;
+        var localY = (int)position.Z;
+        var localZ = position.Y;
+
+        ChunkPlate nearestPlate = null;
+        double nearestDistance = double.MaxValue;
+
+        foreach (var plate in Plates)
+        {
+            var minX = plate.X;
+            var minY = plate.Y;
+            var maxX = minX + plate.Wx;
+            var maxY = minY + plate.Wy;
+
+            if (localX >= minX && localX < maxX && localY >= minY && localY < maxY)
+            {
+                var zDistance = Math.Abs(localZ - plate.Z);
+                
+                if (zDistance < nearestDistance)
+                {
+                    nearestPlate = plate;
+                    nearestDistance = zDistance;
+                }
+            }
+        }
+
+        return nearestPlate;
+    }
+
+    
     public ChunkPlate[] GetChunkPlateUnderPosition(Vector3 position)
     {
         if (Plates.Count == 0)

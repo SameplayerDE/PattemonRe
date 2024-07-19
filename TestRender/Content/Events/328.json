@@ -1,0 +1,133 @@
+﻿{
+    "id": 328,
+    "entities": [
+        {
+            "id": 0,
+            "cx": 27,
+            "cy": 22,
+            "cz": 1,
+            "mx": 3,
+            "my": 26,
+            "flag": 0,
+            "execute": 9,
+            "sprite": 9,
+            "orientation": 2
+        },
+        {
+            "id": 1,
+            "cx": 12,
+            "cy": 10,
+            "cz": 1,
+            "mx": 4,
+            "my": 26,
+            "flag": 0,
+            "execute": 10,
+            "sprite": 24,
+            "orientation": 1
+        },
+        {
+            "id": 2,
+            "cx": 12,
+            "cy": 10,
+            "cz": 1,
+            "mx": 4,
+            "my": 26,
+            "flag": 0,
+            "execute": 10,
+            "sprite": 24,
+            "orientation": 1
+        }
+    ],
+    "triggers": [
+        {
+            "id": 0,
+            "cx": 14,
+            "cy": 25,
+            "cz": 0,
+            "mx": 3,
+            "my": 26,
+            "wx": 4,
+            "wy": 1,
+            "logic": {
+                "watch": 16518,
+                "expect": 0,
+                "execute": 2
+            }
+        },
+        {
+            "id": 1,
+            "cx": 17,
+            "cy": 23,
+            "cz": 0,
+            "mx": 3,
+            "my": 26,
+            "wx": 2,
+            "wy": 1,
+            "logic": {
+                "watch": 16518,
+                "expect": 1,
+                "execute": 4
+            }
+        },
+        {
+            "id": 2,
+            "cx": 14,
+            "cy": 26,
+            "cz": 0,
+            "mx": 3,
+            "my": 26,
+            "wx": 4,
+            "wy": 1,
+            "logic": {
+                "watch": 16518,
+                "expect": 3,
+                "execute": 3
+            }
+        },
+        {
+            "id": 3,
+            "cx": 19,
+            "cy": 22,
+            "cz": 0,
+            "mx": 3,
+            "my": 26,
+            "wx": 1,
+            "wy": 1,
+            "logic": {
+                "watch": 16518,
+                "expect": 1,
+                "execute": 4
+            }
+        },
+        {
+            "id": 4,
+            "cx": 19,
+            "cy": 20,
+            "cz": 0,
+            "mx": 3,
+            "my": 26,
+            "wx": 1,
+            "wy": 4,
+            "logic": {
+                "watch": 16518,
+                "expect": 3,
+                "execute": 14
+            }
+        },
+        {
+            "id": 5,
+            "cx": 13,
+            "cy": 25,
+            "cz": 0,
+            "mx": 3,
+            "my": 26,
+            "wx": 5,
+            "wy": 1,
+            "logic": {
+                "watch": 16518,
+                "expect": 2,
+                "execute": 16
+            }
+        }
+    ]
+}
