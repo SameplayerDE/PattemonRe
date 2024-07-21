@@ -21,11 +21,11 @@ public class World
 
     public Dictionary<(int x, int y), (int chunkId, int headerId, int height)> Combination = [];
 
-    public static World Load(GraphicsDevice graphicsDevice, int mapId)
+    public static World LoadByMatrix(GraphicsDevice graphicsDevice, int matrixId)
     {
         var world = new World();
 
-        var json = File.ReadAllText(@$"Content/WorldData/Matrices/{mapId}.json");
+        var json = File.ReadAllText(@$"Content/WorldData/Matrices/{matrixId}.json");
         var jArray = JArray.Parse(json);
         foreach (var jCombination in jArray)
         {
@@ -62,7 +62,7 @@ public class World
         
         var matrixId = header.MatrixId;
 
-        world = Load(graphicsDevice, matrixId);
+        world = LoadByMatrix(graphicsDevice, matrixId);
         
         return world;
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using HxGLTF;
 using HxGLTF.Implementation;
 using HxLocal;
@@ -29,13 +30,13 @@ public class Game1 : Game
     private AlphaTestEffect _basicEffect;
     private Effect _worldShader;
     private Effect _buildingShader;
+    private Effect _animationShader;
     private Camera _camera;
     private World _world;
     private WorldTimeManager _timeManager;
     private Texture2D _pixel;
     private ImageFont _imageFont;
     private ImageFontRenderer _fontRenderer;
-    private RenderTarget2D _4k;
     private RenderTarget2D _alphaPassTarget;
     private RenderTarget2D _defaultPassTarget;
 
@@ -46,13 +47,13 @@ public class Game1 : Game
     private VertexBuffer _vertexBuffer;
     private IndexBuffer _indexBuffer;
     
-    private List<TextureAnimation> _animations = [];
+    private Dictionary<string[], AdvTextureAnimation> _animations = [];
     private Dictionary<int, SoundEffect> _soundEffects = [];
     private Dictionary<int, Music> _musics = [];
     private SoundEffectInstance _currentSoundEffectInstance;
 
     private Point _preferredDimensions = new Point(1280, 980);
-    private int _matrix = 0;
+    private int _matrix = 411;
     private bool _debugTexture = false;
 
     public Game1()
@@ -75,10 +76,6 @@ public class Game1 : Game
     protected override void Initialize()
     {
         _timeManager = new WorldTimeManager();
-
-        _4k = new RenderTarget2D(GraphicsDevice, 1280 * 10, 960 * 10, false,
-            GraphicsDevice.PresentationParameters.BackBufferFormat,
-            DepthFormat.Depth24);
         
         _alphaPassTarget = new RenderTarget2D(GraphicsDevice, _preferredDimensions.X, _preferredDimensions.Y, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
         _defaultPassTarget = new RenderTarget2D(GraphicsDevice, _preferredDimensions.X, _preferredDimensions.Y, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
@@ -95,23 +92,27 @@ public class Game1 : Game
         TextArchiveManager.RootDirectory = @"Content\Localisation\de";
         TextArchiveManager.Load(561);
         
-        Building.RootDirectory = @"A:\ModelExporter\Platin\export_output\output_assets";
+        Building.RootDirectory = @"A:\ModelExporter\Platin\output_assets";
         Chunk.RootDirectory = @"A:\ModelExporter\Platin\overworldmaps";
         
         _camera = new Camera(GraphicsDevice);
-        _camera.Teleport(29 * 32 + (8 * 16), 100, 29 * 32);
+        //_camera.Teleport(29 * 32 + (8 * 16), 100, 29 * 32);
         _camera.RotateY(-90);
 
         _world = World.LoadByHeader(GraphicsDevice, _matrix);
         
-        _animations.Add(new TextureAnimation(Services, "Content/Animations/Lakep", "lakep", 0.32f, 4, ["lakep_lm"]));
-        _animations.Add(new TextureAnimation(Services, "Content/Animations/C1_Lamp1", "c1_lamp01", 0.16f, 5, ["c1_lamp01_", "lamp01"], AnimationPlayMode.Bounce, 0.64f));
-        _animations.Add(new TextureAnimation(Services, "Content/Animations/C1_Lamp2", "c1_lamp02", 0.16f, 5, ["c1_lamp02_", "lamp03"], AnimationPlayMode.Bounce, 0.64f));
-        _animations.Add(new TextureAnimation(Services, "Content/Animations/C1_S02_3", "c1_s02_3", 0.32f, 4, ["c1_s02_4"]));
-        _animations.Add(new TextureAnimation(Services, "Content/Animations/C1_S01_D", "c1_s01_d", 0.08f, 4, ["c1_s01_d"]));
-        _animations.Add(new TextureAnimation(Services, "Content/Animations/Hamabe", "hamabe", 0.32f, 8, ["hamabe_lm"]));
-        _animations.Add(new TextureAnimation(Services, "Content/Animations/SeaRock", "searock", 0.16f, 4, ["searock_"]));
-        _animations.Add(new TextureAnimation(Services, "Content/Animations/Sea", "sea", 0.32f, 8, ["sea_"]));
+        _animations.Add(["l_lake"], AdvTextureAnimation.Load(GraphicsDevice, "Content/sea_animation.json"));
+        _animations.Add(["c1_fun2"], AdvTextureAnimation.Load(GraphicsDevice, "Content/funsui_animation.json"));
+        _animations.Add(["neon0"], AdvTextureAnimation.Load(GraphicsDevice, "Content/party_animation.json"));
+        
+        //_animations.Add(new TextureAnimation(Services, "Content/Animations/Lakep", "lakep", 0.32f, 4, ["lakep_lm"]));
+        //_animations.Add(new TextureAnimation(Services, "Content/Animations/C1_Lamp1", "c1_lamp01", 0.16f, 5, ["c1_lamp01_", "lamp01"], AnimationPlayMode.Bounce, 0.64f));
+        //_animations.Add(new TextureAnimation(Services, "Content/Animations/C1_Lamp2", "c1_lamp02", 0.16f, 5, ["c1_lamp02_", "lamp03"], AnimationPlayMode.Bounce, 0.64f));
+        //_animations.Add(new TextureAnimation(Services, "Content/Animations/C1_S02_3", "c1_s02_3", 0.32f, 4, ["c1_s02_4"]));
+        //_animations.Add(new TextureAnimation(Services, "Content/Animations/C1_S01_D", "c1_s01_d", 0.08f, 4, ["c1_s01_d"]));
+        //_animations.Add(new TextureAnimation(Services, "Content/Animations/Hamabe", "hamabe", 0.32f, 8, ["hamabe_lm"]));
+        //_animations.Add(new TextureAnimation(Services, "Content/Animations/SeaRock", "searock", 0.16f, 4, ["searock_"]));
+        //_animations.Add(new TextureAnimation(Services, "Content/Animations/Sea", "sea", 0.32f, 8, ["sea_"]));
         
         var vertices = new VertexPositionTexture[4];
         
@@ -139,10 +140,11 @@ public class Game1 : Game
         
     protected override void LoadContent()
     {
-        // ReSharper disable once HeapView.ObjectAllocation.Evident
+        var texAnim = AdvTextureAnimation.Load(GraphicsDevice, "Content/sea_animation.json"); 
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _worldShader = Content.Load<Effect>("Shaders/WorldShader");
         _buildingShader = Content.Load<Effect>("Shaders/BuildingShader");
+        _animationShader = Content.Load<Effect>("Shaders/AnimationShader");
         _basicEffect = new AlphaTestEffect(GraphicsDevice);
         _pixel = new Texture2D(GraphicsDevice, 1, 1);
         _pixel.SetData(new[] { Color.White });
@@ -227,7 +229,7 @@ public class Game1 : Game
             
         foreach (var animation in _animations)
         {
-            animation.Load();
+            //animation.Load();
         }
     }
         
@@ -283,7 +285,7 @@ public class Game1 : Game
             
         foreach (var animation in _animations)
         {
-            animation.Update(gameTime);
+            //animation.Update(gameTime);
         }
             
         _worldShader.Parameters["TimeOfDay"]?.SetValue(2);
@@ -294,6 +296,11 @@ public class Game1 : Game
         _buildingShader.Parameters["Delta"]?.SetValue(delta);
         _buildingShader.Parameters["Total"]?.SetValue((float)gameTime.TotalGameTime.TotalSeconds);
             
+        _animationShader.Parameters["TimeOfDay"]?.SetValue(2);
+        _animationShader.Parameters["Delta"]?.SetValue(delta);
+        _animationShader.Parameters["Total"]?.SetValue((float)gameTime.TotalGameTime.TotalSeconds);
+        _animationShader.Parameters["StepIndex"]?.SetValue((int)gameTime.TotalGameTime.TotalSeconds % 16);
+
         KeyboardHandler.Update(gameTime);
 
         if (KeyboardHandler.IsKeyDownOnce(Keys.T))
@@ -324,102 +331,7 @@ public class Game1 : Game
         {
             _world = World.LoadByHeader(GraphicsDevice, _matrix);
         }
-/*
-            var direction = GetDirectionFromInput();
 
-            if (direction != Vector3.Zero)
-            {
-                direction.Normalize();
-                var stepSize = 0.1f;
-
-                CellTarget = new Vector2(_heroX, _heroY) + new Vector2(direction.X, direction.Z) * stepSize;
-                _heroHeight += direction.Y * stepSize;
-
-
-                var newHeroPosition = new Vector3(CellTarget.X, 0, CellTarget.Y);
-
-                var newChunkX = (int)newHeroPosition.X / Chunk.Wx;
-                var newChunkY = (int)newHeroPosition.Z / Chunk.Wy;
-
-                var chunk = _world.GetChunkAtPosition(newHeroPosition);
-
-                if (chunk != null)
-                {
-                    var collision = _world.CheckTileCollision(newHeroPosition);
-                    var type = _world.CheckTileType(newHeroPosition);
-
-                    Console.WriteLine(collision);
-
-                    if (collision == 0x800)
-                    {
-                        if (type != 0x00)
-                        {
-                            Console.WriteLine(type);
-                            Console.WriteLine(direction);
-                            if (type == (byte)ChunkTileType.JumpDown)
-                            {
-                                if (direction == Vector3.Backward)
-                                {
-                                    _heroX = CellTarget.X;
-                                    _heroY = CellTarget.Y + 1;
-                                    _chunkX = newChunkX;
-                                    _chunkY = newChunkY;
-                                    _cellX = (int)(_heroX % 32) / 16;
-                                    _cellY = (int)(_heroY % 32) / 16;
-                                }
-                            }
-                            else if (type == (byte)ChunkTileType.TV)
-                            {
-
-                            }
-                            else
-                            {
-                                _heroX = CellTarget.X;
-                                _heroY = CellTarget.Y;
-                                _chunkX = newChunkX;
-                                _chunkY = newChunkY;
-                                _cellX = (int)(_heroX % 32) / 16;
-                                _cellY = (int)(_heroY % 32) / 16;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (type == 0x5E)
-                        {
-                            _world = World.Load(GraphicsDevice, 0);
-                            _chunkX = 3;
-                            _chunkY = 27;
-                            _cellX = 15;
-                            _cellY = 15;
-                            _heroX = _chunkX * 32;
-                            _heroX += _cellX * 16;
-
-                            _heroY = _chunkY * 32;
-                            _heroY += _cellY * 16;
-                        }
-                        else
-                        {
-                            _heroX = CellTarget.X;
-                            _heroY = CellTarget.Y;
-                            _chunkX = newChunkX;
-                            _chunkY = newChunkY;
-                            _cellX = (int)(_heroX % 32) / 16;
-                            _cellY = (int)(_heroY % 32) / 16;
-                        }
-                    }
-                }
-                else
-                {
-                    _heroX = CellTarget.X;
-                    _heroY = CellTarget.Y;
-                    _chunkX = newChunkX;
-                    _chunkY = newChunkY;
-                    _cellX = (int)(_heroX % 512) / 16;
-                    _cellY = (int)(_heroY % 512) / 16;
-                }
-            }
-*/
         _frameCount += delta;
         UpdateCamera(gameTime);
 
@@ -427,9 +339,9 @@ public class Game1 : Game
         {
             foreach (var building in chunk.Value.Buildings)
             {
-                //building.Model.Update(gameTime);
-                //building.Model.Play(0);
-                building.Model.Stop();
+                building.Model.Update(gameTime);
+                building.Model.Play(0);
+                //building.Model.Stop();
             }
         }
 
@@ -482,7 +394,7 @@ public class Game1 : Game
 
         if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
         {
-            Direction *= 64;
+            Direction *= 128;
         }
         else
         {
@@ -581,12 +493,10 @@ public class Game1 : Game
         {
             // ignored
         }
-
         _spriteBatch.End();
 
         if (_debugTexture)
         {
-            _4k.SaveAsPng(File.Create("output.png"), _4k.Width, _4k.Height);
             _debugTexture = false;
         }
         
@@ -609,12 +519,12 @@ public class Game1 : Game
             {
                 if (chunk.IsLoaded && chunk.Model != null)
                 {
-                    DrawModel(gameTime, _worldShader, chunk.Model,
+                    DrawModel(gameTime, _animationShader, chunk.Model,
                         offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
                                 new Vector3(16, 0, 16), alpha: false);
                     foreach (var building in chunk.Buildings)
                     {
-                        DrawModel(gameTime, _buildingShader, building.Model,
+                        DrawModel(gameTime, _animationShader, building.Model,
                             offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
                                     new Vector3(16, 0, 16), alpha: false);
                     }
@@ -762,6 +672,7 @@ public class Game1 : Game
                 }
             }
         }
+        
     }
 
     private void DrawWorldSmart(GameTime gameTime, World world)
@@ -842,7 +753,8 @@ public class Game1 : Game
                     }
                 }
             }
-        }*/
+        }
+        */
     }
     
     private void DrawModel(GameTime gameTime, Effect effect, GameModel model, bool alpha = false, Vector3 offset = default)
@@ -1009,7 +921,7 @@ public class Game1 : Game
                 effect.Parameters["TextureEnabled"]?.SetValue(true);
                 effect.Parameters["TextureDimensions"]?.SetValue(material.BaseTexture.Texture.Bounds.Size.ToVector2());
                 effect.Parameters["Texture"]?.SetValue(material.BaseTexture.Texture);
-                effect.Parameters["TextureAnimation"]?.SetValue(false);
+                effect.Parameters["ShouldAnimate"]?.SetValue(false);
                 SetTextureAnimation(gameTime, material, effect);
                 SetTextureEffects(gameTime, material, effect);
 
@@ -1028,16 +940,50 @@ public class Game1 : Game
 
     private void SetTextureAnimation(GameTime gameTime, GameMaterial material, Effect effect)
     {
-        foreach (var animation in _animations)
+        foreach (var animationPair in _animations)
         {
-            foreach (var keyWord in animation.ForMaterial)
+            if (animationPair.Key.Contains(material.Name))
             {
-                if (material.Name.Contains(keyWord))
+                var animation = animationPair.Value;
+                
+                effect.Parameters["ShouldAnimate"]?.SetValue(true);
+                effect.Parameters["AnimationType"]?.SetValue((int)animation.Type);
+                effect.Parameters["AnimationStyle"]?.SetValue((int)animation.Style);
+                
+                if (animation.Type == AnimationType.TextureCoords)
                 {
-                    effect.Parameters["Texture"]?.SetValue(animation.CurrentFrame);
-                    return;
+                    if (animation.Style == AnimationStyle.Linear)
+                    {
+                        effect.Parameters["AnimationSpeed"]?.SetValue(animation.Speed);
+                        effect.Parameters["AnimationDirection"]?.SetValue((int)animation.Direction);
+                    }
+                    else if (animation.Style == AnimationStyle.StepLoop)
+                    {
+                        var offsetArray = new Vector2[32];
+                        var scaleArray = new Vector2[32];
+                        for (int i = 0; i < animation.Steps.Length; i++)
+                        {
+                            AnimationStep step = animation.Steps[i];
+                            offsetArray[i] = step.Offset;
+                            scaleArray[i] = step.Scale;
+                        }
+                        effect.Parameters["Offset"]?.SetValue(offsetArray);
+                        effect.Parameters["Scale"]?.SetValue(scaleArray);
+                    }
                 }
             }
+        }
+        /*
+        foreach (var animation in _animations)
+        {
+            //foreach (var keyWord in animation.ForMaterial)
+            //{
+            //    if (material.Name.Contains(keyWord))
+            //    {
+            //        effect.Parameters["Texture"]?.SetValue(animation.CurrentFrame);
+            //        return;
+            //    }
+            //}
         }
         if (material.Name.Contains("c3_s03b"))
         {
@@ -1092,6 +1038,6 @@ public class Game1 : Game
             effect.Parameters["AnimationSpeed"]?.SetValue(42);
             effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
             effect.Parameters["TextureAnimation"]?.SetValue(true);
-        }
+        }*/
     }
 }

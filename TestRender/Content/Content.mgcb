@@ -5138,6 +5138,12 @@
 /processorParam:DebugMode=Auto
 /build:PBRShader.fx
 
+#begin Shaders/AnimationShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/AnimationShader.fx
+
 #begin Shaders/BuildingShader.fx
 /importer:EffectImporter
 /processor:EffectProcessor

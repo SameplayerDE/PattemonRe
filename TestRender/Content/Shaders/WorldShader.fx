@@ -8,19 +8,13 @@
 #endif
 
 
+
 cbuffer Matrices : register(b0)
 {
     matrix World;
     matrix View;
     matrix Projection;
 }
-
-cbuffer FogBuffer
-{
-    float4 fogColor;
-    float fogStart;
-    float fogEnd;
-};
 
 cbuffer Constants : register(b1)
 {

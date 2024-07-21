@@ -5,7 +5,9 @@ namespace PatteLib;
 
 public class Utils
 {
-            
+    
+    
+    
     // Funktion zum Konvertieren von 3D-Weltkoordinaten zu 2D-Bildschirmkoordinaten
     public static Vector2 WorldToScreen(Vector3 worldPosition, Matrix viewMatrix, Matrix projectionMatrix, Viewport viewport)
     {

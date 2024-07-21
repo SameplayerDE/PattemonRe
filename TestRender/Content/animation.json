@@ -1,0 +1,59 @@
+﻿[
+    {
+        "type": "frame-by-frame",
+        "frames": [
+            "image_0.png",
+            "image_1.png",
+            "image_2.png",
+            "image_3.png",
+            "image_4.png"
+        ],
+        "style": "linear-loop",
+        "durationPerFrame": 320
+    },
+    {
+        "type": "frame-by-frame",
+        "frames": [
+            "image_0.png",
+            "image_1.png",
+            "image_2.png",
+            "image_3.png",
+            "image_4.png"
+        ],
+        "style": "bounce-loop",
+        "bounceWait": 50,
+        "durationPerFrame": 320
+    },
+    {
+        "type": "texture-coords",
+        "style": "linear",
+        "speed": 320,
+        "direction": "up"
+    },
+    {
+        "type": "texture-coords",
+        "style": "step",
+        "steps": [
+            {
+                "offset": [0, 0],
+                "scale": [1, 1],
+                "duration": 0.32
+            },
+            {
+                "offset": [0, 0],
+                "scale": [1, 1],
+                "duration": 0.32
+            },
+            {
+                "offset": [0, 0],
+                "scale": [1, 1],
+                "duration": 0.32
+            },
+            {
+                "offset": [0, 0],
+                "scale": [1, 1],
+                "duration": 0.32
+            }
+        ]
+    }
+]
