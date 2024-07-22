@@ -59,6 +59,8 @@ public class Game1 : Game
     private int _matrix = 411;
     private bool _debugTexture = false;
 
+    private Vector3 _target;
+
     public Game1()
     {
         _graphicsDeviceManager = new GraphicsDeviceManager(this);
@@ -98,16 +100,20 @@ public class Game1 : Game
         Building.RootDirectory = @"A:\ModelExporter\Platin\output_assets";
         Chunk.RootDirectory = @"A:\ModelExporter\Platin\overworldmaps";
         
-        _camera = new Camera();
-        _camera.InitWithPosition(Vector3.One, (float)NitroUtils.Fx32ToDecimal(2731713), Vector3.Zero, NitroUtils.GetAngleFromU16Int(1473));
-        _camera.SetRotation(new Vector3(NitroUtils.GetAngleFromU16Int(54786), 0, 0));
-        _camera.SetClipping(0.01f, 1000f);
-        _camera.SetAsActive();
-        
         _normalCamera = new Camera();
-        _normalCamera.InitWithPosition(Vector3.One, 10, Vector3.Zero, 75);
+        //_normalCamera.InitWithPosition(Vector3.One, 10, Vector3.Zero, 75, CameraProjectionType.Perspective);
+        _normalCamera.InitWithTarget(ref _target, 10, Vector3.Zero, 75, CameraProjectionType.Perspective, true);
         _normalCamera.SetClipping(0.01f, 1000f);
 
+        
+        _camera = new Camera();
+        //_camera.InitWithPosition(Vector3.One, (float)NitroUtils.Fx32ToDecimal(2731713), Vector3.Zero, NitroUtils.GetAngleFromU16Int(1473), CameraProjectionType.Perspective);
+        _camera.InitWithTarget(ref _normalCamera.Position, (float)NitroUtils.Fx32ToDecimal(2731713), Vector3.Zero, NitroUtils.GetAngleFromU16Int(1473), CameraProjectionType.Perspective, true);
+        _camera.SetRotation(new Vector3(NitroUtils.GetAngleFromU16Int(54786), 0, 0));
+        _camera.SetClipping(100f, 500f);
+        _camera.SetAsActive();
+        
+        
         _world = World.LoadByHeader(GraphicsDevice, _matrix);
         
         _animations.Add(["l_lake"], AdvTextureAnimation.Load(GraphicsDevice, "Content/sea_animation.json"));
@@ -269,7 +275,9 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
         var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            
+
+        _target.X++;
+        
         if (!IsActive)
         {
             MediaPlayer.Pause();
@@ -331,11 +339,19 @@ public class Game1 : Game
             _world = World.LoadByHeader(GraphicsDevice, _matrix);
         }
 
-       // _camera.SetAsActive();
-       // UpdateCamera(gameTime);
+       _camera.SetAsActive();
+       _camera.ComputeViewMatrix();
        //Camera.ClearActive();
        //
+
+       //if (KeyboardHandler.IsKeyDownOnce(Keys.O))
+       //{
+       //    _camera.Position = new Vector3(_normalCamera.Position.X, _camera.Position.Y, _normalCamera.Position.Z);
+       //    //_camera.Position = new Vector3(_normalCamera.Position.X, _normalCamera.Position.Y, _normalCamera.Position.Z);
+       //}
+       
        _normalCamera.SetAsActive();
+       //_normalCamera.ComputeViewMatrix();
        UpdateCamera(gameTime);
        //Camera.ClearActive();
 
