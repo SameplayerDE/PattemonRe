@@ -31,15 +31,17 @@ cbuffer Skinning : register(b2) {
     matrix Bones[180];
 }
 
+bool ShouldAnimate;	
+float2 Offset;
+
 float Delta;
 float Total;
-uint  AnimationDirection;
-float AnimationSpeed = 1.0;
+
 float3 LightPosition;
 float3 LightDirection;
 float3 CameraPosition;
 float3 CameraDirection;
-bool TextureAnimation;
+
 float TimeOfDay = 1;
 
 float2 TextureDimensions;
@@ -72,6 +74,15 @@ struct VertexShaderOutput
 	float Depth : TEXCOORD7;
 };
 
+float2 ApplyTextureAnimation(float2 textureCoordinate)
+{
+    if (ShouldAnimate == true)
+    {
+    	textureCoordinate += Offset;
+    }
+    return textureCoordinate;
+}
+
 VertexShaderOutput MainVS(in VertexShaderInput input)
 {
     VertexShaderOutput output;
@@ -80,24 +91,6 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
     float3 normal = input.Normal;
     float4 color = input.Color;
     float2 textureCoordinate = input.TextureCoordinate;
-
-    if (TextureAnimation == true)
-    {
-        float speedX = Total / TextureDimensions.x * AnimationSpeed;
-        float speedY = Total / TextureDimensions.y * AnimationSpeed;
-        
-        switch (AnimationDirection)
-        {
-            case 0x01: textureCoordinate.x += speedX; break;
-            case 0x02: textureCoordinate.x -= speedX; break;
-            case 0x03: textureCoordinate.y += speedY; break;
-            case 0x04: textureCoordinate.y -= speedY; break;
-            case 0x05: textureCoordinate.x -= speedX; textureCoordinate.y += speedY; break;
-            case 0x06: textureCoordinate.x -= speedX; textureCoordinate.y -= speedY; break;
-            case 0x07: textureCoordinate.x += speedX; textureCoordinate.y += speedY; break;
-            case 0x08: textureCoordinate.x += speedX; textureCoordinate.y -= speedY; break;
-        }
-    }
 
     if (SkinningEnabled == true)
     {
@@ -118,7 +111,7 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
     output.Color = input.Color;
     output.Normal = mul(input.Normal, World);
     output.LightDirection = LightPosition - mul(input.Position, World);
-    output.TextureCoordinate = textureCoordinate;
+    output.TextureCoordinate = ApplyTextureAnimation(textureCoordinate);
     output.WorldPosition = worldPosition;
     output.ViewPosition = viewPosition;
     output.ViewDistance = (worldPosition - float4(CameraPosition, 1));

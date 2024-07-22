@@ -1,6 +1,6 @@
 ﻿{
     "type": "texture-coords",
     "style": "linear",
-    "speed": 16,
+    "speed": 2000,
     "direction": "down-left"
 }

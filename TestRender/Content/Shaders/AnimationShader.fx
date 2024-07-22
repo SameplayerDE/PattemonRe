@@ -14,32 +14,11 @@ cbuffer Camera : register(b0)
     matrix Projection;
 }
 
-float2 Offset[32];
-float2 Scale[32];
-
 float Delta;
 float Total;
 
-bool ShouldAnimate;
-uint AnimationType;
-	// 0 = frame-by-frame
-	// 1 = texture-coords
-uint AnimationStyle;
-	// 0 = linear-loop
-	// 1 = bounce-loop
-	// 2 = step-loop
-	// 3 = linear
-uint AnimationSpeed;
-uint AnimationDirection;
-	// 0 = up
-	// 1 = down
-	// 2 = left
-	// 3 = right
-	// 4 = up-left
-	// 5 = up-right
-	// 6 = down-left
-	// 7 = down-right
-uint StepIndex;
+bool ShouldAnimate;	
+float2 Offset;
 
 Texture2D Texture : register(t0);
 sampler TextureSampler : register(s0)
@@ -67,36 +46,8 @@ float2 ApplyTextureAnimation(float2 textureCoordinate)
 {
     if (ShouldAnimate == true)
     {
-    	
-    	if (AnimationType == 0)
-    	{
-    		return textureCoordinate;
-    	}
-    
-		if (AnimationStyle == 2)
-		{
-			textureCoordinate += Offset[StepIndex % 32];
-		}
-		else if (AnimationStyle == 3)
-    	{
-    		
-			float speedX = Total / AnimationSpeed;
-			float speedY = Total / AnimationSpeed;
-	
-			switch (AnimationDirection)
-			{
-				case 0: textureCoordinate.y += speedY; break;
-				case 1: textureCoordinate.y -= speedY; break;
-				case 2: textureCoordinate.x += speedX; break;
-				case 3: textureCoordinate.x -= speedX; break;
-				case 4: textureCoordinate.y += speedY; textureCoordinate.x += speedX; break;
-				case 5: textureCoordinate.y += speedY; textureCoordinate.x -= speedX; break;
-				case 6: textureCoordinate.y -= speedY; textureCoordinate.x += speedX; break;
-				case 7: textureCoordinate.y -= speedY; textureCoordinate.x -= speedX; break;
-			}
-        }
+    	textureCoordinate += Offset;
     }
-
     return textureCoordinate;
 }
 

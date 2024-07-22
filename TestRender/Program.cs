@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
+using PatteLib;
 using TestRender;
 using Utils = PatteLib.Utils;
 
@@ -9,18 +11,15 @@ public static class Program
     [STAThread]
     private static void Main()
     {
-        
-        Console.WriteLine(Utils.Q412ToDouble(1473));
-        Console.WriteLine(Q4_12_ToFloat(1473));
-        Console.WriteLine(Q4_12_ToFloat(2731713));
-        Console.WriteLine(Q4_12_ToFloat(-10750));
-        Console.WriteLine(Utils.Q412ToDouble(-10750));
-        
+        Console.WriteLine(MathHelper.ToDegrees((float)NitroUtils.Fx32ToDecimal(1473))); //
+        //Console.WriteLine(NitroUtils.Fx32ToDecimal(5377)); //
+        //Console.WriteLine(NitroUtils.DecimalToFx32((decimal)MathHelper.ToRadians(180)));
+        //Console.WriteLine(NitroUtils.DecimalToFx32(0));
+        //Console.WriteLine((short)NitroUtils.GetU16IntFromAngle(180));
+        //Console.WriteLine((short)NitroUtils.GetU16IntFromAngle(270));
+        //Console.WriteLine((short)NitroUtils.GetU16IntFromAngle(360));
+        //Console.WriteLine((uint)NitroUtils.DecimalToFx32(111));
         using var game = new Game1();
         game.Run();
-    }
-    
-    static float Q4_12_ToFloat( int fx ) {
-        return (float)fx / (float)(1 << 12);
     }
 }

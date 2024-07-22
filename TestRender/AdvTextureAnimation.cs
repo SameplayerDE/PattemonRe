@@ -39,7 +39,7 @@ public struct AnimationStep
 {
     public Vector2 Offset;
     public Vector2 Scale;
-    public float Duration;
+    public int Duration;
 }
 
 public class AdvTextureAnimation
@@ -63,6 +63,70 @@ public class AdvTextureAnimation
     public int Duration;
     public int Speed;
     public AnimationStep[] Steps;
+
+    public Vector2 Offset;
+    public TimeSpan AnimationTimer;
+    public int CurrentIndex;
+
+    public void Update(GameTime gameTime)
+    {
+        if (Type == AnimationType.Texture)
+        {
+            if (Style == AnimationStyle.LinearLoop)
+            {
+                AnimationTimer += gameTime.ElapsedGameTime;
+                if (AnimationTimer <= TimeSpan.FromMilliseconds(Duration))
+                {
+                    return;
+                }
+
+                AnimationTimer -= TimeSpan.FromMilliseconds(Duration);
+                CurrentIndex = (CurrentIndex + 1) % Frames.Length;
+            }
+        }
+        else if (Type == AnimationType.TextureCoords)
+        {
+            if (Style == AnimationStyle.StepLoop)
+            {
+                var currentStep = Steps[CurrentIndex];
+                AnimationTimer += gameTime.ElapsedGameTime;
+                if (AnimationTimer <= TimeSpan.FromMilliseconds(currentStep.Duration))
+                {
+                    return;
+                }
+                AnimationTimer -= TimeSpan.FromMilliseconds(currentStep.Duration);
+                CurrentIndex = (CurrentIndex + 1) % Steps.Length;
+                Offset = Steps[CurrentIndex].Offset;
+            }
+            else if (Style == AnimationStyle.Linear)
+            {
+                //AnimationTimer += gameTime.ElapsedGameTime;
+
+                float speed = 1000f / Speed;
+                
+                float deltaX = 0, deltaY = 0;
+
+                switch (Direction)
+                {
+                    case AnimationDirection.Up: deltaY = speed; break;
+                    case AnimationDirection.Down: deltaY = -speed; break;
+                    case AnimationDirection.Left: deltaX = speed; break;
+                    case AnimationDirection.Right: deltaX = -speed; break;
+                    case AnimationDirection.UpLeft: deltaY = speed; deltaX = speed; break;
+                    case AnimationDirection.UpRight: deltaY = speed; deltaX = -speed; break;
+                    case AnimationDirection.DownLeft: deltaY = -speed; deltaX = speed; break;
+                    case AnimationDirection.DownRight: deltaY = -speed; deltaX = -speed; break;
+                }
+                
+                Offset.X += deltaX * (float)gameTime.ElapsedGameTime.TotalSeconds;;
+                Offset.Y += deltaY * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                
+                Offset.X = Utils.Wrap(Offset.X, 0f, 1f);
+                Offset.Y = Utils.Wrap(Offset.Y, 0f, 1f);
+
+            }
+        }
+    }
     
     public static AdvTextureAnimation Load(GraphicsDevice graphicsDevice, string path)
     {
@@ -128,7 +192,7 @@ public class AdvTextureAnimation
                         JsonUtils.GetValue<float>(step["scale"][0]),
                         JsonUtils.GetValue<float>(step["scale"][1])
                     ),
-                    Duration = JsonUtils.GetValue<float>(step["duration"])
+                    Duration = JsonUtils.GetValue<int>(step["duration"])
                 }).ToArray();
                 result.Steps = steps;
             }

@@ -3,10 +3,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PatteLib;
 
-public class Utils
+public static class Utils
 {
     
-    
+    public static float Wrap(float value, float min, float max)
+    {
+        if (value < min)
+        {
+            return max - (min - value) % (max - min);
+        }
+        else if (value > max)
+        {
+            return min + (value - max) % (max - min);
+        }
+        else
+        {
+            return value;
+        }
+    }
     
     // Funktion zum Konvertieren von 3D-Weltkoordinaten zu 2D-Bildschirmkoordinaten
     public static Vector2 WorldToScreen(Vector3 worldPosition, Matrix viewMatrix, Matrix projectionMatrix, Viewport viewport)

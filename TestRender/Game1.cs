@@ -12,10 +12,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Newtonsoft.Json.Linq;
+using PatteLib;
 using PatteLib.Data;
 using PatteLib.Graphics;
 using PatteLib.World;
-using TestRendering;
+using TestRender.Graphics;
 
 namespace TestRender;
 
@@ -31,7 +32,10 @@ public class Game1 : Game
     private Effect _worldShader;
     private Effect _buildingShader;
     private Effect _animationShader;
+    
     private Camera _camera;
+    private Camera _normalCamera;
+    
     private World _world;
     private WorldTimeManager _timeManager;
     private Texture2D _pixel;
@@ -41,7 +45,6 @@ public class Game1 : Game
     private RenderTarget2D _defaultPassTarget;
 
     private Texture2D _textBox;
-    private float _frameCount = 0;
 
     private Dictionary<int, Texture2D> _sprites = [];
     private VertexBuffer _vertexBuffer;
@@ -95,24 +98,21 @@ public class Game1 : Game
         Building.RootDirectory = @"A:\ModelExporter\Platin\output_assets";
         Chunk.RootDirectory = @"A:\ModelExporter\Platin\overworldmaps";
         
-        _camera = new Camera(GraphicsDevice);
-        //_camera.Teleport(29 * 32 + (8 * 16), 100, 29 * 32);
-        _camera.RotateY(-90);
+        _camera = new Camera();
+        _camera.InitWithPosition(Vector3.One, (float)NitroUtils.Fx32ToDecimal(2731713), Vector3.Zero, NitroUtils.GetAngleFromU16Int(1473));
+        _camera.SetRotation(new Vector3(NitroUtils.GetAngleFromU16Int(54786), 0, 0));
+        _camera.SetClipping(0.01f, 1000f);
+        _camera.SetAsActive();
+        
+        _normalCamera = new Camera();
+        _normalCamera.InitWithPosition(Vector3.One, 10, Vector3.Zero, 75);
+        _normalCamera.SetClipping(0.01f, 1000f);
 
         _world = World.LoadByHeader(GraphicsDevice, _matrix);
         
         _animations.Add(["l_lake"], AdvTextureAnimation.Load(GraphicsDevice, "Content/sea_animation.json"));
-        _animations.Add(["c1_fun2"], AdvTextureAnimation.Load(GraphicsDevice, "Content/funsui_animation.json"));
+        _animations.Add(["c1_fun2", "taki"], AdvTextureAnimation.Load(GraphicsDevice, "Content/funsui_animation.json"));
         _animations.Add(["neon0"], AdvTextureAnimation.Load(GraphicsDevice, "Content/party_animation.json"));
-        
-        //_animations.Add(new TextureAnimation(Services, "Content/Animations/Lakep", "lakep", 0.32f, 4, ["lakep_lm"]));
-        //_animations.Add(new TextureAnimation(Services, "Content/Animations/C1_Lamp1", "c1_lamp01", 0.16f, 5, ["c1_lamp01_", "lamp01"], AnimationPlayMode.Bounce, 0.64f));
-        //_animations.Add(new TextureAnimation(Services, "Content/Animations/C1_Lamp2", "c1_lamp02", 0.16f, 5, ["c1_lamp02_", "lamp03"], AnimationPlayMode.Bounce, 0.64f));
-        //_animations.Add(new TextureAnimation(Services, "Content/Animations/C1_S02_3", "c1_s02_3", 0.32f, 4, ["c1_s02_4"]));
-        //_animations.Add(new TextureAnimation(Services, "Content/Animations/C1_S01_D", "c1_s01_d", 0.08f, 4, ["c1_s01_d"]));
-        //_animations.Add(new TextureAnimation(Services, "Content/Animations/Hamabe", "hamabe", 0.32f, 8, ["hamabe_lm"]));
-        //_animations.Add(new TextureAnimation(Services, "Content/Animations/SeaRock", "searock", 0.16f, 4, ["searock_"]));
-        //_animations.Add(new TextureAnimation(Services, "Content/Animations/Sea", "sea", 0.32f, 8, ["sea_"]));
         
         var vertices = new VertexPositionTexture[4];
         
@@ -283,9 +283,9 @@ public class Game1 : Game
             
         _timeManager.Update(gameTime);
             
-        foreach (var animation in _animations)
+        foreach (var animation in _animations.Values)
         {
-            //animation.Update(gameTime);
+            animation.Update(gameTime);
         }
             
         _worldShader.Parameters["TimeOfDay"]?.SetValue(2);
@@ -299,7 +299,6 @@ public class Game1 : Game
         _animationShader.Parameters["TimeOfDay"]?.SetValue(2);
         _animationShader.Parameters["Delta"]?.SetValue(delta);
         _animationShader.Parameters["Total"]?.SetValue((float)gameTime.TotalGameTime.TotalSeconds);
-        _animationShader.Parameters["StepIndex"]?.SetValue((int)gameTime.TotalGameTime.TotalSeconds % 16);
 
         KeyboardHandler.Update(gameTime);
 
@@ -332,8 +331,13 @@ public class Game1 : Game
             _world = World.LoadByHeader(GraphicsDevice, _matrix);
         }
 
-        _frameCount += delta;
-        UpdateCamera(gameTime);
+       // _camera.SetAsActive();
+       // UpdateCamera(gameTime);
+       //Camera.ClearActive();
+       //
+       _normalCamera.SetAsActive();
+       UpdateCamera(gameTime);
+       //Camera.ClearActive();
 
         foreach (var chunk in World.Chunks)
         {
@@ -350,8 +354,14 @@ public class Game1 : Game
 
     private void UpdateCamera(GameTime gameTime)
     {
+        if (Camera.ActiveCamera == null)
+        {
+            return;
+        }
+        
         var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
         Vector3 Direction = new Vector3();
+        float turnSpeed = 1;
 
         if (Keyboard.GetState().IsKeyDown(Keys.W))
         {
@@ -375,56 +385,50 @@ public class Game1 : Game
 
         if (Keyboard.GetState().IsKeyDown(Keys.Q))
         {
-            Direction -= Vector3.Down;
+            Direction += Vector3.Down;
         }
 
         if (Keyboard.GetState().IsKeyDown(Keys.E))
         {
-            Direction -= Vector3.Up;
-        }
-            
-        if (Keyboard.GetState().IsKeyDown(Keys.O))
-        {
-            _camera.EnableMix = true;
-        }
-        if (Keyboard.GetState().IsKeyDown(Keys.P))
-        {
-            _camera.EnableMix = false;
+            Direction += Vector3.Up;
         }
 
         if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
         {
-            Direction *= 128;
+            Direction *= 64;
         }
         else
         {
             Direction *= 4;
         }
 
-        _camera.Move(-Direction * delta);
-
-        var turnSpeed = 32 * delta;
-
+        Camera.ActiveCamera.MoveAlongRotation(Direction * delta);
+        
+        turnSpeed *= 64;
+        turnSpeed = MathHelper.ToRadians(turnSpeed * delta);
+        
         if (Keyboard.GetState().IsKeyDown(Keys.Up))
         {
-            _camera.RotateX(-turnSpeed);
+            Camera.ActiveCamera.AdjustRotation(new Vector3(turnSpeed, 0, 0));
         }
 
         if (Keyboard.GetState().IsKeyDown(Keys.Down))
         {
-            _camera.RotateX(turnSpeed);
+            Camera.ActiveCamera.AdjustRotation(new Vector3(-turnSpeed, 0, 0));
         }
 
         if (Keyboard.GetState().IsKeyDown(Keys.Left))
         {
-            _camera.RotateY(turnSpeed);
+            Camera.ActiveCamera.AdjustRotation(new Vector3(0, turnSpeed, 0));
         }
 
         if (Keyboard.GetState().IsKeyDown(Keys.Right))
         {
-            _camera.RotateY(-turnSpeed);
+            Camera.ActiveCamera.AdjustRotation(new Vector3(0, -turnSpeed, 0));
         }
-        _camera.Update(gameTime);
+        
+        //_camera.Update(gameTime);
+        Camera.ActiveCamera.ComputeViewMatrix();
     }
 
     private void DrawSprite(GameTime gameTime, AlphaTestEffect effect, Vector3 position, Vector3 scale, Vector3 rotation, Texture2D texture)
@@ -436,8 +440,8 @@ public class Game1 : Game
                           Matrix.CreateTranslation(position);
 
         effect.World = worldMatrix;
-        effect.View = _camera.View;
-        effect.Projection = _camera.Projection;
+        effect.View = _camera.ViewMatrix;
+        effect.Projection = _camera.ProjectionMatrix;
         effect.AlphaFunction = CompareFunction.Greater;
         effect.ReferenceAlpha = 0;
         effect.Texture = texture;
@@ -459,25 +463,25 @@ public class Game1 : Game
     
     protected override void Draw(GameTime gameTime)
     {
-        if (!IsActive)
+        if (!IsActive || Camera.ActiveCamera == null)
         {
             return;
         }
-        
+
+        _camera.SetAsActive();
         GraphicsDevice.SetRenderTarget(_defaultPassTarget);
         GraphicsDevice.Clear(Color.Transparent);
         DrawWorld(gameTime, _world);
-        //GraphicsDevice.SetRenderTarget(_alphaPassTarget);
-        //GraphicsDevice.Clear(Color.Transparent);
         
-        //Exit();
+        _normalCamera.SetAsActive();
         GraphicsDevice.SetRenderTarget(null);
         GraphicsDevice.Clear(Color.Black);
-
+        DrawWorld(gameTime, _world);
+        
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp, depthStencilState: DepthStencilState.Default, blendState: BlendState.AlphaBlend);
-        _spriteBatch.Draw(_defaultPassTarget, new Rectangle(0, 0, 1280, 960), Color.White);
-        //_spriteBatch.Draw(_alphaPassTarget, new Rectangle(0, 0, 1280, 960), Color.White);
-        _spriteBatch.Draw(_textBox, Vector2.Zero, Color.White);
+        _spriteBatch.Draw(_defaultPassTarget, new Rectangle(0, 0, 1280 / 5, 960 / 5), Color.White);
+        //_spriteBatch.Draw(_textBox, Vector2.Zero, Color.White);
+        
         try
         {
             var text = TextArchiveManager.GetLine(1, (int)(gameTime.TotalGameTime.TotalSeconds % Localisation.Count));
@@ -519,12 +523,12 @@ public class Game1 : Game
             {
                 if (chunk.IsLoaded && chunk.Model != null)
                 {
-                    DrawModel(gameTime, _animationShader, chunk.Model,
+                    DrawModel(gameTime, _worldShader, chunk.Model,
                         offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
                                 new Vector3(16, 0, 16), alpha: false);
                     foreach (var building in chunk.Buildings)
                     {
-                        DrawModel(gameTime, _animationShader, building.Model,
+                        DrawModel(gameTime, _buildingShader, building.Model,
                             offset: new Vector3(targetX * 32, tuple.height / 2f, targetY * 32) +
                                     new Vector3(16, 0, 16), alpha: false);
                     }
@@ -552,8 +556,8 @@ public class Game1 : Game
                 var header = HeaderManager.GetHeaderById(headerId);
                 if (distance < 1)
                 {
-                    Console.WriteLine(("Distance to " + new Vector2(targetX, targetY) + " : " + distance));
-                    Console.WriteLine(header.LocationName + " : " + headerId);
+                    //Console.WriteLine(("Distance to " + new Vector2(targetX, targetY) + " : " + distance));
+                    //Console.WriteLine(header.LocationName + " : " + headerId);
                 }
                 try
                 {
@@ -619,7 +623,7 @@ public class Game1 : Game
                                     sprite = entity.EntryId;
                                 }
 
-                                var frameIndex = (int)(_frameCount % 16);
+                                var frameIndex = (int)(gameTime.TotalGameTime.TotalSeconds % 16);
                                 var collection = AppContext.OverWorldSprites[sprite];
 
                                 frameIndex %= collection.Count;
@@ -630,8 +634,8 @@ public class Game1 : Game
                                     var scale = texture.Width / 16;
 
                                    
-                                    var position = PatteLib.Utils.WorldToScreen(worldPosition, _camera.View,
-                                        _camera.Projection,
+                                    var position = PatteLib.Utils.WorldToScreen(worldPosition, _camera.ViewMatrix,
+                                        _camera.ProjectionMatrix,
                                         GraphicsDevice.Viewport);
                                     DrawSprite(gameTime, _basicEffect, worldPosition + new Vector3(0.5f, -1, 0.5f),
                                         new Vector3(1, 1, 1) * scale, _camera.Rotation, texture);
@@ -799,8 +803,8 @@ public class Game1 : Game
                           Matrix.CreateTranslation(offset);
 
         effect.Parameters["World"].SetValue(node.GlobalTransform * worldMatrix);
-        effect.Parameters["View"].SetValue(_camera.View);
-        effect.Parameters["Projection"].SetValue(_camera.Projection);
+        effect.Parameters["View"].SetValue(Camera.ActiveCamera.ViewMatrix);
+        effect.Parameters["Projection"].SetValue(Camera.ActiveCamera.ProjectionMatrix);
 
         if (model.IsPlaying)
         {
@@ -908,7 +912,7 @@ public class Game1 : Game
                 
             if (_debugTexture)
             {
-                //Console.WriteLine(material.Name);
+                Console.WriteLine(material.Name);
             }
                 
             effect.Parameters["EmissiveColorFactor"]?.SetValue(material.EmissiveFactor.ToVector4());
@@ -945,99 +949,15 @@ public class Game1 : Game
             if (animationPair.Key.Contains(material.Name))
             {
                 var animation = animationPair.Value;
+
+                if (animation.Type == AnimationType.Texture)
+                {
+                    return;
+                }
                 
                 effect.Parameters["ShouldAnimate"]?.SetValue(true);
-                effect.Parameters["AnimationType"]?.SetValue((int)animation.Type);
-                effect.Parameters["AnimationStyle"]?.SetValue((int)animation.Style);
-                
-                if (animation.Type == AnimationType.TextureCoords)
-                {
-                    if (animation.Style == AnimationStyle.Linear)
-                    {
-                        effect.Parameters["AnimationSpeed"]?.SetValue(animation.Speed);
-                        effect.Parameters["AnimationDirection"]?.SetValue((int)animation.Direction);
-                    }
-                    else if (animation.Style == AnimationStyle.StepLoop)
-                    {
-                        var offsetArray = new Vector2[32];
-                        var scaleArray = new Vector2[32];
-                        for (int i = 0; i < animation.Steps.Length; i++)
-                        {
-                            AnimationStep step = animation.Steps[i];
-                            offsetArray[i] = step.Offset;
-                            scaleArray[i] = step.Scale;
-                        }
-                        effect.Parameters["Offset"]?.SetValue(offsetArray);
-                        effect.Parameters["Scale"]?.SetValue(scaleArray);
-                    }
-                }
+                effect.Parameters["Offset"]?.SetValue(animation.Offset);
             }
         }
-        /*
-        foreach (var animation in _animations)
-        {
-            //foreach (var keyWord in animation.ForMaterial)
-            //{
-            //    if (material.Name.Contains(keyWord))
-            //    {
-            //        effect.Parameters["Texture"]?.SetValue(animation.CurrentFrame);
-            //        return;
-            //    }
-            //}
-        }
-        if (material.Name.Contains("c3_s03b"))
-        {
-            effect.Parameters["AnimationSpeed"]?.SetValue(16);
-            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
-            effect.Parameters["TextureAnimation"]?.SetValue(true);
-        }
-        else if (material.Name.Contains("taki"))
-        {
-            effect.Parameters["AnimationSpeed"]?.SetValue(16);
-            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Down);
-            effect.Parameters["TextureAnimation"]?.SetValue(true);
-        }
-        else if (material.Name.Contains("c1_fun2"))
-        {
-            effect.Parameters["AnimationSpeed"]?.SetValue(32);
-            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Down);
-            effect.Parameters["TextureAnimation"]?.SetValue(true);
-        }
-        else if (material.Name.Contains("mag_smoke"))
-        {
-            effect.Parameters["AnimationSpeed"]?.SetValue(16);
-            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
-            effect.Parameters["TextureAnimation"]?.SetValue(true);
-        }
-        else if (material.Name.Contains("kemuri"))
-        {
-            effect.Parameters["AnimationSpeed"]?.SetValue(32);
-            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Left);
-            effect.Parameters["TextureAnimation"]?.SetValue(true);
-        }
-        else if (material.Name.Contains("l_lake"))
-        {
-            effect.Parameters["AnimationSpeed"]?.SetValue(16);
-            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
-            effect.Parameters["TextureAnimation"]?.SetValue(true);
-        }
-        else if (material.Name.Contains("pool_W"))
-        {
-            effect.Parameters["AnimationSpeed"]?.SetValue(1);
-            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
-            effect.Parameters["TextureAnimation"]?.SetValue(true);
-        }
-        else if (material.Name.Contains("neon0"))
-        {
-            effect.Parameters["AnimationSpeed"]?.SetValue(1);
-            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.DownLeft);
-            effect.Parameters["TextureAnimation"]?.SetValue(true);
-        }
-        else if (material.Name.Contains("leag_yuka03"))
-        {
-            effect.Parameters["AnimationSpeed"]?.SetValue(42);
-            effect.Parameters["AnimationDirection"]?.SetValue((byte)TextureAnimationDirection.Up);
-            effect.Parameters["TextureAnimation"]?.SetValue(true);
-        }*/
     }
 }

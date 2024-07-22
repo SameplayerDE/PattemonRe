@@ -5,7 +5,7 @@ using PatteLib;
 
 namespace TestRendering
 {
-    public class Camera
+    public class Camera2
     {
 
         protected GraphicsDevice GraphicsDevice { get; set; }
@@ -52,7 +52,7 @@ namespace TestRendering
         public bool EnableMix = false;
         public float OrthoFactor = 0.00001f;
         
-        public Camera(GraphicsDevice graphicsDevice)
+        public Camera2(GraphicsDevice graphicsDevice)
         {
             GraphicsDevice = graphicsDevice;
             //RotateX(MathHelper.ToDegrees((float)Utils.Q412ToDouble(-10750)));
