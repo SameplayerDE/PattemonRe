@@ -20,7 +20,7 @@ using TestRender.Graphics;
 
 namespace TestRender;
 
-public class Game1 : Game
+public unsafe class Game1 : Game
 {   
     private GraphicsDeviceManager _graphicsDeviceManager;
     private SpriteBatch _spriteBatch;
@@ -59,7 +59,7 @@ public class Game1 : Game
     private int _matrix = 411;
     private bool _debugTexture = false;
 
-    private Vector3 _target;
+    private Vector3* _target;
 
     public Game1()
     {
@@ -102,13 +102,13 @@ public class Game1 : Game
         
         _normalCamera = new Camera();
         //_normalCamera.InitWithPosition(Vector3.One, 10, Vector3.Zero, 75, CameraProjectionType.Perspective);
-        _normalCamera.InitWithTarget(ref _target, 10, Vector3.Zero, 75, CameraProjectionType.Perspective, true);
+        _normalCamera.InitWithTarget(_target, 10, Vector3.Zero, 75, CameraProjectionType.Perspective, true);
         _normalCamera.SetClipping(0.01f, 1000f);
 
         
         _camera = new Camera();
         //_camera.InitWithPosition(Vector3.One, (float)NitroUtils.Fx32ToDecimal(2731713), Vector3.Zero, NitroUtils.GetAngleFromU16Int(1473), CameraProjectionType.Perspective);
-        _camera.InitWithTarget(ref _normalCamera.Position, (float)NitroUtils.Fx32ToDecimal(2731713), Vector3.Zero, NitroUtils.GetAngleFromU16Int(1473), CameraProjectionType.Perspective, true);
+        _camera.InitWithTarget(_normalCamera.Position, (float)NitroUtils.Fx32ToDecimal(2731713), Vector3.Zero, NitroUtils.GetAngleFromU16Int(1473), CameraProjectionType.Perspective, true);
         _camera.SetRotation(new Vector3(NitroUtils.GetAngleFromU16Int(54786), 0, 0));
         _camera.SetClipping(100f, 500f);
         _camera.SetAsActive();
@@ -276,7 +276,7 @@ public class Game1 : Game
     {
         var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        _target.X++;
+        _target->X++;
         
         if (!IsActive)
         {
@@ -533,7 +533,7 @@ public class Game1 : Game
             var chunkId = tuple.chunkId;
             var headerId = tuple.headerId;
 
-            var distance = Vector2.Distance(new Vector2(targetX, targetY), (new Vector2(_camera.Position.X, _camera.Position.Z) / 32).ToPoint().ToVector2());
+            var distance = Vector2.Distance(new Vector2(targetX, targetY), (new Vector2(_camera.Position->X, _camera.Position->Z) / 32).ToPoint().ToVector2());
             
             if (World.Chunks.TryGetValue(chunkId, out var chunk))
             {
@@ -560,7 +560,7 @@ public class Game1 : Game
             var chunkId = tuple.chunkId;
             var headerId = tuple.headerId;
 
-            var distance = Vector2.Distance(new Vector2(targetX, targetY), (new Vector2(_camera.Position.X, _camera.Position.Z) / 32).ToPoint().ToVector2());
+            var distance = Vector2.Distance(new Vector2(targetX, targetY), (new Vector2(_camera.Position->X, _camera.Position->Z) / 32).ToPoint().ToVector2());
 
             if (headerId == -1)
             {
