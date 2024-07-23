@@ -1,0 +1,15 @@
+﻿{
+    "type": "frame-by-frame",
+    "frames": [
+        "sea_1.png",
+        "sea_2.png",
+        "sea_3.png",
+        "sea_4.png",
+        "sea_5.png",
+        "sea_6.png",
+        "sea_7.png",
+        "sea_8.png"
+    ],
+    "style": "linear-loop",
+    "duration": 320
+}

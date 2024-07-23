@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace TestRender.Graphics;
@@ -6,20 +7,26 @@ namespace TestRender.Graphics;
 public enum CameraProjectionType
 {
     Perspective,
-    Ortho
+    Orthographic
 }
 
 public class Camera
 {
 
+    public static Dictionary<int, Camera> CameraLookMap = new Dictionary<int, Camera>
+    {
+        { 0, CameraFactory.CreateFromDSPRE(2731713 / 16, 54786, 0, 0, false, 1473, 614400 / 16, 3686400 / 16) },
+        { 4, CameraFactory.CreateFromDSPRE(6404251 / 16, 56418, 0, 0, true, 641, 614400 / 16, 7106560 / 16) }
+    };
+    
     public CameraProjectionType ProjectionType;
 
     public Vector3 Position;
-    public unsafe Vector3* Target { get; set; }
-    public Vector3 Up { get; set; }
-    public Vector3 Rotation { get; set; }
-    public float Distance { get; set; }
-
+    public Vector3 Target;
+    public Vector3 Up;
+    public Vector3 Rotation;
+    public float Distance;
+    
     public float FieldOfViewY { get; set; }
     public float FieldOfViewSin { get; set; }
     public float FieldOfViewCos { get; set; }
@@ -41,6 +48,8 @@ public class Camera
     public static void Init(float fieldOfViewY, Camera camera)
     {
         camera.FieldOfViewY = fieldOfViewY;
+        camera.FieldOfViewSin = (float)Math.Sin(camera.FieldOfViewY);
+        camera.FieldOfViewCos = (float)Math.Cos(camera.FieldOfViewY);
         camera.AspectRatio = Constants.CameraDefaultAspectRatio;
         camera.NearClip = Constants.CameraDefaultNearClip;
         camera.FarClip = Constants.CameraDefaultFarClip;
@@ -50,8 +59,7 @@ public class Camera
         camera.TrackTargetY = false;
         camera.TrackTargetZ = false;
     }
-
-        
+    
     public static void AdjustTargetAroundPosition(Camera camera)
     {
         float rotationX = -camera.Rotation.X;
@@ -68,7 +76,7 @@ public class Camera
         float newX = (float)(Math.Sin(camera.Rotation.Y) * camera.Distance * Math.Cos(camera.Rotation.X));
         float newZ = (float)(Math.Cos(camera.Rotation.Y) * camera.Distance * Math.Cos(camera.Rotation.X));
         float newY = (float)(Math.Sin(rotationX) * camera.Distance);
-
+        
         camera.Position = new Vector3(newX, newY, newZ) + camera.Target; 
     }
     
@@ -87,6 +95,11 @@ public class Camera
         }
     }
 
+    public void SetProjectionType(CameraProjectionType type)
+    {
+        ProjectionType = type;
+        ComputeProjectionMatrix(type);
+    }
     
     public void SetAsActive()
     {
@@ -152,7 +165,7 @@ public class Camera
         ComputeProjectionMatrix(ProjectionType);
     }
 
-    public void InitWithTarget(ref Vector3 target, float distance, Vector3 rotation, float fieldOfViewY, CameraProjectionType projectionType, bool trackTarget)
+    public void InitWithTarget(Vector3 target, float distance, Vector3 rotation, float fieldOfViewY, CameraProjectionType projectionType, bool trackTarget)
     {
         Init(fieldOfViewY, this);
 
@@ -190,11 +203,12 @@ public class Camera
         ProjectionType = projectionType;
         if (projectionType == CameraProjectionType.Perspective)
         {
-            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(FieldOfViewY), AspectRatio, NearClip, FarClip);
+            float fieldOfViewY = (float)(2 * Math.Atan2(FieldOfViewSin, FieldOfViewCos));
+            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(fieldOfViewY, AspectRatio, NearClip, FarClip);
         }
         else
         {
-            float top = (float)(Math.Sin(FieldOfViewY) / Math.Cos(FieldOfViewY) * Distance);
+            float top = FieldOfViewSin / FieldOfViewCos * Distance;
             float right = top * AspectRatio;
 
             ProjectionMatrix = Matrix.CreateOrthographicOffCenter(-right, right, -top, top, NearClip, FarClip);
@@ -204,12 +218,16 @@ public class Camera
     public void SetFieldOfView(float fieldOfViewY)
     {
         FieldOfViewY = fieldOfViewY;
+        FieldOfViewSin = (float)Math.Sin(FieldOfViewY);
+        FieldOfViewCos = (float)Math.Cos(FieldOfViewY);
         ComputeProjectionMatrix(ProjectionType);
     }
     
     public void AdjustFieldOfView(float amount)
     {
         FieldOfViewY += amount;
+        FieldOfViewSin = (float)Math.Sin(FieldOfViewY);
+        FieldOfViewCos = (float)Math.Cos(FieldOfViewY);
         ComputeProjectionMatrix(ProjectionType);
     }
 
@@ -234,11 +252,11 @@ public class Camera
         AdjustTargetAroundPosition(this);
     }
 
-    //void SetAngleAroundTarget(const CameraAngle *angle, Camera *camera)
-    //{
-    //    camera->angle = *angle;
-    //    Camera_AdjustPositionAroundTarget(camera);
-    //}
+    public void SetRotationAroundTarget(Vector3 rotation)
+    {
+        Rotation = rotation;
+        AdjustPositionAroundTarget(this);
+    }
 
     public void AdjustRotation(Vector3 amount)
     {
@@ -258,19 +276,19 @@ public class Camera
     public void SetDistance(float distance)
     {
         Distance = distance;
-        //Camera_AdjustPositionAroundTarget(camera);
+        AdjustPositionAroundTarget(this);
     }
 
     public void SetTargetAndUpdatePosition(Vector3 target)
     {
         Target = target;
-        //Camera_AdjustPositionAroundTarget(camera);
+        AdjustPositionAroundTarget(this);
     }
 
     public void Camera_AdjustDistance(float amount)
     {
         Distance += amount;
-        //Camera_AdjustPositionAroundTarget(camera);
+        AdjustPositionAroundTarget(this);
     }
 
 }

@@ -73,7 +73,8 @@ public class World
         {
             var chunkX = (int)position.X / ChunkWx;
             var chunkY = (int)position.Z / ChunkWy;
-
+            
+            
             if (!Combination.TryGetValue((chunkX, chunkY), out var tuple))
             {
                 throw new KeyNotFoundException($"Chunk at ({chunkX}, {chunkY}) not found in Combination dictionary.");
@@ -104,8 +105,8 @@ public class World
     {
         try
         {
-            var chunkX = (int)position.X / 32;
-            var chunkY = (int)position.Z / 32;
+            var chunkX = (int)position.X / ChunkWx;
+            var chunkY = (int)position.Z / ChunkWy;
 
             if (!Combination.TryGetValue((chunkX, chunkY), out var tuple))
             {
@@ -124,8 +125,8 @@ public class World
                 throw new InvalidOperationException($"Chunk {chunkId} is not loaded or has a null model.");
             }
 
-            var cellX = (int)(position.X % 32);
-            var cellY = (int)(position.Z % 32);
+            var cellX = (int)(position.X % ChunkWx);
+            var cellY = (int)(position.Z % ChunkWy);
             
             if (cellX < 0 || cellX >= chunk.Collision.GetLength(1) || cellY < 0 ||
                 cellY >= chunk.Collision.GetLength(0))
@@ -147,8 +148,8 @@ public class World
     {
         try
         {
-            var chunkX = (int)position.X / 32;
-            var chunkY = (int)position.Z / 32;
+            var chunkX = (int)position.X / ChunkWx;
+            var chunkY = (int)position.Z / ChunkWy;
 
             if (!Combination.TryGetValue((chunkX, chunkY), out var tuple))
             {
@@ -167,8 +168,8 @@ public class World
                 throw new InvalidOperationException($"Chunk {chunkId} is not loaded or has a null model.");
             }
 
-            var cellX = (int)(position.X % 32);
-            var cellY = (int)(position.Z % 32);
+            var cellX = (int)(position.X % ChunkWx);
+            var cellY = (int)(position.Z % ChunkWy);
 
             if (cellX < 0 || cellX >= chunk.Type.GetLength(1) || cellY < 0 || cellY >= chunk.Type.GetLength(0))
             {

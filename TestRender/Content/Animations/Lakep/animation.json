@@ -1,0 +1,11 @@
+﻿{
+    "type": "frame-by-frame",
+    "frames": [
+        "lakep_1.png",
+        "lakep_2.png",
+        "lakep_3.png",
+        "lakep_4.png"
+    ],
+    "style": "linear-loop",
+    "duration": 320
+}

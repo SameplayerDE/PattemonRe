@@ -149,7 +149,7 @@ technique T1
         CullMode = CW;
         DestBlend = INVSRCALPHA;
         SrcBlend = SRCALPHA;
-        AlphaBlendEnable = false; 
+        AlphaBlendEnable = true; 
         PixelShader = compile PS_SHADERMODEL MainPS();
     }
 };

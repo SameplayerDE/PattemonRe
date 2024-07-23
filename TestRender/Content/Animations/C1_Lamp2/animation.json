@@ -1,0 +1,13 @@
+﻿{
+    "type": "frame-by-frame",
+    "frames": [
+        "c1_lamp02_1.png",
+        "c1_lamp02_2.png",
+        "c1_lamp02_3.png",
+        "c1_lamp02_4.png",
+        "c1_lamp02_5.png"
+    ],
+    "style": "bounce-loop",
+    "bounce": 50,
+    "duration": 320
+}

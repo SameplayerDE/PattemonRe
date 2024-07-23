@@ -25,6 +25,7 @@ public class Building
         var gltfFile = GLTFLoader.Load(@$"{RootDirectory}\{BuildingName}\{BuildingName}.gltf");
         var model = GameModel.From(graphicsDevice, gltfFile);
         model.TranslateTo(Position);
+        model.Scale /= 16;
         Model = model;
     }
 
@@ -158,6 +159,7 @@ public class Chunk
         {
             var gltfFile = GLTFLoader.Load(filePath);
             var gameModel = GameModel.From(graphicsDevice, gltfFile);
+            gameModel.Scale /= 16;
             Model = gameModel;
         }
     }
@@ -264,7 +266,7 @@ public class Chunk
             var minY = plate.Y;
             var maxX = minX + plate.Wx;
             var maxY = minY + plate.Wy;
-
+            
             if (localX >= minX && localX < maxX && localY >= minY && localY < maxY)
             {
                 if (localZ >= plate.Z - tolerance)

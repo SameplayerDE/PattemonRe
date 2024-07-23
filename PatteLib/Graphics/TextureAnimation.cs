@@ -7,7 +7,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using PatteLib;
 
-namespace TestRender;
+namespace PatteLib.Graphics;
+
+public enum AnimationCompareFunction
+{
+    Equals,
+    Contains,
+    StartsWith
+}
 
 public enum AnimationType: byte
 {
@@ -42,8 +49,11 @@ public struct AnimationStep
     public int Duration;
 }
 
-public class AdvTextureAnimation
+public class TextureAnimation : IDisposable
 {
+
+    private static Dictionary<string, TextureAnimation> _loaded = [];
+    
     private static readonly Dictionary<string, AnimationDirection> DirectionMap = new()
     {
         { "up", AnimationDirection.Up },
@@ -128,9 +138,13 @@ public class AdvTextureAnimation
         }
     }
     
-    public static AdvTextureAnimation Load(GraphicsDevice graphicsDevice, string path)
+    public static TextureAnimation Load(GraphicsDevice graphicsDevice, string path)
     {
-        var result = new AdvTextureAnimation();
+        if (_loaded.TryGetValue(path, out var load))
+        {
+            return load;
+        }
+        var result = new TextureAnimation();
         JObject jAnimation = JObject.Parse(File.ReadAllText(path));
         
         string typeString = JsonUtils.GetValue<string>(jAnimation["type"]);
@@ -153,13 +167,23 @@ public class AdvTextureAnimation
 
         if (result.Type == AnimationType.Texture)
         {
-            var frames = JsonUtils.GetValues<string>(jAnimation["frames"]);
+            IEnumerable<string> frames = JsonUtils.GetValues<string>(jAnimation["frames"]);
+            result.Frames = new Texture2D[Enumerable.Count(frames)];
+            int index = 0;
             foreach (var framePath in frames)
             {
+                string combinedPath = Path.IsPathRooted(framePath) ? framePath : Path.Combine(Path.GetDirectoryName(path), framePath);
                 Console.WriteLine(framePath);
-                //ToDo: load textures
-                //var texture = Texture2D.FromFile(graphicsDevice, framePath.ToString());
+                if (!File.Exists(combinedPath))
+                {
+                    throw new FileNotFoundException();
+                }
+                Texture2D texture = Texture2D.FromFile(graphicsDevice, combinedPath);
+                result.Frames[index++] = texture;
             }
+            
+            int durationValue = JsonUtils.GetValue<int>(jAnimation["duration"]);
+            result.Duration = durationValue;
         }
         else if (result.Type == AnimationType.TextureCoords)
         {
@@ -196,7 +220,17 @@ public class AdvTextureAnimation
                 }).ToArray();
                 result.Steps = steps;
             }
-        } 
+        }
+        _loaded.Add(path, result);
         return result;
+    }
+
+    public void Dispose()
+    {
+        foreach (var frame in Frames)
+        {
+            frame.Dispose();
+        }
+        GC.SuppressFinalize(this);
     }
 }
