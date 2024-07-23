@@ -103,11 +103,10 @@ public class Game1 : Game
         Chunk.RootDirectory = @"A:\ModelExporter\Platin\overworldmaps";
         
         _normalCamera = new Camera();
-        //_normalCamera.InitWithPosition(Vector3.One, 10, Vector3.Zero, 75, CameraProjectionType.Perspective);
-        _normalCamera.InitWithTarget(_target, 10, Vector3.Zero, MathHelper.ToRadians(75), CameraProjectionType.Perspective, true);
+        _normalCamera.InitWithPosition(Vector3.Zero, 10, Vector3.Zero, MathHelper.ToRadians(30), CameraProjectionType.Perspective);
+        //_normalCamera.InitWithTarget(_target, 10, Vector3.Zero, MathHelper.ToRadians(75), CameraProjectionType.Perspective, true);
         _normalCamera.SetClipping(0.01f, 100000f);
-
-
+        
         _camera = Camera.CameraLookMap[0];
         
         _world = World.LoadByHeader(GraphicsDevice, _matrix);
@@ -273,8 +272,6 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
         var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-        _target.X++;
         
         if (!IsActive)
         {
@@ -314,48 +311,86 @@ public class Game1 : Game
             Console.WriteLine("--------------------");
         }
 
-        if (KeyboardHandler.IsKeyDownOnce(Keys.P))
-        {
-            Localisation.Reload();
-            TextArchiveManager.Dispose();
-            TextArchiveManager.Load(561);
-            TextArchiveManager.Load(412);
-        }
+        //if (KeyboardHandler.IsKeyDownOnce(Keys.P))
+        //{
+        //    Localisation.Reload();
+        //    TextArchiveManager.Dispose();
+        //    TextArchiveManager.Load(561);
+        //    TextArchiveManager.Load(412);
+        //}
 
+#if DEBUG
         if (KeyboardHandler.IsKeyDownOnce(Keys.PageDown))
         {
-            //_matrix = Math.Max(_matrix - 1, 0);
-            _camera.AdjustFieldOfView(MathHelper.ToRadians(-1));
+            _matrix = Math.Max(_matrix - 1, 0);
+            //_camera.AdjustFieldOfView(MathHelper.ToRadians(-1));
         }
 
         if (KeyboardHandler.IsKeyDownOnce(Keys.PageUp))
         {
-            //_matrix = Math.Min(_matrix + 1, 288);
-            _camera.AdjustFieldOfView(MathHelper.ToRadians(1));
+            _matrix = Math.Min(_matrix + 1, 288);
+            //_camera.AdjustFieldOfView(MathHelper.ToRadians(1));
+        }
+        
+        if (KeyboardHandler.IsKeyDownOnce(Keys.O))
+        {
+            _camera = Camera.CameraLookMap[4];
+        }
+        if (KeyboardHandler.IsKeyDownOnce(Keys.P))
+        {
+            _camera = Camera.CameraLookMap[0];
         }
 
         if (KeyboardHandler.IsKeyDownOnce(Keys.Space))
         {
             _world = World.LoadByHeader(GraphicsDevice, _matrix);
         }
+#endif
 
-       _camera.SetAsActive();
-        _camera.SetClipping(0.1f, 100000000f);
-       _camera.CaptureTarget(ref _normalCamera.Position);
-       _camera.ComputeViewMatrix();
-       //Camera.ClearActive();
-       //
+        _camera.SetAsActive();
+#if DEBUG
+        _camera.CaptureTarget(ref _normalCamera.Position);
+#else
+        _camera.CaptureTarget(ref _target);
+#endif
+        _camera.ComputeViewMatrix();
 
-       //if (KeyboardHandler.IsKeyDownOnce(Keys.O))
-       //{
-       //    _camera.Position = new Vector3(_normalCamera.Position.X, _camera.Position.Y, _normalCamera.Position.Z);
-       //    //_camera.Position = new Vector3(_normalCamera.Position.X, _normalCamera.Position.Y, _normalCamera.Position.Z);
-       //}
-       
-       _normalCamera.SetAsActive();
-       //_normalCamera.ComputeViewMatrix();
-       UpdateCamera(gameTime);
-       //Camera.ClearActive();
+#if DEBUG
+        _normalCamera.SetAsActive();
+        ControlActiveCamera(gameTime);
+        _normalCamera.ComputeViewMatrix();
+#else
+        if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
+        {
+            _target += GetDirectionFromInput() * World.ChunkWx * delta;
+        }
+        else
+        {
+            _target += GetDirectionFromInput() * World.ChunkWx / 8 * delta;
+        }
+        var result = _world.GetChunkPlateUnderPosition(_target);
+        if (result.Length >= 1)
+        {
+            var plate = result[0];
+
+            // Get camera position relative to chunk top-left corner
+            var localX = (_target.X % World.ChunkWx) - plate.X;
+            var localZ = (_target.Z % World.ChunkWy) - plate.Y;
+
+            // Get height at camera position considering angles
+            var height = plate.GetHeightAt(localX, localZ);
+
+            if (height >= 0)
+            {
+                Console.WriteLine($"Height under camera: {height}");
+                _target += (new Vector3(_camera.Position.X, height, _camera.Position.Z));
+            }
+            else
+            {
+                Console.WriteLine("Camera position is outside the ChunkPlate");
+            }
+        }
+#endif
 
         foreach (var chunk in World.Chunks)
         {
@@ -370,7 +405,7 @@ public class Game1 : Game
         base.Update(gameTime);
     }
 
-    private void UpdateCamera(GameTime gameTime)
+    private void ControlActiveCamera(GameTime gameTime)
     {
         if (Camera.ActiveCamera == null)
         {
@@ -444,39 +479,6 @@ public class Game1 : Game
         {
             Camera.ActiveCamera.AdjustRotation(new Vector3(0, -turnSpeed, 0));
         }
-        
-        //_camera.Update(gameTime);
-        Camera.ActiveCamera.ComputeViewMatrix();
-    }
-
-    private void DrawSprite(GameTime gameTime, AlphaTestEffect effect, Vector3 position, Vector3 scale, Vector3 rotation, Texture2D texture)
-    {
-        
-        var worldMatrix = Matrix.CreateScale(scale) *
-                          Matrix.CreateRotationX(rotation.X) *
-                          Matrix.CreateRotationY(rotation.Y) *
-                          Matrix.CreateTranslation(position);
-
-        effect.World = worldMatrix;
-        effect.View = Camera.ActiveCamera.ViewMatrix;
-        effect.Projection = Camera.ActiveCamera.ProjectionMatrix;
-        effect.AlphaFunction = CompareFunction.Greater;
-        effect.ReferenceAlpha = 0;
-        effect.Texture = texture;
-            
-        //effect.Parameters["World"].SetValue(worldMatrix);
-        //effect.Parameters["View"].SetValue(_camera.View);
-        //effect.Parameters["Projection"].SetValue(_camera.Projection);
-
-        GraphicsDevice.SetVertexBuffer(_vertexBuffer);
-        GraphicsDevice.Indices = _indexBuffer;
-        
-        // Draw the sprite with indices
-        foreach (var pass in effect.CurrentTechnique.Passes)
-        {
-            pass.Apply();
-            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleStrip, 0, 0, 4);
-        }
     }
     
     protected override void Draw(GameTime gameTime)
@@ -490,17 +492,19 @@ public class Game1 : Game
         GraphicsDevice.SetRenderTarget(_defaultPassTarget);
         GraphicsDevice.Clear(Color.Black);
         DrawWorldSmart(gameTime, _world, _camera.Target);
-        
-        _normalCamera.SetAsActive();
         GraphicsDevice.SetRenderTarget(null);
+#if DEBUG
+        _normalCamera.SetAsActive();
         GraphicsDevice.Clear(Color.Black);
         DrawWorld(gameTime, _world);
+#endif
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp, depthStencilState: DepthStencilState.Default, blendState: BlendState.Opaque);
+#if RELEASE
+        _spriteBatch.Draw(_defaultPassTarget, GraphicsDevice.Viewport.Bounds, Color.White);
+#else
         _spriteBatch.Draw(_defaultPassTarget, new Rectangle(0, 0, 256 * 2, 192 * 2), Color.White);
-        //_spriteBatch.Draw(_map, Vector2.Zero, Color.White);
-        //_spriteBatch.Draw(_pixel, , Color.White);
-        //_spriteBatch.Draw(_textBox, Vector2.Zero, Color.White);
+#endif
         try
         {
             var text = "position: " + _camera.Position + "\\nrotation: " + _camera.Rotation + "\\nfieldofview: " + MathHelper.ToDegrees(_camera.FieldOfViewY);
@@ -540,7 +544,7 @@ public class Game1 : Game
             {
                 _defaultPassTarget.SaveAsJpeg(file, _defaultPassTarget.Width, _defaultPassTarget.Height);
             }
-         }
+        }
         
         base.Draw(gameTime);
     }
@@ -572,128 +576,17 @@ public class Game1 : Game
                     if (chunk.IsLoaded && chunk.Model != null)
                     {
                         DrawModel(gameTime, _worldShader, chunk.Model,
-                            offset: new Vector3(chunkX * World.ChunkWx, tuple.height * 8f, chunkY * World.ChunkWy) +
+                            offset: new Vector3(chunkX * World.ChunkWx, tuple.height / 2f, chunkY * World.ChunkWy) +
                                     new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: false);
                         foreach (var building in chunk.Buildings)
                         {
                             DrawModel(gameTime, _buildingShader, building.Model,
-                                offset: new Vector3(chunkX * World.ChunkWx, tuple.height, chunkY * World.ChunkWy) +
+                                offset: new Vector3(chunkX * World.ChunkWx, tuple.height / 2f, chunkY * World.ChunkWy) +
                                         new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: false);
                         }
                     }
                 }
             }
-        }
-
-        foreach (var chunkEntry in world.Combination)
-        {
-            var (targetX, targetY) = chunkEntry.Key;
-            var tuple = chunkEntry.Value;
-
-            var chunkId = tuple.chunkId;
-            var headerId = tuple.headerId;
-
-            var distance = Vector2.Distance(new Vector2(targetX, targetY), (new Vector2(_camera.Position.X, _camera.Position.Z) / 32).ToPoint().ToVector2());
-
-            if (headerId == -1)
-            {
-                headerId = AppContext.CurrentHeaderId;
-            }
-            
-            if (headerId > 0)
-            {
-                var header = HeaderManager.GetHeaderById(headerId);
-                if (distance < 1)
-                {
-                    //Console.WriteLine(("Distance to " + new Vector2(targetX, targetY) + " : " + distance));
-                    //Console.WriteLine(header.LocationName + " : " + headerId);
-                }
-                try
-                {
-                    
-                    var eventFile = EventContainerLoader.Load($@"A:\ModelExporter\Platin\event_files\390.json");
-                    //var eventFile = AppContext.CurrentEventContainer;
-                    if (eventFile != null)
-                    {
-                        foreach (var entity in eventFile.Overworlds)
-                        {
-
-                            if (entity.Script == 0xFFFF)
-                            {
-                                //continue;
-                            }
-                            else
-                            {
-                                if (entity.Flag != 0)
-                                {
-                                    if (MemoryContext.GetFlag(entity.Flag) != 1)
-                                    {
-                                        continue;
-                                    }
-                                }
-                            }
-
-                            var worldPosition = new Vector3(entity.MatrixX * World.ChunkWx, 0, entity.MatrixY * World.ChunkWy);
-                            var chunkPosition = new Vector3(entity.ChunkX, entity.ChunkZ, entity.ChunkY) * 16;
-
-                            var chunkPlate = world.GetChunkAtPosition(worldPosition).GetNearestChunkPlate(chunkPosition);
-                            var height = 0f;
-                            if (chunkPlate != null)
-                            {
-                                height = chunkPlate.GetHeightAt(entity.ChunkX, entity.ChunkY);
-                            }
-                            else
-                            {
-                                height = 1;
-                            }
-                            chunkPosition.Y = height;
-                            worldPosition += chunkPosition;
-                            
-                            if (entity.Is3D)
-                            {
-                                var model = 92;
-                                if (AppContext.OverWorldModels.ContainsKey(entity.EntryId))
-                                {
-                                    model = entity.EntryId;
-                                }
-
-                                DrawModel(gameTime, _buildingShader, AppContext.OverWorldModels[model], false,
-                                    offset: worldPosition - new Vector3(-8f, -16, -8f));
-                                DrawModel(gameTime, _buildingShader, AppContext.OverWorldModels[model], true,
-                                    offset: worldPosition - new Vector3(-8f, -16, -8f));
-                            }
-                            else
-                            {
-
-                                var sprite = -1;
-                                if (AppContext.OverWorldSprites.ContainsKey(entity.EntryId))
-                                {
-                                    sprite = entity.EntryId;
-                                }
-
-                                var frameIndex = (int)(gameTime.TotalGameTime.TotalSeconds % 16);
-                                var collection = AppContext.OverWorldSprites[sprite];
-
-                                frameIndex %= collection.Count;
-
-                                if (collection.Has(frameIndex))
-                                {
-                                    var texture = collection.Get(frameIndex);
-                                    var scale = texture.Width;
-                                    
-                                    DrawSprite(gameTime, _basicEffect, worldPosition + new Vector3(8, 16, 8),
-                                        new Vector3(1, 1, 1) * scale, Camera.ActiveCamera.Rotation, texture);
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            
         }
         
         foreach (var dx in offsetX)
@@ -717,12 +610,12 @@ public class Game1 : Game
                     if (chunk.IsLoaded && chunk.Model != null)
                     {
                         DrawModel(gameTime, _worldShader, chunk.Model,
-                            offset: new Vector3(chunkX * World.ChunkWx, tuple.height * 8f, chunkY * World.ChunkWy) +
+                            offset: new Vector3(chunkX * World.ChunkWx, tuple.height / 2f, chunkY * World.ChunkWy) +
                                     new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: true);
                         foreach (var building in chunk.Buildings)
                         {
                             DrawModel(gameTime, _buildingShader, building.Model,
-                                offset: new Vector3(chunkX * World.ChunkWx, tuple.height, chunkY * World.ChunkWy) +
+                                offset: new Vector3(chunkX * World.ChunkWx, tuple.height / 2f, chunkY * World.ChunkWy) +
                                         new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: true);
                         }
                     }
@@ -755,121 +648,10 @@ public class Game1 : Game
                     {
                         DrawModel(gameTime, _buildingShader, building.Model,
                             offset: new Vector3(targetX * World.ChunkWx, tuple.height, targetY * World.ChunkWy) +
-                            new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: false);
+                                    new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: false);
                     }
                 }
             }
-        }
-        
-        foreach (var chunkEntry in world.Combination)
-        {
-            var (targetX, targetY) = chunkEntry.Key;
-            var tuple = chunkEntry.Value;
-
-            var chunkId = tuple.chunkId;
-            var headerId = tuple.headerId;
-
-            var distance = Vector2.Distance(new Vector2(targetX, targetY), (new Vector2(_camera.Position.X, _camera.Position.Z) / 32).ToPoint().ToVector2());
-
-            if (headerId == -1)
-            {
-                headerId = AppContext.CurrentHeaderId;
-            }
-            
-            if (headerId > 0)
-            {
-                var header = HeaderManager.GetHeaderById(headerId);
-                if (distance < 1)
-                {
-                    //Console.WriteLine(("Distance to " + new Vector2(targetX, targetY) + " : " + distance));
-                    //Console.WriteLine(header.LocationName + " : " + headerId);
-                }
-                try
-                {
-                    
-                    var eventFile = EventContainerLoader.Load($@"A:\ModelExporter\Platin\event_files\390.json");
-                    //var eventFile = AppContext.CurrentEventContainer;
-                    if (eventFile != null)
-                    {
-                        foreach (var entity in eventFile.Overworlds)
-                        {
-
-                            if (entity.Script == 0xFFFF)
-                            {
-                                //continue;
-                            }
-                            else
-                            {
-                                if (entity.Flag != 0)
-                                {
-                                    if (MemoryContext.GetFlag(entity.Flag) != 1)
-                                    {
-                                        continue;
-                                    }
-                                }
-                            }
-
-                            var worldPosition = new Vector3(entity.MatrixX * World.ChunkWx, 0, entity.MatrixY * World.ChunkWy);
-                            var chunkPosition = new Vector3(entity.ChunkX, entity.ChunkZ, entity.ChunkY) * 16;
-
-                            var chunkPlate = world.GetChunkAtPosition(worldPosition).GetNearestChunkPlate(chunkPosition);
-                            var height = 0f;
-                            if (chunkPlate != null)
-                            {
-                                height = chunkPlate.GetHeightAt(entity.ChunkX, entity.ChunkY);
-                            }
-                            else
-                            {
-                                height = 1;
-                            }
-                            chunkPosition.Y = height;
-                            worldPosition += chunkPosition;
-                            
-                            if (entity.Is3D)
-                            {
-                                var model = 92;
-                                if (AppContext.OverWorldModels.ContainsKey(entity.EntryId))
-                                {
-                                    model = entity.EntryId;
-                                }
-
-                                DrawModel(gameTime, _buildingShader, AppContext.OverWorldModels[model], false,
-                                    offset: worldPosition - new Vector3(-8f, -16, -8f));
-                                DrawModel(gameTime, _buildingShader, AppContext.OverWorldModels[model], true,
-                                    offset: worldPosition - new Vector3(-8f, -16, -8f));
-                            }
-                            else
-                            {
-
-                                var sprite = -1;
-                                if (AppContext.OverWorldSprites.ContainsKey(entity.EntryId))
-                                {
-                                    sprite = entity.EntryId;
-                                }
-
-                                var frameIndex = (int)(gameTime.TotalGameTime.TotalSeconds % 16);
-                                var collection = AppContext.OverWorldSprites[sprite];
-
-                                frameIndex %= collection.Count;
-
-                                if (collection.Has(frameIndex))
-                                {
-                                    var texture = collection.Get(frameIndex);
-                                    var scale = texture.Width;
-                                    
-                                    DrawSprite(gameTime, _basicEffect, worldPosition + new Vector3(8, 16, 8),
-                                        new Vector3(1, 1, 1) * scale, Camera.ActiveCamera.Rotation, texture);
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            
         }
         
         foreach (var chunkEntry in world.Combination)
@@ -969,18 +751,7 @@ public class Game1 : Game
         {
             effect.Parameters["SkinningEnabled"]?.SetValue(false);
         }
-
-        //Todo: Fix Sorting
-   
-        //var primitivesWithDistance = new List<(GameMeshPrimitives Primitive, float Distance)>();
-        //foreach (var primitive in mesh.Primitives)
-        //{
-        //    var distance = Vector3.Distance(new Vector3(_camera.Position.X, _camera.Position.Y, _camera.Position.Z), primitive.LocalPosition);
-        //    primitivesWithDistance.Add((primitive, distance));
-        //}
-        //var sortedPrimitives = primitivesWithDistance.OrderByDescending(p => p.Distance)
-        //    .Select(p => p.Primitive).ToList();
-
+        
         foreach (var primitive in mesh.Primitives)
         {
             if (ShouldSkipPrimitive(primitive, effect, alpha, ref alphaMode))

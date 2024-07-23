@@ -14,8 +14,8 @@ namespace TestRender;
 public class World
 {
 
-    public const int ChunkWx = 512;
-    public const int ChunkWy = 512;
+    public const int ChunkWx = 32;
+    public const int ChunkWy = 32;
 
     public static Dictionary<int, Chunk> Chunks = [];
 
