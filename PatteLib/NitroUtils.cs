@@ -1,4 +1,6 @@
-﻿namespace PatteLib;
+﻿using Microsoft.Xna.Framework;
+
+namespace PatteLib;
 
 public static class NitroUtils
 {
@@ -133,18 +135,14 @@ public static class NitroUtils
     public static float GetAngleFromU16Int(ushort angleIndex)
     {
         double normalizedAngleIndex = angleIndex / 65535d;
-        double angleInDegrees = normalizedAngleIndex * 360;
-
-        return (float)angleInDegrees;
+        double angleInRad = normalizedAngleIndex * MathHelper.TwoPi;
+        return (float)angleInRad;
     }
-    public static ushort GetU16IntFromAngle(float angleDegrees)
+    public static ushort GetU16IntFromAngle(float angleRad)
     {
-        angleDegrees %= 360;
-
-        double angleInRadians = angleDegrees * Math.PI / 180;
-        double normalizedAngleIndex = angleInRadians / (2 * Math.PI);
-        double angleIndex = normalizedAngleIndex * 65535;
-
+        angleRad %= MathHelper.TwoPi;
+        double normalizedAngle = angleRad / MathHelper.TwoPi;
+        double angleIndex = normalizedAngle * 65535;
         return (ushort)angleIndex;
     }
 }

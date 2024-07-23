@@ -1,0 +1,11 @@
+﻿{
+    "type": "frame-by-frame",
+    "frames": [
+        "c1_s02_3_1.png",
+        "c1_s02_3_2.png",
+        "c1_s02_3_3.png",
+        "c1_s02_3_4.png"
+    ],
+    "style": "linear-loop",
+    "duration": 160
+}

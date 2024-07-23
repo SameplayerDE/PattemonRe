@@ -1,0 +1,15 @@
+﻿{
+    "type": "frame-by-frame",
+    "frames": [
+        "hamabe_1.png",
+        "hamabe_2.png",
+        "hamabe_3.png",
+        "hamabe_4.png",
+        "hamabe_5.png",
+        "hamabe_6.png",
+        "hamabe_7.png",
+        "hamabe_8.png"
+    ],
+    "style": "linear-loop",
+    "duration": 320
+}

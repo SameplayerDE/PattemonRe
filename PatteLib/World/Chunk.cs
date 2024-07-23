@@ -24,7 +24,7 @@ public class Building
         }
         var gltfFile = GLTFLoader.Load(@$"{RootDirectory}\{BuildingName}\{BuildingName}.gltf");
         var model = GameModel.From(graphicsDevice, gltfFile);
-        model.TranslateTo(Position);
+        model.TranslateTo(Position * 16);
         Model = model;
     }
 

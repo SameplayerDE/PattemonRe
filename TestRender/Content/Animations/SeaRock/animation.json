@@ -1,0 +1,11 @@
+﻿{
+    "type": "frame-by-frame",
+    "frames": [
+        "searock_1.png",
+        "searock_2.png",
+        "searock_3.png",
+        "searock_4.png"
+    ],
+    "style": "linear-loop",
+    "duration": 160
+}
