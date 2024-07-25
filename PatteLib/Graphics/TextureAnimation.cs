@@ -173,11 +173,6 @@ public class TextureAnimation : IDisposable
             foreach (var framePath in frames)
             {
                 string combinedPath = Path.IsPathRooted(framePath) ? framePath : Path.Combine(Path.GetDirectoryName(path), framePath);
-                Console.WriteLine(framePath);
-                if (!File.Exists(combinedPath))
-                {
-                    throw new FileNotFoundException();
-                }
                 Texture2D texture = Texture2D.FromFile(graphicsDevice, combinedPath);
                 result.Frames[index++] = texture;
             }

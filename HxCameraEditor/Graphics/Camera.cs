@@ -15,8 +15,8 @@ public class Camera
 
     public static Dictionary<int, Camera> CameraLookMap = new Dictionary<int, Camera>
     {
-        { 0, CameraFactory.CreateFromDSPRE(2731713 / 16, 54786, 0, 0, false, 1473, 614400 / 16, 3686400 / 16) },
-        { 4, CameraFactory.CreateFromDSPRE(6404251 / 16, 56418, 0, 0, true, 641, 614400 / 16, 7106560 / 16) }
+        { 0, CameraFactory.CreateFromDSPRE(2731713, 54786, 0, 0, false, 1473, 614400, 3686400) },
+        { 4, CameraFactory.CreateFromDSPRE(6404251, 56418, 0, 0, true, 641, 614400, 7106560) }
     };
     
     public CameraProjectionType ProjectionType;

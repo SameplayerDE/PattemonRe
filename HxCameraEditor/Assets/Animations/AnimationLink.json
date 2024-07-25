@@ -1,0 +1,7 @@
+﻿[
+    {
+        "materials": ["sea_lm"],
+        "compare": "startsWith",
+        "animation": "Sea/animation.json"
+    }
+]
