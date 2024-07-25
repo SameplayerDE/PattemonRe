@@ -89,7 +89,7 @@ public class Game1 : Game
 
         _worldShader = Content.Load<Effect>("Shaders/WorldShader");
         _basicEffect = new AlphaTestEffect(GraphicsDevice);
-        _overlay = Content.Load<Texture2D>("overlay_no_shine");
+        _overlay = Texture2D.FromFile(GraphicsDevice,"Assets/overlay_no_shine.png");
 
         _player = Texture2D.FromFile(GraphicsDevice, "Assets/Sprites/player.png");
         
