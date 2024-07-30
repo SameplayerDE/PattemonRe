@@ -15,6 +15,17 @@ public static class CameraFactory
         return camera;
     }
     
+    public static GameCameraFile ToDSPRE(Camera camera)
+    {
+        var file = new GameCameraFile();
+        file.distance = (uint)NitroUtils.DecimalToFx32((decimal)camera.Distance);
+        file.vertRot = NitroUtils.GetU16IntFromAngle(camera.Rotation.X);
+        file.horiRot = NitroUtils.GetU16IntFromAngle(camera.Rotation.Y);
+        file.zRot = NitroUtils.GetU16IntFromAngle(camera.Rotation.Z);
+        file.fov = NitroUtils.GetU16IntFromAngle(camera.FieldOfViewY);
+        return file;
+    }
+    
     public static Dictionary<int, Camera> CreateFromFile(string path)
     {
         string[] lines = File.ReadAllLines(path);

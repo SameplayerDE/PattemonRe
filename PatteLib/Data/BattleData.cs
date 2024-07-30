@@ -1,6 +1,6 @@
-﻿namespace PatteLib.Gameplay.Battleplay;
+﻿namespace PatteLib.Data;
 
-public class Battle
+public class BattleData
 {
     //ToDo: finish
     public BattleType Type;

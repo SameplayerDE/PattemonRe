@@ -10,23 +10,23 @@ public class GameCameraFile
 
     public uint distance { get; set; }
 
-    public ushort vertRot { get; private set; }
-    public ushort horiRot { get; private set; }
-    public ushort zRot { get; private set; }
-    public ushort unk1 { get; private set; }
+    public ushort vertRot { get;  set; }
+    public ushort horiRot { get;  set; }
+    public ushort zRot { get;  set; }
+    public ushort unk1 { get;  set; }
 
-    public byte perspMode { get; private set; }
+    public byte perspMode { get;  set; }
 
-    public byte unk2 { get; private set; }
+    public byte unk2 { get;  set; }
 
 
-    public ushort fov { get; private set; }
-    public uint nearClip { get; private set; }
-    public uint farClip { get; private set; }
+    public ushort fov { get;  set; }
+    public uint nearClip { get;  set; }
+    public uint farClip { get;  set; }
 
-    public int? xOffset { get; private set; }
-    public int? yOffset { get; private set; }
-    public int? zOffset { get; private set; }
+    public int? xOffset { get;  set; }
+    public int? yOffset { get;  set; }
+    public int? zOffset { get;  set; }
 
     public object this[int index] {
         get {

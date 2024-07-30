@@ -204,6 +204,10 @@ public class Camera
         if (projectionType == CameraProjectionType.Perspective)
         {
             float fieldOfViewY = (float)(2 * Math.Atan2(FieldOfViewSin, FieldOfViewCos));
+            if (fieldOfViewY <= 0 || fieldOfViewY >= Math.PI)
+            {
+                fieldOfViewY = (float)Math.Clamp(fieldOfViewY, 0.1, Math.PI - 0.1);
+            }
             ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(fieldOfViewY, AspectRatio, NearClip, FarClip);
         }
         else
@@ -261,17 +265,44 @@ public class Camera
     public void AdjustRotation(Vector3 amount)
     {
         Rotation += amount;
+        WrapAngle(ref Rotation);
         AdjustTargetAroundPosition(this);
     }
 
-    
-    //void Camera_AdjustAngleAroundTarget(const CameraAngle *amount, Camera *camera)
-    //{
-    //    camera->angle.x += amount->x;
-    //    camera->angle.y += amount->y;
-    //    camera->angle.z += amount->z;
-    //    Camera_AdjustPositionAroundTarget(camera);
-    //}
+    public void AdjustRotationAroundTarget(Vector3 amount)
+    {
+        Rotation += amount;
+        WrapAngle(ref Rotation);
+        AdjustPositionAroundTarget(this);
+    }
+
+    private void WrapAngle(ref Vector3 angle)
+    {
+        if (angle.X > MathHelper.TwoPi)
+        {
+            angle.X -= MathHelper.TwoPi;
+        }
+        else if (angle.X < 0)
+        {
+            angle.X += MathHelper.TwoPi;
+        }
+        if (angle.Y > MathHelper.TwoPi)
+        {
+            angle.Y -= MathHelper.TwoPi;
+        }
+        else if (angle.Y < 0)
+        {
+            angle.Y += MathHelper.TwoPi;
+        }
+        if (angle.Z > MathHelper.TwoPi)
+        {
+            angle.Z -= MathHelper.TwoPi;
+        }
+        else if (angle.Z < 0)
+        {
+            angle.Z += MathHelper.TwoPi;
+        }
+    }
 
     public void SetDistance(float distance)
     {
@@ -285,7 +316,7 @@ public class Camera
         AdjustPositionAroundTarget(this);
     }
 
-    public void Camera_AdjustDistance(float amount)
+    public void AdjustDistance(float amount)
     {
         Distance += amount;
         AdjustPositionAroundTarget(this);

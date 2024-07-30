@@ -1,4 +1,4 @@
-﻿namespace PatteLib.Gameplay.Battleplay;
+﻿namespace PatteLib.Data;
 
 public enum BattleType
 {

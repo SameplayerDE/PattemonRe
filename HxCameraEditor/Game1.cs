@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using HxCameraEditor.Graphics;
+using HxCameraEditor.UserInterface;
 using HxGLTF;
 using HxGLTF.Implementation;
 using InputLib;
@@ -18,6 +19,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private UserInterfaceRenderer _interfaceRenderer;
 
     private RenderTarget2D _cameraViewPort;
     private Point _preferredDimensions = new Point(1280 / 2, 960 / 2);
@@ -35,8 +37,14 @@ public class Game1 : Game
     private VertexBuffer _vertexBuffer;
     private IndexBuffer _indexBuffer;
 
+    private UserInterfaceNode _node;
+    
     private Vector3 _target = new Vector3(0, 80, 0);
 
+    private Binding<object> _rotation;
+    private Binding<object> _distance;
+    private Binding<object> _fieldOfView;
+    
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -59,6 +67,10 @@ public class Game1 : Game
         _cameraViewPort = new RenderTarget2D(GraphicsDevice, _preferredDimensions.X, _preferredDimensions.Y, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
         _camera = Camera.CameraLookMap[0];
         _camera.SetAsActive();
+
+        _rotation = new Binding<object>(_camera.Rotation);
+        _distance = new Binding<object>(_camera.Distance);
+        _fieldOfView = new Binding<object>(_camera.FieldOfViewY);
         
         var vertices = new VertexPositionTexture[4];
         
@@ -80,13 +92,188 @@ public class Game1 : Game
         _indexBuffer = new IndexBuffer(GraphicsDevice, typeof(short), indices.Length, BufferUsage.WriteOnly);
         _indexBuffer.SetData(indices);
         
+        GenerateNode();
+        
         base.Initialize();
+    }
+
+    private void GenerateNode()
+    {
+        _node = new VStack(
+            new Button(new Label("Reload .bin")).OnClick(() =>
+            {
+                ReloadCameraFile();
+            }),
+            new Button(new Label("Overwrite .bin")).OnClick(() =>
+            {
+                SaveCamerFile();
+            }),
+            
+            new VStack(
+                new Label("Rotation"),
+                new HStack(
+                    new HStack(
+                        new VStack(
+                            new Button(new Label("Increase X")).OnClick(() =>
+                            {
+                                float amount = 1;
+                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                {
+                                    amount *= 10;
+                                }
+                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                {
+                                    amount /= 2;
+                                }
+                                _camera.AdjustRotationAroundTarget(new Vector3(MathHelper.ToRadians(amount), 0, 0));
+                            }),
+                            new Button(new Label("Decrease X")).OnClick(() =>
+                            {
+                                float amount = 1;
+                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                {
+                                    amount *= 10;
+                                }
+                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                {
+                                    amount /= 2;
+                                }
+                                _camera.AdjustRotationAroundTarget(new Vector3(-MathHelper.ToRadians(amount), 0, 0));
+                            })
+                        ).SetSpacing(5),
+                        new VStack(
+                            new Button(new Label("Increase Y")).OnClick(() =>
+                            {
+                                float amount = 1;
+                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                {
+                                    amount *= 10;
+                                }
+                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                {
+                                    amount /= 2;
+                                }
+                                _camera.AdjustRotationAroundTarget(new Vector3(0, MathHelper.ToRadians(amount), 0));
+                            }),
+                            new Button(new Label("Decrease Y")).OnClick(() =>
+                            {
+                                float amount = 1;
+                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                {
+                                    amount *= 10;
+                                }
+                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                {
+                                    amount /= 2;
+                                }
+                                _camera.AdjustRotationAroundTarget(new Vector3(0, -MathHelper.ToRadians(amount), 0));
+                            })
+                        ).SetSpacing(5)
+                    ),
+                    new Label().SetTextBinding(_rotation)
+                ).SetAlignment(Alignment.Center)
+            ).SetSpacing(5),
+            new VStack(
+                new Label("Distance"),
+                new HStack(
+                    new VStack(
+                        new Button(new Label("Increase")).OnClick(() =>
+                        {
+                            float amount = 1;
+                            if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                            {
+                                amount *= 10;
+                            }
+                            else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                            {
+                                amount /= 2;
+                            }
+                            _camera.AdjustDistance(amount);
+                        }),
+                        new Button(new Label("Decrease")).OnClick(() =>
+                        {
+                            float amount = 1;
+                            if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                            {
+                                amount *= 10;
+                            }
+                            else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                            {
+                                amount /= 2;
+                            }
+                            _camera.AdjustDistance(-amount);
+                        })
+                    ).SetSpacing(5),
+                    new Label().SetTextBinding(_distance)
+                ).SetAlignment(Alignment.Center)
+            ).SetSpacing(5),
+            new VStack(
+                new Label("FOV"),
+                new HStack(
+                    new VStack(
+                        new Button(new Label("Increase")).OnClick(() =>
+                        {
+                            float amount = 1;
+                            if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                            {
+                                amount *= 10;
+                            }
+                            else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                            {
+                                amount /= 2;
+                            }
+                            _camera.AdjustFieldOfView(MathHelper.ToRadians(amount));
+                        }),
+                        new Button(new Label("Decrease")).OnClick(() =>
+                        {
+                            float amount = 1;
+                            if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                            {
+                                amount *= 10;
+                            }
+                            else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                            {
+                                amount /= 2;
+                            }
+                            _camera.AdjustFieldOfView(-MathHelper.ToRadians(amount));
+                        })
+                    ).SetSpacing(5),
+                    new Label().SetTextBinding(_fieldOfView)
+                ).SetAlignment(Alignment.Center)
+            ).SetSpacing(5)
+        ).SetSpacing(5).SetPadding(10);
+    }
+
+    private void SaveCamerFile()
+    {
+        GameCameraFile cameraFile = CameraFactory.ToDSPRE(Camera.ActiveCamera);
+        File.WriteAllBytes("Assets/camera.bin", cameraFile.ToByteArray());
+        Console.WriteLine("Saved Camera To Binary File");
+    }
+
+    private void ReloadCameraFile()
+    {
+        if (!File.Exists("Assets/camera.bin"))
+        {
+            Console.WriteLine("No Binary File Found");
+            Console.WriteLine("Place It In [ Assets ] And Rename It To [ camera.bin ]");
+            return;
+        }
+
+        GameCameraFile cameraFile = new GameCameraFile(File.ReadAllBytes("Assets/camera.bin"));
+
+        _camera = CameraFactory.CreateFromDSPRE((int)cameraFile.distance, cameraFile.vertRot, cameraFile.horiRot, cameraFile.zRot, cameraFile.perspMode == GameCameraFile.ORTHO, cameraFile.fov, (int)cameraFile.nearClip, (int)cameraFile.farClip);
+        _camera.SetAsActive();
+            
+        Console.WriteLine("Loaded Camera From Binary File");
     }
 
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+        
+        _interfaceRenderer = new UserInterfaceRenderer(GraphicsDevice, _spriteBatch, Services);
+        
         _worldShader = Content.Load<Effect>("Shaders/WorldShader");
         _basicEffect = new AlphaTestEffect(GraphicsDevice);
         _overlay = Texture2D.FromFile(GraphicsDevice,"Assets/overlay_no_shine.png");
@@ -99,29 +286,18 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        if (!IsActive)
+        {
+            return;
+        }
+        
         float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
         KeyboardHandler.Update(gameTime);
+        MouseHandler.Update(gameTime);
         
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-
-        if (KeyboardHandler.IsKeyDownOnce(Keys.R))
-        {
-            if (!File.Exists("Assets/camera.bin"))
-            {
-                Console.WriteLine("No Binary File Found");
-                Console.WriteLine("Place It In [ Assets ] And Rename It To [ camera.bin ]");
-                return;
-            }
-
-            GameCameraFile cameraFile = new GameCameraFile(File.ReadAllBytes("Assets/camera.bin"));
-
-            _camera = CameraFactory.CreateFromDSPRE((int)cameraFile.distance, cameraFile.vertRot, cameraFile.horiRot, cameraFile.zRot, cameraFile.perspMode == GameCameraFile.ORTHO, cameraFile.fov, (int)cameraFile.nearClip, (int)cameraFile.farClip);
-            _camera.SetAsActive();
-            
-            Console.WriteLine("Loaded Camera From Binary File");
-        }
 
         const float speed = 64.0f;
 
@@ -138,7 +314,12 @@ public class Game1 : Game
             animation.Update(gameTime);
         }
 
-        
+        _interfaceRenderer.CalculateLayout(_node);
+        _interfaceRenderer.HandleInput(_node);
+
+        _rotation.Value = _camera.Rotation;        
+        _distance.Value = _camera.Distance;        
+        _fieldOfView.Value = _camera.FieldOfViewY;        
         base.Update(gameTime);
     }
     
@@ -152,13 +333,16 @@ public class Game1 : Game
         DrawModel(gameTime,  _worldShader, _model, alpha: true);
         
         //DrawSprite(gameTime, _basicEffect,  _target + new Vector3(0.5f, 0, 0.5f) * 8 - new Vector3(0, 0, 8), new Vector3(1, 1, 1) * 16, new Vector3(MathHelper.ToRadians(90), 0, 0), _shadow);
-        DrawSprite(gameTime, _basicEffect,  _target, new Vector3(1, 1, 1) * 32, _camera.Rotation, _player);
+        DrawSprite(gameTime, _basicEffect,  _target + new Vector3(0, 0, 1) * 16, new Vector3(1, 1, 1) * 32, _camera.Rotation, _player);
         
         GraphicsDevice.SetRenderTarget(null);
-        GraphicsDevice.Clear(Color.Black);
+        GraphicsDevice.Clear(Color.DarkSlateGray);
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        
         _spriteBatch.Draw(_cameraViewPort, new Rectangle(GraphicsDevice.Viewport.Bounds.Center - (_preferredDimensions.ToVector2() / 2).ToPoint(), (_preferredDimensions.ToVector2() / 1).ToPoint()), Color.White);
-        _spriteBatch.Draw(_overlay, Vector2.Zero, Color.White);
+        // _spriteBatch.Draw(_overlay, Vector2.Zero, Color.White);
+        
+        _interfaceRenderer.DrawNode(_spriteBatch, gameTime, _node);
         _spriteBatch.End();
         
 
@@ -181,11 +365,11 @@ public class Game1 : Game
         effect.Texture = texture;
         effect.
             
-        //effect.Parameters["World"].SetValue(worldMatrix);
-        //effect.Parameters["View"].SetValue(_camera.View);
-        //effect.Parameters["Projection"].SetValue(_camera.Projection);
+            //effect.Parameters["World"].SetValue(worldMatrix);
+            //effect.Parameters["View"].SetValue(_camera.View);
+            //effect.Parameters["Projection"].SetValue(_camera.Projection);
 
-        GraphicsDevice.SetVertexBuffer(_vertexBuffer);
+            GraphicsDevice.SetVertexBuffer(_vertexBuffer);
         GraphicsDevice.Indices = _indexBuffer;
         GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
         foreach (var pass in effect.CurrentTechnique.Passes)

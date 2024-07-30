@@ -1,4 +1,4 @@
-﻿namespace PatteLib.Gameplay;
+﻿namespace PatteLib.Data;
 
 public class TrainerPartyMember
 {
