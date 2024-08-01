@@ -1,0 +1,22 @@
+﻿[
+    {
+        "materials": ["sea_lm"],
+        "compareFunction": "startsWith",
+        "animation": "Sea/animation.json"
+    },
+    {
+        "materials": ["l_lake", "c1_fun2", "taki"],
+        "compareFunction": "equals",
+        "animation": "animation_down_1000.json"
+    },
+    {
+        "materials": ["neon0"],
+        "compareFunction": "equals",
+        "animation": "party_animation.json"
+    },
+    {
+        "materials": ["hamabe_lm"],
+        "compareFunction": "startsWith",
+        "animation": "Hamabe/animation.json"
+    }
+]

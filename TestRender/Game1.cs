@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using HxGLTF;
 using HxGLTF.Implementation;
 using HxLocal;
@@ -110,12 +109,8 @@ public class Game1 : Game
         _camera = Camera.CameraLookMap[0];
         
         _world = World.LoadByHeader(GraphicsDevice, _matrix);
-        
-        _animations.Add((["l_lake"], AnimationCompareFunction.Equals), TextureAnimation.Load(GraphicsDevice, "Content/Animations/animation_down_1000.json"));
-        _animations.Add((["c1_fun2", "taki"], AnimationCompareFunction.Equals), TextureAnimation.Load(GraphicsDevice, "Content/Animations/animation_down_1000.json"));
-        _animations.Add((["neon0"], AnimationCompareFunction.Equals), TextureAnimation.Load(GraphicsDevice, "Content/party_animation.json"));
-        _animations.Add((["hamabe_lm"], AnimationCompareFunction.StartsWith), TextureAnimation.Load(GraphicsDevice, "Content/Animations/Hamabe/animation.json"));
-        _animations.Add((["sea_lm"], AnimationCompareFunction.StartsWith), TextureAnimation.Load(GraphicsDevice, "Content/Animations/Sea/animation.json"));
+
+        LoadAnimations();
         
         var vertices = new VertexPositionTexture[4];
         
@@ -140,7 +135,38 @@ public class Game1 : Game
         
         base.Initialize();
     }
-        
+
+    private void LoadAnimations()
+    {
+        string path = "Content/Animations/animations.json";   
+        JArray jAnimations = JArray.Parse(File.ReadAllText(path));
+
+        foreach (var jAnimation in jAnimations)
+        {
+            
+            IEnumerable<string> materialsEnumerable = JsonUtils.GetValues<string>(jAnimation["materials"]);
+            string[] materials = new string[Enumerable.Count(materialsEnumerable)];
+            int index = 0;
+            foreach (var material in materialsEnumerable)
+            {
+                materials[index++] = material;
+            }
+            string compareFunctionString = JsonUtils.GetValue<string>(jAnimation["compareFunction"]);
+            AnimationCompareFunction compareFunction = compareFunctionString switch
+            {
+                "equals" => AnimationCompareFunction.Equals,
+                "contains" => AnimationCompareFunction.Contains,
+                "startsWith" => AnimationCompareFunction.StartsWith,
+                _ => throw new Exception()
+            };
+            
+            string animationPathString = JsonUtils.GetValue<string>(jAnimation["animation"]);
+            string combinedPath = Path.IsPathRooted(animationPathString) ? animationPathString : Path.Combine(Path.GetDirectoryName(path), animationPathString);
+            
+            _animations.Add((materials, compareFunction), TextureAnimation.Load(GraphicsDevice, combinedPath));
+        } 
+    }
+
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -894,7 +920,7 @@ public class Game1 : Game
 
                 effect.Parameters["ShouldAnimate"]?.SetValue(true);
                 effect.Parameters["Offset"]?.SetValue(animation.Offset);
-                
+                Console.WriteLine(animation.Offset);
             }
         }
     }

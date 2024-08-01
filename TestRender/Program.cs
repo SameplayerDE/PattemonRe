@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using PatteLib;
+using PatteLib.Data;
 using TestRender;
 using Utils = PatteLib.Utils;
 
@@ -11,15 +12,17 @@ public static class Program
     [STAThread]
     private static void Main()
     {
-        Console.WriteLine(MathHelper.ToDegrees((float)NitroUtils.Fx32ToDecimal(1473))); //
-        //Console.WriteLine(NitroUtils.Fx32ToDecimal(5377)); //
-        //Console.WriteLine(NitroUtils.DecimalToFx32((decimal)MathHelper.ToRadians(180)));
-        //Console.WriteLine(NitroUtils.DecimalToFx32(0));
-        //Console.WriteLine((short)NitroUtils.GetU16IntFromAngle(180));
-        //Console.WriteLine((short)NitroUtils.GetU16IntFromAngle(270));
-        //Console.WriteLine((short)NitroUtils.GetU16IntFromAngle(360));
-        //Console.WriteLine((uint)NitroUtils.DecimalToFx32(111));
-        using var game = new Game1();
-        game.Run();
+        ExperienceTableHandler.LoadData(@"Content\Pokemon\experiences.json");
+        string expRate = "EXP_RATE_MEDIUM_SLOW";
+        int currExp = 10233;
+        int currLevel = ExperienceTableHandler.GetLevel(expRate, currExp);
+        int totalExpNext = ExperienceTableHandler.GetExp(expRate, currLevel + 1);
+        int expToNext = totalExpNext - currExp;
+
+        Console.WriteLine(currLevel);
+        Console.WriteLine($"{currExp} / {totalExpNext} ({expToNext})");
+        
+        //using var game = new Game1();
+        //game.Run();
     }
 }

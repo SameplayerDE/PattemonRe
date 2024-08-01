@@ -1,0 +1,10 @@
+﻿[
+    {
+        "id": "EXP_RATE_MEDIUM_SLOW",
+        "path": "medium_slow.json"
+    },
+    {
+        "id": "EXP_RATE_MEDIUM_FAST",
+        "path": "medium_fast.json"
+    }
+]
