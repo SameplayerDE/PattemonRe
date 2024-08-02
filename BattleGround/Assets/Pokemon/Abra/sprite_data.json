@@ -1,0 +1,149 @@
+{
+    "front": {
+        "yOffset": {
+            "female": 18,
+            "male": 18
+        },
+        "addl_y_offset": -4,
+        "animation": 21,
+        "cryDelay": 10,
+        "startDelay": 8,
+        "frames": [
+            {
+                "spriteFrame": 1,
+                "frameDelay": 8,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": 0,
+                "frameDelay": 8,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": 1,
+                "frameDelay": 12,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": 0,
+                "frameDelay": 12,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            }
+        ]
+    },
+    "back": {
+        "yOffset": {
+            "female": 15,
+            "male": 15
+        },
+        "animation": 4,
+        "cryDelay": 7,
+        "startDelay": 7,
+        "frames": [
+            {
+                "spriteFrame": 1,
+                "frameDelay": 12,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": 1,
+                "frameDelay": 15,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": 1,
+                "frameDelay": 12,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            },
+            {
+                "spriteFrame": -1,
+                "frameDelay": 0,
+                "xShift": 0,
+                "yShift": 0
+            }
+        ]
+    },
+    "shadow": {
+        "xOffset": 0,
+        "size": "SHADOW_SIZE_MEDIUM"
+    }
+}

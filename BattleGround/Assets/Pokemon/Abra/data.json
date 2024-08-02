@@ -1,0 +1,118 @@
+{
+    "name": "Abra",
+    "baseStats": {
+        "hp": 25,
+        "attack": 20,
+        "defense": 15,
+        "speed": 90,
+        "specialAttack": 105,
+        "specialDefense": 55
+    },
+    "types": [
+        "TYPE_PSYCHIC",
+        "TYPE_PSYCHIC"
+    ],
+    "catchRate": 200,
+    "baseExpReward": 75,
+    "evYields": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "speed": 0,
+        "specialAttack": 1,
+        "specialDefense": 0
+    },
+    "heldItems": {
+        "common": "ITEM_NONE",
+        "rare": "ITEM_TWISTEDSPOON"
+    },
+    "genderRatio": "GENDER_RATIO_FEMALE_25",
+    "hatchCycles": 20,
+    "baseFriendship": 70,
+    "expRate": "EXP_RATE_MEDIUM_SLOW",
+    "eggGroups": [
+        "EGG_GROUP_HUMAN_LIKE",
+        "EGG_GROUP_HUMAN_LIKE"
+    ],
+    "abilities": [
+        "ABILITY_SYNCHRONIZE",
+        "ABILITY_INNER_FOCUS"
+    ],
+    "greatMarshFleeRate": 0,
+    "sprite": {
+        "color": "MON_COLOR_BROWN",
+        "flipSprite": false
+    },
+    "learnSet": {
+        "tms": [
+            "TM01",
+            "TM04",
+            "TM06",
+            "TM10",
+            "TM11",
+            "TM12",
+            "TM16",
+            "TM17",
+            "TM18",
+            "TM20",
+            "TM21",
+            "TM23",
+            "TM27",
+            "TM29",
+            "TM30",
+            "TM32",
+            "TM33",
+            "TM34",
+            "TM41",
+            "TM42",
+            "TM43",
+            "TM44",
+            "TM45",
+            "TM46",
+            "TM48",
+            "TM49",
+            "TM53",
+            "TM56",
+            "TM57",
+            "TM58",
+            "TM60",
+            "TM63",
+            "TM67",
+            "TM70",
+            "TM73",
+            "TM77",
+            "TM78",
+            "TM82",
+            "TM83",
+            "TM85",
+            "TM86",
+            "TM87",
+            "TM90",
+            "TM92"
+        ],
+        "levelUp": {
+            "1": "MOVE_TELEPORT"
+        },
+        "tutor": [
+            "MOVE_THUNDER_PUNCH",
+            "MOVE_FIRE_PUNCH",
+            "MOVE_ICE_PUNCH",
+            "MOVE_SNORE",
+            "MOVE_SIGNAL_BEAM",
+            "MOVE_ZEN_HEADBUTT",
+            "MOVE_TRICK",
+            "MOVE_KNOCK_OFF"
+        ]
+    },
+    "evolutions": [
+        [
+            "EVO_LEVEL_UP",
+            16,
+            "SPECIES_KADABRA"
+        ]
+    ],
+    "footprint": {
+        "hasFootprint": true,
+        "footprintSize": "FOOTPRINT_MEDIUM"
+    }
+}

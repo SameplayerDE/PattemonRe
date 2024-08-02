@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <PublishReadyToRun>false</PublishReadyToRun>
+        <TieredCompilation>false</TieredCompilation>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <ApplicationIcon>Icon.ico</ApplicationIcon>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Remove="Icon.ico"/>
+        <None Remove="Icon.bmp"/>
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Icon.ico"/>
+        <EmbeddedResource Include="Icon.bmp"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="Assets\**">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <MonoGameContentReference Include="Content\Content.mgcb"/>
+    </ItemGroup>
+    <ItemGroup>
+        <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641"/>
+        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641"/>
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="Assets\Pokemon\.Shared\exp_tables.csv" />
+      <Content Include="Assets\Pokemon\.Shared\pl_poke_icon.pal" />
+      <Content Include="Assets\Pokemon\.Shared\pl_poke_icon_anim_01.json" />
+      <Content Include="Assets\Pokemon\.Shared\pl_poke_icon_anim_02.json" />
+      <Content Include="Assets\Pokemon\.Shared\pl_poke_icon_anim_03.json" />
+      <Content Include="Assets\Pokemon\.Shared\pl_poke_icon_cell_01.json" />
+      <Content Include="Assets\Pokemon\.Shared\pl_poke_icon_cell_02.json" />
+      <Content Include="Assets\Pokemon\.Shared\pl_poke_icon_cell_03.json" />
+      <Content Include="Assets\Pokemon\.Shared\shadows.pal" />
+      <Content Include="Assets\Pokemon\.Shared\shadows.png" />
+      <Content Include="Assets\Pokemon\.Shared\substitute.pal" />
+      <Content Include="Assets\Pokemon\.Shared\substitute_back.png" />
+      <Content Include="Assets\Pokemon\.Shared\substitute_front.png" />
+    </ItemGroup>
+</Project>
