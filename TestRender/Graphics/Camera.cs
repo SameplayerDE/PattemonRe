@@ -42,8 +42,8 @@ public class Camera
     public bool TrackTargetX { get; private set; }
     public bool TrackTargetY { get; private set; }
     public bool TrackTargetZ { get; private set; }
-    
-    public static Camera ActiveCamera { get; private set; }
+
+    public static Camera ActiveCamera;
 
     public static void Init(float fieldOfViewY, Camera camera)
     {

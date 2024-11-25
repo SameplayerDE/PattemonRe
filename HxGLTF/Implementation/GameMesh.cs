@@ -24,7 +24,16 @@ namespace HxGLTF.Implementation
             Material = null;
         }
         
-       public static GameMeshPrimitives From(GraphicsDevice graphicsDevice, GLTFFile file, MeshPrimitive primitive)
+        public float DistanceToCamera(Vector3 cameraPosition, Matrix worldMatrix)
+        {
+            // Transformiere die lokale Position der Primitive in den Welt-Raum
+            var worldPosition = Vector3.Transform(LocalPosition, worldMatrix);
+
+            // Berechne die Distanz zur Kamera
+            return Vector3.Distance(worldPosition, cameraPosition);
+        }
+        
+        public static GameMeshPrimitives From(GraphicsDevice graphicsDevice, GLTFFile file, MeshPrimitive primitive)
         {
             var result = new GameMeshPrimitives();
 
@@ -39,8 +48,8 @@ namespace HxGLTF.Implementation
             
             foreach (var attribute in primitive.Attributes)
             {
-               //Console.WriteLine(attribute.Key);
-               //Console.WriteLine(attribute.Value.Type.Id);
+                //Console.WriteLine(attribute.Key);
+                //Console.WriteLine(attribute.Value.Type.Id);
 
                 var dataAccessor = attribute.Value;
                 var elementCount = dataAccessor.Count;

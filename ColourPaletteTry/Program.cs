@@ -32,7 +32,8 @@ namespace ColourPaletteTry
         static void Main()
         {
             var angle = 95;
-            
+            var game = new Game1();
+            game.Run();
             Console.WriteLine("" + GetU16IntFromAngle(angle));
         }
     }

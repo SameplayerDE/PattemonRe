@@ -25,7 +25,7 @@ cbuffer Constants : register(b1)
 }
 
 bool ShouldAnimate;	
-float2 Offset;
+float2 Offset; 
 
 float Delta;
 float Total;
@@ -121,7 +121,9 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
 
 float4 DepthPS(VertexShaderOutput input) : SV_Target
 {
-    return saturate(float4(input.Normal.xyz, 1) );
+	float depth = input.Depth;
+    return float4(depth, depth, depth, 1.0);
+    //return saturate(float4(input.Normal.xyz, 1) );
 }
 
 technique T0
@@ -145,7 +147,7 @@ technique T1
         VertexShader = compile VS_SHADERMODEL MainVS();
         ZEnable = true;
         FillMode = Solid;
-        ZWriteEnable = true;
+        ZWriteEnable = false;
         CullMode = CW;
         DestBlend = INVSRCALPHA;
         SrcBlend = SRCALPHA;
@@ -153,3 +155,18 @@ technique T1
         PixelShader = compile PS_SHADERMODEL MainPS();
     }
 };
+
+technique T2
+{
+    pass P0
+    {
+        VertexShader = compile VS_SHADERMODEL MainVS();
+        ZEnable = true;
+        FillMode = Solid;
+        CullMode = CW;
+        DestBlend = INVSRCALPHA;
+        SrcBlend = SRCALPHA;
+        PixelShader = compile PS_SHADERMODEL DepthPS();
+    }
+};
+

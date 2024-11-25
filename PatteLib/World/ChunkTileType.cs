@@ -2,7 +2,7 @@
 
 public enum ChunkTileType
 {
-     None = 0x00,                            // Kein Tile
+    None = 0x00,                            // Kein Tile
     TallGrassWild = 0x02,                   // Hohes Gras (Wild)
     VeryTallGrassWild = 0x03,               // Sehr hohes Gras (Wild)
     TreeHeadbuttHGSS = 0x06,                // Baum (Kopfnuss in HGSS)

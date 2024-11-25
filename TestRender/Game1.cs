@@ -22,6 +22,9 @@ namespace TestRender;
 
 public class Game1 : Game
 {   
+    
+    private bool _blank = false;
+    
     private GraphicsDeviceManager _graphicsDeviceManager;
     private SpriteBatch _spriteBatch;
 
@@ -42,8 +45,13 @@ public class Game1 : Game
     private Texture2D _map;
     private ImageFont _imageFont;
     private ImageFontRenderer _fontRenderer;
+    
     private RenderTarget2D _alphaPassTarget;
     private RenderTarget2D _defaultPassTarget;
+
+    private RenderTarget2D _depthRenderTarget;
+    private RenderTarget2D _normalRenderTarget;
+    private RenderTarget2D _colorRenderTarget;
 
     private Texture2D _textBox;
 
@@ -69,7 +77,7 @@ public class Game1 : Game
         IsMouseVisible = true;
             
         IsFixedTimeStep = true;
-        TargetElapsedTime = TimeSpan.FromSeconds(1d / 120d);
+        TargetElapsedTime = TimeSpan.FromSeconds(1d / 30d);
 
         _graphicsDeviceManager.PreferredBackBufferHeight = 960;
         _graphicsDeviceManager.PreferredBackBufferWidth = 1280;
@@ -85,6 +93,30 @@ public class Game1 : Game
         
         _alphaPassTarget = new RenderTarget2D(GraphicsDevice, _preferredDimensions.X, _preferredDimensions.Y, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
         _defaultPassTarget = new RenderTarget2D(GraphicsDevice, _preferredDimensions.X, _preferredDimensions.Y, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
+        
+        _depthRenderTarget = new RenderTarget2D(
+            GraphicsDevice,
+            _preferredDimensions.X, _preferredDimensions.Y,
+            false,
+            SurfaceFormat.Single, // Für Tiefenwerte
+            DepthFormat.Depth24
+        );
+
+        _normalRenderTarget = new RenderTarget2D(
+            GraphicsDevice,
+            _preferredDimensions.X, _preferredDimensions.Y,
+            false,
+            SurfaceFormat.Color,
+            DepthFormat.None
+        );
+
+        _colorRenderTarget = new RenderTarget2D(
+            GraphicsDevice,
+            _preferredDimensions.X, _preferredDimensions.Y,
+            false,
+            SurfaceFormat.Color,
+            DepthFormat.None
+        );
         
         Localisation.RootDirectory = @"Content\Localisation";
         Localisation.SetLanguage("de");
@@ -169,6 +201,8 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
+        GraphicsDevice.BlendState = BlendState.AlphaBlend;
+        
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _worldShader = Content.Load<Effect>("Shaders/WorldShader");
         _buildingShader = Content.Load<Effect>("Shaders/BuildingShader");
@@ -513,7 +547,7 @@ public class Game1 : Game
         {
             return;
         }
-
+        
         _camera.SetAsActive();
         GraphicsDevice.SetRenderTarget(_defaultPassTarget);
         GraphicsDevice.Clear(Color.Black);
@@ -653,6 +687,7 @@ public class Game1 : Game
     
     private void DrawWorld(GameTime gameTime, World world, bool alphaPass = false)
     {
+        
         foreach (var chunkEntry in world.Combination)
         {
             var (targetX, targetY) = chunkEntry.Key;
@@ -668,8 +703,9 @@ public class Game1 : Game
                 if (chunk.IsLoaded && chunk.Model != null)
                 {
                     DrawModel(gameTime, _worldShader, chunk.Model,
-                        offset: new Vector3(targetX * World.ChunkWx, tuple.height * 8f, targetY * World.ChunkWy) +
+                        offset: new Vector3(targetX * World.ChunkWx, tuple.height * 0.5f, targetY * World.ChunkWy) +
                                 new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: false);
+  
                     foreach (var building in chunk.Buildings)
                     {
                         DrawModel(gameTime, _buildingShader, building.Model,
@@ -679,7 +715,7 @@ public class Game1 : Game
                 }
             }
         }
-        
+
         foreach (var chunkEntry in world.Combination)
         {
             var (targetX, targetY) = chunkEntry.Key;
@@ -693,7 +729,7 @@ public class Game1 : Game
                 if (chunk.IsLoaded && chunk.Model != null)
                 {
                     DrawModel(gameTime, _worldShader, chunk.Model,
-                        offset: new Vector3(targetX * World.ChunkWx, tuple.height * 8f, targetY * World.ChunkWy) +
+                        offset: new Vector3(targetX * World.ChunkWx, tuple.height * 0.5f, targetY * World.ChunkWy) +
                                 new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2f, alpha: true);
                     foreach (var building in chunk.Buildings)
                     {
@@ -777,6 +813,15 @@ public class Game1 : Game
         {
             effect.Parameters["SkinningEnabled"]?.SetValue(false);
         }
+
+        if (alpha)
+        {
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+        }
+        else
+        {
+            //GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Black, 1.0f, 0);
+        }
         
         foreach (var primitive in mesh.Primitives)
         {
@@ -793,6 +838,7 @@ public class Game1 : Game
                 GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0,
                     primitive.VertexBuffer.VertexCount / 3);
             }
+            
         }
     }
 
@@ -801,7 +847,7 @@ public class Game1 : Game
         if (primitive.Material != null)
         {
             var material = primitive.Material;
-
+            
             switch (material.AlphaMode)
             {
                 case "OPAQUE":

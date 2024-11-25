@@ -4,11 +4,22 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>H073.HxGLTF</PackageId>
+    <Title>HxGLTF</Title>
+    <Authors>Sameplayer</Authors>
+    <Description>Load GLTF files for monogame</Description>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <None Include="docs\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 </Project>

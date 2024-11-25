@@ -32,11 +32,18 @@ namespace BattleGround
         private Texture2D _battlePlateNear;
         private Texture2D _battlePlateFar;
         private float xOffset = 0;
+        private float xBackgroundOffset = 0;
+        private float xInfoOffset = 0;
         
         private Texture2D _main;
         private Texture2D _mainOverlay;
-        private Texture2D _sub;
         
+        private Texture2D _enemyInfo;
+        private Texture2D _info;
+        
+        private Texture2D _sub;
+        private Texture2D _subBottomMenu;
+        private float yBottomOffset = 0;
         
         public Game1()
         {
@@ -62,13 +69,15 @@ namespace BattleGround
             _pokemon1 = Pokemon.FromName(GraphicsDevice, "Chimchar");
             
             _main = Texture2D.FromFile(GraphicsDevice, "Assets/Dummy/main.png");
-            _sub = Texture2D.FromFile(GraphicsDevice, "Assets/Dummy/sub.png");
+            _enemyInfo = Texture2D.FromFile(GraphicsDevice, "Assets/Interface/enemy_info.png");
+            _info = Texture2D.FromFile(GraphicsDevice, "Assets/Interface/info.png");
+            _sub = Texture2D.FromFile(GraphicsDevice, "Assets/Interface/sub_bg.png");
+            _subBottomMenu = Texture2D.FromFile(GraphicsDevice, "Assets/Interface/bottom.png");
             _mainOverlay = Texture2D.FromFile(GraphicsDevice, "Assets/Dummy/sub_overlay.png");
             
             _battleBackground = Texture2D.FromFile(GraphicsDevice, "Assets/Dummy/battle_bg_0_d.png");
             _battlePlateNear = Texture2D.FromFile(GraphicsDevice, "Assets/Dummy/battle_plate_front.png");
             _battlePlateFar = Texture2D.FromFile(GraphicsDevice, "Assets/Dummy/battle_plate_back.png");
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -84,12 +93,38 @@ namespace BattleGround
             {
                 xOffset += 256 * delta;
             }
+            
+            if (xBackgroundOffset < 64)
+            {
+                xBackgroundOffset += 64 * delta;
+            }
 
             if (Keyboard.GetState().IsKeyDown(Keys.P))
             {
                 xOffset = 0;
+                xBackgroundOffset = 0;
+                yBottomOffset = 0;
+                xInfoOffset = 0;
             }
 
+            if (xBackgroundOffset >= 64 && xOffset >= 256)
+            {
+                if (yBottomOffset < 48)
+                {
+                    yBottomOffset += 144 * delta;
+                }
+                
+                if (xInfoOffset < 128)
+                {
+                    xInfoOffset += 512 * delta;
+                }
+            }
+
+            if (xInfoOffset >= 128)
+            {
+                
+            }
+            
             base.Update(gameTime);
         }
 
@@ -99,8 +134,8 @@ namespace BattleGround
             GraphicsDevice.Clear(Color.Black);
             
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_battleBackground, new Vector2(-xOffset, 0), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
-            _spriteBatch.Draw(_battleBackground, new Vector2(256 - xOffset, 0), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(_battleBackground, new Vector2(-256 + 64 -xBackgroundOffset, 0), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+            _spriteBatch.Draw(_battleBackground, new Vector2(64 - xBackgroundOffset, 0), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             _spriteBatch.End();
             
             _spriteBatch.Begin();
@@ -112,7 +147,12 @@ namespace BattleGround
             _pokemon1.Draw(_spriteBatch, 0, new Vector2(153, 26) + new Vector2(-256 + xOffset, 0), new Rectangle(0, 0, 80, 80), _paletteEffect);
             
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_mainOverlay, new Vector2(0, 0), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(_info, new Vector2(256 - xInfoOffset, (int)(94 + (xInfoOffset >= 128 ? Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10) * 2 : 0))), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(_enemyInfo, new Vector2(-128 + xInfoOffset, 20), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            _spriteBatch.End();
+            
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(_mainOverlay, new Vector2(0, 0), null, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             _spriteBatch.End();
             
             GraphicsDevice.SetRenderTarget(null);
@@ -125,6 +165,7 @@ namespace BattleGround
             
             _spriteBatch.Begin();
             _spriteBatch.Draw(_sub, Vector2.Zero, Color.White);
+            _spriteBatch.Draw(_subBottomMenu, new Vector2(0, 192 - yBottomOffset), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             _spriteBatch.End();
             
             GraphicsDevice.SetRenderTarget(null);

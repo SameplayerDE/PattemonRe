@@ -1,0 +1,42 @@
+{
+    "name": "PlayerWalkUp",
+    "duration": 16,
+    "textures": [
+        "../Sprites/Player/pl_boy01c_5.png",
+        "../Sprites/Player/pl_boy01c_6.png",
+        "../Sprites/Player/pl_boy01c_7.png",
+        "../Sprites/Player/pl_boy01c_8.png"
+    ],
+    "keyFrames": [
+        {
+            "frame": 0,
+            "texture" : 0
+        },
+        {
+            "frame": 4,
+            "texture" : 1,
+            "events": [
+                "OnPlayerStep"
+            ]
+        },
+        {
+            "frame": 8,
+            "texture" : 2
+        },
+        {
+            "frame": 12,
+            "texture" : 3,
+            "events": [
+                "OnPlayerStep"
+            ]
+        }
+    ],
+    "events": [
+        {
+            "name": "OnPlayerStep",
+            "data": {
+                "sound": "step"
+            }
+        }
+    ]
+}

@@ -16,39 +16,6 @@
         <None Update="Assets\**">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="Assets\Animations\Sea\sea_1.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Animations\Sea\sea_2.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Animations\Sea\sea_3.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Animations\Sea\sea_4.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Animations\Sea\sea_5.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Animations\Sea\sea_6.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Animations\Sea\sea_7.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Animations\Sea\sea_8.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Animations\Sea\animation.json">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Font.json">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Font.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Icon.ico"/>
