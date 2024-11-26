@@ -9,6 +9,8 @@ public enum UserInterfaceNodeType
     Spacer,
     Label,
     Button,
+    ToggleButton,
+    RadioButton,
     Image,
     TextField,
     Slider

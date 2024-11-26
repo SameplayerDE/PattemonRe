@@ -38,6 +38,23 @@ public class UserInterfaceRenderer
         _fonts.Add("default", ContentManager.Load<SpriteFont>("default"));
         Pixel = new Texture2D(GraphicsDevice, 1, 1);
         Pixel.SetData(new[] { Color.White });
+        LoadContent();
+    }
+
+    public void LoadContent()
+    {
+        _images.Add("toggleOn", ContentManager.Load<Texture2D>("toggle_on"));
+        _images.Add("toggleOff", ContentManager.Load<Texture2D>("toggle_off"));
+        _images.Add("toggleBoxOn", ContentManager.Load<Texture2D>("toggleBox_on"));
+        _images.Add("toggleBoxOff", ContentManager.Load<Texture2D>("toggleBox_off"));
+        
+        _images.Add("iconPlus", ContentManager.Load<Texture2D>("icon_plus"));
+        _images.Add("iconMinus", ContentManager.Load<Texture2D>("icon_minus"));
+        _images.Add("iconUp", ContentManager.Load<Texture2D>("icon_up"));
+        _images.Add("iconDown", ContentManager.Load<Texture2D>("icon_down"));
+        _images.Add("iconLeft", ContentManager.Load<Texture2D>("icon_left"));
+        _images.Add("iconRight", ContentManager.Load<Texture2D>("icon_right"));
+        _images.Add("iconReset", ContentManager.Load<Texture2D>("icon_reset"));
     }
 
     public void CalculateLayout(UserInterfaceNode node)
@@ -46,10 +63,25 @@ public class UserInterfaceRenderer
         {
             CalculateLabelLayout((Label)node);
         }
+        
+        if (node.Type == UserInterfaceNodeType.Image)
+        {
+            CalculateImageLayout((Image)node);
+        }
 
         if (node.Type == UserInterfaceNodeType.Button)
         {
             CalculateButtonLayout((Button)node);
+        }
+        
+        if (node.Type == UserInterfaceNodeType.ToggleButton)
+        {
+            CalculateToggleButtonLayout((ToggleButton)node);
+        }
+        
+        if (node.Type == UserInterfaceNodeType.RadioButton)
+        {
+            CalculateRadioButtonLayout((RadioButton)node);
         }
 
         if (node.Type == UserInterfaceNodeType.HStack)
@@ -63,7 +95,7 @@ public class UserInterfaceRenderer
         }
     }
 
-        private void CalculateVStackLayout(VStack stack)
+    private void CalculateVStackLayout(VStack stack)
     {
         var currentY = stack.Y + stack.PaddingTop;
         var currentX = stack.X + stack.PaddingLeft;
@@ -214,6 +246,28 @@ public class UserInterfaceRenderer
                 button.Invoke();
             }
         }
+        
+        if (node.Type == UserInterfaceNodeType.ToggleButton)
+        {
+            var button = (ToggleButton)node;
+            var buttonRect = new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height);
+
+            if (buttonRect.Contains(MouseHandler.Position) && MouseHandler.IsButtonDownOnce(MouseButton.Left))
+            {
+                button.Invoke();
+            }
+        }
+        
+        if (node.Type == UserInterfaceNodeType.RadioButton)
+        {
+            var button = (RadioButton)node;
+            var buttonRect = new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height);
+
+            if (buttonRect.Contains(MouseHandler.Position) && MouseHandler.IsButtonDownOnce(MouseButton.Left))
+            {
+                button.Invoke();
+            }
+        }
 
         if (node is UserInterfaceNodeContainer container)
         {
@@ -236,6 +290,28 @@ public class UserInterfaceRenderer
         label.Width = dimensions.X;
     }
     
+    private void CalculateToggleButtonLayout(ToggleButton node)
+    {
+        ToggleButton button = node;
+        button.Height = 32;
+        button.Width = 64;
+    }
+    
+    private void CalculateImageLayout(Image node)
+    {
+        Image image = node;
+        var texture = _images[image.Path];
+        image.Height = texture.Height * image.Scale;
+        image.Width = texture.Width * image.Scale;;
+    }
+    
+    private void CalculateRadioButtonLayout(RadioButton node)
+    {
+        RadioButton button = node;
+        button.Height = 32;
+        button.Width = 32;
+    }
+    
     public void DrawNode(SpriteBatch spriteBatch, GameTime gameTime, UserInterfaceNode node)
     {
         if (node.Type == UserInterfaceNodeType.Label)
@@ -254,8 +330,7 @@ public class UserInterfaceRenderer
                 DrawNode(spriteBatch, gameTime, child);
             }
         }
-
-
+        
         if (node.Type == UserInterfaceNodeType.VStack)
         {
             var stack = (VStack)node;
@@ -276,6 +351,24 @@ public class UserInterfaceRenderer
             {
                 DrawNode(spriteBatch, gameTime, child);
             }
+        }
+        
+        if (node.Type == UserInterfaceNodeType.ToggleButton)
+        {
+            var button = (ToggleButton)node;
+            spriteBatch.Draw(button.Checked ? _images["toggleOn"] : _images["toggleOff"], new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height), Color.White);
+        }
+        
+        if (node.Type == UserInterfaceNodeType.RadioButton)
+        {
+            var button = (RadioButton)node;
+            spriteBatch.Draw(button.Checked ? _images["toggleBoxOn"] : _images["toggleBoxOff"], new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height), Color.White);
+        }
+        
+        if (node.Type == UserInterfaceNodeType.Image)
+        {
+            var image = (Image)node;
+            spriteBatch.Draw(_images[image.Path], new Rectangle((int)image.X, (int)image.Y, (int)image.Width, (int)image.Height), Color.White);
         }
         //if (node.Type == UserInterfaceNodeType.Slider)
         //{

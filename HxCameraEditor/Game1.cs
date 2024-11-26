@@ -11,7 +11,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using NativeFileDialogSharp;
 using PatteLib.Graphics;
+using Image = HxCameraEditor.UserInterface.Image;
 
 namespace HxCameraEditor;
 
@@ -32,6 +34,7 @@ public class Game1 : Game
     private Dictionary<(string[] Materials, AnimationCompareFunction CompareFunction), TextureAnimation> _animations = [];
     private GameModel _model;
     private Effect _worldShader;
+    private Effect _billBoardShader;
     private AlphaTestEffect _basicEffect;
     
     private VertexBuffer _vertexBuffer;
@@ -39,7 +42,7 @@ public class Game1 : Game
 
     private UserInterfaceNode _node;
     
-    private Vector3 _target = new Vector3(0, 80, 0);
+    private Vector3 _target = new Vector3(0, 0, 0);
 
     private Binding<object> _rotation;
     private Binding<object> _distance;
@@ -110,145 +113,163 @@ public class Game1 : Game
             }),
             
             new VStack(
-                new Label("Rotation"),
                 new HStack(
-                    new HStack(
-                        new VStack(
-                            new Button(new Label("Increase X")).OnClick(() =>
-                            {
-                                float amount = 1;
-                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
-                                {
-                                    amount *= 10;
-                                }
-                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
-                                {
-                                    amount /= 2;
-                                }
-                                _camera.AdjustRotationAroundTarget(new Vector3(MathHelper.ToRadians(amount), 0, 0));
-                            }),
-                            new Button(new Label("Decrease X")).OnClick(() =>
-                            {
-                                float amount = 1;
-                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
-                                {
-                                    amount *= 10;
-                                }
-                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
-                                {
-                                    amount /= 2;
-                                }
-                                _camera.AdjustRotationAroundTarget(new Vector3(-MathHelper.ToRadians(amount), 0, 0));
-                            })
-                        ).SetSpacing(5),
-                        new VStack(
-                            new Button(new Label("Increase Y")).OnClick(() =>
-                            {
-                                float amount = 1;
-                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
-                                {
-                                    amount *= 10;
-                                }
-                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
-                                {
-                                    amount /= 2;
-                                }
-                                _camera.AdjustRotationAroundTarget(new Vector3(0, MathHelper.ToRadians(amount), 0));
-                            }),
-                            new Button(new Label("Decrease Y")).OnClick(() =>
-                            {
-                                float amount = 1;
-                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
-                                {
-                                    amount *= 10;
-                                }
-                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
-                                {
-                                    amount /= 2;
-                                }
-                                _camera.AdjustRotationAroundTarget(new Vector3(0, -MathHelper.ToRadians(amount), 0));
-                            })
-                        ).SetSpacing(5)
-                    ),
+                    new Label("Camera"),
                     new Label().SetTextBinding(_rotation)
-                ).SetAlignment(Alignment.Center)
-            ).SetSpacing(5),
-            new VStack(
-                new Label("Distance"),
-                new HStack(
-                    new VStack(
-                        new Button(new Label("Increase")).OnClick(() =>
+                ),
+                new VStack(
+                    new HStack(
+                        new Label("Orthographic"),
+                        new RadioButton().OnClick((isChecked) =>
                         {
-                            float amount = 1;
-                            if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
-                            {
-                                amount *= 10;
-                            }
-                            else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
-                            {
-                                amount /= 2;
-                            }
-                            _camera.AdjustDistance(amount);
-                        }),
-                        new Button(new Label("Decrease")).OnClick(() =>
-                        {
-                            float amount = 1;
-                            if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
-                            {
-                                amount *= 10;
-                            }
-                            else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
-                            {
-                                amount /= 2;
-                            }
-                            _camera.AdjustDistance(-amount);
+                            _camera.SetProjectionType(isChecked ? CameraProjectionType.Orthographic : CameraProjectionType.Perspective);
                         })
-                    ).SetSpacing(5),
-                    new Label().SetTextBinding(_distance)
-                ).SetAlignment(Alignment.Center)
-            ).SetSpacing(5),
-            new VStack(
-                new Label("FOV"),
-                new HStack(
+                    ).SetAlignment(Alignment.Center),
+            
                     new VStack(
-                        new Button(new Label("Increase")).OnClick(() =>
-                        {
-                            float amount = 1;
-                            if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
-                            {
-                                amount *= 10;
-                            }
-                            else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
-                            {
-                                amount /= 2;
-                            }
-                            _camera.AdjustFieldOfView(MathHelper.ToRadians(amount));
-                        }),
-                        new Button(new Label("Decrease")).OnClick(() =>
-                        {
-                            float amount = 1;
-                            if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
-                            {
-                                amount *= 10;
-                            }
-                            else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
-                            {
-                                amount /= 2;
-                            }
-                            _camera.AdjustFieldOfView(-MathHelper.ToRadians(amount));
-                        })
+                        new Label("Rotation - (Click [1rad], Click + LftShft [10rad], Click + LftCtrl [0.5rad])"),
+                        new HStack(
+                            new HStack(
+                                new VStack(
+                                    new HStack(
+                                        new Button(new Image("iconLeft")).OnClick(() =>
+                                        {
+                                            float amount = 1;
+                                            if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                            {
+                                                amount *= 10;
+                                            }
+                                            else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                            {
+                                                amount /= 2;
+                                            }
+                                            _camera.AdjustRotationAroundTarget(new Vector3(0, -MathHelper.ToRadians(amount), 0));
+                                        }).SetPadding(5),
+                                        new VStack(
+                                            new Button(new Image("iconUp")).OnClick(() =>
+                                            {
+                                                float amount = 1;
+                                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                                {
+                                                    amount *= 10;
+                                                }
+                                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                                {
+                                                    amount /= 2;
+                                                }
+                                                _camera.AdjustRotationAroundTarget(new Vector3(-MathHelper.ToRadians(amount), 0, 0));
+                                            }).SetPadding(5),
+                                            new Button(new Image("iconDown")).OnClick(() =>
+                                            {
+                                                float amount = 1;
+                                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                                {
+                                                    amount *= 10;
+                                                }
+                                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                                {
+                                                    amount /= 2;
+                                                }
+                                                _camera.AdjustRotationAroundTarget(new Vector3(MathHelper.ToRadians(amount), 0, 0));
+                                            }).SetPadding(5)
+                                        ).SetSpacing(5),
+                                        new Button(new Image("iconRight")).OnClick(() =>
+                                        {
+                                            float amount = 1;
+                                            if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                            {
+                                                amount *= 10;
+                                            }
+                                            else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                            {
+                                                amount /= 2;
+                                            }
+                                            _camera.AdjustRotationAroundTarget(new Vector3(0, MathHelper.ToRadians(amount), 0));
+                                        }).SetPadding(5)
+                                    ).SetAlignment(Alignment.Center).SetSpacing(5)
+                                ).SetSpacing(10)
+                            )
+                        ).SetAlignment(Alignment.Center)
                     ).SetSpacing(5),
-                    new Label().SetTextBinding(_fieldOfView)
-                ).SetAlignment(Alignment.Center)
-            ).SetSpacing(5)
-        ).SetSpacing(5).SetPadding(10);
+                    new VStack(
+                        new HStack(
+                            new Label("Distance"),
+                            new Label().SetTextBinding(_distance)
+                        ),
+                        new HStack(
+                            new Button(new Image("iconPlus")).OnClick(() =>
+                            {
+                                float amount = 1;
+                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                {
+                                    amount *= 10;
+                                }
+                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                {
+                                    amount /= 2;
+                                }
+                                _camera.AdjustDistance(amount);
+                            }).SetPadding(5),
+                            new Button(new Image("iconMinus")).OnClick(() =>
+                            {
+                                float amount = 1;
+                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                {
+                                    amount *= 10;
+                                }
+                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                {
+                                    amount /= 2;
+                                }
+                                _camera.AdjustDistance(-amount);
+                            }).SetPadding(5)
+                        ).SetAlignment(Alignment.Center).SetSpacing(5)
+                    ).SetSpacing(10),
+                    new VStack(
+                        new HStack(
+                            new Label("Field Of View"),
+                            new Label().SetTextBinding(_fieldOfView)
+                        ),
+                        new HStack(
+                            new Button(new Image("iconPlus")).OnClick(() =>
+                            {
+                                float amount = 1;
+                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                {
+                                    amount *= 10;
+                                }
+                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                {
+                                    amount /= 2;
+                                }
+                                _camera.AdjustFieldOfView(MathHelper.ToRadians(amount));
+                            }).SetPadding(5),
+                            new Button(new Image("iconMinus")).OnClick(() =>
+                            {
+                                float amount = 1;
+                                if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
+                                {
+                                    amount *= 10;
+                                }
+                                else  if (KeyboardHandler.IsKeyDown(Keys.LeftControl))
+                                {
+                                    amount /= 2;
+                                }
+                                _camera.AdjustFieldOfView(-MathHelper.ToRadians(amount));
+                            }).SetPadding(5)
+                        ).SetAlignment(Alignment.Center).SetSpacing(5)
+                    ).SetSpacing(5)
+                ).SetPaddingLeft(32).SetSpacing(20)
+            )
+        ).SetSpacing(10).SetPadding(10);
     }
 
     private void SaveCamerFile()
     {
-        GameCameraFile cameraFile = CameraFactory.ToDSPRE(Camera.ActiveCamera);
-        File.WriteAllBytes("Assets/camera.bin", cameraFile.ToByteArray());
-        Console.WriteLine("Saved Camera To Binary File");
+        var result = Dialog.FileSave();
+        //GameCameraFile cameraFile = CameraFactory.ToDSPRE(Camera.ActiveCamera);
+        //File.WriteAllBytes("Assets/camera.bin", cameraFile.ToByteArray());
+        //Console.WriteLine("Saved Camera To Binary File");
     }
 
     private void ReloadCameraFile()
@@ -275,6 +296,7 @@ public class Game1 : Game
         _interfaceRenderer = new UserInterfaceRenderer(GraphicsDevice, _spriteBatch, Services);
         
         _worldShader = Content.Load<Effect>("Shaders/WorldShader");
+        //_billBoardShader = Content.Load<Effect>("Shaders/BillboardShader");
         _basicEffect = new AlphaTestEffect(GraphicsDevice);
         _overlay = Texture2D.FromFile(GraphicsDevice,"Assets/overlay_no_shine.png");
 
@@ -298,6 +320,26 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
+
+        var amount = 10;
+        var rad = MathHelper.ToRadians(amount) * delta;
+        if (Keyboard.GetState().IsKeyDown(Keys.Left))
+        {
+            _camera.AdjustRotationAroundTarget(new Vector3(0, -rad, 0));
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.Right))
+        {
+            _camera.AdjustRotationAroundTarget(new Vector3(0, rad, 0));
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.Up))
+        {
+            _camera.AdjustRotationAroundTarget(new Vector3(-rad, 0, 0));
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.Down))
+        {
+            _camera.AdjustRotationAroundTarget(new Vector3(rad, 0, 0));
+        }
 
         const float speed = 64.0f;
 
@@ -363,13 +405,12 @@ public class Game1 : Game
         effect.AlphaFunction = CompareFunction.Greater;
         effect.ReferenceAlpha = 0;
         effect.Texture = texture;
-        effect.
             
-            //effect.Parameters["World"].SetValue(worldMatrix);
-            //effect.Parameters["View"].SetValue(_camera.View);
-            //effect.Parameters["Projection"].SetValue(_camera.Projection);
+        //effect.Parameters["World"].SetValue(worldMatrix);
+        //effect.Parameters["View"].SetValue(_camera.View);
+        //effect.Parameters["Projection"].SetValue(_camera.Projection);
 
-            GraphicsDevice.SetVertexBuffer(_vertexBuffer);
+        GraphicsDevice.SetVertexBuffer(_vertexBuffer);
         GraphicsDevice.Indices = _indexBuffer;
         GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
         foreach (var pass in effect.CurrentTechnique.Passes)
@@ -378,6 +419,35 @@ public class Game1 : Game
             GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleStrip, 0, 0, 4);
         }
     }
+    
+    private void DrawSprite(GameTime gameTime, Effect effect, Vector3 position, Vector3 scale, Vector3 rotation, Texture2D texture)
+    {
+        // Weltmatrix berechnen
+        var worldMatrix = Matrix.CreateScale(scale) *
+                          Matrix.CreateRotationX(rotation.X) *
+                          Matrix.CreateRotationY(rotation.Y) *
+                          Matrix.CreateRotationZ(rotation.Z) *
+                          Matrix.CreateTranslation(position);
+
+        // Shader-Parameter setzen
+        effect.Parameters["World"].SetValue(worldMatrix);
+        effect.Parameters["View"].SetValue(Camera.ActiveCamera.ViewMatrix);
+        effect.Parameters["Projection"].SetValue(Camera.ActiveCamera.ProjectionMatrix);
+        effect.Parameters["Texture"].SetValue(texture);
+
+        // Render-Setup
+        GraphicsDevice.SetVertexBuffer(_vertexBuffer);
+        GraphicsDevice.Indices = _indexBuffer;
+        GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
+
+        // Rendern mit den Shader-Passes
+        foreach (var pass in effect.CurrentTechnique.Passes)
+        {
+            pass.Apply();
+            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleStrip, 0, 0, 4);
+        }
+    }
+
     
     private void DrawModel(GameTime gameTime, Effect effect, GameModel model, bool alpha = false, Vector3 offset = default)
     {

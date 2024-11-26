@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InputLib", "InputLib\InputL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChunkEditor", "ChunkEditor\ChunkEditor.csproj", "{CDA47A4B-EC67-41CC-BA64-37EF587BD65A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatteLib", "PatteLib\PatteLib.csproj", "{63C0C816-F422-4613-ABA5-C8D6945ECE94}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HxLocal", "HxLocal\HxLocal.csproj", "{99A62E0B-375E-4F60-9FAF-E78957050D71}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColourPaletteTry", "ColourPaletteTry\ColourPaletteTry.csproj", "{2388F3D8-3BF9-4EC6-8686-3FBCB6D140EC}"
@@ -34,6 +32,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitro", "Nitro\Nitro.csproj", "{BC5175D2-3302-41B3-89AD-F5323512DF0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Horror", "Horror\Horror.csproj", "{A6291C71-006B-4BE7-A9BB-04594EC1BA71}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatteLib", "PatteLib\PatteLib.csproj", "{284860D5-886F-4259-A096-2529CFCA42D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,10 +65,6 @@ Global
 		{CDA47A4B-EC67-41CC-BA64-37EF587BD65A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDA47A4B-EC67-41CC-BA64-37EF587BD65A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDA47A4B-EC67-41CC-BA64-37EF587BD65A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{63C0C816-F422-4613-ABA5-C8D6945ECE94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{63C0C816-F422-4613-ABA5-C8D6945ECE94}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{63C0C816-F422-4613-ABA5-C8D6945ECE94}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{63C0C816-F422-4613-ABA5-C8D6945ECE94}.Release|Any CPU.Build.0 = Release|Any CPU
 		{99A62E0B-375E-4F60-9FAF-E78957050D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{99A62E0B-375E-4F60-9FAF-E78957050D71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99A62E0B-375E-4F60-9FAF-E78957050D71}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -105,6 +101,10 @@ Global
 		{A6291C71-006B-4BE7-A9BB-04594EC1BA71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6291C71-006B-4BE7-A9BB-04594EC1BA71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6291C71-006B-4BE7-A9BB-04594EC1BA71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{284860D5-886F-4259-A096-2529CFCA42D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{284860D5-886F-4259-A096-2529CFCA42D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{284860D5-886F-4259-A096-2529CFCA42D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{284860D5-886F-4259-A096-2529CFCA42D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
