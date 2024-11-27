@@ -32,15 +32,15 @@ public class Game1 : Game
     
     private Texture2D _overlay;
     private Texture2D _player;
-    private Texture2D _shadow;
+    private Texture2D _kage;
     
     public Chunk CurrentChunk;
     public GameModel CurrentMesh => _model;
+    public GameModel Building;
     
     private Dictionary<(string[] Materials, AnimationCompareFunction CompareFunction), TextureAnimation> _animations = [];
     private GameModel _model;
     private Effect _worldShader;
-    private Effect _billBoardShader;
     private AlphaTestEffect _basicEffect;
     
     private VertexBuffer _vertexBuffer;
@@ -48,7 +48,7 @@ public class Game1 : Game
 
     private UserInterfaceNode _node;
     
-    private Vector3 _target = new Vector3(0, 0, 0);
+    private Vector3 _target = new Vector3(0.5f, 5.05f, -2.25f);
 
     private Binding<object> _rotation;
     private Binding<object> _distance;
@@ -111,15 +111,20 @@ public class Game1 : Game
     private void GenerateNode()
     {
         _node = new VStack(
-            new Button(new Label("Reload .bin")).OnClick(() =>
-            {
-                ReloadCameraFile();
-            }),
-            new Button(new Label("Overwrite .bin")).OnClick(() =>
-            {
-                SaveCamerFile();
-            }),
-            
+            new HStack(
+                new Button(new Label("Reset Settings")).OnClick(() =>
+                {
+                    ResetSettings();
+                }),
+                new Button(new Label("Load Settings")).OnClick(() =>
+                {
+                    LoadSettingsFromFile();
+                }),
+                new Button(new Label("Save Settings")).OnClick(() =>
+                {
+                    SaveSettingsToFile();
+                })
+            ),
             new VStack(
                 new HStack(
                     new Label("Camera"),
@@ -130,9 +135,8 @@ public class Game1 : Game
                         new Label("Orthographic"),
                         new RadioButton().OnClick((isChecked) =>
                         {
-                            _orthoMode.Value = isChecked;
                             _camera.SetProjectionType(isChecked ? CameraProjectionType.Orthographic : CameraProjectionType.Perspective);
-                        })
+                        }).SetIsCheckedBinding(_orthoMode)
                     ).SetAlignment(Alignment.Center),
             
                     new VStack(
@@ -282,8 +286,18 @@ public class Game1 : Game
             )
         ).SetSpacing(10).SetPadding(10);
     }
+
+    private void ResetSettings()
+    {
+        _camera = Camera.CameraLookMap[0];
+        _camera.SetAsActive();
+        _orthoMode.Value = _camera.ProjectionType == CameraProjectionType.Orthographic;
+            
+        _messageQueue.Enqueue("Loaded default camera settings.");
+        Console.WriteLine("Loaded default camera settings.");
+    }
     
-    private void SaveCamerFile()
+    private void SaveSettingsToFile()
     {
         var result = Dialog.FileSave();
         //GameCameraFile cameraFile = CameraFactory.ToDSPRE(Camera.ActiveCamera);
@@ -291,10 +305,12 @@ public class Game1 : Game
         //Console.WriteLine("Saved Camera To Binary File");
     }
 
-    private void ReloadCameraFile()
+    private void LoadSettingsFromFile()
     {
         if (!File.Exists("Assets/camera.bin"))
         {
+            _messageQueue.Enqueue("No Binary File Found");
+            Console.WriteLine("Loaded Camera From Binary File");
             Console.WriteLine("No Binary File Found");
             Console.WriteLine("Place It In [ Assets ] And Rename It To [ camera.bin ]");
             return;
@@ -304,7 +320,9 @@ public class Game1 : Game
 
         _camera = CameraFactory.CreateFromDSPRE((int)cameraFile.distance, cameraFile.vertRot, cameraFile.horiRot, cameraFile.zRot, cameraFile.perspMode == GameCameraFile.ORTHO, cameraFile.fov, (int)cameraFile.nearClip, (int)cameraFile.farClip);
         _camera.SetAsActive();
+        _orthoMode.Value = _camera.ProjectionType == CameraProjectionType.Orthographic;
             
+        _messageQueue.Enqueue("Loaded Camera From Binary File");
         Console.WriteLine("Loaded Camera From Binary File");
     }
 
@@ -322,11 +340,11 @@ public class Game1 : Game
         };
 
         _worldShader = Content.Load<Effect>("Shaders/WorldShader");
-        //_billBoardShader = Content.Load<Effect>("Shaders/BillboardShader");
         _basicEffect = new AlphaTestEffect(GraphicsDevice);
         _overlay = Texture2D.FromFile(GraphicsDevice,"Assets/overlay_no_shine.png");
 
         _player = Texture2D.FromFile(GraphicsDevice, "Assets/Sprites/player.png");
+        _kage = Texture2D.FromFile(GraphicsDevice, "Assets/Sprites/kage.png");
         
         var chunkJson = File.ReadAllText($@"Assets/0042/ChunkData.json");
         var jChunk = JObject.Parse(chunkJson);
@@ -334,6 +352,7 @@ public class Game1 : Game
         CurrentChunk = chunk;
         
         _model = GameModel.From(GraphicsDevice, GLTFLoader.Load("Assets/0042/0042.glb"));
+        Building = GameModel.From(GraphicsDevice, GLTFLoader.Load("Assets/0042/d4_s01.gltf"));
         _animations = TextureAnimationLinker.LoadAnimations(GraphicsDevice, "Assets/Animations/AnimationLink.json");
     }
 
@@ -374,14 +393,12 @@ public class Game1 : Game
 
         const float speed = 1.0f;
 
-        _target += KeyboardHandler.GetDirection() * speed * delta;
-
-        Console.WriteLine(_target);
+        //_target += KeyboardHandler.GetDirection() * speed * delta;
         
-        _target.X = Math.Clamp(_target.X, 0, Chunk.Wx);
-        _target.Z = Math.Clamp(_target.Z, 0, Chunk.Wy);
+        //_target.X = Math.Clamp(_target.X, 0, Chunk.Wx);
+        //_target.Z = Math.Clamp(_target.Z, 0, Chunk.Wy);
         
-        _camera.CaptureTarget(new Vector3(_target.X * Chunk.Wx, _target.Y, _target.Z * Chunk.Wy));
+        _camera.CaptureTarget(new Vector3(_target.X * 16, _target.Y * 16, _target.Z * 16));
         _camera.ComputeViewMatrix();
 
         foreach (var animation in _animations.Values)
@@ -397,11 +414,11 @@ public class Game1 : Game
         _distance.Value = _camera.Distance;        
         _fieldOfView.Value = _camera.FieldOfViewY;
         
-        var chunkPlates = CurrentChunk.GetChunkPlateUnderPosition(new Vector3(_target.X, _target.Y, _target.Z));
-        if (chunkPlates.Length > 0)
-        {
-            _target.Y = chunkPlates[0].GetHeightAt(_target.X, _target.Z);
-        }
+        //var chunkPlates = CurrentChunk.GetChunkPlateUnderPosition(new Vector3(_target.X, _target.Y, _target.Z));
+        //if (chunkPlates.Length > 0)
+        //{
+        //    _target.Y = chunkPlates[0].GetHeightAt(_target.X, _target.Z) * 16f;
+        //}
         
         base.Update(gameTime);
     }
@@ -413,15 +430,17 @@ public class Game1 : Game
         GraphicsDevice.SetRenderTarget(_cameraViewPort);
         GraphicsDevice.Clear(Color.Black);
         
-        DrawModel(gameTime, _worldShader, CurrentMesh,
-            offset: new Vector3(0 * Chunk.Wx, 0, 0 * Chunk.Wy) +
-                    new Vector3(Chunk.Wx, 0, Chunk.Wy) / 2, alpha: false);
+        DrawModel(gameTime, _worldShader, Building,
+            offset: new Vector3(CurrentChunk.Buildings[1].Position.X * 16, CurrentChunk.Buildings[1].Position.Y * 16, CurrentChunk.Buildings[1].Position.Z * 16), alpha: false);
         
         DrawModel(gameTime, _worldShader, CurrentMesh,
-            offset: new Vector3(0 * Chunk.Wx, 0, 0 * Chunk.Wy) +
-                    new Vector3(Chunk.Wx, 0, Chunk.Wy) / 2, alpha: true);
+            offset: new Vector3(0 * Chunk.Wx, 0, 0 * Chunk.Wy), alpha: false);
         
-        DrawSprite(gameTime, _basicEffect,  new Vector3(_target.X, _target.Y, _target.Z), new Vector3(1, 1, 1) * 32, _camera.Rotation, _player);
+        DrawModel(gameTime, _worldShader, CurrentMesh,
+            offset: new Vector3(0 * Chunk.Wx, 0, 0 * Chunk.Wy), alpha: true);
+        
+        DrawSprite(gameTime, _basicEffect, 1f,  new Vector3(_target.X * 16, _target.Y * 16, _target.Z * 16), Vector3.One * 32, _camera.Rotation, _player);
+        DrawSprite(gameTime, _basicEffect, 0.5f,  new Vector3(_target.X * 16, _target.Y * 16, (_target.Z - 0.625f) * 16), Vector3.One * 16,  new Vector3(MathHelper.PiOver2, 0, 0), _kage);
         
         GraphicsDevice.SetRenderTarget(null);
         GraphicsDevice.Clear(Color.DarkSlateGray);
@@ -439,7 +458,7 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
     
-    private void DrawSprite(GameTime gameTime, AlphaTestEffect effect, Vector3 position, Vector3 scale, Vector3 rotation, Texture2D texture)
+    private void DrawSprite(GameTime gameTime, AlphaTestEffect effect, float alpha, Vector3 position, Vector3 scale, Vector3 rotation, Texture2D texture)
     {
         
         var worldMatrix = Matrix.CreateScale(scale) *
@@ -451,7 +470,7 @@ public class Game1 : Game
         effect.View = _camera.ViewMatrix;
         effect.Projection = _camera.ProjectionMatrix;
         effect.AlphaFunction = CompareFunction.Greater;
-        effect.ReferenceAlpha = 0;
+        effect.Alpha = alpha;
         effect.Texture = texture;
             
         //effect.Parameters["World"].SetValue(worldMatrix);
@@ -468,7 +487,7 @@ public class Game1 : Game
         }
     }
     
-    private void DrawSprite(GameTime gameTime, Effect effect, Vector3 position, Vector3 scale, Vector3 rotation, Texture2D texture)
+    /*private void DrawSprite(GameTime gameTime, Effect effect, Vector3 position, Vector3 scale, Vector3 rotation, Texture2D texture)
     {
         // Weltmatrix berechnen
         var worldMatrix = Matrix.CreateScale(scale) *
@@ -494,7 +513,7 @@ public class Game1 : Game
             pass.Apply();
             GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleStrip, 0, 0, 4);
         }
-    }
+    }*/
 
     
     private void DrawModel(GameTime gameTime, Effect effect, GameModel model, bool alpha = false, Vector3 offset = default)

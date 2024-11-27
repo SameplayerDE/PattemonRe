@@ -10,13 +10,34 @@ public class RadioButton : UserInterfaceNode
     public float PaddingRight { get; private set; } = 25;
     public float PaddingBottom { get; private set; } = 5;
     public UserInterfaceNode? ToolTip { get; private set; }
+    public Binding<bool>? IsCheckedBinding { get; private set; }
             
     public RadioButton() : base(UserInterfaceNodeType.RadioButton)
     {
         IsClickable = true;
     }
             
-            
+    public RadioButton SetIsCheckedBinding(Binding<bool> binding)
+    {
+        IsCheckedBinding = binding;
+        IsCheckedBinding!.ValueChanged += OnCheckedChanged;
+        UpdateIsDisabled();
+        return this;
+    }
+        
+    private void OnCheckedChanged(bool value)
+    {
+        Checked = value;
+    }
+
+    private void UpdateIsDisabled()
+    {
+        if (IsCheckedBinding != null)
+        {
+            Checked = IsCheckedBinding.Value;
+        }
+    }
+    
     public RadioButton SetPadding(float value)
     {
         SetPaddingLeft(value);
