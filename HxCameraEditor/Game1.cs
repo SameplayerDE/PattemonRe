@@ -12,7 +12,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using NativeFileDialogSharp;
+using Newtonsoft.Json.Linq;
 using PatteLib.Graphics;
+using PatteLib.World;
 using Image = HxCameraEditor.UserInterface.Image;
 
 namespace HxCameraEditor;
@@ -30,6 +32,9 @@ public class Game1 : Game
     private Texture2D _overlay;
     private Texture2D _player;
     private Texture2D _shadow;
+    
+    public Chunk CurrentChunk;
+    public GameModel CurrentMesh => _model;
     
     private Dictionary<(string[] Materials, AnimationCompareFunction CompareFunction), TextureAnimation> _animations = [];
     private GameModel _model;
@@ -61,8 +66,6 @@ public class Game1 : Game
         _graphics.PreferredBackBufferWidth = 1280;
             
         _graphics.ApplyChanges();
-
-        MediaPlayer.Volume = 0.3f;
     }
 
     protected override void Initialize()
@@ -263,7 +266,7 @@ public class Game1 : Game
             )
         ).SetSpacing(10).SetPadding(10);
     }
-
+    
     private void SaveCamerFile()
     {
         var result = Dialog.FileSave();
@@ -301,6 +304,11 @@ public class Game1 : Game
         _overlay = Texture2D.FromFile(GraphicsDevice,"Assets/overlay_no_shine.png");
 
         _player = Texture2D.FromFile(GraphicsDevice, "Assets/Sprites/player.png");
+        
+        var chunkJson = File.ReadAllText($@"Assets/0042/ChunkData.json");
+        var jChunk = JObject.Parse(chunkJson);
+        var chunk = Chunk.Load(jChunk);
+        CurrentChunk = chunk;
         
         _model = GameModel.From(GraphicsDevice, GLTFLoader.Load("Assets/0042/0042.glb"));
         _animations = TextureAnimationLinker.LoadAnimations(GraphicsDevice, "Assets/Animations/AnimationLink.json");
@@ -341,14 +349,16 @@ public class Game1 : Game
             _camera.AdjustRotationAroundTarget(new Vector3(rad, 0, 0));
         }
 
-        const float speed = 64.0f;
+        const float speed = 1.0f;
 
         _target += KeyboardHandler.GetDirection() * speed * delta;
 
-        _target.X = Math.Clamp(_target.X, -256, 256);
-        _target.Z = Math.Clamp(_target.Z, -256, 256);
+        Console.WriteLine(_target);
         
-        _camera.CaptureTarget(ref _target);
+        _target.X = Math.Clamp(_target.X, 0, Chunk.Wx);
+        _target.Z = Math.Clamp(_target.Z, 0, Chunk.Wy);
+        
+        _camera.CaptureTarget(new Vector3(_target.X * Chunk.Wx, _target.Y, _target.Z * Chunk.Wy));
         _camera.ComputeViewMatrix();
 
         foreach (var animation in _animations.Values)
@@ -361,7 +371,14 @@ public class Game1 : Game
 
         _rotation.Value = _camera.Rotation;        
         _distance.Value = _camera.Distance;        
-        _fieldOfView.Value = _camera.FieldOfViewY;        
+        _fieldOfView.Value = _camera.FieldOfViewY;
+        
+        var chunkPlates = CurrentChunk.GetChunkPlateUnderPosition(new Vector3(_target.X, _target.Y, _target.Z));
+        if (chunkPlates.Length > 0)
+        {
+            _target.Y = chunkPlates[0].GetHeightAt(_target.X, _target.Z);
+        }
+        
         base.Update(gameTime);
     }
     
@@ -371,18 +388,23 @@ public class Game1 : Game
 
         GraphicsDevice.SetRenderTarget(_cameraViewPort);
         GraphicsDevice.Clear(Color.Black);
-        DrawModel(gameTime,  _worldShader, _model, alpha: false);
-        DrawModel(gameTime,  _worldShader, _model, alpha: true);
         
-        //DrawSprite(gameTime, _basicEffect,  _target + new Vector3(0.5f, 0, 0.5f) * 8 - new Vector3(0, 0, 8), new Vector3(1, 1, 1) * 16, new Vector3(MathHelper.ToRadians(90), 0, 0), _shadow);
-        DrawSprite(gameTime, _basicEffect,  _target + new Vector3(0, 0, 1) * 16, new Vector3(1, 1, 1) * 32, _camera.Rotation, _player);
+        DrawModel(gameTime, _worldShader, CurrentMesh,
+            offset: new Vector3(0 * Chunk.Wx, 0, 0 * Chunk.Wy) +
+                    new Vector3(Chunk.Wx, 0, Chunk.Wy) / 2, alpha: false);
+        
+        DrawModel(gameTime, _worldShader, CurrentMesh,
+            offset: new Vector3(0 * Chunk.Wx, 0, 0 * Chunk.Wy) +
+                    new Vector3(Chunk.Wx, 0, Chunk.Wy) / 2, alpha: true);
+        
+        DrawSprite(gameTime, _basicEffect,  new Vector3(_target.X, _target.Y, _target.Z), new Vector3(1, 1, 1) * 32, _camera.Rotation, _player);
         
         GraphicsDevice.SetRenderTarget(null);
         GraphicsDevice.Clear(Color.DarkSlateGray);
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         
         _spriteBatch.Draw(_cameraViewPort, new Rectangle(GraphicsDevice.Viewport.Bounds.Center - (_preferredDimensions.ToVector2() / 2).ToPoint(), (_preferredDimensions.ToVector2() / 1).ToPoint()), Color.White);
-        // _spriteBatch.Draw(_overlay, Vector2.Zero, Color.White);
+        //_spriteBatch.Draw(_overlay, Vector2.Zero, Color.White);
         
         _interfaceRenderer.DrawNode(_spriteBatch, gameTime, _node);
         _spriteBatch.End();

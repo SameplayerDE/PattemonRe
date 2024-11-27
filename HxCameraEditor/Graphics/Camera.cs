@@ -142,7 +142,7 @@ public class Camera
         Up = up;
     }
 
-    public void CaptureTarget(ref Vector3 target)
+    public void CaptureTarget(Vector3 target)
     {
         TargetPosition = target;
         TrackTargetX = true;

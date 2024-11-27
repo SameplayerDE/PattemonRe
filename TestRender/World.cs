@@ -13,7 +13,6 @@ namespace TestRender;
 
 public class World
 {
-
     public const int ChunkWx = 32;
     public const int ChunkWy = 32;
 

@@ -83,7 +83,6 @@ public class Game1 : Game
         _graphicsDeviceManager.PreferredBackBufferWidth = 1280;
             
         _graphicsDeviceManager.ApplyChanges();
-
         MediaPlayer.Volume = 0.3f;
     }
 
@@ -406,7 +405,6 @@ public class Game1 : Game
             _world = World.LoadByHeader(GraphicsDevice, _matrix);
         }
 #endif
-
         _camera.SetAsActive();
 #if DEBUG
         _camera.CaptureTarget(ref _normalCamera.Position);
@@ -414,7 +412,6 @@ public class Game1 : Game
         _camera.CaptureTarget(ref _target);
 #endif
         _camera.ComputeViewMatrix();
-
 #if DEBUG
         _normalCamera.SetAsActive();
         ControlActiveCamera(gameTime);
@@ -600,10 +597,8 @@ public class Game1 : Game
         if (_debugTexture)
         {
             _debugTexture = false;
-            using (var file = File.Create($"output_{DateTime.Now.ToString("HH_mm_ss_d_M")}.jpeg"))
-            {
-                _defaultPassTarget.SaveAsJpeg(file, _defaultPassTarget.Width, _defaultPassTarget.Height);
-            }
+            using var file = File.Create($"output_{DateTime.Now:HH_mm_ss_d_M}.jpeg");
+            _defaultPassTarget.SaveAsJpeg(file, _defaultPassTarget.Width, _defaultPassTarget.Height);
         }
         
         base.Draw(gameTime);
