@@ -127,8 +127,7 @@ public class Game1 : Game
             ),
             new VStack(
                 new HStack(
-                    new Label("Camera"),
-                    new Label().SetTextBinding(_rotation)
+                    new Label("Camera")
                 ),
                 new VStack(
                     new HStack(
@@ -206,8 +205,7 @@ public class Game1 : Game
                     ).SetSpacing(5),
                     new VStack(
                         new HStack(
-                            new Label("Distance"),
-                            new Label().SetTextBinding(_distance)
+                            new Label("Distance")
                         ),
                         new HStack(
                             new Button(new Image("iconPlus")).OnClick(() =>
@@ -250,8 +248,7 @@ public class Game1 : Game
                     ).SetSpacing(10),
                     new VStack(
                         new HStack(
-                            new Label("Field Of View"),
-                            new Label().SetTextBinding(_fieldOfView)
+                            new Label("Field Of View")
                         ),
                         new HStack(
                             new Button(new Image("iconPlus")).OnClick(() =>
