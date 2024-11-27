@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using HxCameraEditor.Graphics;
 using HxCameraEditor.UserInterface;
+using HxCameraEditor.UserInterface.Models;
 using HxGLTF;
 using HxGLTF.Implementation;
 using InputLib;
@@ -52,6 +53,9 @@ public class Game1 : Game
     private Binding<object> _rotation;
     private Binding<object> _distance;
     private Binding<object> _fieldOfView;
+    private Binding<bool> _orthoMode;
+
+    private MessageQueue _messageQueue;
     
     public Game1()
     {
@@ -77,6 +81,7 @@ public class Game1 : Game
         _rotation = new Binding<object>(_camera.Rotation);
         _distance = new Binding<object>(_camera.Distance);
         _fieldOfView = new Binding<object>(_camera.FieldOfViewY);
+        _orthoMode = new Binding<bool>(_camera.ProjectionType == CameraProjectionType.Orthographic);
         
         var vertices = new VertexPositionTexture[4];
         
@@ -125,6 +130,7 @@ public class Game1 : Game
                         new Label("Orthographic"),
                         new RadioButton().OnClick((isChecked) =>
                         {
+                            _orthoMode.Value = isChecked;
                             _camera.SetProjectionType(isChecked ? CameraProjectionType.Orthographic : CameraProjectionType.Perspective);
                         })
                     ).SetAlignment(Alignment.Center),
@@ -202,6 +208,11 @@ public class Game1 : Game
                         new HStack(
                             new Button(new Image("iconPlus")).OnClick(() =>
                             {
+                                if (_orthoMode.Value)
+                                {
+                                    _messageQueue.Enqueue("Action can not be performed in orthographic mode.");
+                                    return;
+                                }
                                 float amount = 1;
                                 if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
                                 {
@@ -212,9 +223,14 @@ public class Game1 : Game
                                     amount /= 2;
                                 }
                                 _camera.AdjustDistance(amount);
-                            }).SetPadding(5),
+                            }).SetPadding(5).SetIsDisabledBinding(_orthoMode),
                             new Button(new Image("iconMinus")).OnClick(() =>
                             {
+                                if (_orthoMode.Value)
+                                {
+                                    _messageQueue.Enqueue("Action can not be performed in orthographic mode.");
+                                    return;
+                                }
                                 float amount = 1;
                                 if (KeyboardHandler.IsKeyDown(Keys.LeftShift))
                                 {
@@ -225,7 +241,7 @@ public class Game1 : Game
                                     amount /= 2;
                                 }
                                 _camera.AdjustDistance(-amount);
-                            }).SetPadding(5)
+                            }).SetPadding(5).SetIsDisabledBinding(_orthoMode)
                         ).SetAlignment(Alignment.Center).SetSpacing(5)
                     ).SetSpacing(10),
                     new VStack(
@@ -298,6 +314,13 @@ public class Game1 : Game
         
         _interfaceRenderer = new UserInterfaceRenderer(GraphicsDevice, _spriteBatch, Services);
         
+        _messageQueue = new MessageQueue
+        {
+            Font = _interfaceRenderer.Font,
+            Pixel = _interfaceRenderer.Pixel,
+            Position = new Vector2(16, GraphicsDevice.Viewport.Height - 16)
+        };
+
         _worldShader = Content.Load<Effect>("Shaders/WorldShader");
         //_billBoardShader = Content.Load<Effect>("Shaders/BillboardShader");
         _basicEffect = new AlphaTestEffect(GraphicsDevice);
@@ -368,6 +391,7 @@ public class Game1 : Game
 
         _interfaceRenderer.CalculateLayout(_node);
         _interfaceRenderer.HandleInput(_node);
+        _messageQueue.Update(gameTime);
 
         _rotation.Value = _camera.Rotation;        
         _distance.Value = _camera.Distance;        
@@ -405,6 +429,8 @@ public class Game1 : Game
         
         _spriteBatch.Draw(_cameraViewPort, new Rectangle(GraphicsDevice.Viewport.Bounds.Center - (_preferredDimensions.ToVector2() / 2).ToPoint(), (_preferredDimensions.ToVector2() / 1).ToPoint()), Color.White);
         //_spriteBatch.Draw(_overlay, Vector2.Zero, Color.White);
+
+        _messageQueue.Draw(_spriteBatch);
         
         _interfaceRenderer.DrawNode(_spriteBatch, gameTime, _node);
         _spriteBatch.End();

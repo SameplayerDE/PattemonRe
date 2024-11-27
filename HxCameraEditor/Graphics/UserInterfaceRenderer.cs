@@ -20,7 +20,7 @@ public class UserInterfaceRenderer
     private ImageFontRenderer _fontRenderer;
     
     // Properties
-    public SpriteFont Font { get; set; }
+    public SpriteFont Font => _fonts["default"]; 
     public Texture2D ButtonTile { get; set; }
     
     public GraphicsDevice GraphicsDevice;
@@ -239,6 +239,11 @@ public class UserInterfaceRenderer
         if (node.Type == UserInterfaceNodeType.Button)
         {
             var button = (Button)node;
+            //if (button.IsDisabled)
+            //{
+            //    return;
+            //}
+            
             var buttonRect = new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height);
 
             if (buttonRect.Contains(MouseHandler.Position) && MouseHandler.IsButtonDownOnce(MouseButton.Left))
@@ -311,6 +316,13 @@ public class UserInterfaceRenderer
         button.Height = 32;
         button.Width = 32;
     }
+
+    public void DrawMessage(SpriteBatch spriteBatch, GameTime gameTime, string message, Vector2 position, Color color, float alpha = 1f)
+    {
+        var textSize = _fonts["default"].MeasureString(message);
+        spriteBatch.Draw(Pixel, new Rectangle((int)position.X, (int)position.Y, (int)textSize.X, (int)textSize.Y), color * alpha);
+        spriteBatch.DrawString(_fonts["default"], message, position, Color.White * alpha);
+    }
     
     public void DrawNode(SpriteBatch spriteBatch, GameTime gameTime, UserInterfaceNode node)
     {
@@ -345,7 +357,12 @@ public class UserInterfaceRenderer
         if (node.Type == UserInterfaceNodeType.Button)
         {
             var button = (Button)node;
-            spriteBatch.Draw(Pixel, new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height), Color.Black * 0.8f);
+            var color = Color.Black * 0.8f;
+            if (button.IsDisabled)
+            {
+                color = Color.Gray * 0.8f;
+            }
+            spriteBatch.Draw(Pixel, new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height), color);
 
             foreach (var child in button.Children)
             {

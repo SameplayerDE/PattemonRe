@@ -19,14 +19,12 @@
     <EmbeddedResource Include="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="H073.HxGLTF" Version="1.0.1" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="NewFolder\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HxGLTF\HxGLTF.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Content\Cube.glb">
