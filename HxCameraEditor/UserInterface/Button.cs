@@ -51,6 +51,12 @@ namespace HxCameraEditor.UserInterface
        //public Button(string image, string text) : this(new HStack(new Image(image), new Label(text))
        //    .SetAlignment(Alignment.Center).SetSpacing(10).SetPadding(10)) {}
 
+       public Button SetIsDisabled()
+       {
+           IsDisabled = true;
+           return this;
+       }
+       
         public Button SetToolTip(UserInterfaceNode toolTip)
         {
             ToolTip = toolTip;

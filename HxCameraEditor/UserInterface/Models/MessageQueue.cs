@@ -5,6 +5,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace HxCameraEditor.UserInterface.Models;
 
+public enum MessageType
+{
+    Info,
+    Error,
+    Warning,
+    Success,
+}
+
 public class MessageQueue
 {
     public List<Message> Messages = [];
@@ -13,11 +21,33 @@ public class MessageQueue
     public SpriteFont Font;
     public Texture2D Pixel;
     
-    public void Enqueue(string message)
+    public void Enqueue(string message, MessageType type = MessageType.Info)
     {
-        Messages.Add(new Message()
+        switch (type)
         {
-            Text = message
+            case MessageType.Error:
+                Enqueue(message, Color.DarkRed, Color.White);
+                break;
+            case MessageType.Warning:
+                Enqueue(message, Color.DarkOrange, Color.Black);
+                break;
+            case MessageType.Success:
+                Enqueue(message, Color.DarkGreen, Color.White);
+                break;
+            case MessageType.Info:
+            default:
+                Enqueue(message, Color.DarkBlue, Color.White);
+                break;
+        }
+    }
+    
+    public void Enqueue(string message, Color backgroundColor, Color messageColor)
+    {
+        Messages.Add(new Message
+        {
+            Text = message,
+            BackgroundColor = backgroundColor,
+            MessageColor = messageColor,
         });
     }
     
@@ -51,8 +81,8 @@ public class MessageQueue
             var message = Messages[i];
             var messageSize = Font.MeasureString(message.Text);
             
-            spriteBatch.Draw(Pixel, new Rectangle((int)Position.X, (int)(Position.Y - messageSize.Y - offsetY), (int)messageSize.X, (int)messageSize.Y), Color.Red);
-            spriteBatch.DrawString(Font, message.Text, Position - new Vector2(0, messageSize.Y + offsetY), Color.White);
+            spriteBatch.Draw(Pixel, new Rectangle((int)Position.X, (int)(Position.Y - messageSize.Y - offsetY), (int)messageSize.X, (int)messageSize.Y), message.BackgroundColor);
+            spriteBatch.DrawString(Font, message.Text, Position - new Vector2(0, messageSize.Y + offsetY), message.MessageColor);
             offsetY += messageSize.Y + padding;
         }
     }

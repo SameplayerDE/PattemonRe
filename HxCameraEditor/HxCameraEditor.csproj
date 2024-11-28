@@ -4,25 +4,25 @@
         <TargetFramework>net8.0</TargetFramework>
         <RollForward>Major</RollForward>
         <PublishReadyToRun>true</PublishReadyToRun>
+        <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract> <!-- Beinhaltet alles -->
         <TieredCompilation>false</TieredCompilation>
         <LangVersion>12</LangVersion>
     </PropertyGroup>
-    <PropertyGroup>
-        <ApplicationIcon>Icon.ico</ApplicationIcon>
-    </PropertyGroup>
     <ItemGroup>
-        <None Remove="Icon.ico"/>
-        <None Remove="Icon.bmp"/>
+        <EmbeddedResource Include="Icon.ico">
+            <LogicalName>Icon.ico</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Icon.bmp">
+            <LogicalName>Icon.bmp</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup>
         <None Update="Assets\**">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Assets\0042\ChunkData.json">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="Icon.ico"/>
-        <EmbeddedResource Include="Icon.bmp"/>
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303"/>

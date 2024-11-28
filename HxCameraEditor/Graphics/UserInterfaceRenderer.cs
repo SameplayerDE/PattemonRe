@@ -36,6 +36,7 @@ public class UserInterfaceRenderer
         _images = new Dictionary<string, Texture2D>();
         _fonts = new Dictionary<string, SpriteFont>();
         _fonts.Add("default", ContentManager.Load<SpriteFont>("default"));
+        _fonts.Add("defaultS", ContentManager.Load<SpriteFont>("defaultS"));
         Pixel = new Texture2D(GraphicsDevice, 1, 1);
         Pixel.SetData(new[] { Color.White });
         LoadContent();
@@ -55,6 +56,7 @@ public class UserInterfaceRenderer
         _images.Add("iconLeft", ContentManager.Load<Texture2D>("icon_left"));
         _images.Add("iconRight", ContentManager.Load<Texture2D>("icon_right"));
         _images.Add("iconReset", ContentManager.Load<Texture2D>("icon_reset"));
+        _images.Add("mouseL", ContentManager.Load<Texture2D>("mouse_left"));
     }
 
     public void CalculateLayout(UserInterfaceNode node)

@@ -10,7 +10,7 @@ public enum CameraProjectionType
     Orthographic
 }
 
-public class Camera
+public class Camera : ICloneable
 {
 
     public static Dictionary<int, Camera> CameraLookMap = new Dictionary<int, Camera>
@@ -18,6 +18,11 @@ public class Camera
         { 0, CameraFactory.CreateFromDSPRE(2731713, 54786, 0, 0, false, 1473, 614400, 3686400) },
         { 4, CameraFactory.CreateFromDSPRE(6404251, 56418, 0, 0, true, 641, 614400, 7106560) }
     };
+
+    public static Camera GetDefault()
+    {
+        return (Camera)CameraLookMap[0].Clone();
+    }
     
     public CameraProjectionType ProjectionType;
 
@@ -43,7 +48,7 @@ public class Camera
     public bool TrackTargetY { get; private set; }
     public bool TrackTargetZ { get; private set; }
     
-    public static Camera ActiveCamera { get; private set; }
+    public static Camera? ActiveCamera { get; private set; }
 
     public static void Init(float fieldOfViewY, Camera camera)
     {
@@ -322,4 +327,39 @@ public class Camera
         AdjustPositionAroundTarget(this);
     }
 
+    public static Camera GetCameraCopy(int key)
+    {
+        if (CameraLookMap.TryGetValue(key, out var camera))
+        {
+            return (Camera)camera.Clone();
+        }
+
+        throw new KeyNotFoundException($"Camera with key {key} not found.");
+    }
+    
+    public object Clone()
+    {
+        return new Camera
+        {
+            ProjectionType = this.ProjectionType,
+            Position = this.Position,
+            Target = this.Target,
+            Up = this.Up,
+            Rotation = this.Rotation,
+            Distance = this.Distance,
+            FieldOfViewY = this.FieldOfViewY,
+            FieldOfViewSin = this.FieldOfViewSin,
+            FieldOfViewCos = this.FieldOfViewCos,
+            AspectRatio = this.AspectRatio,
+            NearClip = this.NearClip,
+            FarClip = this.FarClip,
+            ViewMatrix = this.ViewMatrix,
+            ProjectionMatrix = this.ProjectionMatrix,
+            PrevTargetPosition = this.PrevTargetPosition,
+            TargetPosition = this.TargetPosition,
+            TrackTargetX = this.TrackTargetX,
+            TrackTargetY = this.TrackTargetY,
+            TrackTargetZ = this.TrackTargetZ
+        };
+    }
 }

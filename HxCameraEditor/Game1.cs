@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using NativeFileDialogSharp;
+using NativeFileDialogSharp.Native;
 using Newtonsoft.Json.Linq;
 using PatteLib.Graphics;
 using PatteLib.World;
@@ -75,7 +76,7 @@ public class Game1 : Game
     protected override void Initialize()
     {
         _cameraViewPort = new RenderTarget2D(GraphicsDevice, _preferredDimensions.X, _preferredDimensions.Y, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24Stencil8);
-        _camera = Camera.CameraLookMap[0];
+        _camera = Camera.GetDefault();
         _camera.SetAsActive();
 
         _rotation = new Binding<object>(_camera.Rotation);
@@ -126,20 +127,24 @@ public class Game1 : Game
                 })
             ),
             new VStack(
-                new HStack(
-                    new Label("Camera")
+                new VStack(
+                    new HStack(
+                        new Label("Camera Settings")
+                    )
                 ),
                 new VStack(
                     new HStack(
                         new Label("Orthographic"),
                         new RadioButton().OnClick((isChecked) =>
                         {
+                            _orthoMode.Value = isChecked;
                             _camera.SetProjectionType(isChecked ? CameraProjectionType.Orthographic : CameraProjectionType.Perspective);
                         }).SetIsCheckedBinding(_orthoMode)
                     ).SetAlignment(Alignment.Center),
-            
                     new VStack(
-                        new Label("Rotation - (Click [1rad], Click + LftShft [10rad], Click + LftCtrl [0.5rad])"),
+                        new Label("Rotation"),
+                        new Label(null, "defaultS").SetTextBinding(_rotation),
+                        new Label("can also be changed with arrow keys", "defaultS"),
                         new HStack(
                             new HStack(
                                 new VStack(
@@ -204,9 +209,8 @@ public class Game1 : Game
                         ).SetAlignment(Alignment.Center)
                     ).SetSpacing(5),
                     new VStack(
-                        new HStack(
-                            new Label("Distance")
-                        ),
+                        new Label("Distance"),
+                        new Label(null, "defaultS").SetTextBinding(_distance),
                         new HStack(
                             new Button(new Image("iconPlus")).OnClick(() =>
                             {
@@ -247,9 +251,8 @@ public class Game1 : Game
                         ).SetAlignment(Alignment.Center).SetSpacing(5)
                     ).SetSpacing(10),
                     new VStack(
-                        new HStack(
-                            new Label("Field Of View")
-                        ),
+                        new Label("Field Of View"),
+                        new Label(null, "defaultS").SetTextBinding(_fieldOfView),
                         new HStack(
                             new Button(new Image("iconPlus")).OnClick(() =>
                             {
@@ -279,48 +282,116 @@ public class Game1 : Game
                             }).SetPadding(5)
                         ).SetAlignment(Alignment.Center).SetSpacing(5)
                     ).SetSpacing(5)
-                ).SetPaddingLeft(32).SetSpacing(20)
-            )
+                ).SetPaddingLeft(32).SetSpacing(20),
+                new VStack(
+                    new VStack(
+                        new HStack(
+                            new Label("World Settings")
+                        )
+                    ),
+                    new VStack(
+                        new Label("Preview"),
+                        new HStack(
+                            new Button(new Image("iconLeft")).OnClick(() =>
+                            {
+                                _messageQueue.Enqueue("Action not yet implemented.");
+                            }).SetPadding(5).SetIsDisabled(),
+                            new Button(new Image("iconRight")).OnClick(() =>
+                            {
+                                _messageQueue.Enqueue("Action not yet implemented.");
+                            }).SetPadding(5).SetIsDisabled()
+                        ).SetAlignment(Alignment.Center).SetSpacing(5)
+                    ).SetSpacing(10).SetPaddingLeft(32)
+                ).SetSpacing(20).SetPaddingTop(32)
+            ).SetSpacing(10)
         ).SetSpacing(10).SetPadding(10);
     }
 
     private void ResetSettings()
     {
-        _camera = Camera.CameraLookMap[0];
+        _camera = Camera.GetDefault();
         _camera.SetAsActive();
         _orthoMode.Value = _camera.ProjectionType == CameraProjectionType.Orthographic;
             
-        _messageQueue.Enqueue("Loaded default camera settings.");
-        Console.WriteLine("Loaded default camera settings.");
+        _messageQueue.Enqueue("Loaded default camera settings.", MessageType.Warning);
     }
     
     private void SaveSettingsToFile()
     {
-        var result = Dialog.FileSave();
-        //GameCameraFile cameraFile = CameraFactory.ToDSPRE(Camera.ActiveCamera);
-        //File.WriteAllBytes("Assets/camera.bin", cameraFile.ToByteArray());
-        //Console.WriteLine("Saved Camera To Binary File");
+        var result = Dialog.FileSave("bin");
+
+        if (result.IsOk && !string.IsNullOrEmpty(result.Path))
+        {
+            string filePath = result.Path.EndsWith(".bin", StringComparison.OrdinalIgnoreCase)
+                ? result.Path
+                : $"{result.Path}.bin";
+
+            try
+            {
+                GameCameraFile cameraFile = CameraFactory.ToDSPRE(Camera.ActiveCamera);
+                File.WriteAllBytes(filePath, cameraFile.ToByteArray());
+                _messageQueue.Enqueue($"Saved camera to binary file:\n {filePath}", MessageType.Success);
+            }
+            catch (Exception ex)
+            {
+                _messageQueue.Enqueue($"Failed to save camera settings: {ex.Message}", MessageType.Error);
+                Console.WriteLine($"Error saving file: {ex}");
+            }
+        }
+        else if (result.IsError)
+        {
+            _messageQueue.Enqueue($"Error: {result.ErrorMessage}", MessageType.Error);
+        }
+        else
+        {
+            _messageQueue.Enqueue("Save operation was canceled.", MessageType.Warning);
+        }
     }
+
+
 
     private void LoadSettingsFromFile()
     {
-        if (!File.Exists("Assets/camera.bin"))
+        var result = Dialog.FileOpen("bin");
+
+        if (result.IsOk && !string.IsNullOrEmpty(result.Path))
         {
-            _messageQueue.Enqueue("No Binary File Found");
-            Console.WriteLine("Loaded Camera From Binary File");
-            Console.WriteLine("No Binary File Found");
-            Console.WriteLine("Place It In [ Assets ] And Rename It To [ camera.bin ]");
-            return;
+            try
+            {
+                var cameraData = File.ReadAllBytes(result.Path);
+                GameCameraFile cameraFile = new GameCameraFile(cameraData);
+
+                _camera = CameraFactory.CreateFromDSPRE(
+                    (int)cameraFile.distance,
+                    cameraFile.vertRot,
+                    cameraFile.horiRot,
+                    cameraFile.zRot,
+                    cameraFile.perspMode == GameCameraFile.ORTHO,
+                    cameraFile.fov,
+                    (int)cameraFile.nearClip,
+                    (int)cameraFile.farClip
+                );
+
+                _camera.SetAsActive();
+                _orthoMode.Value = _camera.ProjectionType == CameraProjectionType.Orthographic;
+
+                _messageQueue.Enqueue("Loaded camera settings from binary file.", MessageType.Success);
+                Console.WriteLine("Loaded camera settings from binary file.");
+            }
+            catch (Exception ex)
+            {
+                _messageQueue.Enqueue($"Failed to load camera settings: {ex.Message}", MessageType.Error);
+                Console.WriteLine($"Failed to load camera settings: {ex}");
+            }
         }
-
-        GameCameraFile cameraFile = new GameCameraFile(File.ReadAllBytes("Assets/camera.bin"));
-
-        _camera = CameraFactory.CreateFromDSPRE((int)cameraFile.distance, cameraFile.vertRot, cameraFile.horiRot, cameraFile.zRot, cameraFile.perspMode == GameCameraFile.ORTHO, cameraFile.fov, (int)cameraFile.nearClip, (int)cameraFile.farClip);
-        _camera.SetAsActive();
-        _orthoMode.Value = _camera.ProjectionType == CameraProjectionType.Orthographic;
-            
-        _messageQueue.Enqueue("Loaded Camera From Binary File");
-        Console.WriteLine("Loaded Camera From Binary File");
+        else if (result.IsError)
+        {
+            _messageQueue.Enqueue($"Error: {result.ErrorMessage}", MessageType.Error);
+        }
+        else
+        {
+            _messageQueue.Enqueue("Load operation was canceled.", MessageType.Warning);
+        }
     }
 
     protected override void LoadContent()
@@ -427,14 +498,19 @@ public class Game1 : Game
         GraphicsDevice.SetRenderTarget(_cameraViewPort);
         GraphicsDevice.Clear(Color.Black);
         
-        DrawModel(gameTime, _worldShader, Building,
-            offset: new Vector3(CurrentChunk.Buildings[1].Position.X * 16, CurrentChunk.Buildings[1].Position.Y * 16, CurrentChunk.Buildings[1].Position.Z * 16), alpha: false);
-        
         DrawModel(gameTime, _worldShader, CurrentMesh,
             offset: new Vector3(0 * Chunk.Wx, 0, 0 * Chunk.Wy), alpha: false);
         
         DrawModel(gameTime, _worldShader, CurrentMesh,
             offset: new Vector3(0 * Chunk.Wx, 0, 0 * Chunk.Wy), alpha: true);
+        
+                
+        DrawModel(gameTime, _worldShader, Building,
+            offset: new Vector3(CurrentChunk.Buildings[1].Position.X * 16, CurrentChunk.Buildings[1].Position.Y * 16, CurrentChunk.Buildings[1].Position.Z * 16), alpha: false);
+        
+        DrawModel(gameTime, _worldShader, Building,
+            offset: new Vector3(CurrentChunk.Buildings[1].Position.X * 16, CurrentChunk.Buildings[1].Position.Y * 16, CurrentChunk.Buildings[1].Position.Z * 16), alpha: true);
+        
         
         DrawSprite(gameTime, _basicEffect, 1f,  new Vector3(_target.X * 16, _target.Y * 16, _target.Z * 16), Vector3.One * 32, _camera.Rotation, _player);
         DrawSprite(gameTime, _basicEffect, 0.5f,  new Vector3(_target.X * 16, _target.Y * 16, (_target.Z - 0.625f) * 16), Vector3.One * 16,  new Vector3(MathHelper.PiOver2, 0, 0), _kage);

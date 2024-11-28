@@ -20,6 +20,13 @@
 /processorParam:TextureFormat=Compressed
 /build:default.spritefont
 
+#begin defaultS.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:defaultS.spritefont
+
 #begin icon_down.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -103,6 +110,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icon_up.png
+
+#begin mouse_left.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:mouse_left.png
 
 #begin Shaders/BillboardShader.fx
 /importer:EffectImporter
