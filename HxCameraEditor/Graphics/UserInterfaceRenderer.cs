@@ -70,6 +70,11 @@ public class UserInterfaceRenderer
         {
             CalculateImageLayout((Image)node);
         }
+        
+        if (node.Type == UserInterfaceNodeType.ScrollView)
+        {
+            CalculateScrollViewLayout((ScrollView)node);
+        }
 
         if (node.Type == UserInterfaceNodeType.Button)
         {
@@ -203,6 +208,39 @@ public class UserInterfaceRenderer
         }
     }
     
+    private void CalculateScrollViewLayout(ScrollView node)
+    {
+        var view = (ScrollView)node;
+        var currentY = view.Y + view.PaddingTop - view.ScrollOffset.Y;
+        var currentX = view.X + view.PaddingLeft;
+        var totalWidth = view.PaddingLeft + view.PaddingRight;
+        var totalHeight = view.PaddingTop + view.PaddingBottom;
+
+        var contentSize = Vector2.Zero;
+        
+        for (var index = 0; index < view.Children.Count; index++)
+        {
+            var child = view.Children[index];
+
+            // Setze die Position des Kindes auf die aktuelle Y-Position des Buttons
+            child.X = currentX;
+            child.Y = currentY;
+
+            // Rendere das Kind und aktualisiere die Abmessungen des Buttons
+            CalculateLayout(child);
+
+            contentSize.Y += child.Height;
+            contentSize.X += child.Width;
+        }
+
+        // Setze die Breite und Höhe des Buttons auf die berechneten Werte
+        
+        view.Width = totalWidth + 100;
+        view.Height = totalHeight + 100;
+        
+        view.MaxScrollY = contentSize.Y - view.Height + totalHeight;
+    }
+    
     private void CalculateButtonLayout(Button node)
     {
         var button = (Button)node;
@@ -231,60 +269,119 @@ public class UserInterfaceRenderer
         button.Height = totalHeight;
     }
 
-    public void HandleInput(UserInterfaceNode node)
+public void HandleInput(UserInterfaceNode node)
+{
+    if (node == null)
     {
-        if (node == null)
-        {
-            return;
-        }
-        
-        if (node.Type == UserInterfaceNodeType.Button)
-        {
-            var button = (Button)node;
-            //if (button.IsDisabled)
-            //{
-            //    return;
-            //}
-            
-            var buttonRect = new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height);
-
-            if (buttonRect.Contains(MouseHandler.Position) && MouseHandler.IsButtonDownOnce(MouseButton.Left))
-            {
-                button.Invoke();
-            }
-        }
-        
-        if (node.Type == UserInterfaceNodeType.ToggleButton)
-        {
-            var button = (ToggleButton)node;
-            var buttonRect = new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height);
-
-            if (buttonRect.Contains(MouseHandler.Position) && MouseHandler.IsButtonDownOnce(MouseButton.Left))
-            {
-                button.Invoke();
-            }
-        }
-        
-        if (node.Type == UserInterfaceNodeType.RadioButton)
-        {
-            var button = (RadioButton)node;
-            var buttonRect = new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height);
-
-            if (buttonRect.Contains(MouseHandler.Position) && MouseHandler.IsButtonDownOnce(MouseButton.Left))
-            {
-                button.Invoke();
-            }
-        }
-
-        if (node is UserInterfaceNodeContainer container)
-        {
-            foreach (var child in container.Children)
-            {
-                HandleInput(child);
-            }
-        }
-        
+        return;
     }
+
+    // Spezialbehandlung für ScrollView
+    if (node.Type == UserInterfaceNodeType.ScrollView)
+    {
+        var view = (ScrollView)node;
+        var viewBounds = new Rectangle((int)view.X, (int)view.Y, (int)view.Width, (int)view.Height);
+
+        // Nur Eingaben innerhalb der ScrollView verarbeiten
+        if (viewBounds.Contains(MouseHandler.Position))
+        {
+            // Scrollen mit Mausrad
+            float scrollDelta = MouseHandler.GetMouseWheelValueDelta() * view.ScrollSpeed;
+            if (scrollDelta != 0)
+            {
+                view.UpdateScroll(-scrollDelta);
+            }
+
+            // Eingaben nur für sichtbare Kinder
+            foreach (var child in view.Children)
+            {
+                ProcessVisibleChildInput(child, viewBounds);
+            }
+        }
+
+        // Beende hier, damit der Container-Block nicht doppelt aufgerufen wird
+        return;
+    }
+
+    // Standardbehandlung für andere Knoten
+    if (node.Type == UserInterfaceNodeType.Button)
+    {
+        var button = (Button)node;
+        var buttonRect = new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height);
+
+        if (buttonRect.Contains(MouseHandler.Position) && MouseHandler.IsButtonDownOnce(MouseButton.Left))
+        {
+            button.Invoke();
+        }
+    }
+
+    if (node.Type == UserInterfaceNodeType.ToggleButton)
+    {
+        var button = (ToggleButton)node;
+        var buttonRect = new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height);
+
+        if (buttonRect.Contains(MouseHandler.Position) && MouseHandler.IsButtonDownOnce(MouseButton.Left))
+        {
+            button.Invoke();
+        }
+    }
+
+    if (node.Type == UserInterfaceNodeType.RadioButton)
+    {
+        var button = (RadioButton)node;
+        var buttonRect = new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height);
+
+        if (buttonRect.Contains(MouseHandler.Position) && MouseHandler.IsButtonDownOnce(MouseButton.Left))
+        {
+            button.Invoke();
+        }
+    }
+
+    // Generische Behandlung für andere Container (außer ScrollView, da separat behandelt)
+    if (node is UserInterfaceNodeContainer container && node.Type != UserInterfaceNodeType.ScrollView)
+    {
+        foreach (var child in container.Children)
+        {
+            HandleInput(child);
+        }
+    }
+}
+
+private void ProcessVisibleChildInput(UserInterfaceNode child, Rectangle viewBounds)
+{
+    // Berechne die sichtbare Fläche des Kindes
+    var childBounds = new Rectangle((int)child.X, (int)child.Y, (int)child.Width, (int)child.Height);
+    var clippedBounds = Rectangle.Intersect(childBounds, viewBounds);
+
+    // Wenn das Kind sichtbar ist, Eingaben verarbeiten
+    if (!clippedBounds.IsEmpty)
+    {
+        if (child is UserInterfaceNodeContainer container)
+        {
+            if (child.Type == UserInterfaceNodeType.Button)
+            {
+                var button = (Button)child;
+                var buttonRect = new Rectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height);
+
+                if (buttonRect.Contains(MouseHandler.Position) && MouseHandler.IsButtonDownOnce(MouseButton.Left))
+                {
+                    button.Invoke();
+                }
+            }
+            // Rekursiv Kinder des Containers prüfen
+            foreach (var grandChild in container.Children)
+            {
+                ProcessVisibleChildInput(grandChild, viewBounds);
+            }
+        }
+        else
+        {
+            // Direkte Eingabebehandlung für sichtbare Knoten
+            HandleInput(child);
+        }
+    }
+}
+
     
     private void CalculateLabelLayout(Label node)
     {
@@ -371,6 +468,61 @@ public class UserInterfaceRenderer
                 DrawNode(spriteBatch, gameTime, child);
             }
         }
+        
+        if (node.Type == UserInterfaceNodeType.ScrollView)
+        {
+            var view = (ScrollView)node;
+            var originalScissorRectangle = spriteBatch.GraphicsDevice.ScissorRectangle;
+
+            // Aktiviere Scissor-Test
+            var rasterizerState = new RasterizerState { ScissorTestEnable = true };
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Immediate, rasterizerState: rasterizerState, samplerState: SamplerState.PointClamp);
+
+            // Setze das ScissorRectangle
+            spriteBatch.GraphicsDevice.ScissorRectangle = new Rectangle(
+                (int)view.X,
+                (int)view.Y,
+                (int)view.Width,
+                (int)view.Height);
+
+            // Zeichne den Hintergrund der ScrollView
+            var color = Color.Black * 0.8f;
+            spriteBatch.Draw(Pixel, new Rectangle((int)view.X, (int)view.Y, (int)view.Width, (int)view.Height), color);
+
+            // Zeichne die Kinder innerhalb des ScissorRectangle
+            foreach (var child in view.Children)
+            {
+                DrawNode(spriteBatch, gameTime, child);
+            }
+
+            // Wiederherstellen des vorherigen ScissorRectangle
+            spriteBatch.GraphicsDevice.ScissorRectangle = originalScissorRectangle;
+            spriteBatch.End(); // Beende den Batch für die ScrollView
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp); // Starte neuen Batch
+            
+            float maxScrollY = view.MaxScrollY;
+            float viewHeight = view.Height;
+            float scrollOffset = view.ScrollOffset.Y;
+
+            if (maxScrollY > 0)
+            {
+                // Höhe des Indikators relativ zur Sichtbarkeit
+                float indicatorHeight = Math.Max(10, (viewHeight / (viewHeight + maxScrollY)) * viewHeight);
+
+                // Berechnung der Y-Position des Indikators
+                float indicatorY = (scrollOffset / maxScrollY) * (viewHeight - indicatorHeight);
+
+                // Zeichne den Scroll-Indikator
+                spriteBatch.Draw(Pixel, new Rectangle(
+                    (int)(view.X + view.Width - 10), // Rechtsbündig
+                    (int)(view.Y + indicatorY),     // Korrekte Y-Position
+                    8,                              // Breite des Indikators
+                    (int)indicatorHeight            // Höhe des Indikators
+                ), Color.Gray);
+            }
+        }
+
         
         if (node.Type == UserInterfaceNodeType.ToggleButton)
         {

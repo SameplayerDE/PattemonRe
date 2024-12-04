@@ -1,0 +1,11 @@
+﻿{
+    "type": "frame-by-frame",
+    "frames": [
+        "t3_fl_p_1.png",
+        "t3_fl_p_2.png",
+        "t3_fl_p_3.png",
+        "t3_fl_p_4.png"
+    ],
+    "style": "linear-loop",
+    "duration": 360
+}

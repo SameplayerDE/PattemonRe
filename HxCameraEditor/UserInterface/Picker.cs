@@ -1,6 +1,6 @@
 ﻿namespace HxCameraEditor.UserInterface;
 
-public class InputField
+public class Picker
 {
     
 }

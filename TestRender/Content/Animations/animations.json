@@ -18,5 +18,25 @@
         "materials": ["hamabe_lm"],
         "compareFunction": "startsWith",
         "animation": "Hamabe/animation.json"
+    },
+    {
+        "materials": ["t3_fl_r"],
+        "compareFunction": "startsWith",
+        "animation": "t3_fl_r/animation.json"
+    },
+    {
+        "materials": ["t3_fl_y"],
+        "compareFunction": "startsWith",
+        "animation": "t3_fl_y/animation.json"
+    },
+    {
+        "materials": ["t3_fl_b"],
+        "compareFunction": "startsWith",
+        "animation": "t3_fl_b/animation.json"
+    },
+    {
+        "materials": ["t3_fl_p"],
+        "compareFunction": "startsWith",
+        "animation": "t3_fl_p/animation.json"
     }
 ]

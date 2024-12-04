@@ -164,6 +164,7 @@ public class Game1 : Game
         _indexBuffer.SetData(indices);
 
         
+        
         base.Initialize();
     }
 
@@ -328,10 +329,65 @@ public class Game1 : Game
         return direction;
     }
 
+    private int _currentMusicId = -1;
+    private int _currentHeaderId = -1;
+    public void UpdateMusic(Point prev, Point curr)
+    {
+        if (prev.X != curr.X || prev.Y != curr.Y)
+        {
+            int _chunkX = curr.X;
+            int _chunkY = curr.Y;
+            //_chunkX -= 1;
+            //_chunkY -= 1;
+            try
+            {
+                if (_world.Combination.TryGetValue((_chunkX, _chunkY), out var targetChunkTuple))
+                {
+                    if (World.Chunks.TryGetValue(targetChunkTuple.chunkId, out var targetChunk))
+                    {
+                        var header = HeaderManager.GetHeaderById(targetChunkTuple.headerId);
+                        var soundId = _timeManager.CurrentPeriod.TimeOfDay == TimeOfDay.Day ? header.MusicDayId : header.MusicNightId;
+                        Console.WriteLine(header.Id);
+                        Console.WriteLine(_chunkX);
+                        Console.WriteLine(_chunkY);
+                        Console.WriteLine(header.LocationName);
+                        // Überprüfe, ob sich die Musik-ID oder Header-ID geändert haben
+                        if (header.Id != _currentHeaderId)
+                        {
+                            if (soundId != _currentMusicId)
+                            {
+                                //// Fadet die aktuelle Musik aus
+                                //await FadeOutCurrentSoundEffectAsync();
+//
+                                //// Starte die neue Musik
+                                //await PlayNewMusicAsync(soundId);
+
+                                if (_musics.TryGetValue(soundId, out var music))
+                                {
+                                    music.Play();
+                                }
+
+                                // Aktualisiere die aktuellen IDs
+                                _currentMusicId = soundId;
+                                _currentHeaderId = header.Id;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // Fehlerbehandlung (optional)
+            }
+        }
+    }
+    
     protected override void Update(GameTime gameTime)
     {
         var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        
+        Console.Clear();
+        Console.WriteLine(new Vector2(_camera.Position.X, _camera.Position.Z).ToString());
+        UpdateMusic(Point.Zero, (new Vector2(_normalCamera.Position.X, _normalCamera.Position.Z) / 32).ToPoint());
         if (!IsActive)
         {
             MediaPlayer.Pause();
@@ -342,7 +398,15 @@ public class Game1 : Game
         {
             MediaPlayer.Resume();
         }
-            
+        
+        //if (_world.GetChunkAtPosition(_camera.Position) != null)
+        //{
+        //    var chunk = _world.GetChunkAtPosition(_camera.Position);
+        //    var header = HeaderManager.GetHeaderById(chunk.Id);
+        //    _musics[header.MusicDayId].Play();
+        //    //MediaPlayer.Play();
+        //}
+        
         _timeManager.Update(gameTime);
             
         foreach (var animation in _animations.Values)
@@ -544,27 +608,33 @@ public class Game1 : Game
         {
             return;
         }
-        
-        _camera.SetAsActive();
-        GraphicsDevice.SetRenderTarget(_defaultPassTarget);
-        GraphicsDevice.Clear(Color.Black);
-        DrawWorldSmart(gameTime, _world, _camera.Target);
-        GraphicsDevice.SetRenderTarget(null);
+
+        if (Keyboard.GetState().IsKeyDown(Keys.Space))
+        {
+            _camera.SetAsActive();
+            GraphicsDevice.SetRenderTarget(_defaultPassTarget);
+            GraphicsDevice.Clear(Color.Black);
+            DrawWorldSmart(gameTime, _world, _camera.Target);
+            GraphicsDevice.SetRenderTarget(null);
+        }
 #if DEBUG
         _normalCamera.SetAsActive();
-        GraphicsDevice.Clear(Color.Black);
-        DrawWorld(gameTime, _world);
+        GraphicsDevice.Clear(new Color(34, 42, 53, 255));
+        DrawWorldSmart(gameTime, _world, _normalCamera.Position, 5);
 #endif
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp, depthStencilState: DepthStencilState.Default, blendState: BlendState.Opaque);
 #if RELEASE
         _spriteBatch.Draw(_defaultPassTarget, GraphicsDevice.Viewport.Bounds, Color.White);
 #else
-        _spriteBatch.Draw(_defaultPassTarget, new Rectangle(0, 0, 256 * 2, 192 * 2), Color.White);
+        if (Keyboard.GetState().IsKeyDown(Keys.Space))
+        {
+            _spriteBatch.Draw(_defaultPassTarget, new Rectangle(0, 0, 256 * 2, 192 * 2), Color.White);
+        }
 #endif
         try
         {
-            var text = "position: " + _camera.Position + "\\nrotation: " + _camera.Rotation + "\\nfieldofview: " + MathHelper.ToDegrees(_camera.FieldOfViewY);
+            var text = "position: " + _normalCamera.Position + "\\nrotation: " + _normalCamera.Rotation + "\\nfieldofview: " + MathHelper.ToDegrees(_normalCamera.FieldOfViewY) + "\\n\\ntimeOfDay: " + _timeManager.CurrentPeriod.TimeOfDay.ToString() + "\\nlocation: " + HeaderManager.GetHeaderById(_currentHeaderId)?.LocationName;
             text = text.Replace("\\r", "");
             text = text.Replace("\\f", "");
             var lines = text.Split("\\n");
@@ -604,80 +674,53 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
 
-    private void DrawWorldSmart(GameTime gameTime, World world, Vector3 target)
+    private void DrawWorldSmart(GameTime gameTime, World world, Vector3 target, int renderDistance = 1)
     {
-        
-        int[] offsetX = [-2, -1, 0, 1, 2];
-        int[] offsetY = [-2, -1, 0, 1, 2];
+        int startX = -renderDistance;
+        int endX = renderDistance;
+        int startY = -renderDistance;
+        int endY = renderDistance;
 
-        foreach (var dx in offsetX)
+        // Ein Loop für opake und transparente Modelle
+        foreach (var alpha in new[] { false, true })
         {
-            foreach (var dy in offsetY)
+            for (int dx = startX; dx <= endX; dx++)
             {
-                var chunkX = (int)target.X / World.ChunkWx + dx;
-                var chunkY = (int)target.Z / World.ChunkWy + dy;
-
-
-                if (!_world.Combination.TryGetValue((chunkX, chunkY), out var tuple))
+                for (int dy = startY; dy <= endY; dy++)
                 {
-                    continue;
-                }
-
-                var chunkId = tuple.chunkId;
-                var headerId = tuple.headerId;
-
-                if (World.Chunks.TryGetValue(chunkId, out var chunk))
-                {
-                    if (chunk.IsLoaded && chunk.Model != null)
-                    {
-                        DrawModel(gameTime, _worldShader, chunk.Model,
-                            offset: new Vector3(chunkX * World.ChunkWx, tuple.height / 2f, chunkY * World.ChunkWy) +
-                                    new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: false);
-                        foreach (var building in chunk.Buildings)
-                        {
-                            DrawModel(gameTime, _buildingShader, building.Model,
-                                offset: new Vector3(chunkX * World.ChunkWx, tuple.height / 2f, chunkY * World.ChunkWy) +
-                                        new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: false);
-                        }
-                    }
+                    DrawChunk(gameTime, world, target, dx, dy, alpha);
                 }
             }
         }
-        
-        foreach (var dx in offsetX)
+    }
+
+    private void DrawChunk(GameTime gameTime, World world, Vector3 target, int dx, int dy, bool alpha)
+    {
+        var chunkX = (int)target.X / World.ChunkWx + dx;
+        var chunkY = (int)target.Z / World.ChunkWy + dy;
+
+        if (!_world.Combination.TryGetValue((chunkX, chunkY), out var tuple))
         {
-            foreach (var dy in offsetY)
+            return;
+        }
+
+        var chunkId = tuple.chunkId;
+
+        if (World.Chunks.TryGetValue(chunkId, out var chunk))
+        {
+            if (chunk.IsLoaded)
             {
-                var chunkX = (int)target.X / World.ChunkWx + dx;
-                var chunkY = (int)target.Z / World.ChunkWy + dy;
+                Vector3 offset = new Vector3(chunkX * World.ChunkWx, tuple.height / 2f, chunkY * World.ChunkWy) +
+                                 new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2;
 
+                DrawModel(gameTime, _worldShader, chunk.Model, alpha, offset);
 
-                if (!_world.Combination.TryGetValue((chunkX, chunkY), out var tuple))
+                foreach (var building in chunk.Buildings)
                 {
-                    continue;
-                }
-
-                var chunkId = tuple.chunkId;
-                var headerId = tuple.headerId;
-
-                if (World.Chunks.TryGetValue(chunkId, out var chunk))
-                {
-                    if (chunk.IsLoaded && chunk.Model != null)
-                    {
-                        DrawModel(gameTime, _worldShader, chunk.Model,
-                            offset: new Vector3(chunkX * World.ChunkWx, tuple.height / 2f, chunkY * World.ChunkWy) +
-                                    new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: true);
-                        foreach (var building in chunk.Buildings)
-                        {
-                            DrawModel(gameTime, _buildingShader, building.Model,
-                                offset: new Vector3(chunkX * World.ChunkWx, tuple.height / 2f, chunkY * World.ChunkWy) +
-                                        new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: true);
-                        }
-                    }
+                    DrawModel(gameTime, _buildingShader, building.Model, alpha, offset);
                 }
             }
         }
-        
     }
     
     private void DrawWorld(GameTime gameTime, World world, bool alphaPass = false)
@@ -700,7 +743,6 @@ public class Game1 : Game
                     DrawModel(gameTime, _worldShader, chunk.Model,
                         offset: new Vector3(targetX * World.ChunkWx, tuple.height * 0.5f, targetY * World.ChunkWy) +
                                 new Vector3(World.ChunkWx, 0, World.ChunkWy) / 2, alpha: false);
-  
                     foreach (var building in chunk.Buildings)
                     {
                         DrawModel(gameTime, _buildingShader, building.Model,
@@ -715,10 +757,10 @@ public class Game1 : Game
         {
             var (targetX, targetY) = chunkEntry.Key;
             var tuple = chunkEntry.Value;
-
+//
             var chunkId = tuple.chunkId;
             var headerId = tuple.headerId;
-
+//
             if (World.Chunks.TryGetValue(chunkId, out var chunk))
             {
                 if (chunk.IsLoaded && chunk.Model != null)
@@ -961,7 +1003,6 @@ public class Game1 : Game
 
                 effect.Parameters["ShouldAnimate"]?.SetValue(true);
                 effect.Parameters["Offset"]?.SetValue(animation.Offset);
-                Console.WriteLine(animation.Offset);
             }
         }
     }

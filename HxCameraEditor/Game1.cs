@@ -132,6 +132,25 @@ public class Game1 : Game
                         new Label("Camera Settings")
                     )
                 ),
+                new ScrollView(
+                    new VStack(
+                        new Label("Hallo"),
+                        new Label("Hallo"),
+                        new Label("Hallo"),
+                        new Button(new Image("iconPlus")).OnClick(Exit),
+                        new Button(new Image("iconMinus")),
+                        new Label("Hallo"),
+                        new Label("Hallo"),
+                        new Label("Hallo"),
+                        new Label("Hallo"),
+                        new Label("Hallo"),
+                        new Label("Hallo"),
+                        new Label("Hallo"),
+                        new Label("Hallo"),
+                        new Label("Hallo"),
+                        new Label("Hallo")
+                    )
+                ),
                 new VStack(
                     new HStack(
                         new Label("Orthographic"),
@@ -503,7 +522,6 @@ public class Game1 : Game
         
         DrawModel(gameTime, _worldShader, CurrentMesh,
             offset: new Vector3(0 * Chunk.Wx, 0, 0 * Chunk.Wy), alpha: true);
-        
                 
         DrawModel(gameTime, _worldShader, Building,
             offset: new Vector3(CurrentChunk.Buildings[1].Position.X * 16, CurrentChunk.Buildings[1].Position.Y * 16, CurrentChunk.Buildings[1].Position.Z * 16), alpha: false);
@@ -521,9 +539,10 @@ public class Game1 : Game
         
         _spriteBatch.Draw(_cameraViewPort, new Rectangle(GraphicsDevice.Viewport.Bounds.Center - (_preferredDimensions.ToVector2() / 2).ToPoint(), (_preferredDimensions.ToVector2() / 1).ToPoint()), Color.White);
         //_spriteBatch.Draw(_overlay, Vector2.Zero, Color.White);
-
         _messageQueue.Draw(_spriteBatch);
+        _spriteBatch.End();
         
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _interfaceRenderer.DrawNode(_spriteBatch, gameTime, _node);
         _spriteBatch.End();
         

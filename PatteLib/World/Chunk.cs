@@ -22,7 +22,7 @@ public class Building
         {
             throw new Exception();
         }
-        var gltfFile = GLTFLoader.Load(@$"{RootDirectory}\{BuildingName}\{BuildingName}.gltf");
+        var gltfFile = GLTFLoader.Load(@$"{RootDirectory}\{BuildingName}\{BuildingName}");
         var model = GameModel.From(graphicsDevice, gltfFile);
         model.TranslateTo(Position);
         model.Scale /= 16;
