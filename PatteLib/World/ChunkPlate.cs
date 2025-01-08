@@ -5,10 +5,10 @@ namespace PatteLib.World;
 
 public class ChunkPlate
 {
-    public int X, Y, Z; //X TopLeft, y TopLeft, z height
-    public int Wx, Wy; //wdith x , heigh y
-    public float Ax, Ay; // angle alon x, angle along y
-    
+    public int X, Y, Z; // X TopLeft, Y TopLeft, Z height
+    public int Wx, Wy; // X width, Y width
+    public float Ax, Ay; // angle along X, angle along Y
+
     public float GetHeightAt(float x, float y)
     {
         if (x < 0 || x >= Wx || y < 0 || y >= Wy)
@@ -20,8 +20,9 @@ public class ChunkPlate
         {
             return Z;
         }
-    
+
         const double tolerance = 0.0;
+
         if (Ax == 0 && Ay != 0)
         {
             var maxHeight = Wx * (float)Math.Tan(MathHelper.ToRadians(Ay));
@@ -33,14 +34,14 @@ public class ChunkPlate
             };
 
             // Adjust percentage to be exactly 1 if very close to boundary
-            if (Math.Abs(1 - percentage) < tolerance)  // adjust the threshold as needed
+            if (Math.Abs(1 - percentage) < tolerance) // adjust the threshold as needed
             {
                 percentage = 1;
             }
 
             return Z + (percentage * maxHeight);
         }
-    
+
         if (Ay == 0 && Ax != 0)
         {
             var maxHeight = Wy * (float)Math.Tan(MathHelper.ToRadians(Ax));
@@ -52,7 +53,7 @@ public class ChunkPlate
             };
 
             // Adjust percentage to be exactly 1 if very close to boundary
-            if (Math.Abs(1 - percentage) < tolerance)  // adjust the threshold as needed
+            if (Math.Abs(1 - percentage) < tolerance) // adjust the threshold as needed
             {
                 percentage = 1;
             }
@@ -62,11 +63,8 @@ public class ChunkPlate
 
         return Z;
     }
-
-
-
     
-    //public float GetHeightAt(float x, float y)
+//public float GetHeightAt(float x, float y)
     //{
     //    if (x < 0 || x >= Wx || y < 0 || y >= Wy)
     //    {
