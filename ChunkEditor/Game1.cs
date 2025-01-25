@@ -100,7 +100,7 @@ namespace ChunkEditor
             _gridTexture = new Texture2D(GraphicsDevice, 1, 1);
             _gridTexture.SetData(new[] { Color.White });
 
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < 10; i++)
             {
                 var chunkJson = File.ReadAllText($@"A:\Coding\Survival\TestRender\Content\WorldData\Chunks\{i}.json");
                 var jChunk = JObject.Parse(chunkJson);
@@ -362,19 +362,19 @@ namespace ChunkEditor
         private void DrawPreview(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(_chunkView);
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            DrawModel(gameTime, _effect, _chunks[_currentChunk].Model);
+            GraphicsDevice.Clear(Color.Transparent);
+            //DrawModel(gameTime, _effect, _chunks[_currentChunk].Model);
             foreach (var building in _chunks[_currentChunk].Buildings)
             {
-                DrawModel(gameTime, _effect, building.Model);
+                //DrawModel(gameTime, _effect, building.Model);
             }
-            DrawModel(gameTime, _effect, _chunks[_currentChunk].Model, alpha: true);
+            //DrawModel(gameTime, _effect, _chunks[_currentChunk].Model, alpha: true);
             foreach (var building in _chunks[_currentChunk].Buildings)
             {
-                DrawModel(gameTime, _effect, building.Model, alpha: true);
+               // DrawModel(gameTime, _effect, building.Model, alpha: true);
             }
             
-            /*_spriteBatch.Begin();
+            _spriteBatch.Begin();
             if (_showPlates)
             {
                 foreach (var plate in _chunks[_currentChunk].Plates)
@@ -426,8 +426,39 @@ namespace ChunkEditor
                     }
                 }
             }
+            
+            if (_showTypes)
+            {
+                //_spriteBatch.Draw(_gridTexture, new Rectangle(0, 0, 32 * 16, 32 * 16), Color.Black * 0.3f);
 
-            _spriteBatch.End();*/
+                for (var y = 0; y < _chunks[_currentChunk].Type.GetLength(0); y++)
+                {
+                    for (var x = 0; x < _chunks[_currentChunk].Type.GetLength(1); x++)
+                    {
+                        var typeId = _chunks[_currentChunk].Type[y, x];
+
+                        if (typeId == 0x10)
+                        {
+                            _spriteBatch.Draw(_gridTexture, new Rectangle(x * CellSize, y * CellSize, 16, 16), Color.Blue * 0.9f);
+                            _spriteBatch.DrawString(_font, $"{typeId:x2}", new Vector2(x * CellSize, y * CellSize), Color.White);
+                        }
+                        if (typeId == 0xa9)
+                        {
+                            _spriteBatch.Draw(_gridTexture, new Rectangle(x * CellSize, y * CellSize, 16, 16), Color.White);
+                            _spriteBatch.DrawString(_font, $"{typeId:x2}", new Vector2(x * CellSize, y * CellSize), Color.Black);
+                        }
+                        if (typeId == 0x69)
+                        {
+                            _spriteBatch.Draw(_gridTexture, new Rectangle(x * CellSize, y * CellSize, 16, 16), Color.Purple * 0.9f);
+                            _spriteBatch.DrawString(_font, $"{typeId:x2}", new Vector2(x * CellSize, y * CellSize), Color.White);
+                        }
+                        
+                        //_spriteBatch.DrawString(_font, $"{typeId:x2}", new Vector2(x * CellSize, y * CellSize), Color.White);
+                    }
+                }
+            }
+
+            _spriteBatch.End();
             
             GraphicsDevice.SetRenderTarget(null);
         }
