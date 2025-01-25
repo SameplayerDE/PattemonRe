@@ -1,5 +1,21 @@
 ﻿namespace PatteLib.Data;
 
+/**
+typedef struct TrainerInfo {
+    charcode_t name[TRAINER_NAME_LEN + 1];
+    u32 id;
+    u32 money;
+    u8 gender;
+    u8 regionCode;
+    u8 badgeMask;
+    u8 appearance;
+    u8 gameCode;
+    u8 isMainStoryCleared : 1;
+    u8 hasNationalDex : 1;
+    u8 : 6;
+} TrainerInfo;
+**/
+
 public class TrainerInfo
 {
     private string _name;
