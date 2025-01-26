@@ -22,7 +22,12 @@ public class TrainerInfo
     private uint _id;
     private uint _money;
     private bool _gender; // _gender ? male : female
+    private byte _regionCode;
     private int _badgeMask;
+    private byte _appearance;
+    private byte _gameCode;
+    private bool _isMainStoryCleared;
+    private bool _hasNationalDex;
     
     public bool HasBadge(int badge)
     {
