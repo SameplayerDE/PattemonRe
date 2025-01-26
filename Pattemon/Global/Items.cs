@@ -1,6 +1,6 @@
 ﻿namespace Pattemon.Global;
 
-public static class Item
+public static class Items
 {
     public enum BattleItemCategory : int
     {
