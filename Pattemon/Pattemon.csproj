@@ -43,6 +43,7 @@
       <Content Include=".config\dotnet-tools.json" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\InputLib\InputLib.csproj" />
       <ProjectReference Include="..\PatteLib\PatteLib.csproj" />
     </ItemGroup>
 </Project>
