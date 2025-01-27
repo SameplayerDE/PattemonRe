@@ -16,6 +16,7 @@ public class SceneManager
     
     public void Pop()
     {
+        _currentScene.Close();
         _currentScene = null;
     }
     

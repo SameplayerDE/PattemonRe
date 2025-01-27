@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PatteLib;
+using Pattemon.Data;
 using Pattemon.Engine;
 
 namespace Pattemon.Scenes;
@@ -36,7 +37,13 @@ public class MenuScene : Scene
 
     public override void Init()
     {
-        _optionCursor = 0;
+        _optionCursor = ApplicationStorage.ContextMenuIndex;
+    }
+
+    public override void Close()
+    {
+        ApplicationStorage.ContextMenuIndex = _optionCursor;
+        base.Close();
     }
 
     public override void Update(GameTime gameTime, float delta)

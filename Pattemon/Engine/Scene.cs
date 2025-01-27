@@ -30,6 +30,7 @@ public abstract class Scene
     public abstract void Load();
     public abstract void Unload();
     public abstract void Init();
+    public virtual void Close() {}
     
     public abstract void Update(GameTime gameTime, float delta);
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)

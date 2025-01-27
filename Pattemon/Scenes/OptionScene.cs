@@ -34,6 +34,12 @@ public class OptionScene : Scene
         _optionCursor = 0;
     }
 
+    public override void Close()
+    {
+        SceneManager.Push(new MenuScene("name", _game));
+        base.Close();
+    }
+
     public override void Update(GameTime gameTime, float delta)
     {
         if (KeyboardHandler.IsKeyDownOnce(Keys.Down))
