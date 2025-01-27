@@ -67,6 +67,7 @@ public class MenuScene : Scene
 
     protected override void Draw2D(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
+        RenderCore.SetTopScreen();
         spriteBatch.Begin();
         spriteBatch.Draw(_dummy, (new Vector2(38, 0) * 4), Color.White);
         spriteBatch.Draw(_selector, (new Vector2(39, 1 + _optionCursor * 6) * 4), Color.White);

@@ -21,10 +21,7 @@ public class PatteGame : Game
     
     private bool _isBottomScreenFocus = false;
     
-    private RenderTarget2D _topScreen;
     private Rectangle _topScreenRectangle;
-    
-    private RenderTarget2D _bottomScreen;
     private Rectangle _bottomScreenRectangle;
     
     private Rectangle _focusScreenRectangle;
@@ -48,19 +45,20 @@ public class PatteGame : Game
 
         IsFixedTimeStep = true;
         TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
-
-        _preferedScreenSize = new Point(256 * 1, 192 * 1);
     }
 
     protected override void Initialize()
     {
         _sceneManager = new SceneManager();
+        _preferedScreenSize = RenderCore.PreferedScreenSize;
+        
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        RenderCore.Init(GraphicsDevice, _spriteBatch);
         
         _topDummy = Content.Load<Texture2D>("TopScreen");
         _bottomDummy = Content.Load<Texture2D>("BottomScreen");
@@ -80,22 +78,7 @@ public class PatteGame : Game
         _focusScreenRectangle = new Rectangle(0, 0, _preferedScreenSize.X, _preferedScreenSize.Y);
         _unfocusScreenRectangle = new Rectangle(0, _preferedScreenSize.Y, _preferedScreenSize.X, _preferedScreenSize.Y);
         
-        _topScreen = new RenderTarget2D(
-            GraphicsDevice,
-            _preferedScreenSize.X, _preferedScreenSize.Y,
-            false,
-            GraphicsDevice.PresentationParameters.BackBufferFormat,
-            DepthFormat.Depth24
-        );
         _topScreenRectangle = _focusScreenRectangle;
-        
-        _bottomScreen = new RenderTarget2D(
-            GraphicsDevice,
-            _preferedScreenSize.X, _preferedScreenSize.Y,
-            false,
-            GraphicsDevice.PresentationParameters.BackBufferFormat,
-            DepthFormat.Depth24
-        );
         _bottomScreenRectangle = _unfocusScreenRectangle;
             
         PerformScreenFit();
@@ -149,37 +132,38 @@ public class PatteGame : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.SetRenderTarget(_topScreen);
+        RenderCore.SetTopScreen();
         GraphicsDevice.Clear(Color.CornflowerBlue);
         _spriteBatch.Begin();
         _spriteBatch.Draw(_topDummy, Vector2.Zero, Color.White);
         _spriteBatch.End();
-        _sceneManager.Draw(_spriteBatch, gameTime);
         
-        GraphicsDevice.SetRenderTarget(_bottomScreen);
+        RenderCore.SetBottomScreen();
         GraphicsDevice.Clear(Color.Red);
         _spriteBatch.Begin();
         _spriteBatch.Draw(_bottomDummy, Vector2.Zero, Color.White);
         _spriteBatch.End();
         
-        GraphicsDevice.SetRenderTarget(null);
+        _sceneManager.Draw(_spriteBatch, gameTime);
+        
+        RenderCore.Reset();
         GraphicsDevice.Clear(Color.Black);
         _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
         if (!_isBottomScreenFocus)
         {
-            _spriteBatch.Draw(_topScreen, _topScreenRectangle, Color.White);
+            _spriteBatch.Draw(RenderCore.TopScreen, _topScreenRectangle, Color.White);
             if (_transitionProgress < 1.0f)
             {
-                _spriteBatch.Draw(_bottomScreen, _bottomScreenRectangle, Color.White);
+                _spriteBatch.Draw(RenderCore.BottomScreen, _bottomScreenRectangle, Color.White);
             }
         }
         else
         {
             if (_transitionProgress < 1.0f)
             {
-                _spriteBatch.Draw(_topScreen, _topScreenRectangle, Color.White);
+                _spriteBatch.Draw(RenderCore.TopScreen, _topScreenRectangle, Color.White);
             }
-            _spriteBatch.Draw(_bottomScreen, _bottomScreenRectangle, Color.White);
+            _spriteBatch.Draw(RenderCore.BottomScreen, _bottomScreenRectangle, Color.White);
         }
         _spriteBatch.End();
     }

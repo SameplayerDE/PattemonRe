@@ -57,10 +57,15 @@ public class OptionScene : Scene
 
     protected override void Draw2D(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
+        RenderCore.SetTopScreen();
+        GraphicsDevice.Clear(Color.Black);
         spriteBatch.Begin();
         spriteBatch.Draw(_dummy, Vector2.Zero, Color.White);
         spriteBatch.Draw(_selector, (new Vector2(2, 6 + _optionCursor * 4) * 4), Color.White);
         spriteBatch.End();
+        
+        RenderCore.SetBottomScreen();
+        GraphicsDevice.Clear(Color.Black);
     }
 
     protected override void Draw3D(GameTime gameTime, float delta)
