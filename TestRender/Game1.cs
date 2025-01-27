@@ -426,7 +426,7 @@ public class Game1 : Game
         _animationShader.Parameters["Delta"]?.SetValue(delta);
         _animationShader.Parameters["Total"]?.SetValue((float)gameTime.TotalGameTime.TotalSeconds);
 
-        KeyboardHandler.Update(gameTime);
+        KeyboardHandler.Update();
 
         if (KeyboardHandler.IsKeyDownOnce(Keys.T))
         {

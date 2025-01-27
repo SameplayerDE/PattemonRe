@@ -16,7 +16,7 @@ public static class MouseHandler
 
     public static Point Position => _currMouseState.Position;
     
-    public static void Update(GameTime gameTime)
+    public static void Update()
     {
         _prevMouseState = _currMouseState;
         _currMouseState = Mouse.GetState();

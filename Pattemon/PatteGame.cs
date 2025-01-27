@@ -3,6 +3,8 @@ using InputLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Pattemon.Engine;
+using Pattemon.Scenes;
 
 namespace Pattemon;
 
@@ -31,6 +33,8 @@ public class PatteGame : Game
     private float _transitionProgress = 1.0f;
     private const float TransitionSpeed = 2.0f;
 
+    private SceneManager _sceneManager;
+    
     private Texture2D _topDummy;
     private Texture2D _bottomDummy;
     
@@ -50,6 +54,7 @@ public class PatteGame : Game
 
     protected override void Initialize()
     {
+        _sceneManager = new SceneManager();
         base.Initialize();
     }
 
@@ -103,12 +108,22 @@ public class PatteGame : Game
         {
             return;
         }
-        KeyboardHandler.Update(gameTime);
+        Core.ReadInput();
 
         if (KeyboardHandler.IsKeyDownOnce(Keys.Tab) && _transitionProgress >= 1.0f)
         {
             _isBottomScreenFocus = !_isBottomScreenFocus;
             _transitionProgress = 0f;
+        }
+        
+        if (KeyboardHandler.IsKeyDownOnce(Keys.Escape) && _transitionProgress >= 1.0f)
+        {
+            _sceneManager.Push(new OptionScene("name", this));
+        }
+        
+        if (KeyboardHandler.IsKeyDownOnce(Keys.X) && _transitionProgress >= 1.0f)
+        {
+            _sceneManager.Push(new MenuScene("menu", this));
         }
         
         if (_transitionProgress < 1.0f)
@@ -127,6 +142,8 @@ public class PatteGame : Game
             }
         }
         
+        _sceneManager.Update(gameTime);
+        
         base.Update(gameTime);
     }
 
@@ -137,6 +154,7 @@ public class PatteGame : Game
         _spriteBatch.Begin();
         _spriteBatch.Draw(_topDummy, Vector2.Zero, Color.White);
         _spriteBatch.End();
+        _sceneManager.Draw(_spriteBatch, gameTime);
         
         GraphicsDevice.SetRenderTarget(_bottomScreen);
         GraphicsDevice.Clear(Color.Red);

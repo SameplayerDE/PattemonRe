@@ -6,20 +6,25 @@ namespace PatteLib;
 public static class Utils
 {
     
+    public static int Wrap(int value, int min, int max)
+    {
+        int range = max - min + 1;
+        return (value - min + range) % range + min;
+    }
+    
     public static float Wrap(float value, float min, float max)
     {
         if (value < min)
         {
             return max - (min - value) % (max - min);
         }
-        else if (value > max)
+
+        if (value > max)
         {
             return min + (value - max) % (max - min);
         }
-        else
-        {
-            return value;
-        }
+
+        return value;
     }
     
     // Funktion zum Konvertieren von 3D-Weltkoordinaten zu 2D-Bildschirmkoordinaten

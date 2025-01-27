@@ -20,18 +20,6 @@ public class BagPocket
         Capacity = maxCapacity;
         _content = new List<BagItem>(maxCapacity);
     }
-    
-    /*static BagItem *Pocket_FindSlotWithItemQuantity(BagItem *pocket, u32 pocketSize, u16 item, u16 count)
-    {
-        for (u32 i = 0; i < pocketSize; i++) {
-            if (pocket[i].item == item) {
-                return pocket[i].quantity >= count ? &pocket[i] : NULL;
-            }
-        }
-
-        return NULL;
-    }*/
-    
 }
 
 public class Bag

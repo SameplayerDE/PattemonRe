@@ -46,4 +46,7 @@
       <ProjectReference Include="..\InputLib\InputLib.csproj" />
       <ProjectReference Include="..\PatteLib\PatteLib.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Engine\Input\" />
+    </ItemGroup>
 </Project>
