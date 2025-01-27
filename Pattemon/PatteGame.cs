@@ -81,7 +81,7 @@ public class PatteGame : Game
             false,
             GraphicsDevice.PresentationParameters.BackBufferFormat,
             DepthFormat.Depth24
-            );
+        );
         _topScreenRectangle = _focusScreenRectangle;
         
         _bottomScreen = new RenderTarget2D(
@@ -124,9 +124,6 @@ public class PatteGame : Game
             {
                 _bottomScreenRectangle.X = (int)MathHelper.Lerp(_focusScreenRectangle.X, _unfocusScreenRectangle.X, _transitionProgress);
                 _bottomScreenRectangle.Y = (int)MathHelper.Lerp(_focusScreenRectangle.Y, _unfocusScreenRectangle.Y, _transitionProgress);
-
-                //_topScreenRectangle.X = (int)MathHelper.Lerp(_unfocusScreenRectangle.X, _focusScreenRectangle.X, _transitionProgress);
-                //_topScreenRectangle.Y = (int)MathHelper.Lerp(_unfocusScreenRectangle.Y, _focusScreenRectangle.Y, _transitionProgress);
             }
         }
         
@@ -171,7 +168,7 @@ public class PatteGame : Game
 
     #region ScreenFit
 
-    public void PerformScreenFit()
+    private void PerformScreenFit()
     {
         var outputAspect = Window.ClientBounds.Width / (float) Window.ClientBounds.Height;
         var preferredAspect = _preferedScreenSize.X / (float) _preferedScreenSize.Y;

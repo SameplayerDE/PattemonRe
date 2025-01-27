@@ -1,4 +1,4 @@
-﻿namespace Pattemon.Global;
+﻿namespace Pattemon.Global.Settings.Game;
 
 public enum GameLanguage
 {
