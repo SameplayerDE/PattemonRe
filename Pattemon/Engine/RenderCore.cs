@@ -7,6 +7,7 @@ namespace Pattemon.Engine;
 public static class RenderCore
 {
     public static readonly Point PreferedScreenSize = new Point(256, 192);
+    public static readonly Vector2 ScreenCenter = new Vector2(128f, 96f);
 
     private static GraphicsDevice _graphicsDevice;
     private static SpriteBatch _spriteBatch;

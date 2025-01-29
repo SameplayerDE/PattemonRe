@@ -116,6 +116,24 @@
 /processorParam:TextureFormat=Color
 /build:OptionSelector.png
 
+#begin Shaders/AnimationShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/AnimationShader.fx
+
+#begin Shaders/BuildingShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/BuildingShader.fx
+
+#begin Shaders/WorldShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/WorldShader.fx
+
 #begin TopScreen.png
 /importer:TextureImporter
 /processor:TextureProcessor

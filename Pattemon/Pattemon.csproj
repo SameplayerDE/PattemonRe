@@ -32,21 +32,24 @@
         <PackageReference Include="Tesseract.Drawing" Version="5.2.0" />
     </ItemGroup>
     <ItemGroup>
-      <None Update="Content\pokemon-dp-pro.ttf">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Content\Scripts\501.sk">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+        <None Update="Content\pokemon-dp-pro.ttf">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Content\Scripts\**">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Content\WorldData\**">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
-      <Content Include=".config\dotnet-tools.json" />
+        <Content Include=".config\dotnet-tools.json" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\InputLib\InputLib.csproj" />
-      <ProjectReference Include="..\PatteLib\PatteLib.csproj" />
+        <ProjectReference Include="..\InputLib\InputLib.csproj" />
+        <ProjectReference Include="..\PatteLib\PatteLib.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Engine\Input\" />
+        <Folder Include="Engine\Input\" />
     </ItemGroup>
 </Project>

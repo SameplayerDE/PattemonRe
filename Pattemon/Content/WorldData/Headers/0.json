@@ -1,0 +1,26 @@
+{
+  "headerId": 0,
+  "unknown1": 0,
+  "matrixId": 0,
+  "scriptFileId": 401,
+  "levelScriptId": 897,
+  "textArchiveId": 23,
+  "musicDayId": 1000,
+  "musicNightId": 1000,
+  "wildPokemon": 65535,
+  "eventFileId": 0,
+  "locationNameId": 0,
+  "areaIcon": 6,
+  "weatherId": 0,
+  "cameraAngleId": 0,
+  "showNameTagId": 2,
+  "battleBackground": 3,
+  "canUseFly": true,
+  "canUseRope": true,
+  "canUseRun": true,
+  "canUseBicycle": false,
+  "locationName": "Mysteriöser Ort",
+  "showNameTag": true
+}
+
+

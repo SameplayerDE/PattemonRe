@@ -32,9 +32,6 @@ public class PatteGame : Game
 
     private SceneManager _sceneManager;
     
-    private Texture2D _topDummy;
-    private Texture2D _bottomDummy;
-    
     public PatteGame()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -52,6 +49,8 @@ public class PatteGame : Game
         _sceneManager = new SceneManager();
         _preferedScreenSize = RenderCore.PreferedScreenSize;
         
+        _sceneManager.Push(new GameplayScene("", this));
+        
         base.Initialize();
     }
 
@@ -59,9 +58,6 @@ public class PatteGame : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         RenderCore.Init(GraphicsDevice, _spriteBatch);
-        
-        _topDummy = Content.Load<Texture2D>("TopScreen");
-        _bottomDummy = Content.Load<Texture2D>("BottomScreen");
         
         _graphics.PreferredBackBufferWidth = _preferedScreenSize.X;
         _graphics.PreferredBackBufferHeight = _preferedScreenSize.Y;
@@ -99,16 +95,6 @@ public class PatteGame : Game
             _transitionProgress = 0f;
         }
         
-        if (KeyboardHandler.IsKeyDownOnce(Keys.Escape) && _transitionProgress >= 1.0f)
-        {
-            _sceneManager.Push(new OptionScene("name", this));
-        }
-        
-        if (KeyboardHandler.IsKeyDownOnce(Keys.X) && _transitionProgress >= 1.0f)
-        {
-            _sceneManager.Push(new MenuScene("menu", this));
-        }
-        
         if (_transitionProgress < 1.0f)
         {
             _transitionProgress = Math.Min(_transitionProgress + delta * TransitionSpeed, 1.0f);
@@ -124,26 +110,17 @@ public class PatteGame : Game
                 _bottomScreenRectangle.Y = (int)MathHelper.Lerp(_focusScreenRectangle.Y, _unfocusScreenRectangle.Y, _transitionProgress);
             }
         }
-        
-        _sceneManager.Update(gameTime);
-        
+
+        if (_transitionProgress >= 1.0f)
+        {
+            _sceneManager.Update(gameTime);
+        }
+
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        RenderCore.SetTopScreen();
-        GraphicsDevice.Clear(Color.CornflowerBlue);
-        _spriteBatch.Begin();
-        _spriteBatch.Draw(_topDummy, Vector2.Zero, Color.White);
-        _spriteBatch.End();
-        
-        RenderCore.SetBottomScreen();
-        GraphicsDevice.Clear(Color.Red);
-        _spriteBatch.Begin();
-        _spriteBatch.Draw(_bottomDummy, Vector2.Zero, Color.White);
-        _spriteBatch.End();
-        
         _sceneManager.Draw(_spriteBatch, gameTime);
         
         RenderCore.Reset();
