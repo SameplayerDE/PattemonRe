@@ -13,33 +13,47 @@ namespace Pattemon.Scenes;
 
 public class MenuScene : Scene
 {
+    
+    private enum State
+    {
+        Process = 0,
+        FadeOut,
+        WaitFadeOut,
+    }
+    
     private Texture2D _dummy;
     private Texture2D _selector;
     private Texture2D _icons;
+    
+    private Graphics.Window _window;
 
     private const int IconWidth = 28;
     private const int IconHeight = 24;
 
     private int _optionCursor;
     private List<int> _availableOptions = new();
+    private State _state = 0;
 
     public MenuScene(string name, Game game, string contentDirectory = "Content") : base(name, game, contentDirectory)
     {
     }
 
-    public override void Load()
+    public override bool Load()
     {
+        _window = Graphics.Window.Create(38 * 4, 0, 13 * 8, 17 * 8);
         _dummy = Content.Load<Texture2D>("MenuComplete");
         _selector = Content.Load<Texture2D>("MenuSelector");
         _icons = Content.Load<Texture2D>("Icons/MenuIcons");
+        return true;
     }
 
-    public override void Unload()
+    protected override bool Unload()
     {
         Content.Unload();
+        return true;
     }
 
-    public override void Init()
+    public override bool Init()
     {
         // Erstelle die Liste der verfügbaren Optionen basierend auf Spielzustand
         _availableOptions.Clear();
@@ -54,42 +68,64 @@ public class MenuScene : Scene
         // Stelle sicher, dass der Cursor auf einer gültigen Option steht
         _optionCursor = ApplicationStorage.ContextMenuIndex;
         _optionCursor = Math.Clamp(_optionCursor, 0, _availableOptions.Count - 1);
+        return true;
     }
 
-    public override void Close()
+    public override void Exit()
     {
         // Speichere den aktuellen Menüindex
+        _state = 0;
         ApplicationStorage.ContextMenuIndex = _optionCursor;
-        base.Close();
     }
 
-    public override void Update(GameTime gameTime, float delta)
+    public override bool Update(GameTime gameTime, float delta)
     {
-        if (KeyboardHandler.IsKeyDownOnce(Keys.Down))
+        if (_state == State.Process)
         {
-            _optionCursor++;
-        }
-        if (KeyboardHandler.IsKeyDownOnce(Keys.Up))
-        {
-            _optionCursor--;
-        }
-
-        // Wrap den Cursor innerhalb der verfügbaren Optionen
-        _optionCursor = Utils.Wrap(_optionCursor, 0, _availableOptions.Count - 1);
-
-        if (KeyboardHandler.IsKeyDownOnce(Keys.Enter))
-        {
-            int selectedOption = _availableOptions[_optionCursor];
-
-            if (selectedOption == 5) // Optionen
+            if (KeyboardHandler.IsKeyDownOnce(Keys.Down))
             {
-                SceneManager.Push(new OptionScene("name", _game));
+                _optionCursor++;
             }
-            else if (selectedOption == 6) // Zurück
+
+            if (KeyboardHandler.IsKeyDownOnce(Keys.Up))
             {
-                SceneManager.Pop();
+                _optionCursor--;
+            }
+
+            // Wrap den Cursor innerhalb der verfügbaren Optionen
+            _optionCursor = Utils.Wrap(_optionCursor, 0, _availableOptions.Count - 1);
+
+            if (KeyboardHandler.IsKeyDownOnce(Keys.Enter))
+            {
+                int selectedOption = _availableOptions[_optionCursor];
+
+                if (selectedOption == 5) // Optionen
+                {
+                    _state++;
+                }
+                else if (selectedOption == 6) // Zurück
+                {
+                    return true;
+                }
             }
         }
+
+        if (_state == State.FadeOut)
+        {
+            RenderCore.StartScreenTransition(1000, RenderCore.TransitionType.AlphaOut);
+            SceneManager.Next(Scene.PlayerMenuOptionMenu);
+            _state++;
+        }
+
+        if (_state == State.WaitFadeOut)
+        {
+            if (RenderCore.IsScreenTransitionDone())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected override void Draw2D(SpriteBatch spriteBatch, GameTime gameTime, float delta)
@@ -97,7 +133,8 @@ public class MenuScene : Scene
         RenderCore.SetTopScreen();
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-        spriteBatch.Draw(_dummy, (new Vector2(38, 0) * 4), Color.White);
+        _window.Draw(spriteBatch, gameTime, delta);
+        //spriteBatch.Draw(_dummy, (new Vector2(38, 0) * 4), Color.White);
         spriteBatch.Draw(_selector, (new Vector2(39, 1 + _optionCursor * 6) * 4), Color.White);
 
         for (int i = 0; i < _availableOptions.Count; i++)

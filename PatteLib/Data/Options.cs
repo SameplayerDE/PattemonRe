@@ -1,6 +1,6 @@
 ﻿namespace PatteLib.Data;
 
-public class Options
+public struct Options
 {
     private ushort _textSpeed = 1; // slow, medium, fast
     private ushort _soundMode = 0; // stereo, mono
@@ -8,6 +8,16 @@ public class Options
     private ushort _battleStyle = 0; // switch, follow
     private ushort _buttonMapping = 0; // normal, start = x, L = A
     private ushort _textBoxStyle = 0; // 0-19
+
+    public Options(ushort textSpeed, ushort soundMode, ushort animations, ushort battleStyle, ushort buttonMapping, ushort textBoxStyle)
+    {
+        _textSpeed = textSpeed;
+        _soundMode = soundMode;
+        _animations = animations;
+        _battleStyle = battleStyle;
+        _buttonMapping = buttonMapping;
+        _textBoxStyle = textBoxStyle;
+    }
 
     public ushort TextSpeed
     {

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pattemon.Engine;
 using Pattemon.Scenes;
+using Pattemon.Scenes.OptionMenu;
 
 namespace Pattemon;
 
@@ -32,6 +33,8 @@ public class PatteGame : Game
 
     private SceneManager _sceneManager;
     
+    private OptionMenuScene _optionMenuScene;
+    
     public PatteGame()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -48,16 +51,25 @@ public class PatteGame : Game
     {
         _sceneManager = new SceneManager();
         _preferedScreenSize = RenderCore.PreferedScreenSize;
+
+        _optionMenuScene = new OptionMenuScene(this);
         
-        _sceneManager.Push(new GameplayScene("", this));
+        //_sceneManager.RegisterScene(new GameplayScene(Scene.Game, this));
+        //_sceneManager.RegisterScene(new MenuScene(Scene.PlayerMenu, this));
+        //_sceneManager.RegisterScene(new OptionScene(Scene.PlayerMenuOptionMenu, this));
+        //
+        //_sceneManager.Next(Scene.Game);
         
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
+        Graphics.Window.Load(Content);
+        
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         RenderCore.Init(GraphicsDevice, _spriteBatch);
+        _optionMenuScene.Init();
         
         _graphics.PreferredBackBufferWidth = _preferedScreenSize.X;
         _graphics.PreferredBackBufferHeight = _preferedScreenSize.Y;
@@ -114,7 +126,10 @@ public class PatteGame : Game
         if (_transitionProgress >= 1.0f)
         {
             _sceneManager.Update(gameTime);
+            _optionMenuScene.Update(gameTime, 0);
         }
+        
+        RenderCore.UpdateTransition(gameTime);
 
         base.Update(gameTime);
     }
@@ -122,6 +137,10 @@ public class PatteGame : Game
     protected override void Draw(GameTime gameTime)
     {
         _sceneManager.Draw(_spriteBatch, gameTime);
+        RenderCore.SetTopScreen();
+        _optionMenuScene.Draw(_spriteBatch, gameTime);
+        
+        RenderCore.RenderTransition();
         
         RenderCore.Reset();
         GraphicsDevice.Clear(Color.Black);

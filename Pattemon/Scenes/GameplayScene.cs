@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using HxGLTF.Implementation;
 using InputLib;
 using Microsoft.Xna.Framework;
@@ -11,7 +10,6 @@ using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json.Linq;
 using PatteLib.World;
 using Pattemon.Engine;
-using Pattemon.Graphics;
 using Camera = Pattemon.Engine.Camera;
 
 namespace Pattemon.Scenes;
@@ -278,39 +276,48 @@ public class GameplayScene : Scene
     {
     }
 
-    public override void Load()
-    {
-        _bottomDummy = Content.Load<Texture2D>("BottomScreen");
-        _worldShader = Content.Load<Effect>("Shaders/WorldShader");
-        _buildingShader = Content.Load<Effect>("Shaders/BuildingShader");
-        //_world = World.LoadByMatrix(GraphicsDevice, 129);
-        _world = World.LoadByMatrix(GraphicsDevice, 0);
-    }
-
-    public override void Unload()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void Init()
+    public override bool Load()
     {
         Building.RootDirectory = @"A:\ModelExporter\Platin\output_assets";
         Chunk.RootDirectory = @"A:\ModelExporter\Platin\overworldmaps";
-        _camera = Camera.CameraLookMap[0];
-        Camera.ActiveCamera = _camera;
+        
+        _bottomDummy = Content.Load<Texture2D>("BottomScreen");
+        _worldShader = Content.Load<Effect>("Shaders/WorldShader");
+        _buildingShader = Content.Load<Effect>("Shaders/BuildingShader");
+        _world = World.LoadByMatrix(GraphicsDevice, 129);
+        //_world = World.LoadByMatrix(GraphicsDevice, 0);
+        return true;
     }
 
-    public override void Update(GameTime gameTime, float delta)
+    public override bool Init()
     {
+        _camera = Camera.CameraLookMap[4];
+        Camera.ActiveCamera = _camera;
+        return true;
+    }
+
+    public override bool Update(GameTime gameTime, float delta)
+    {
+        if (Child != null)
+        {
+            if (Child.Update(gameTime, delta))
+            {
+                Child.Exit();
+                Child = null;
+            }
+            return false;
+        }
         if (KeyboardHandler.IsKeyDownOnce(Keys.Escape))
         {
-            SceneManager.Push(new OptionScene("name", _game));
-            SceneManager.Pop();
+            // ToDo: open engine settings
         }
         
         if (KeyboardHandler.IsKeyDownOnce(Keys.X))
         {
-            SceneManager.Push(new MenuScene("menu", _game));
+            Child = SceneManager.GetScene(Scene.PlayerMenu);
+            Child.SetManager(SceneManager);
+            Child.Load();
+            Child.Init();
         }
         
         if (KeyboardHandler.IsKeyDownOnce(Keys.Right))
@@ -352,6 +359,7 @@ public class GameplayScene : Scene
         _camera.ComputeViewMatrix();
         
         _rotation += delta;
+        return false;
     }
 
     protected override void Draw2D(SpriteBatch spriteBatch, GameTime gameTime, float delta)
@@ -361,15 +369,24 @@ public class GameplayScene : Scene
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         spriteBatch.Draw(_bottomDummy, Vector2.Zero, Color.White);
         spriteBatch.End();
+
+        Child?.Draw(spriteBatch, gameTime, delta);
     }
 
     protected override void Draw3D(GameTime gameTime, float delta)
     {
         RenderCore.SetTopScreen();
-        GraphicsDevice.Clear(Color.Red);
+        GraphicsDevice.Clear(Color.Black);
         DrawWorldSmart(gameTime, _world, _spawn);
+
+        Child?.Draw(null, gameTime, delta);
     }
-    
+
+    public override void Exit()
+    {
+        Unload();
+    }
+
     private void DrawWorldSmart(GameTime gameTime, World world, Vector3 target, int renderDistance = 1)
     {
         int startX = -renderDistance;

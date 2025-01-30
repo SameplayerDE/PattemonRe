@@ -10,33 +10,33 @@ public class ChoosePokemonScene : Scene
     {
     }
 
-    public override void Load()
+    public override bool Load()
     {
-        //throw new System.NotImplementedException();
+        throw new System.NotImplementedException();
     }
 
-    public override void Unload()
-    {
-        //throw new System.NotImplementedException();
+    public override bool Init()
+    { 
+        throw new System.NotImplementedException();
     }
 
-    public override void Init()
+    public override bool Update(GameTime gameTime, float delta)
     {
-        //throw new System.NotImplementedException();
-    }
-
-    public override void Update(GameTime gameTime, float delta)
-    {
-        //throw new System.NotImplementedException();
+        throw new System.NotImplementedException();
     }
 
     protected override void Draw2D(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
-        //throw new System.NotImplementedException();
+        throw new System.NotImplementedException();
     }
 
     protected override void Draw3D(GameTime gameTime, float delta)
     {
-        //throw new System.NotImplementedException();
+        throw new System.NotImplementedException();
+    }
+
+    public override void Exit()
+    {
+        throw new System.NotImplementedException();
     }
 }
