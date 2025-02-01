@@ -94,6 +94,7 @@ public class ChoosePokemonScene : SceneA
         if (_state == ReplaceMeshes)
         {
             _state = SelectPokemon;
+            
             if (_index == 0)
             {
                 _ballA.Play(0);

@@ -98,6 +98,19 @@ namespace HxGLTF.Implementation
             // if yes then try to interpolate currently running animation with next animation so that there is not visual cut
         }
         
+        public void Prepare(int index)
+        {
+            if (Animations == null || index >= Animations.Length)
+                return;
+
+            _currentAnimationIndex = index;
+            _animationTimer = 0f;
+            IsPlaying = false;
+            
+            GameModelAnimation currentAnimation = Animations[_currentAnimationIndex];
+            UpdateAnimation(currentAnimation, _animationTimer);
+        }
+        
         public void Stop()
         {
             _currentAnimationIndex = -1;
