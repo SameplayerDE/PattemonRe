@@ -175,7 +175,6 @@ public class Game1 : Game
 
         foreach (var jAnimation in jAnimations)
         {
-            
             IEnumerable<string> materialsEnumerable = JsonUtils.GetValues<string>(jAnimation["materials"]);
             string[] materials = new string[Enumerable.Count(materialsEnumerable)];
             int index = 0;

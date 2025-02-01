@@ -20,11 +20,13 @@ namespace HxGLTF.Implementation
         
         private int _currentAnimationIndex;
         private int _nextAnimationIndex;
-
+        
         private float _animationTimer;
         public bool IsPlaying;
+        public float AnimationScale = 0.5f;
         
-        //AnimationPlayerClass
+        public event Action? OnAnimationCompleted;
+        // ToDo: AnimationPlayerClass
 
         public void Dispose()
         {
@@ -109,6 +111,7 @@ namespace HxGLTF.Implementation
         public void Update(GameTime gameTime)
         {
             var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            delta *= AnimationScale;
 
             if (Animations != null)
             {
@@ -125,6 +128,7 @@ namespace HxGLTF.Implementation
                     _animationTimer += delta;
                     if (_animationTimer > currentAnimation.Duration)
                     {
+                        OnAnimationCompleted?.Invoke();
                         _animationTimer = 0;
                     }
                 }

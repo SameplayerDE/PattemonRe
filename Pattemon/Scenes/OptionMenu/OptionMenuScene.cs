@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 using System.Linq;
 using InputLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PatteLib.Data;
+using Pattemon.Audio;
 using Pattemon.Engine;
+using Pattemon.Graphics;
 
 namespace Pattemon.Scenes.OptionMenu;
 
@@ -58,9 +59,9 @@ public class OptionMenuScene(Game game) : SceneA(game)
         },
         new OptionEntry
         {
-            count = 2,
+            count = AudioMode.Count,
             index = 0,
-            options = ["stereo", "mono"],
+            options = ["mono", "stereo", "surround"],
         },
         new OptionEntry
         {
@@ -99,6 +100,7 @@ public class OptionMenuScene(Game game) : SceneA(game)
         _backgroundTexture = _content.Load<Texture2D>("DummyOptions");
         _cursorTexture = _content.Load<Texture2D>("OptionSelector");
         _font = _content.Load<SpriteFont>("Font");
+        GraphicsCore.LoadTexture("dummy", @"A:\Coding\Survival\TestRender\Content\Pokemon\Turtwig\male_front.png");
         
         return true;
     }
@@ -109,6 +111,7 @@ public class OptionMenuScene(Game game) : SceneA(game)
         // set settings
         // save settings
         Data.OptionMenu.OptionMenuData.Options = _options;
+        _game.Exit();
         // free data
         return true;
     }
@@ -129,7 +132,7 @@ public class OptionMenuScene(Game game) : SceneA(game)
                 _entries[Entry.BattleStyle].index = _options.BattleStyle;
                 _entries[Entry.ButtonMode].index = _options.ButtonMapping;
                 _entries[Entry.MessageBox].index = _options.TextBoxStyle;
-                RenderCore.StartScreenTransition(1000, RenderCore.TransitionType.SlideOut);
+                RenderCore.StartScreenTransition(500, RenderCore.TransitionType.SlideOut);
                 break;
             case State.WaitForFadeIn:
                 if (!RenderCore.IsScreenTransitionDone())
@@ -168,11 +171,13 @@ public class OptionMenuScene(Game game) : SceneA(game)
                 {
                     _cursor = (_cursor + 7 - 1) % 7;
                     // play sound
+                    AudioCore.PlaySound(0x00);
                 }
                 else if (KeyboardHandler.IsKeyDownOnce(Keys.Down))
                 {
                     _cursor = (_cursor + 1) % 7;
                     // play sound
+                    AudioCore.PlaySound(0x00);
                 }
                 
                 return false;
@@ -200,6 +205,8 @@ public class OptionMenuScene(Game game) : SceneA(game)
                 break;
             case State.Teardown:
                 // if !teardownDone return false
+                GraphicsCore.FreeTexture("dummy");
+                _game.Exit();
                 return true;
                 break;
             default:
@@ -214,6 +221,8 @@ public class OptionMenuScene(Game game) : SceneA(game)
         {
             return;
         }
+        RenderCore.SetTopScreen();
+        _graphics.Clear(Color.Black);
         spriteBatch.Begin();
         spriteBatch.Draw(_backgroundTexture, Vector2.Zero, Color.White);
         spriteBatch.Draw(_cursorTexture, (new Vector2(8, 24 + 16 * _cursor)), Color.White);

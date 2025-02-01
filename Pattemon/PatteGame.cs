@@ -3,8 +3,11 @@ using InputLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Pattemon.Audio;
 using Pattemon.Engine;
+using Pattemon.Graphics;
 using Pattemon.Scenes;
+using Pattemon.Scenes.ChoosePokemon;
 using Pattemon.Scenes.OptionMenu;
 
 namespace Pattemon;
@@ -34,6 +37,7 @@ public class PatteGame : Game
     private SceneManager _sceneManager;
     
     private OptionMenuScene _optionMenuScene;
+    private ChoosePokemonScene _choosePokemonScene;
     
     public PatteGame()
     {
@@ -51,25 +55,22 @@ public class PatteGame : Game
     {
         _sceneManager = new SceneManager();
         _preferedScreenSize = RenderCore.PreferedScreenSize;
-
-        _optionMenuScene = new OptionMenuScene(this);
-        
-        //_sceneManager.RegisterScene(new GameplayScene(Scene.Game, this));
-        //_sceneManager.RegisterScene(new MenuScene(Scene.PlayerMenu, this));
-        //_sceneManager.RegisterScene(new OptionScene(Scene.PlayerMenuOptionMenu, this));
-        //
-        //_sceneManager.Next(Scene.Game);
-        
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        Graphics.Window.Load(Content);
-        
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        _optionMenuScene = new OptionMenuScene(this);
+        _choosePokemonScene = new ChoosePokemonScene(this);
+        GraphicsCore.Init(GraphicsDevice);
+        GraphicsCore.Load(Content);
+        Graphics.Window.Load(Content);
         RenderCore.Init(GraphicsDevice, _spriteBatch);
+        AudioCore.Init(Content);
+        
         _optionMenuScene.Init();
+        _choosePokemonScene.Init();
         
         _graphics.PreferredBackBufferWidth = _preferedScreenSize.X;
         _graphics.PreferredBackBufferHeight = _preferedScreenSize.Y;
@@ -127,9 +128,11 @@ public class PatteGame : Game
         {
             _sceneManager.Update(gameTime);
             _optionMenuScene.Update(gameTime, 0);
+            _choosePokemonScene.Update(gameTime, 0);
         }
         
         RenderCore.UpdateTransition(gameTime);
+        AudioCore.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -139,6 +142,7 @@ public class PatteGame : Game
         _sceneManager.Draw(_spriteBatch, gameTime);
         RenderCore.SetTopScreen();
         _optionMenuScene.Draw(_spriteBatch, gameTime);
+        _choosePokemonScene.Draw(_spriteBatch, gameTime);
         
         RenderCore.RenderTransition();
         

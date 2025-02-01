@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using HxGLTF.Implementation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -121,7 +122,6 @@ public static class RenderCore
         SetBottomScreen();
         //not at the same time but delayed so it looks like it is on woosh
     }
-
     
     public static void SetTopScreen()
     {
@@ -138,5 +138,172 @@ public static class RenderCore
         _graphicsDevice.SetRenderTarget(null);
     }
     
+    public static void DrawModel(GameTime gameTime, Effect effect, GameModel model, bool alpha = false, Vector3 offset = default)
+    {
+        foreach (var scene in model.Scenes)
+        {
+            foreach (var nodeIndex in scene.Nodes)
+            {
+                var node = model.Nodes[nodeIndex];
+                DrawNode(gameTime, effect, model, node, alpha, offset);
+            }
+        }
+    }
+    
+    public static void DrawNode(GameTime gameTime, Effect effect, GameModel model, GameNode node, bool alpha = false, Vector3 offset = default)
+    {
+            
+        //skinnig here?
+            
+        if (node.HasMesh)
+        {
+            //DrawMesh(node, gameModel.Meshes[node.MeshIndex]);
+            DrawMesh(gameTime, effect, model, node, node.Mesh, alpha, offset);
+        }
+            
+        if (node.HasChildren)
+        {
+            foreach (var child in node.Children)
+            {
+                DrawNode(gameTime, effect, model, node.Model.Nodes[child], alpha, offset);
+            }
+        }
+    }
+    
+    public static void DrawMesh(GameTime gameTime, Effect effect, GameModel model, GameNode node, GameMesh mesh, bool alpha = false, Vector3 offset = default)
+    {
+        var alphaMode = 0;
+
+        var worldMatrix = Matrix.CreateScale(model.Scale) *
+                          Matrix.CreateFromQuaternion(model.Rotation) *
+                          Matrix.CreateTranslation(model.Translation) *
+                          Matrix.CreateTranslation(offset);
+
+        effect.Parameters["World"].SetValue(node.GlobalTransform * worldMatrix);
+        effect.Parameters["View"].SetValue(Camera.ActiveCamera.ViewMatrix);
+        effect.Parameters["Projection"].SetValue(Camera.ActiveCamera.ProjectionMatrix);
+
+        if (model.IsPlaying)
+        {
+            if (model.Skins is { Length: > 0 })
+            {
+                var skin = model.Skins[0];
+                if (skin.JointMatrices.Length > 180)
+                {
+                    effect.Parameters["SkinningEnabled"]?.SetValue(false);
+                }
+                else
+                {
+                    effect.Parameters["Bones"]?.SetValue(skin.JointMatrices);
+                    effect.Parameters["NumberOfBones"]?.SetValue(skin.JointMatrices.Length);
+                    effect.Parameters["SkinningEnabled"]?.SetValue(true);
+                }
+            }
+            else
+            {
+                effect.Parameters["SkinningEnabled"]?.SetValue(false);
+            }
+        }
+        else
+        {
+            effect.Parameters["SkinningEnabled"]?.SetValue(false);
+        }
+
+        if (alpha)
+        {
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+        }
+        
+        foreach (var primitive in mesh.Primitives)
+        {
+            if (ShouldSkipPrimitive(primitive, effect, alpha, ref alphaMode))
+            {
+                continue;
+            }
+
+            SetPrimitiveMaterialParameters(gameTime, primitive, effect);
+
+            foreach (var pass in effect.Techniques[Math.Max(alphaMode - 1, 0)].Passes)
+            {
+                pass.Apply();
+                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0,
+                    primitive.VertexBuffer.VertexCount / 3);
+            }
+            
+        }
+    }
+    
+    public static bool ShouldSkipPrimitive(GameMeshPrimitives primitive, Effect effect, bool alpha, ref int alphaMode)
+    {
+        if (primitive.Material != null)
+        {
+            var material = primitive.Material;
+            
+            switch (material.AlphaMode)
+            {
+                case "OPAQUE":
+                    if (alpha)
+                    {
+                        return true;
+                    }
+                    alphaMode = 0;
+                    break;
+                case "MASK":
+                    if (alpha)
+                    {
+                        return true;
+                    }
+                    alphaMode = 1;
+                    break;
+                case "BLEND":
+                    if (!alpha)
+                    {
+                        return true;
+                    }
+                    alphaMode = 2;
+                    break;
+            }
+
+            effect.Parameters["AlphaMode"]?.SetValue(alphaMode);
+        }
+        return false;
+    }
+    
+    public static void SetPrimitiveMaterialParameters(GameTime gameTime, GameMeshPrimitives primitive, Effect effect)
+    {
+        GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
+
+        effect.Parameters["TextureEnabled"]?.SetValue(false);
+        effect.Parameters["NormalMapEnabled"]?.SetValue(false);
+        effect.Parameters["OcclusionMapEnabled"]?.SetValue(false);
+        effect.Parameters["EmissiveTextureEnabled"]?.SetValue(false);
+
+        if (primitive.Material != null)
+        {
+            var material = primitive.Material;
+                
+            //if (_debugTexture)
+            //{
+            //    Console.WriteLine(material.Name);
+            //}
+                
+            effect.Parameters["EmissiveColorFactor"]?.SetValue(material.EmissiveFactor.ToVector4());
+            effect.Parameters["BaseColorFactor"]?.SetValue(material.BaseColorFactor.ToVector4());
+            effect.Parameters["AdditionalColorFactor"]?.SetValue(Color.White.ToVector4());
+            effect.Parameters["AlphaCutoff"]?.SetValue(material.AlphaCutoff);
+
+            if (material.HasTexture)
+            {
+                effect.Parameters["TextureEnabled"]?.SetValue(true);
+                effect.Parameters["TextureDimensions"]?.SetValue(material.BaseTexture.Texture.Bounds.Size.ToVector2());
+                effect.Parameters["Texture"]?.SetValue(material.BaseTexture.Texture);
+                effect.Parameters["ShouldAnimate"]?.SetValue(false);
+               //SetTextureAnimation(gameTime, material, effect);
+               //SetTextureEffects(gameTime, material, effect);
+
+                GraphicsDevice.SamplerStates[0] = material.BaseTexture.Sampler.SamplerState;
+            }
+        }
+    }
     
 }
