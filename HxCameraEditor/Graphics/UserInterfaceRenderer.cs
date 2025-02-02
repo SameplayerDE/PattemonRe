@@ -32,7 +32,7 @@ public class UserInterfaceRenderer
         GraphicsDevice = graphicsDevice;
         ContentManager = new ContentManager(serviceProvider, "Content");
         
-        _fontRenderer = new ImageFontRenderer(graphicsDevice, spriteBatch, _font = ImageFont.Load(graphicsDevice, "Assets/Font.json"));
+        _fontRenderer = new ImageFontRenderer(graphicsDevice, spriteBatch, _font = ImageFont.LoadFromFile(graphicsDevice, "Assets/Font.json"));
         _images = new Dictionary<string, Texture2D>();
         _fonts = new Dictionary<string, SpriteFont>();
         _fonts.Add("default", ContentManager.Load<SpriteFont>("default"));

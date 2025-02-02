@@ -1,6 +1,11 @@
 ﻿{
-    "source": "Font.png",
-    "chars": [
+    "meta" : {
+        "key": "Font",
+        "source": "Font.png",
+        "height": 19,
+        "spacing": 0
+    },
+    "glyphs": [
         {"char": "A", "x": 0, "y": 0, "w": 16, "h": 19},
         {"char": "B", "x": 16, "y": 0, "w": 16, "h": 19},
         {"char": "C", "x": 32, "y": 0, "w": 16, "h": 19},

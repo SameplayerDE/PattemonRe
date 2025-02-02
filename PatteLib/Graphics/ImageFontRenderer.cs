@@ -72,12 +72,12 @@ public class ImageFontRenderer
                 if (charInfo.HasValue)
                 {
                     DrawCharacter(_spriteBatch, command.Character, currentPosition, currentTint, currentSX * scaleX, currentSY * scaleY);
-                    currentPosition.X += charInfo.Value.w * currentSX * scaleX; // Advance position based on character width and scale
+                    currentPosition.X += charInfo.Value.X * currentSX * scaleX; // Advance position based on character width and scale
                 }
             }
             if (command.Type == ImageFontRenderCommandType.Space)
             {
-                currentPosition.X += _font.SpaceWidth * currentSX * scaleX;
+                currentPosition.X += _font.Meta.Space * currentSX * scaleX;
             }
             if (command.Type == ImageFontRenderCommandType.ChangeTint)
             {
@@ -266,7 +266,7 @@ public class ImageFontRenderer
         if (_font.HasChar(character))
         {
             var charInfo = _font.GetChar(character) ?? throw new Exception();
-            Rectangle sourceRect = new Rectangle(charInfo.x, charInfo.y, charInfo.w, charInfo.h);
+            Rectangle sourceRect = new Rectangle(charInfo.X, charInfo.Y, charInfo.Width, charInfo.Height);
             spriteBatch.Draw(_font.Texture, position, sourceRect, tint, 0f, Vector2.Zero, new Vector2(sx, sy), SpriteEffects.None, 0f);
         }
     }

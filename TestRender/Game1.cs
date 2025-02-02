@@ -210,7 +210,7 @@ public class Game1 : Game
         _pixel = new Texture2D(GraphicsDevice, 1, 1);
         _pixel.SetData(new[] { Color.White });
         _map = Content.Load<Texture2D>("map");
-        _imageFont = ImageFont.Load(GraphicsDevice, @"Content/Font.json");
+        _imageFont = ImageFont.LoadFromFile(GraphicsDevice, @"Content/Font.json");
         _fontRenderer = new ImageFontRenderer(GraphicsDevice, _spriteBatch, _imageFont);
 
         _textBox = Content.Load<Texture2D>("textbox");
@@ -639,7 +639,7 @@ public class Game1 : Game
             var lines = text.Split("\\n");
             for (var i = 0; i < lines.Length; i++)
             {
-                _fontRenderer.DrawText(lines[i], new Vector2(14, 10 + _imageFont.LineHeight * i));
+                _fontRenderer.DrawText(lines[i], new Vector2(14, 10 + _imageFont.Meta.GlyphHeight * i));
             }
         }
         catch (Exception ex)
@@ -654,7 +654,7 @@ public class Game1 : Game
             var lines = text.Split("\\n");
             for (var i = 0; i < lines.Length; i++)
             {
-                _fontRenderer.DrawText(lines[i], new Vector2(14, 10 + _imageFont.LineHeight * i));
+                _fontRenderer.DrawText(lines[i], new Vector2(14, 10 + _imageFont.Meta.GlyphHeight * i));
             }
         }
         catch (Exception ex)

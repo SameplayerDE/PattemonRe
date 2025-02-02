@@ -6,6 +6,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using PatteLib.Graphics;
 using Pattemon.Engine;
 using Utils = PatteLib.Utils;
 
@@ -13,6 +14,12 @@ namespace Pattemon.Scenes.ChoosePokemon;
 
 public class ChoosePokemonScene : SceneA
 {
+
+    private const int CHOOSE_STARTER_MAIN_FADE_IN = 0;
+    private const int CHOOSE_STARTER_MAIN_WAIT_FADE_IN = 1;
+    private const int CHOOSE_STARTER_MAIN_LOOP = 2;
+    private const int CHOOSE_STARTER_MAIN_FADE_OUT = 3;
+    private const int CHOOSE_STARTER_MAIN_WAIT_FADE_OUT = 4;
 
     private const int PlayOpenAnimation = 0;
     private const int ReplaceMeshes = 1;
@@ -27,7 +34,8 @@ public class ChoosePokemonScene : SceneA
     
     private Texture2D _selectorTexture;
     private int _index = 0;
-    
+
+    private GameModel _background;
     private GameModel _openAnimation;
     private GameModel _ballA;
     private GameModel _ballB;
@@ -35,6 +43,7 @@ public class ChoosePokemonScene : SceneA
     private GameModel _case;
     private Vector3 _position;
     private float _speed = 2.0f; // Geschwindigkeit der Bewegung
+    private ImageFontRenderer _fontRenderer;
     
     public ChoosePokemonScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
     {
@@ -46,7 +55,7 @@ public class ChoosePokemonScene : SceneA
         _buildingShader = _content.Load<Effect>("Shaders/BuildingShader");
         
         _camera = new Camera();
-        _camera.InitWithPosition(new Vector3(0, 9, 14) * 16, 10, new Vector3(MathHelper.ToRadians(-30), 0, 0), MathHelper.ToRadians(22), CameraProjectionType.Perspective);
+        _camera.InitWithPosition(new Vector3(0, 9, 14) * 16, 10, new Vector3(MathHelper.ToRadians(-30), 0, 0), MathHelper.ToRadians(26), CameraProjectionType.Perspective);
         //_normalCamera.InitWithTarget(_target, 10, Vector3.Zero, MathHelper.ToRadians(75), CameraProjectionType.Perspective, true);
         _camera.SetClipping(0.01f, 100000f);
         
@@ -54,31 +63,72 @@ public class ChoosePokemonScene : SceneA
         
         var gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\psel_all\psel_all");
         _openAnimation = GameModel.From(_graphics, gltfFile);
-
         _openAnimation.OnAnimationCompleted += () => _state = ReplaceMeshes;
+        
+        gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\pmsel_bg\pmsel_bg");
+        _background = GameModel.From(_graphics, gltfFile);
+        _background.Scale *= 3.6f;
+        _background.Rotation *= Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(180));
         
         gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\psel_trunk\psel_trunk");
         _case = GameModel.From(_graphics, gltfFile);
-        _case.Scale /= 16;
         
         gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\psel_mb_a\psel_mb_a");
         _ballA = GameModel.From(_graphics, gltfFile);
-        _ballA.Scale /= 16;
         
         gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\psel_mb_b\psel_mb_b");
         _ballB = GameModel.From(_graphics, gltfFile);
-        _ballB.Scale /= 16;
          
         gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\psel_mb_c\psel_mb_c");
         _ballC = GameModel.From(_graphics, gltfFile);
-        _ballC.Scale /= 16;
 
+        //var font = ImageFont.LoadFromFile(_graphics, "");
+        
+        return true;
+    }
+    
+    public override bool Exit()
+    {
+        return true; // Exit wurde implementiert
+    }
+    
+    public override bool Update(GameTime gameTime, float delta)
+    {
+
+        switch (_state)
+        {
+            case CHOOSE_STARTER_MAIN_FADE_IN:
+            {
+                RenderCore.StartScreenTransition(1000, RenderCore.TransitionType.AlphaOut);
+                _state++;
+                break;
+            }
+            case CHOOSE_STARTER_MAIN_WAIT_FADE_IN:
+            {
+                if (RenderCore.IsScreenTransitionDone())
+                {
+                    _state++;
+                }
+
+                break;
+            }
+            case CHOOSE_STARTER_MAIN_LOOP:
+            {
+                // check selection
+                // update graphics
+                // if selection is made state++
+                //ExecuteLoop(gameTime, delta);
+                break;
+            }
+        }
+
+        
         return true;
     }
 
-    public override bool Update(GameTime gameTime, float delta)
+    private void ExecuteLoop(GameTime gameTime, float delta)
     {
-        
+                
         if (_state == PlayOpenAnimation)
         {
             if (RenderCore.IsScreenTransitionDone())
@@ -127,7 +177,7 @@ public class ChoosePokemonScene : SceneA
 
             if (changed)
             {
-                _index = Utils.Wrap(_index, 0, 2);
+                _index = Math.Clamp(_index, 0, 2);
                 _ballA.Stop();
                 _ballB.Stop();
                 _ballC.Stop();
@@ -156,12 +206,13 @@ public class ChoosePokemonScene : SceneA
         _camera.SetAsActive();
         _camera.CaptureTarget(ref _position);
         _camera.ComputeViewMatrix();
-        
-        return true;
     }
 
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
+        /*
+        _graphics.Clear(Color.Red);
+        RenderCore.DrawModel(gameTime, _buildingShader, _background, offset: new Vector3(0, -32, 38));
         if (_state == PlayOpenAnimation)
         {
             RenderCore.DrawModel(gameTime, _buildingShader, _openAnimation);
@@ -203,12 +254,7 @@ public class ChoosePokemonScene : SceneA
             spriteBatch.Draw(_selectorTexture, cursorPosition + new Vector2(0, MathF.Sin((float)gameTime.TotalGameTime.TotalSeconds * 5) * 5), null, Color.White, 0f, _selectorTexture.Bounds.Center.ToVector2(), 1f, SpriteEffects.None, 0f);
             spriteBatch.End();
         }
+        */
         
-        
-    }
-
-    public override bool Exit()
-    {
-        return true; // Exit wurde implementiert
     }
 }
