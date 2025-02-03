@@ -293,6 +293,7 @@ public class GameplayScene : Scene
     {
         _camera = Camera.CameraLookMap[4];
         Camera.ActiveCamera = _camera;
+        _camera.CaptureTarget(() => _spawn);
         return true;
     }
 
@@ -355,7 +356,6 @@ public class GameplayScene : Scene
         }
 
         _camera.SetAsActive();
-        _camera.CaptureTarget(ref _spawn);
         _camera.ComputeViewMatrix();
         
         _rotation += delta;

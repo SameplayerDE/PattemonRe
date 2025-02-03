@@ -4,7 +4,6 @@ namespace PatteLib;
 
 public static class NitroUtils
 {
-    
     public static readonly float[] AngleTable = [ushort.MaxValue];
 
     static NitroUtils()

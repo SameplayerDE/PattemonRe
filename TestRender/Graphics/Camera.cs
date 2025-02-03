@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using PatteLib;
 
 namespace TestRender.Graphics;
 
@@ -15,9 +16,25 @@ public class Camera
 
     public static Dictionary<int, Camera> CameraLookMap = new Dictionary<int, Camera>
     {
-        { 0, CameraFactory.CreateFromDSPRE(2731713 / 16, 54786, 0, 0, false, 1473, 614400 / 16, 3686400 / 16) },
-        { 4, CameraFactory.CreateFromDSPRE(6404251 / 16, 56418, 0, 0, true, 641, 614400 / 16, 7106560 / 16) }
+        { 0, CreateFromDSPRE(2731713 / 16, 54786, 0, 0, false, 1473, 614400 / 16, 3686400 / 16) },
+        { 4, CreateFromDSPRE(6404251 / 16, 56418, 0, 0, true, 641, 614400 / 16, 7106560 / 16) }
     };
+
+    public static Camera CreateFromDSPRE(int distance, ushort rotX, ushort rotY, ushort rotZ, bool ortho, ushort fieldOfView, int near, int far)
+    {
+        Camera camera = new Camera();
+        camera.InitWithTarget(Vector3.Zero, (float)NitroUtils.Fx32ToDecimal(distance), new Vector3(NitroUtils.GetAngleFromU16Int(rotX),NitroUtils.GetAngleFromU16Int(rotY), NitroUtils.GetAngleFromU16Int(rotZ)), (float)NitroUtils.GetAngleFromU16Int(fieldOfView), ortho ? CameraProjectionType.Orthographic : CameraProjectionType.Perspective, true);
+        camera.SetClipping((float)NitroUtils.Fx32ToDecimal(near), (float)NitroUtils.Fx32ToDecimal(far));
+        return camera;
+    }
+    
+    public static Camera CreateFromPret(int distance, ushort rotX, ushort rotY, ushort rotZ, bool ortho, ushort fieldOfView, int near, int far)
+    {
+        Camera camera = new Camera();
+        camera.InitWithTarget(Vector3.Zero, (float)NitroUtils.Fx32ToDecimal(distance), new Vector3(NitroUtils.GetAngleFromU16Int(rotX),NitroUtils.GetAngleFromU16Int(rotY), NitroUtils.GetAngleFromU16Int(rotZ)), (float)NitroUtils.GetAngleFromU16Int(fieldOfView), ortho ? CameraProjectionType.Orthographic : CameraProjectionType.Perspective, true);
+        camera.SetClipping((float)NitroUtils.Fx32ToDecimal(near), (float)NitroUtils.Fx32ToDecimal(far));
+        return camera;
+    }
     
     public CameraProjectionType ProjectionType;
 
@@ -38,7 +55,7 @@ public class Camera
     public Matrix ProjectionMatrix { get; private set; }
     
     public Vector3 PrevTargetPosition { get; private set; }
-    public Vector3? TargetPosition { get; private set; }
+    public Func<Vector3> TargetPosition { get; private set; }
     public bool TrackTargetX { get; private set; }
     public bool TrackTargetY { get; private set; }
     public bool TrackTargetZ { get; private set; }
@@ -118,16 +135,16 @@ public class Camera
             return;
         }
 
-        if (ActiveCamera.TargetPosition.HasValue)
+        if (ActiveCamera.TargetPosition != null)
         {
             Vector3 resultPosition;
-            Vector3 targetPositionDelta = Vector3.Subtract(ActiveCamera.TargetPosition.Value, ActiveCamera.PrevTargetPosition);
+            Vector3 targetPositionDelta = Vector3.Subtract(ActiveCamera.TargetPosition.Invoke(), ActiveCamera.PrevTargetPosition);
             
             AdjustDeltaPos(ActiveCamera, ref targetPositionDelta);
             //Camera_UpdateHistory(sActiveCamera, &targetPosDelta, &resultPos);
             ActiveCamera.Move(targetPositionDelta);
 
-            ActiveCamera.PrevTargetPosition = ActiveCamera.TargetPosition.Value;
+            ActiveCamera.PrevTargetPosition = ActiveCamera.TargetPosition.Invoke();
         }
         ViewMatrix = Matrix.CreateLookAt(ActiveCamera.Position, ActiveCamera.Target, ActiveCamera.Up);
     }
@@ -142,7 +159,15 @@ public class Camera
         Up = up;
     }
 
-    public void CaptureTarget(ref Vector3 target)
+    //public void CaptureTarget(ref Vector3 target)
+    //{
+    //    TargetPosition = target;
+    //    TrackTargetX = true;
+    //    TrackTargetY = true;
+    //    TrackTargetZ = true;
+    //}
+    
+    public void CaptureTarget(Func<Vector3> target)
     {
         TargetPosition = target;
         TrackTargetX = true;
@@ -177,7 +202,7 @@ public class Camera
         ComputeProjectionMatrix(projectionType);
 
         if (trackTarget) {
-            TargetPosition = target;
+            TargetPosition = () => target;
             //prevTargetPos = *target;
             TrackTargetX = true;
             TrackTargetY = true;

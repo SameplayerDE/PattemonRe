@@ -138,6 +138,7 @@ public class Game1 : Game
         _normalCamera.SetClipping(0.01f, 100000f);
         
         _camera = Camera.CameraLookMap[0];
+        _camera.CaptureTarget(() => _normalCamera.Position);
         
         _world = World.LoadByHeader(GraphicsDevice, _matrix);
 
@@ -470,9 +471,9 @@ public class Game1 : Game
 #endif
         _camera.SetAsActive();
 #if DEBUG
-        _camera.CaptureTarget(ref _normalCamera.Position);
+        
 #else
-        _camera.CaptureTarget(ref _target);
+        _camera.CaptureTarget(() => _target);
 #endif
         _camera.ComputeViewMatrix();
 #if DEBUG

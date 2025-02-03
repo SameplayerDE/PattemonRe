@@ -11,6 +11,7 @@ public class ImageFontMeta
     public int GlyphHeight = 0;
     public int GlyphWidth = 0;
     public int GlyphSpacing = 0;
+    public int Padding = 0;
     public int Space = 0;
 }
 
@@ -63,7 +64,10 @@ public class ImageFont
         result.Meta = new ImageFontMeta
         {
             Key = key,
-            SourcePath = sourcePath
+            SourcePath = sourcePath,
+            Padding = jMeta["padding"]?.Value<int>() ?? 0,
+            Space = jMeta["space"]?.Value<int>() ?? 0xffff,
+            GlyphHeight = jMeta["height"]?.Value<int>() ?? 0
         };
         
         var jGlyphs = jFont["glyphs"];
@@ -94,14 +98,26 @@ public class ImageFont
             }
 
             glyph.Character = jGlyphCharacter.ToObject<char>();
-            glyph.X = jGlyphX?.Value<int>() ?? 0;
-            glyph.Y = jGlyphY?.Value<int>() ?? 0;
+            glyph.X = jGlyphX?.Value<int>() * 16 ?? 0;
+            glyph.Y = jGlyphY?.Value<int>() * 16 ?? 0;
             glyph.Width = jGlyphW?.Value<int>() ?? result.Meta.GlyphWidth;
             glyph.Height = jGlyphH?.Value<int>() ?? result.Meta.GlyphHeight;
 
             result._glyphs.Add(glyph);
         }
+        
+        var combinedPath = Path.Combine(Path.GetDirectoryName(path) ?? string.Empty, sourcePath);
+        if (!File.Exists(combinedPath))
+        {
+            //Todo: add error message
+            throw new Exception("");
+        }
+        
+        using var stream = File.OpenRead(combinedPath);
+        var image = Texture2D.FromStream(graphicsDevice, stream);
 
+        result.Texture = image;
+        
         return result;
     }
     
@@ -123,11 +139,11 @@ public class ImageFont
 
             if (character == ' ')
             {
-                currentLineWidth += Meta.Space;
+                //currentLineWidth += Meta.Space;
             }
             else if (character == '\t')
             {
-                currentLineWidth += Meta.Space * 4;
+                //currentLineWidth += Meta.Space * 4;
             }
             else
             {

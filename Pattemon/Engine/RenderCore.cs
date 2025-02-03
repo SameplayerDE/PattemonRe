@@ -3,6 +3,7 @@ using System.ComponentModel;
 using HxGLTF.Implementation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PatteLib.Graphics;
 
 namespace Pattemon.Engine;
 
@@ -37,10 +38,14 @@ public static class RenderCore
     public static RenderTarget2D TopScreen => _topScreen;
     public static RenderTarget2D BottomScreen => _bottomScreen;
     
+    private static ImageFontRenderer _fontRenderer;
+    
     public static void Init(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
     {
         _graphicsDevice = graphicsDevice;
         _spriteBatch = spriteBatch;
+        
+        _fontRenderer = new ImageFontRenderer(graphicsDevice, spriteBatch, null);
         
         _pixel = new Texture2D(graphicsDevice, 1, 1);
         _pixel.SetData([Color.White]);
@@ -61,7 +66,24 @@ public static class RenderCore
             DepthFormat.Depth24, 0, RenderTargetUsage.PreserveContents
         );
     }
-
+    
+    public static void WriteText(ImageFont letters, ImageFont background, string text, Vector2 position, Color letterTint, Color backgroundTint)
+    {
+        DrawText(background, text, position, backgroundTint);
+        DrawText(letters, text, position, letterTint);
+    }
+    
+    public static void DrawText(ImageFont font, string text, Vector2 position)
+    {
+        DrawText(font, text, position, Color.White);
+    }
+    
+    public static void DrawText(ImageFont font, string text, Vector2 position, Color tint)
+    {
+        _fontRenderer.SetFont(font);
+        _fontRenderer.DrawText(text, position, tint);
+    }
+    
     public static void StartScreenTransition(int speed, TransitionType type)
     {
         _isTransitioning = true;

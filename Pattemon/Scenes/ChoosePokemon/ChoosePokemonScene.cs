@@ -6,6 +6,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using PatteLib;
 using PatteLib.Graphics;
 using Pattemon.Engine;
 using Utils = PatteLib.Utils;
@@ -21,12 +22,7 @@ public class ChoosePokemonScene : SceneA
     private const int CHOOSE_STARTER_MAIN_FADE_OUT = 3;
     private const int CHOOSE_STARTER_MAIN_WAIT_FADE_OUT = 4;
 
-    private const int PlayOpenAnimation = 0;
-    private const int ReplaceMeshes = 1;
-    private const int SelectPokemon = 2;
-    private const int CleanUp = 3;
-
-    private int _state = PlayOpenAnimation;
+    private int _state = CHOOSE_STARTER_MAIN_FADE_IN;
     
     private Effect _worldShader;
     private Effect _buildingShader;
@@ -43,7 +39,8 @@ public class ChoosePokemonScene : SceneA
     private GameModel _case;
     private Vector3 _position;
     private float _speed = 2.0f; // Geschwindigkeit der Bewegung
-    private ImageFontRenderer _fontRenderer;
+    private ImageFont _fontbg;
+    private ImageFont _font;
     
     public ChoosePokemonScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
     {
@@ -54,16 +51,38 @@ public class ChoosePokemonScene : SceneA
         _worldShader = _content.Load<Effect>("Shaders/WorldShader");
         _buildingShader = _content.Load<Effect>("Shaders/BuildingShader");
         
-        _camera = new Camera();
-        _camera.InitWithPosition(new Vector3(0, 9, 14) * 16, 10, new Vector3(MathHelper.ToRadians(-30), 0, 0), MathHelper.ToRadians(26), CameraProjectionType.Perspective);
-        //_normalCamera.InitWithTarget(_target, 10, Vector3.Zero, MathHelper.ToRadians(75), CameraProjectionType.Perspective, true);
-        _camera.SetClipping(0.01f, 100000f);
+        /*
+        v0.x = ((-30 * 0xffff) / 360);  // Rotation X (-30 Grad)
+        v0.y = ((0 * 0xffff) / 360);     // Rotation Y (0 Grad)
+        v0.z = ((0 * 0xffff) / 360);     // Rotation Z (0 Grad)
+
+        Camera_InitWithTarget(param1, (300 << FX32_SHIFT), &v0, ((22 * 0xffff) / 360), 0, 1, camera);
+        
+        ov78_021D2108(&param0->unk_00, ((-30 * 0xffff) / 360), ((-50 * 0xffff) / 360), 6);
+        ov78_021D2108(&param0->unk_10, (300 << FX32_SHIFT), (200 << FX32_SHIFT), 6);
+        ov78_021D2108(&param0->unk_20, 0, (36 * FX32_ONE), 6);
+        */
+       
+       //_camera = new Camera();
+       //_camera.InitWithTarget(
+       //    new Vector3(0, 0, 0),       // Target
+       //    300.0f,                     // Distance
+       //    new Vector3(-30, 0, 0),      // Rotation (X = -30°)
+       //    MathHelper.ToRadians(22),    // FoV
+       //    CameraProjectionType.Perspective,
+       //    true
+       //);
+        //_camera.InitWithPosition(new Vector3(0, 9, 14) * 16, 10, new Vector3(MathHelper.ToRadians(-30), 0, 0), MathHelper.ToRadians(26), CameraProjectionType.Perspective);
+        ////_normalCamera.InitWithTarget(_target, 10, Vector3.Zero, MathHelper.ToRadians(75), CameraProjectionType.Perspective, true);
+        //_camera.SetClipping(0.01f, 100000f);
+        
+        
         
         _selectorTexture = _content.Load<Texture2D>("Icons/Choose_Selector");
         
         var gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\psel_all\psel_all");
         _openAnimation = GameModel.From(_graphics, gltfFile);
-        _openAnimation.OnAnimationCompleted += () => _state = ReplaceMeshes;
+        _openAnimation.OnAnimationCompleted += () => _state = CHOOSE_STARTER_MAIN_LOOP;
         
         gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\pmsel_bg\pmsel_bg");
         _background = GameModel.From(_graphics, gltfFile);
@@ -82,7 +101,8 @@ public class ChoosePokemonScene : SceneA
         gltfFile = GLTFLoader.Load(@"A:\ModelExporter\Platin\export_output\output_assets\psel_mb_c\psel_mb_c");
         _ballC = GameModel.From(_graphics, gltfFile);
 
-        //var font = ImageFont.LoadFromFile(_graphics, "");
+        _font = ImageFont.LoadFromFile(_graphics, "Content/Fonts/Font_0.json");
+        _fontbg = ImageFont.LoadFromFile(_graphics, "Content/Fonts/Font_0_bg.json");
         
         return true;
     }
@@ -94,12 +114,13 @@ public class ChoosePokemonScene : SceneA
     
     public override bool Update(GameTime gameTime, float delta)
     {
-
+        _camera = Camera.CreateFromPret(76800, 60082, 0, 0, false, ((22 * 0xffff) / 360), 1, 100);
+        _camera.SetAsActive();
         switch (_state)
         {
             case CHOOSE_STARTER_MAIN_FADE_IN:
             {
-                RenderCore.StartScreenTransition(1000, RenderCore.TransitionType.AlphaOut);
+                RenderCore.StartScreenTransition(1000, RenderCore.TransitionType.AlphaIn);
                 _state++;
                 break;
             }
@@ -107,9 +128,12 @@ public class ChoosePokemonScene : SceneA
             {
                 if (RenderCore.IsScreenTransitionDone())
                 {
-                    _state++;
+                    if (!_openAnimation.IsPlaying)
+                    {
+                        _openAnimation.Play(0);
+                    }
+                    _openAnimation.Update(gameTime);
                 }
-
                 break;
             }
             case CHOOSE_STARTER_MAIN_LOOP:
@@ -121,117 +145,27 @@ public class ChoosePokemonScene : SceneA
                 break;
             }
         }
-
         
-        return true;
-    }
-
-    private void ExecuteLoop(GameTime gameTime, float delta)
-    {
-                
-        if (_state == PlayOpenAnimation)
-        {
-            if (RenderCore.IsScreenTransitionDone())
-            {
-                if (!_openAnimation.IsPlaying)
-                {
-                    _openAnimation.Play(0);
-                }
-                _openAnimation.Update(gameTime);
-            }
-        }
-
-        if (_state == ReplaceMeshes)
-        {
-            _state = SelectPokemon;
-            
-            if (_index == 0)
-            {
-                _ballA.Play(0);
-            }
-
-            if (_index == 1)
-            {
-                _ballB.Play(0);
-            }
-
-            if (_index == 2)
-            {
-                _ballC.Play(0);
-            }
-        }
-        
-        if (_state == SelectPokemon)
-        {
-            bool changed = false;
-            if (KeyboardHandler.IsKeyDownOnce(Keys.Left))
-            {
-                _index--;
-                changed = true;
-            }
-            if (KeyboardHandler.IsKeyDownOnce(Keys.Right))
-            {
-                _index++;
-                changed = true;
-            }
-
-            if (changed)
-            {
-                _index = Math.Clamp(_index, 0, 2);
-                _ballA.Stop();
-                _ballB.Stop();
-                _ballC.Stop();
-
-                if (_index == 0)
-                {
-                    _ballA.Play(0);
-                }
-
-                if (_index == 1)
-                {
-                    _ballB.Play(0);
-                }
-
-                if (_index == 2)
-                {
-                    _ballC.Play(0);
-                }
-            }
-            
-            _ballA.Update(gameTime);
-            _ballB.Update(gameTime);
-            _ballC.Update(gameTime);
-        }
-        
-        _camera.SetAsActive();
-        _camera.CaptureTarget(ref _position);
         _camera.ComputeViewMatrix();
+        
+        return false;
     }
 
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
-        /*
-        _graphics.Clear(Color.Red);
+        
+        _graphics.Clear(ColorUtils.FromHex("182921"));
         RenderCore.DrawModel(gameTime, _buildingShader, _background, offset: new Vector3(0, -32, 38));
-        if (_state == PlayOpenAnimation)
+        if (_state == CHOOSE_STARTER_MAIN_WAIT_FADE_IN)
         {
             RenderCore.DrawModel(gameTime, _buildingShader, _openAnimation);
         }
-
-        if (_state >= ReplaceMeshes)
+        if (_state == CHOOSE_STARTER_MAIN_LOOP)
         {
-            float divisor = 1f;
-            Vector3 scale = Vector3.One / divisor;
-
-            _case.Scale = scale;
-            _ballA.Scale = scale;
-            _ballB.Scale = scale;
-            _ballC.Scale = scale;
-            
             RenderCore.DrawModel(gameTime, _buildingShader, _case);
-            RenderCore.DrawModel(gameTime, _buildingShader, _ballA, offset: new Vector3(-44, -4, 32) / divisor);
-            RenderCore.DrawModel(gameTime, _buildingShader, _ballB, offset: new Vector3(0, -4, 62) / divisor);
-            RenderCore.DrawModel(gameTime, _buildingShader, _ballC, offset: new Vector3(38, -4, 26) / divisor);
+            RenderCore.DrawModel(gameTime, _buildingShader, _ballA, offset: new Vector3(-44, -4, 32));
+            RenderCore.DrawModel(gameTime, _buildingShader, _ballB, offset: new Vector3(0, -4, 62));
+            RenderCore.DrawModel(gameTime, _buildingShader, _ballC, offset: new Vector3(38, -4, 26));
             
             var cursorPosition = Vector2.Zero;
             
@@ -252,9 +186,11 @@ public class ChoosePokemonScene : SceneA
                 
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             spriteBatch.Draw(_selectorTexture, cursorPosition + new Vector2(0, MathF.Sin((float)gameTime.TotalGameTime.TotalSeconds * 5) * 5), null, Color.White, 0f, _selectorTexture.Bounds.Center.ToVector2(), 1f, SpriteEffects.None, 0f);
+            
+            RenderCore.WriteText(_font, _fontbg, "Winziglaub CHELAST", cursorPosition, ColorUtils.FromHex("515159"), ColorUtils.FromHex("a6a6ae"));
+            RenderCore.WriteText(_font, _fontbg, "Möchtest du dieses Pokemon", cursorPosition + new Vector2(0, _font.Meta.GlyphHeight), ColorUtils.FromHex("515159"), ColorUtils.FromHex("a6a6ae"));
+            
             spriteBatch.End();
         }
-        */
-        
     }
 }

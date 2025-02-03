@@ -28,11 +28,14 @@ public class ImageFontRenderer
 
     private Queue<ImageFontRenderCommand> _renderQueue = [];
     
-    public ImageFontRenderer(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, ImageFont font)
+    public ImageFontRenderer(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, ImageFont? font)
     {
         _graphicsDevice = graphicsDevice;
         _spriteBatch = spriteBatch;
-        SetFont(font);
+        if (font != null)
+        {   
+            SetFont(font);
+        }
     }
 
     public void SetFont(ImageFont font)
@@ -42,16 +45,16 @@ public class ImageFontRenderer
     
     public void DrawText(string text, Vector2 position)
     {
-        DrawText(text, position, Color.White, 1, 1);
+        DrawText(text, position, Color.White);
     }
-
-    public void DrawText(string text, Vector2 position, Color tint)
+    
+    public void DrawText(string text, Vector2 position, Color tint, int sx = 1, int sy = 1)
     {
-        DrawText(text, position, tint, 1, 1);
-    }
-
-    public void DrawText(string text, Vector2 position, Color tint, int sx, int sy)
-    {
+        if (_font == null)
+        {
+            throw new Exception();
+        }
+        
         Vector2 currentPosition = position;
         Color currentTint = tint;
         int scaleX = sx;
@@ -72,12 +75,32 @@ public class ImageFontRenderer
                 if (charInfo.HasValue)
                 {
                     DrawCharacter(_spriteBatch, command.Character, currentPosition, currentTint, currentSX * scaleX, currentSY * scaleY);
-                    currentPosition.X += charInfo.Value.X * currentSX * scaleX; // Advance position based on character width and scale
+                    currentPosition.X += _font.Meta.Padding + charInfo.Value.Width * currentSX * scaleX; // Advance position based on character width and scale
                 }
             }
             if (command.Type == ImageFontRenderCommandType.Space)
             {
-                currentPosition.X += _font.Meta.Space * currentSX * scaleX;
+                if (_font.Meta.Space != 0xffff)
+                {
+                    currentPosition.X += _font.Meta.Space * currentSX * scaleX;
+                }
+                else
+                {
+                    var charInfo = _font.GetChar(command.Character);
+                    if (charInfo.HasValue)
+                    {
+                        DrawCharacter(_spriteBatch, command.Character, currentPosition, currentTint, currentSX * scaleX,
+                            currentSY * scaleY);
+                        currentPosition.X +=
+                            _font.Meta.Padding +
+                            charInfo.Value.Width * currentSX *
+                            scaleX; // Advance position based on character width and scale
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
             }
             if (command.Type == ImageFontRenderCommandType.ChangeTint)
             {
@@ -247,7 +270,8 @@ public class ImageFontRenderer
                 case ' ':
                     _renderQueue.Enqueue(new ImageFontRenderCommand()
                     {
-                        Type = ImageFontRenderCommandType.Space
+                        Type = ImageFontRenderCommandType.Space,
+                        Character = ' '
                     });
                     break;
                 default:
