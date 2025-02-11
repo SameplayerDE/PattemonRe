@@ -121,6 +121,11 @@ namespace HxGLTF.Implementation
             // if yes then try to interpolate currently running animation with next animation so that there is not visual cut
         }
         
+        public void Reset()
+        {
+            _animationTimer = 0f;
+        }
+        
         public void Update(GameTime gameTime)
         {
             var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;

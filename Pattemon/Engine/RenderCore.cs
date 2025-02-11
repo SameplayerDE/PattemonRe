@@ -3,9 +3,27 @@ using System.ComponentModel;
 using HxGLTF.Implementation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PatteLib;
 using PatteLib.Graphics;
 
 namespace Pattemon.Engine;
+
+public struct ColorCombination(Color foreground, Color background)
+{
+    static ColorCombination() {
+        ColorCombination.Default = new ColorCombination(ColorUtils.FromHex("383838"), ColorUtils.FromHex("d8d8d8"));
+    }
+
+    public static ColorCombination Default { get; private set; }
+    
+    public Color Foreground = foreground;
+    public Color Background = background;
+
+    public static ColorCombination Invert(ColorCombination combination)
+    {
+        return new ColorCombination(combination.Background, combination.Foreground);
+    }
+}
 
 public static class RenderCore
 {
@@ -16,9 +34,11 @@ public static class RenderCore
         SlideIn,
         SlideOut
     }
-    
-    public static readonly Point PreferedScreenSize = new Point(256, 192);
-    public static readonly Vector2 ScreenCenter = new Vector2(128f, 96f);
+
+    public const float ScreenScale = 1f;
+    public static readonly Point OriginalScreenSize = new Point(256, 192);
+    public static readonly Point PreferedScreenSize = (OriginalScreenSize.ToVector2() * ScreenScale).ToPoint();
+    public static readonly Vector2 ScreenCenter = PreferedScreenSize.ToVector2() / 2;
 
     private static Texture2D _pixel;
     private static float _transitionProgress;
@@ -39,6 +59,8 @@ public static class RenderCore
     public static RenderTarget2D BottomScreen => _bottomScreen;
     
     private static ImageFontRenderer _fontRenderer;
+    private static ImageFont _fontOutline;
+    private static ImageFont _fontBase;
     
     public static void Init(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
     {
@@ -46,6 +68,8 @@ public static class RenderCore
         _spriteBatch = spriteBatch;
         
         _fontRenderer = new ImageFontRenderer(graphicsDevice, spriteBatch, null);
+        _fontBase = ImageFont.LoadFromFile(graphicsDevice, "Content/Fonts/Font_0.json");
+        _fontOutline = ImageFont.LoadFromFile(graphicsDevice, "Content/Fonts/Font_0_bg.json");
         
         _pixel = new Texture2D(graphicsDevice, 1, 1);
         _pixel.SetData([Color.White]);
@@ -67,10 +91,15 @@ public static class RenderCore
         );
     }
     
-    public static void WriteText(ImageFont letters, ImageFont background, string text, Vector2 position, Color letterTint, Color backgroundTint)
+    public static void WriteText(string text, Vector2 position)
     {
-        DrawText(background, text, position, backgroundTint);
-        DrawText(letters, text, position, letterTint);
+        WriteText(text, position, ColorCombination.Default);
+    }
+    
+    public static void WriteText(string text, Vector2 position, ColorCombination combination)
+    {
+        DrawText(_fontOutline, text, position, combination.Background);
+        DrawText(_fontBase, text, position, combination.Foreground);
     }
     
     public static void DrawText(ImageFont font, string text, Vector2 position)

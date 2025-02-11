@@ -72,8 +72,8 @@ public class PatteGame : Game
         _optionMenuScene.Init();
         _choosePokemonScene.Init();
         
-        _graphics.PreferredBackBufferWidth = _preferedScreenSize.X;
-        _graphics.PreferredBackBufferHeight = _preferedScreenSize.Y;
+        _graphics.PreferredBackBufferWidth = RenderCore.OriginalScreenSize.X;
+        _graphics.PreferredBackBufferHeight = RenderCore.OriginalScreenSize.Y;
         _graphics.PreferredBackBufferFormat = SurfaceFormat.Color;
         _graphics.PreferredDepthStencilFormat = DepthFormat.Depth24; // <-- set depth here
         _graphics.HardwareModeSwitch = false;
@@ -84,8 +84,8 @@ public class PatteGame : Game
         Window.AllowUserResizing = true;
         Window.ClientSizeChanged += OnResize;
         
-        _focusScreenRectangle = new Rectangle(0, 0, _preferedScreenSize.X, _preferedScreenSize.Y);
-        _unfocusScreenRectangle = new Rectangle(0, _preferedScreenSize.Y, _preferedScreenSize.X, _preferedScreenSize.Y);
+        _focusScreenRectangle = new Rectangle(0, 0, RenderCore.OriginalScreenSize.X, RenderCore.OriginalScreenSize.Y);
+        _unfocusScreenRectangle = new Rectangle(0, RenderCore.OriginalScreenSize.Y, RenderCore.OriginalScreenSize.X, RenderCore.OriginalScreenSize.Y);
         
         _topScreenRectangle = _focusScreenRectangle;
         _bottomScreenRectangle = _unfocusScreenRectangle;
@@ -96,6 +96,8 @@ public class PatteGame : Game
     protected override void Update(GameTime gameTime)
     {
         var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        delta = Core.GetDelta(delta);
+        
         if (!IsActive)
         {
             return;
@@ -127,8 +129,8 @@ public class PatteGame : Game
         if (_transitionProgress >= 1.0f)
         {
             _sceneManager.Update(gameTime);
-            _optionMenuScene.Update(gameTime, 0);
-            _choosePokemonScene.Update(gameTime, 0);
+            //_optionMenuScene.Update(gameTime, delta);
+            _choosePokemonScene.Update(gameTime, delta);
         }
         
         RenderCore.UpdateTransition(gameTime);
@@ -141,7 +143,7 @@ public class PatteGame : Game
     {
         _sceneManager.Draw(_spriteBatch, gameTime);
         RenderCore.SetTopScreen();
-        _optionMenuScene.Draw(_spriteBatch, gameTime);
+        //_optionMenuScene.Draw(_spriteBatch, gameTime);
         _choosePokemonScene.Draw(_spriteBatch, gameTime);
         
         RenderCore.RenderTransition();
