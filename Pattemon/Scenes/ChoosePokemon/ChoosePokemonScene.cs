@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PatteLib;
 using Pattemon.Engine;
+using Pattemon.Global;
 using Pattemon.Graphics;
 using Camera = Pattemon.Engine.Camera;
 
@@ -82,14 +83,18 @@ public class ChoosePokemonScene : SceneA
     
     public override bool Exit()
     {
-        _game.Exit();
+        GraphicsCore.FreeTexture("textbox");
+        _ballA.Dispose();
+        _ballB.Dispose();
+        _ballC.Dispose();
+        _case.Dispose();
+        _background.Dispose();
         return true; // Exit wurde implementiert
     }
     
     public override bool Update(GameTime gameTime, float delta)
     {
         int i = 0;
-        
         
         switch (_state)
         {
@@ -183,6 +188,7 @@ public class ChoosePokemonScene : SceneA
 
                 if (KeyboardHandler.IsKeyDownOnce(Keys.Enter))
                 {
+                    PlayerData.HasPokemon = true;
                     _state++;
                 }
                 // if selection is made state++
@@ -199,13 +205,7 @@ public class ChoosePokemonScene : SceneA
             {
                 if (RenderCore.IsScreenTransitionDone())
                 {
-                    GraphicsCore.FreeTexture("textbox");
-                    _ballA.Dispose();
-                    _ballB.Dispose();
-                    _ballC.Dispose();
-                    _case.Dispose();
-                    _background.Dispose();
-                    Exit();
+                    return true;
                 }
                 break;
             }
@@ -218,7 +218,12 @@ public class ChoosePokemonScene : SceneA
 
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
+        RenderCore.SetBottomScreen();
+        _graphics.Clear(Color.Black);
+        
+        RenderCore.SetTopScreen();
         _graphics.Clear(ColorUtils.FromHex("182921"));
+        
         RenderCore.DrawModel(gameTime, _buildingShader, _background, offset: new Vector3(0, -32, 38));
         if (_state == CHOOSE_STARTER_MAIN_WAIT_FADE_IN)
         {
@@ -239,7 +244,6 @@ public class ChoosePokemonScene : SceneA
             
             if (_state > CHOOSE_STARTER_MAIN_CAMERA_MOVE)
             {
-
                 spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 spriteBatch.Draw(_selectorTexture, _cursorPosition, null, Color.White, 0f, _selectorTexture.Bounds.Center.ToVector2(), 1f, SpriteEffects.None, 0f);
                 spriteBatch.Draw(GraphicsCore.GetTexture("textbox"), new Vector2(0, 18) * 8, Color.White);

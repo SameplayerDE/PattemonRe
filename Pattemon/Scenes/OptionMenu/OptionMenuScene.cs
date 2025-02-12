@@ -110,8 +110,8 @@ public class OptionMenuScene(Game game) : SceneA(game)
         // fetch data
         // set settings
         // save settings
+        GraphicsCore.FreeTexture("dummy");
         Data.OptionMenu.OptionMenuData.Options = _options;
-        _game.Exit();
         // free data
         return true;
     }
@@ -194,7 +194,7 @@ public class OptionMenuScene(Game game) : SceneA(game)
                 return false;
                 break;
             case State.StartVisualTeardown:
-                RenderCore.StartScreenTransition(1000, RenderCore.TransitionType.SlideIn);
+                RenderCore.StartScreenTransition(500, RenderCore.TransitionType.SlideIn);
                 // transition 3, 0, 0, 0x0, 6, 1
                 break;
             case State.WaitForFadeOut:
@@ -205,10 +205,7 @@ public class OptionMenuScene(Game game) : SceneA(game)
                 break;
             case State.Teardown:
                 // if !teardownDone return false
-                GraphicsCore.FreeTexture("dummy");
-                _game.Exit();
                 return true;
-                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -218,12 +215,20 @@ public class OptionMenuScene(Game game) : SceneA(game)
     
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
-        if (_state >= State.StartVisualTeardown)
-        {
-            return;
-        }
+        RenderCore.SetBottomScreen();
+        _graphics.Clear(Color.Black);
+        
         RenderCore.SetTopScreen();
         _graphics.Clear(Color.Black);
+        
+        if (_state >= State.WaitForFadeOut)
+        {
+            if (RenderCore.IsScreenTransitionDone())
+            {
+                return;
+            }
+        }
+        
         spriteBatch.Begin();
         spriteBatch.Draw(_backgroundTexture, Vector2.Zero, Color.White);
         spriteBatch.Draw(_cursorTexture, (new Vector2(8, 24 + 16 * _cursor)), Color.White);

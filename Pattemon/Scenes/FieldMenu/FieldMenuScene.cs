@@ -54,13 +54,15 @@ public class FieldMenuScene : SceneA
     // runtime vars
     private float _iconRotationValue;
     private float _iconRotationTime;
-    private const float _iconRotationStrength = 0.5f;
+    private const float _iconRotationStrength = 0.3f;
     private const float _iconRotationSpeed = 0.5f;
     
     private float _iconScaleValue = 1;
+    private float _iconScaleMinValue = 1;
+    private float _iconScaleMaxValue = 1.3f;
     private float _iconScaleTime;
     private int _iconScaleState = 2; // 0 = grow, 1 = shrink, 2 = done
-    private const float _iconScaleSpeed = 0.5f;
+    private const float _iconScaleSpeed = 0.1f;
     
     public FieldMenuScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
     {
@@ -68,7 +70,7 @@ public class FieldMenuScene : SceneA
 
     public override bool Init()
     {
-        ResetIconAnimationVars();
+        ResetIconAnimationVars(2);
         
         // load assets
         _cursorTexture = _content.Load<Texture2D>("MenuSelector");
@@ -110,9 +112,9 @@ public class FieldMenuScene : SceneA
                         {
                             // grow
                             _iconScaleValue += _iconScaleSpeed * delta;
-                            if (_iconScaleValue >= 2)
+                            if (_iconScaleValue >= _iconScaleMaxValue)
                             {
-                                _iconScaleValue = 2;
+                                _iconScaleValue = _iconScaleMaxValue;
                                 _iconScaleState = 1;
                             }
                             break;
@@ -121,9 +123,9 @@ public class FieldMenuScene : SceneA
                         {
                             // shrink
                             _iconScaleValue -= _iconScaleSpeed * delta;
-                            if (_iconScaleValue <= 1)
+                            if (_iconScaleValue <= _iconScaleMinValue)
                             {
-                                _iconScaleValue = 1;
+                                _iconScaleValue = _iconScaleMinValue;
                                 _iconScaleState = 2;
                             }
                             break;
@@ -315,10 +317,10 @@ public class FieldMenuScene : SceneA
         }
     }
 
-    public void ResetIconAnimationVars()
+    public void ResetIconAnimationVars(int scaleState = 0)
     {
         _iconScaleTime = 0f;
-        _iconScaleState = 0;
+        _iconScaleState = scaleState;
         _iconScaleValue = 1;
             
         _iconRotationTime = 0f;

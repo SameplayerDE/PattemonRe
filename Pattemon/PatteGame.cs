@@ -140,6 +140,14 @@ public class PatteGame : Game
             {
                 _sceneAManager.Next(new FieldMenuScene(this));
             }
+            if (KeyboardHandler.IsKeyDownOnce(Keys.F))
+            {
+                _sceneAManager.Next(new OptionMenuScene(this));
+            }
+            if (KeyboardHandler.IsKeyDownOnce(Keys.P))
+            {
+                _sceneAManager.Next(new ChoosePokemonScene(this));
+            }
             _sceneManager.Update(gameTime);
             _sceneAManager.Update(gameTime, delta);
             
