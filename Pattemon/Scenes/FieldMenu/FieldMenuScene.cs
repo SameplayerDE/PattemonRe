@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using InputLib;
 using Microsoft.Xna.Framework;
@@ -30,6 +31,8 @@ public class FieldMenuScene : SceneA
     private int _iconY;
     private int _iconW;
     private int _iconH;
+    private int _iconCenterX;
+    private int _iconCenterY;
     private int _iconPaddingX;
     private int _iconPaddingY;
     private int _iconSpacing;
@@ -48,7 +51,16 @@ public class FieldMenuScene : SceneA
     private Texture2D _cursorTexture;
     private Texture2D _iconSheetTexture;
     
+    // runtime vars
+    private float _iconRotationValue;
+    private float _iconRotationTime;
+    private const float _iconRotationStrength = 0.5f;
+    private const float _iconRotationSpeed = 0.5f;
     
+    private float _iconScaleValue = 1;
+    private float _iconScaleTime;
+    private int _iconScaleState = 2; // 0 = grow, 1 = shrink, 2 = done
+    private const float _iconScaleSpeed = 0.5f;
     
     public FieldMenuScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
     {
@@ -56,6 +68,8 @@ public class FieldMenuScene : SceneA
 
     public override bool Init()
     {
+        ResetIconAnimationVars();
+        
         // load assets
         _cursorTexture = _content.Load<Texture2D>("MenuSelector");
         _iconSheetTexture = _content.Load<Texture2D>("Icons/MenuIcons");
@@ -83,7 +97,45 @@ public class FieldMenuScene : SceneA
         {
             case _stateProcess:
             {
+                                    
                 ProcessInput();
+                
+                // calculate scale for icon animation
+                if (_iconScaleState != 2)
+                {
+                    _iconScaleTime += delta;
+                    switch (_iconScaleState)
+                    {
+                        case 0:
+                        {
+                            // grow
+                            _iconScaleValue += _iconScaleSpeed * delta;
+                            if (_iconScaleValue >= 2)
+                            {
+                                _iconScaleValue = 2;
+                                _iconScaleState = 1;
+                            }
+                            break;
+                        }
+                        case 1:
+                        {
+                            // shrink
+                            _iconScaleValue -= _iconScaleSpeed * delta;
+                            if (_iconScaleValue <= 1)
+                            {
+                                _iconScaleValue = 1;
+                                _iconScaleState = 2;
+                            }
+                            break;
+                        }
+                    }
+                }
+                else
+                { 
+                    // calculate rotation for icon animation
+                    _iconRotationTime += delta;
+                    _iconRotationValue = MathF.Sin(_iconRotationTime  * _iconRotationSpeed)  * _iconRotationStrength;
+                }
                 break;
             }
             case _stateExit:
@@ -103,27 +155,32 @@ public class FieldMenuScene : SceneA
             return;
         }
         
-        spriteBatch.Begin();
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _window.Draw(spriteBatch, gameTime, delta);
+        spriteBatch.Draw(_cursorTexture, (new Vector2(39, 1 + _index * 6) * 4), Color.White);
 
+        
         for (int i = 0; i < _entries.Count; i++)
         {
             var entry = _entries[i];
             
-            var iconPosition = new Vector2(_iconX, _iconY + _iconSpacing * i);
+            var iconCenter = new Vector2(_iconCenterX, _iconCenterY);
+            var iconOffset = iconCenter;
+            var iconPosition = new Vector2(_iconX, _iconY + _iconSpacing * i) + iconOffset;
             var sourceRectangle = new Rectangle(0, _iconH * entry.IconIndex, _iconW, _iconH);
 
             if (i == _index)
             {
                 sourceRectangle = new Rectangle(_iconW, _iconH * entry.IconIndex, _iconW, _iconH);
+                spriteBatch.Draw(_iconSheetTexture, iconPosition, sourceRectangle, Color.White, _iconRotationValue, iconCenter, Vector2.One * _iconScaleValue, SpriteEffects.None, 0f);
             }
-
-            spriteBatch.Draw(_iconSheetTexture, iconPosition, sourceRectangle, Color.White);
+            else
+            {
+                spriteBatch.Draw(_iconSheetTexture, iconPosition, sourceRectangle, Color.White, 0f, iconCenter, Vector2.One, SpriteEffects.None, 0f);
+            }
             
             RenderCore.WriteText(entry.Text, new Vector2(_textX, _textY + _textSpacing * i), ColorCombination.Dark);
         }
-        
-        spriteBatch.Draw(_cursorTexture, (new Vector2(39, 1 + _index * 6) * 4), Color.White);
         spriteBatch.End();
     }
     
@@ -137,6 +194,11 @@ public class FieldMenuScene : SceneA
             {
                 IconIndex = 0,
                 Text = "POKEDEX",
+                OnClick = () =>
+                {
+                    // open pokedex
+                    _state = _stateExit;
+                }
             });
         }
         if (PlayerData.HasPokemon)
@@ -145,27 +207,52 @@ public class FieldMenuScene : SceneA
             {
                 IconIndex = 1,
                 Text = "POKEMON",
+                OnClick = () =>
+                {
+                    // open team
+                    _state = _stateExit;
+                }
             });
         }
         _entries.Add(new FieldMenuEntry()
         {
             IconIndex = 2,
-            Text = "BEUTEL"
+            Text = "BEUTEL",
+            OnClick = () =>
+            {
+                // open bag
+                _state = _stateExit;
+            }
         });
         _entries.Add(new FieldMenuEntry()
         {
             IconIndex = 3,
-            Text = "Spielername"
+            Text = "Spielername",
+            OnClick = () =>
+            {
+                // open trainercard
+                _state = _stateExit;
+            }
         });
         _entries.Add(new FieldMenuEntry()
         {
             IconIndex = 4,
-            Text = "SICHERN"
+            Text = "SICHERN",
+            OnClick = () =>
+            {
+                // save
+                _state = _stateExit;
+            }
         });
         _entries.Add(new FieldMenuEntry()
         {
             IconIndex = 5,
-            Text = "OPTIONEN"
+            Text = "OPTIONEN",
+            OnClick = () =>
+            {
+                // open settings
+                _state = _stateExit;
+            }
         });
         _entries.Add(new FieldMenuEntry()
         {
@@ -190,6 +277,8 @@ public class FieldMenuScene : SceneA
         _iconY = _windowY + _iconPaddingY;
         _iconW = 28;
         _iconH = 24;
+        _iconCenterX = _iconW / 2;
+        _iconCenterY = _iconH / 2;
         _iconSpacing = _iconH;
         
         _textPaddingX = _iconPaddingX + _iconW;
@@ -219,9 +308,21 @@ public class FieldMenuScene : SceneA
 
         if (indexChanged)
         {
+            ResetIconAnimationVars();
+            
             _index = Utils.Wrap(_index, 0, _entries.Count - 1);
             // animate new index icon
         }
+    }
+
+    public void ResetIconAnimationVars()
+    {
+        _iconScaleTime = 0f;
+        _iconScaleState = 0;
+        _iconScaleValue = 1;
+            
+        _iconRotationTime = 0f;
+        _iconRotationValue = 0f;
     }
     
     #endregion
