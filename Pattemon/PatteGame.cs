@@ -202,8 +202,8 @@ public class PatteGame : Game
         var outputAspect = Window.ClientBounds.Width / (float) Window.ClientBounds.Height;
         var preferredAspect = _preferedScreenSize.X / (float) _preferedScreenSize.Y;
 
-        Console.WriteLine(outputAspect);
-        Console.WriteLine(preferredAspect);
+        //Console.WriteLine(outputAspect);
+        //Console.WriteLine(preferredAspect);
         
         Rectangle dst = _focusScreenRectangle;
         if (outputAspect < preferredAspect)
