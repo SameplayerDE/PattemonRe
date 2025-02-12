@@ -72,5 +72,6 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Engine\Input\" />
+        <Folder Include="Scenes\StartMenu\" />
     </ItemGroup>
 </Project>

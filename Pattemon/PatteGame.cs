@@ -8,6 +8,7 @@ using Pattemon.Engine;
 using Pattemon.Graphics;
 using Pattemon.Scenes;
 using Pattemon.Scenes.ChoosePokemon;
+using Pattemon.Scenes.FieldMenu;
 using Pattemon.Scenes.OptionMenu;
 
 namespace Pattemon;
@@ -35,9 +36,11 @@ public class PatteGame : Game
     private const float TransitionSpeed = 2.0f;
 
     private SceneManager _sceneManager;
+    private SceneAManager _sceneAManager;
     
     private OptionMenuScene _optionMenuScene;
     private ChoosePokemonScene _choosePokemonScene;
+    private FieldMenuScene _fieldMenuScene;
     
     public PatteGame()
     {
@@ -54,6 +57,7 @@ public class PatteGame : Game
     protected override void Initialize()
     {
         _sceneManager = new SceneManager();
+        _sceneAManager = new SceneAManager();
         _preferedScreenSize = RenderCore.PreferedScreenSize;
         base.Initialize();
     }
@@ -61,8 +65,11 @@ public class PatteGame : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        
         _optionMenuScene = new OptionMenuScene(this);
         _choosePokemonScene = new ChoosePokemonScene(this);
+        _fieldMenuScene = new FieldMenuScene(this);
+        
         GraphicsCore.Init(GraphicsDevice);
         GraphicsCore.Load(Content);
         Graphics.Window.Load(Content);
@@ -71,6 +78,7 @@ public class PatteGame : Game
         
         _optionMenuScene.Init();
         _choosePokemonScene.Init();
+        _fieldMenuScene.Init();
         
         _graphics.PreferredBackBufferWidth = RenderCore.OriginalScreenSize.X;
         _graphics.PreferredBackBufferHeight = RenderCore.OriginalScreenSize.Y;
@@ -128,9 +136,16 @@ public class PatteGame : Game
 
         if (_transitionProgress >= 1.0f)
         {
+            if (KeyboardHandler.IsKeyDownOnce(Keys.Z))
+            {
+                _sceneAManager.Next(new FieldMenuScene(this));
+            }
             _sceneManager.Update(gameTime);
+            _sceneAManager.Update(gameTime, delta);
+            
             //_optionMenuScene.Update(gameTime, delta);
-            _choosePokemonScene.Update(gameTime, delta);
+            //_choosePokemonScene.Update(gameTime, delta);
+            //_fieldMenuScene.Update(gameTime, delta);
         }
         
         RenderCore.UpdateTransition(gameTime);
@@ -141,13 +156,23 @@ public class PatteGame : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        _sceneManager.Draw(_spriteBatch, gameTime);
+        var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        delta = Core.GetDelta(delta);
+        
         RenderCore.SetTopScreen();
-        //_optionMenuScene.Draw(_spriteBatch, gameTime);
-        _choosePokemonScene.Draw(_spriteBatch, gameTime);
+        GraphicsDevice.Clear(Color.Red);
+        RenderCore.SetBottomScreen();
+        GraphicsDevice.Clear(Color.Blue);
+        
+        _sceneManager.Draw(_spriteBatch, gameTime);
+        _sceneAManager.Draw(_spriteBatch, gameTime, delta);
+        
+        //RenderCore.SetTopScreen();
+        //_optionMenuScene.Draw(_spriteBatch, gameTime, delta);
+        //_choosePokemonScene.Draw(_spriteBatch, gameTime, delta);
+        //_fieldMenuScene.Draw(_spriteBatch, gameTime, delta);
         
         RenderCore.RenderTransition();
-        
         RenderCore.Reset();
         GraphicsDevice.Clear(Color.Black);
         _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
@@ -208,6 +233,8 @@ public class PatteGame : Game
             _hasBlackBars = false;
             _verticalFit = true;
             _horizontalFit = true;
+            _barSize = 0;
+            dst = new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
         }
 
         _focusScreenRectangle = dst;
@@ -219,7 +246,7 @@ public class PatteGame : Game
             _unfocusScreenRectangle.X = _barSize;
             _unfocusScreenRectangle.Y = _focusScreenRectangle.Height;
         }
-        else if (_horizontalFit)
+        if (_horizontalFit)
         {
             _unfocusScreenRectangle.Y = _barSize;
             _unfocusScreenRectangle.X = _focusScreenRectangle.Width;

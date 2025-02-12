@@ -24,14 +24,14 @@ public abstract class SceneA
     
     // loads data and inits
     public abstract bool Init();
+    // frees memory and cleans up
+    public abstract bool Exit();
     
     // Nitro System uses one function
     // I use two, because Update and Draw are seperated
     // Only update() returns a bool, because draw only renders
     // and should not manage the state of the scene
     public abstract bool Update(GameTime gameTime, float delta);
-    public abstract void Draw(SpriteBatch spriteBatch, GameTime gameTime);
-    
-    // frees memory and cleans up
-    public abstract bool Exit();
+    public abstract void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta);
+
 }

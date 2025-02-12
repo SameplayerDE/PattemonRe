@@ -2,16 +2,13 @@
 using HxGLTF;
 using HxGLTF.Implementation;
 using InputLib;
-using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PatteLib;
-using PatteLib.Graphics;
 using Pattemon.Engine;
 using Pattemon.Graphics;
 using Camera = Pattemon.Engine.Camera;
-using Utils = PatteLib.Utils;
 
 namespace Pattemon.Scenes.ChoosePokemon;
 
@@ -54,7 +51,6 @@ public class ChoosePokemonScene : SceneA
         _buildingShader = _content.Load<Effect>("Shaders/BuildingShader");
         
         _camera = new Camera();
-        
         _camera.InitWithTarget(new Vector3(0, 0, 0), 300, new Vector3(MathHelper.ToRadians(-30), 0, 0), MathHelper.ToRadians(22), CameraProjectionType.Perspective, false);
         _camera.SetAsActive();
         
@@ -92,6 +88,9 @@ public class ChoosePokemonScene : SceneA
     
     public override bool Update(GameTime gameTime, float delta)
     {
+        int i = 0;
+        
+        
         switch (_state)
         {
             case CHOOSE_STARTER_MAIN_FADE_IN:
@@ -114,15 +113,15 @@ public class ChoosePokemonScene : SceneA
             }
             case CHOOSE_STARTER_MAIN_CAMERA_MOVE:
             {
-                _camera.InitWithTarget(new Vector3(0, 0, 36), 200, new Vector3(MathHelper.ToRadians(-50), 0, 0), MathHelper.ToRadians(22), CameraProjectionType.Perspective, false);
-                _state++;
+                if (_camera.MoveToTarget(new Vector3(0, 0, 36), 200, new Vector3(MathHelper.ToRadians(-50), 0, 0), MathHelper.ToRadians(22), 2000, delta))
+                {
+                    _state++;
+                }
+                _camera.SetClipping(0.5f, 500f);
                 break;
             }
             case CHOOSE_STARTER_MAIN_LOOP:
             {
-                
-                _camera.SetClipping(10f, 1000f);
-                
                 switch (_index) {
                     case 0:
                         _cursorPosition.X = 78;
@@ -143,21 +142,22 @@ public class ChoosePokemonScene : SceneA
                 // check selection
                 // update graphics
                 var indexChanged = false;
-                
+                var prevIndex = _index;
                 if (KeyboardHandler.IsKeyDownOnce(Keys.Left))
                 {
                     _index--;
-                    indexChanged = true;
                 }
-
                 if (KeyboardHandler.IsKeyDownOnce(Keys.Right))
                 {
                     _index++;
+                }
+                _index = Math.Clamp(_index, 0, 2);
+                if (prevIndex != _index)
+                {
                     indexChanged = true;
                 }
                 if (indexChanged)
                 {
-                    _index = MathHelper.Clamp(_index, 0, 2);
                     _ballA.Stop();
                     _ballA.Reset();
                     _ballB.Stop();
@@ -216,7 +216,7 @@ public class ChoosePokemonScene : SceneA
         return false;
     }
 
-    public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+    public override void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
         _graphics.Clear(ColorUtils.FromHex("182921"));
         RenderCore.DrawModel(gameTime, _buildingShader, _background, offset: new Vector3(0, -32, 38));
@@ -237,11 +237,15 @@ public class ChoosePokemonScene : SceneA
             RenderCore.DrawModel(gameTime, _buildingShader, _ballB, offset: new Vector3(0, -4, 62), alpha: true);
             RenderCore.DrawModel(gameTime, _buildingShader, _ballC, offset: new Vector3(38, -4, 26), alpha: true);
             
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            spriteBatch.Draw(_selectorTexture, _cursorPosition, null, Color.White, 0f, _selectorTexture.Bounds.Center.ToVector2(), 1f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(GraphicsCore.GetTexture("textbox"), new Vector2(0, 18) * 8, Color.White);
-            RenderCore.WriteText("Möchtest du dieses Pokemon?", new Vector2(4, 19) * 8);
-            spriteBatch.End();
+            if (_state > CHOOSE_STARTER_MAIN_CAMERA_MOVE)
+            {
+
+                spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                spriteBatch.Draw(_selectorTexture, _cursorPosition, null, Color.White, 0f, _selectorTexture.Bounds.Center.ToVector2(), 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(GraphicsCore.GetTexture("textbox"), new Vector2(0, 18) * 8, Color.White);
+                RenderCore.WriteText("Romeo will Fußbilder.", new Vector2(4, 19) * 8);
+                spriteBatch.End();
+            }
         }
     }
 }

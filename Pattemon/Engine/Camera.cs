@@ -62,6 +62,75 @@ public class Camera
 
     public static Camera ActiveCamera;
 
+    public bool MoveToTarget(Vector3 target, float distance, Vector3 rotation, float fieldOfViewY, float durationMs, float deltaTime, float threshold = 0.01f)
+    {
+        if (durationMs <= 0)
+        {
+            // Falls Dauer 0 oder negativ ist, sofort ans Ziel springen
+            InitWithTarget(target, distance, rotation, fieldOfViewY, ProjectionType, false);
+            return true;
+        }
+
+        // Konvertiere ms in Sekunden, da deltaTime normalerweise in Sekunden ist
+        float durationSec = durationMs / 1000f;
+
+        // Berechne den Lerp-Faktor pro Frame basierend auf der Zeit
+        float step = deltaTime / durationSec; // Wie viel Prozent pro Frame
+
+        // Prüfe, ob das Ziel erreicht ist
+        bool isTargetReached =
+            Vector3.Distance(this.Target, target) < threshold &&
+            Math.Abs(this.Distance - distance) < threshold &&
+            Vector3.Distance(this.Rotation, rotation) < threshold &&
+            Math.Abs(this.FieldOfViewY - fieldOfViewY) < threshold;
+
+        if (isTargetReached)
+        {
+            // Direkt auf das Ziel setzen
+            InitWithTarget(target, distance, rotation, fieldOfViewY, ProjectionType, false);
+            return true;
+        }
+
+        // Bewege in exakt der vorgegebenen Zeit
+        Vector3 newTarget = Vector3.Lerp(this.Target, target, step);
+        float newDistance = MathHelper.Lerp(this.Distance, distance, step);
+        Vector3 newRotation = Vector3.Lerp(this.Rotation, rotation, step);
+        float newFieldOfView = MathHelper.Lerp(this.FieldOfViewY, fieldOfViewY, step);
+
+        // Setze die neuen Werte
+        InitWithTarget(newTarget, newDistance, newRotation, newFieldOfView, ProjectionType, false);
+
+        return false;
+    }
+    
+    public bool LerpToTarget(Vector3 target, float distance, Vector3 rotation, float fieldOfViewY, float t, float threshold = 0.01f)
+    {
+        // Prüfe, ob der aktuelle Zustand schon nah genug am Ziel ist
+        bool isTargetReached =
+            Vector3.Distance(this.Target, target) < threshold &&
+            Math.Abs(this.Distance - distance) < threshold &&
+            Vector3.Distance(this.Rotation, rotation) < threshold &&
+            Math.Abs(this.FieldOfViewY - fieldOfViewY) < threshold;
+
+        if (isTargetReached)
+        {
+            // Falls die Werte innerhalb des Thresholds liegen, direkt auf das Ziel setzen
+            InitWithTarget(target, distance, rotation, fieldOfViewY, ProjectionType, false);
+            return true;
+        }
+
+        // Ansonsten Lerp anwenden
+        Vector3 lerpedTarget = Vector3.Lerp(this.Target, target, t);
+        float lerpedDistance = MathHelper.Lerp(this.Distance, distance, t);
+        Vector3 lerpedRotation = Vector3.Lerp(this.Rotation, rotation, t);
+        float lerpedFieldOfView = MathHelper.Lerp(this.FieldOfViewY, fieldOfViewY, t);
+
+        // Neue Werte setzen
+        InitWithTarget(lerpedTarget, lerpedDistance, lerpedRotation, lerpedFieldOfView, ProjectionType, false);
+
+        return false;
+    }
+    
     public static void Init(float fieldOfViewY, Camera camera)
     {
         camera.FieldOfViewY = fieldOfViewY;

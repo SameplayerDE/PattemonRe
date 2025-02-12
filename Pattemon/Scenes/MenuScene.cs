@@ -26,9 +26,17 @@ public class MenuScene : Scene
     private Texture2D _icons;
     
     private Graphics.Window _window;
-
-    private const int IconWidth = 28;
-    private const int IconHeight = 24;
+    
+    private const int _windowX = 0;
+    private const int _windowY = 0;
+    private const int _windowH = 0;
+    private const int _windowW = 0;
+    private const int _iconX = 0;
+    private const int _iconY = 0;
+    private const int _iconW = 28;
+    private const int _iconH = 24;
+    private const int _textX = 0;
+    private const int _textY = 0;
 
     private int _optionCursor;
     private List<int> _availableOptions = new();
@@ -141,12 +149,12 @@ public class MenuScene : Scene
         {
             int optionIndex = _availableOptions[i];
 
-            var iconPosition = new Vector2(38, 0) * 4 + new Vector2(8, 8 + IconHeight * i);
-            var sourceRectangle = new Rectangle(0, IconHeight * optionIndex, IconWidth, IconHeight);
+            var iconPosition = new Vector2(38, 0) * 4 + new Vector2(8, 8 + _iconH * i);
+            var sourceRectangle = new Rectangle(0, _iconH * optionIndex, _iconW, _iconH);
 
             if (i == _optionCursor)
             {
-                sourceRectangle = new Rectangle(IconWidth, IconHeight * optionIndex, IconWidth, IconHeight);
+                sourceRectangle = new Rectangle(_iconW, _iconH * optionIndex, _iconW, _iconH);
             }
 
             spriteBatch.Draw(_icons, iconPosition, sourceRectangle, Color.White);

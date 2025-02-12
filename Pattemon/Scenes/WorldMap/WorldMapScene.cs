@@ -37,7 +37,7 @@ public class WorldMapScene : SceneA
         return false;
     }
 
-    public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+    public override void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
         
     }

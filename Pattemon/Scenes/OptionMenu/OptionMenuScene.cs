@@ -215,7 +215,8 @@ public class OptionMenuScene(Game game) : SceneA(game)
         _state++;
         return false;
     }
-    public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+    
+    public override void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
         if (_state >= State.StartVisualTeardown)
         {
