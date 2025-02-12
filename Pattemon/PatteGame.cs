@@ -110,7 +110,10 @@ public class PatteGame : Game
         {
             return;
         }
+        
         Core.ReadInput();
+        RenderCore.UpdateTransition(gameTime);
+        AudioCore.Update(gameTime);
 
         if (KeyboardHandler.IsKeyDownOnce(Keys.Tab) && _transitionProgress >= 1.0f)
         {
@@ -155,9 +158,6 @@ public class PatteGame : Game
             //_choosePokemonScene.Update(gameTime, delta);
             //_fieldMenuScene.Update(gameTime, delta);
         }
-        
-        RenderCore.UpdateTransition(gameTime);
-        AudioCore.Update(gameTime);
 
         base.Update(gameTime);
     }

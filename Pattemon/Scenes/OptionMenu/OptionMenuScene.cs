@@ -198,16 +198,7 @@ public class OptionMenuScene(Game game) : SceneA(game)
                 // transition 3, 0, 0, 0x0, 6, 1
                 break;
             case State.WaitForFadeOut:
-                if (!RenderCore.IsScreenTransitionDone())
-                {
-                    return false;
-                }
-                break;
-            case State.Teardown:
-                // if !teardownDone return false
-                return true;
-            default:
-                throw new ArgumentOutOfRangeException();
+                return RenderCore.IsScreenTransitionDone();
         }
         _state++;
         return false;
@@ -220,14 +211,6 @@ public class OptionMenuScene(Game game) : SceneA(game)
         
         RenderCore.SetTopScreen();
         _graphics.Clear(Color.Black);
-        
-        if (_state >= State.WaitForFadeOut)
-        {
-            if (RenderCore.IsScreenTransitionDone())
-            {
-                return;
-            }
-        }
         
         spriteBatch.Begin();
         spriteBatch.Draw(_backgroundTexture, Vector2.Zero, Color.White);
