@@ -10,6 +10,7 @@ using Pattemon.Scenes;
 using Pattemon.Scenes.ChoosePokemon;
 using Pattemon.Scenes.FieldMenu;
 using Pattemon.Scenes.OptionMenu;
+using Pattemon.Scenes.WorldMap;
 
 namespace Pattemon;
 
@@ -151,6 +152,10 @@ public class PatteGame : Game
             if (KeyboardHandler.IsKeyDownOnce(Keys.F))
             {
                 _sceneAManager.Next(new OptionMenuScene(this));
+            }
+            if (KeyboardHandler.IsKeyDownOnce(Keys.M))
+            {
+                _sceneAManager.Next(new WorldMapScene(this));
             }
             if (KeyboardHandler.IsKeyDownOnce(Keys.P))
             {

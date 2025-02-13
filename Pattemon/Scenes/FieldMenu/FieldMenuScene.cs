@@ -100,7 +100,7 @@ public class FieldMenuScene : SceneA
         {
             case _stateProcess:
             {
-                                    
+                
                 ProcessInput();
                 
                 // calculate scale for icon animation
