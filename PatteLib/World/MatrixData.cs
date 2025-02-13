@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Xna.Framework;
+using Newtonsoft.Json.Linq;
 
 namespace PatteLib.World;
 
@@ -6,7 +7,8 @@ public class MatrixData
 {
     public int Width;
     public int Height;
-    public List<MatrixCellData> Cells = [];
+    // public List<MatrixCellData> Cells = [];
+    public Dictionary<(int x, int y), MatrixCellData> Cells = [];
 
     public static MatrixData LoadFromFile(string path)
     {
@@ -35,7 +37,7 @@ public class MatrixData
         };
 
         // Initialize Cells list with empty cells
-        matrixData.Cells = Enumerable.Repeat(MatrixCellData.Empty, matrixData.Width * matrixData.Height).ToList();
+        //matrixData.Cells = Enumerable.Repeat(MatrixCellData.Empty, matrixData.Width * matrixData.Height).ToList();
         
         foreach (var jCombination in jArray)
         {
@@ -47,7 +49,7 @@ public class MatrixData
                 ChunkId = jCombination["mapId"].Value<int>(),
                 HeaderId = jCombination["headerId"].Value<int>()
             };
-            matrixData.Cells[y * matrixData.Width + x] = cellData;
+            matrixData.Cells[(x, y)] = cellData;
         }
 
         return matrixData;
@@ -59,6 +61,11 @@ public class MatrixData
         {
             return MatrixCellData.Empty; // Or throw an exception for out-of-bounds access
         }
-        return Cells[y * Width + x];
+
+        if (Cells.ContainsKey((x, y)))
+        {
+            return Cells[(x, y)];
+        }
+        return MatrixCellData.Empty;
     }
 }

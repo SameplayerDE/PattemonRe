@@ -3,10 +3,10 @@ using InputLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using PatteLib.Data;
 using Pattemon.Audio;
 using Pattemon.Engine;
 using Pattemon.Graphics;
-using Pattemon.Scenes;
 using Pattemon.Scenes.ChoosePokemon;
 using Pattemon.Scenes.FieldMenu;
 using Pattemon.Scenes.OptionMenu;
@@ -38,6 +38,7 @@ public class PatteGame : Game
 
     private SceneManager _sceneManager;
     private SceneAManager _sceneAManager;
+    private HeaderManager _headerManager;
     
     private OptionMenuScene _optionMenuScene;
     private ChoosePokemonScene _choosePokemonScene;
@@ -69,6 +70,11 @@ public class PatteGame : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        
+        _headerManager = new HeaderManager();
+        HeaderManager.RootDirectory = @"Content\WorldData\Headers";
+        _headerManager.Load();
+        Services.AddService(_headerManager);
         
         _optionMenuScene = new OptionMenuScene(this);
         _choosePokemonScene = new ChoosePokemonScene(this);
