@@ -9,6 +9,7 @@ using PatteLib;
 using Pattemon.Engine;
 using Pattemon.Global;
 using Pattemon.Graphics;
+using Pattemon.Scenes.OptionMenu;
 
 namespace Pattemon.Scenes.FieldMenu;
 
@@ -134,9 +135,11 @@ public class FieldMenuScene : SceneA
                 }
                 else
                 { 
-                    // calculate rotation for icon animation
-                    _iconRotationTime += delta;
-                    _iconRotationValue = MathF.Sin(_iconRotationTime  * _iconRotationSpeed)  * _iconRotationStrength;
+                    float frequency = 0.2f;
+                    float rotationStrength = MathHelper.ToRadians(2);
+                    _iconRotationTime += delta * frequency;
+                    float rotationChange = MathF.Cos(_iconRotationTime) * delta * rotationStrength;
+                    _iconRotationValue += rotationChange;
                 }
                 break;
             }
@@ -254,6 +257,9 @@ public class FieldMenuScene : SceneA
             {
                 // open settings
                 _state = _stateExit;
+                //var manager = _services.GetService<SceneAManager>();
+                //manager.Next(new OptionMenuScene(_game));
+                //_state = _stateExit;
             }
         });
         _entries.Add(new FieldMenuEntry()

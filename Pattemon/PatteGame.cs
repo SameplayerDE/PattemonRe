@@ -58,6 +58,9 @@ public class PatteGame : Game
     {
         _sceneManager = new SceneManager();
         _sceneAManager = new SceneAManager();
+        
+        Services.AddService(_sceneAManager);
+        
         _preferedScreenSize = RenderCore.PreferedScreenSize;
         base.Initialize();
     }
@@ -115,6 +118,7 @@ public class PatteGame : Game
         RenderCore.UpdateTransition(gameTime);
         AudioCore.Update(gameTime);
 
+        #region screen swap
         if (KeyboardHandler.IsKeyDownOnce(Keys.Tab) && _transitionProgress >= 1.0f)
         {
             _isBottomScreenFocus = !_isBottomScreenFocus;
@@ -136,6 +140,7 @@ public class PatteGame : Game
                 _bottomScreenRectangle.Y = (int)MathHelper.Lerp(_focusScreenRectangle.Y, _unfocusScreenRectangle.Y, _transitionProgress);
             }
         }
+        #endregion
 
         if (_transitionProgress >= 1.0f)
         {
@@ -153,12 +158,8 @@ public class PatteGame : Game
             }
             _sceneManager.Update(gameTime);
             _sceneAManager.Update(gameTime, delta);
-            
-            //_optionMenuScene.Update(gameTime, delta);
-            //_choosePokemonScene.Update(gameTime, delta);
-            //_fieldMenuScene.Update(gameTime, delta);
         }
-
+        
         base.Update(gameTime);
     }
 
@@ -167,10 +168,10 @@ public class PatteGame : Game
         var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
         delta = Core.GetDelta(delta);
         
-        RenderCore.SetTopScreen();
-        GraphicsDevice.Clear(Color.Red);
-        RenderCore.SetBottomScreen();
-        GraphicsDevice.Clear(Color.Blue);
+        //RenderCore.SetTopScreen();
+        //GraphicsDevice.Clear(Color.Black);
+        //RenderCore.SetBottomScreen();
+        //GraphicsDevice.Clear(Color.Black);
         
         _sceneManager.Draw(_spriteBatch, gameTime);
         _sceneAManager.Draw(_spriteBatch, gameTime, delta);

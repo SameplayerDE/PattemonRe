@@ -5,7 +5,6 @@ namespace Pattemon.Engine;
 
 public class SceneAManager
 {
-    
     private SceneA _currentScene;
     private SceneA _nextScene;
 
