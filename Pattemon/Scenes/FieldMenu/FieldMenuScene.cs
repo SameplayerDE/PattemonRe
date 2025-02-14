@@ -63,7 +63,7 @@ public class FieldMenuScene : SceneA
     private float _iconScaleMaxValue = 1.3f;
     private float _iconScaleTime;
     private int _iconScaleState = 2; // 0 = grow, 1 = shrink, 2 = done
-    private const float _iconScaleSpeed = 0.1f;
+    private const float _iconScaleSpeed = 3f;
     
     public FieldMenuScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
     {
@@ -134,13 +134,18 @@ public class FieldMenuScene : SceneA
                     }
                 }
                 else
-                { 
-                    float frequency = 0.2f;
-                    float rotationStrength = MathHelper.ToRadians(2);
-                    _iconRotationTime += delta * frequency;
-                    float rotationChange = MathF.Cos(_iconRotationTime) * delta * rotationStrength;
-                    _iconRotationValue += rotationChange;
+                {
+                    _iconRotationTime += delta;
+
+                    const float maxTilt = 2;
+                    const float frequency = 1f;
+                    float angleSpeed = MathF.PI * 2 * frequency;
+                    float speed = MathF.Cos(_iconRotationTime * angleSpeed);
+                    _iconRotationValue += speed * delta * maxTilt;
                 }
+
+
+
                 break;
             }
             case _stateExit:

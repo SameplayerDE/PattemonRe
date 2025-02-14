@@ -1,0 +1,52 @@
+﻿[
+    {
+        "x": 2,
+        "y": 9,
+        "name": "Eiseninsel"
+    },
+    {
+        "x": 2,
+        "y": 21,
+        "name": "Zweiblattdorf"
+    },
+    {
+        "x": 2,
+        "y": 20,
+        "name": "Route 201"
+    },
+    {
+        "x": 3,
+        "y": 20,
+        "name": "Route 201"
+    },
+    {
+        "x": 4,
+        "y": 20,
+        "name": "Sandgemme"
+    },
+    {
+        "x": 4,
+        "y": 19,
+        "name": "Route 202"
+    },
+    {
+        "x": 4,
+        "y": 18,
+        "name": "Jubelstadt"
+    },
+    {
+        "x": 3,
+        "y": 18,
+        "name": "Jubelstadt"
+    },
+    {
+        "x": 4,
+        "y": 17,
+        "name": "Jubelstadt"
+    },
+    {
+        "x": 3,
+        "y": 17,
+        "name": "Jubelstadt"
+    }
+]

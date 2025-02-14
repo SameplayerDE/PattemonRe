@@ -118,7 +118,7 @@ public class ChoosePokemonScene : SceneA
             }
             case CHOOSE_STARTER_MAIN_CAMERA_MOVE:
             {
-                if (_camera.MoveToTarget(new Vector3(0, 0, 36), 200, new Vector3(MathHelper.ToRadians(-50), 0, 0), MathHelper.ToRadians(22), 2000, delta))
+                if (_camera.MoveToTarget(new Vector3(0, 0, 36), 200, new Vector3(MathHelper.ToRadians(-50), 0, 0), MathHelper.ToRadians(22), 100, delta))
                 {
                     _state++;
                 }

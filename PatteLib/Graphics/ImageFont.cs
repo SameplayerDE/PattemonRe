@@ -24,7 +24,8 @@ public struct ImageFontGlyph
 public class ImageFont
 {
     public ImageFontMeta Meta { get; protected set; }
-    private List<ImageFontGlyph> _glyphs = [];
+    //private List<ImageFontGlyph> _glyphs = [];
+    private Dictionary<char, ImageFontGlyph> _glyphs = [];
     public Texture2D Texture { get; private set; }
     public int GlyphCount => _glyphs.Count;
 
@@ -103,7 +104,7 @@ public class ImageFont
             glyph.Width = jGlyphW?.Value<int>() ?? result.Meta.GlyphWidth;
             glyph.Height = jGlyphH?.Value<int>() ?? result.Meta.GlyphHeight;
 
-            result._glyphs.Add(glyph);
+            result._glyphs.Add(glyph.Character, glyph);
         }
         
         var combinedPath = Path.Combine(Path.GetDirectoryName(path) ?? string.Empty, sourcePath);
@@ -145,13 +146,9 @@ public class ImageFont
             {
                 //currentLineWidth += Meta.Space * 4;
             }
-            else
+            else if (_glyphs.TryGetValue(character, out var glyph))
             {
-                var glyph = _glyphs.FirstOrDefault(g => g.Character == character);
-                if (glyph.Character == character) // Falls Glyph existiert
-                {
-                    currentLineWidth += glyph.Width + Meta.GlyphSpacing;
-                }
+                currentLineWidth += glyph.Width + Meta.GlyphSpacing;
             }
 
             maxWidth = Math.Max(maxWidth, currentLineWidth);
@@ -159,22 +156,14 @@ public class ImageFont
 
         return new Point(maxWidth * scale, totalHeight * scale);
     }
-
     
-    public bool HasChar(char @char)
+    public bool HasChar(char character)
     {
-        return _glyphs.Any(g => g.Character == @char);
-    }
-    
-    public ImageFontGlyph? GetChar(char @char)
-    {
-        var glyph = _glyphs.FirstOrDefault(g => g.Character == @char);
-        if (glyph.Character == @char)
-        {
-            return glyph;
-        }
-        return null;
+        return _glyphs.ContainsKey(character);
     }
 
-    
+    public ImageFontGlyph? GetChar(char character)
+    {
+        return _glyphs.TryGetValue(character, out var glyph) ? glyph : null;
+    }
 }

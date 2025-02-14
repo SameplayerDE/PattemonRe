@@ -20,9 +20,10 @@ public static class GraphicsCore
     {
     }
 
-    public static void LoadTexture(string key, string path)
+    public static Texture2D LoadTexture(string key, string path)
     {
         _textures[key] = Texture2D.FromFile(_graphics, path);
+        return _textures[key];
     }
     
     public static Texture2D GetTexture(string key)

@@ -114,7 +114,7 @@ public class PatteGame : Game
     protected override void Update(GameTime gameTime)
     {
         var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        delta = Core.GetDelta(delta);
+        //delta = Core.GetDelta(delta);
         
         if (!IsActive)
         {

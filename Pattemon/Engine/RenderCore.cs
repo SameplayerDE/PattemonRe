@@ -13,10 +13,12 @@ public struct ColorCombination(Color foreground, Color background)
     static ColorCombination() {
         ColorCombination.Default = new ColorCombination(ColorUtils.FromHex("383838"), ColorUtils.FromHex("d8d8d8"));
         ColorCombination.Dark = new ColorCombination(ColorUtils.FromHex("515159"), ColorUtils.FromHex("a6a6ae"));
+        ColorCombination.LightGray = new ColorCombination(ColorUtils.FromHex("5a5a52"), ColorUtils.FromHex("adbdbd"));
     }
 
     public static ColorCombination Default { get; private set; }
     public static ColorCombination Dark { get; private set; }
+    public static ColorCombination LightGray { get; private set; }
     
     public Color Foreground = foreground;
     public Color Background = background;
