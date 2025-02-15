@@ -143,9 +143,6 @@ public class FieldMenuScene : SceneA
                     float speed = MathF.Cos(_iconRotationTime * angleSpeed);
                     _iconRotationValue += speed * delta * maxTilt;
                 }
-
-
-
                 break;
             }
             case _stateExit:

@@ -12,7 +12,7 @@ public enum ImageFontRenderCommandType
     Character
 }
 
-public class ImageFontRenderCommand
+public struct ImageFontRenderCommand
 {
     public ImageFontRenderCommandType Type;
     public char Character;

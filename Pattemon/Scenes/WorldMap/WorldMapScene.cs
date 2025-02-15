@@ -36,7 +36,7 @@ public class WorldMapScene : SceneA
     private int _mapX;
     private int _mapY;
     private int _offsetX = 3 * 8;
-    private int _offsetY = 0;
+    private int _offsetY = -1; // bug inside the ROM fixed
     private int _cellSizeX = 7;
     private int _cellSizeY = 7;
     
