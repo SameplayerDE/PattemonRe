@@ -2,6 +2,9 @@
 
 public static class Constants
 {
+    
+    public const string ChosePokemonMessage = "ChosePokemonMessage";
+    
     public static class TexturePrefix
     {
         public const string Icon = "icon_";

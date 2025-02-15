@@ -188,6 +188,7 @@ public class ChoosePokemonScene : SceneA
 
                 if (KeyboardHandler.IsKeyDownOnce(Keys.Enter))
                 {
+                    MessageSystem.Publish(Global.Constants.ChosePokemonMessage, _index);
                     PlayerData.HasPokemon = true;
                     _state++;
                 }

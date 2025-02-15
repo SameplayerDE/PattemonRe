@@ -11,6 +11,7 @@ using Pattemon.Scenes.ChoosePokemon;
 using Pattemon.Scenes.FieldMenu;
 using Pattemon.Scenes.OptionMenu;
 using Pattemon.Scenes.WorldMap;
+using FieldScene = Pattemon.Scenes.Field.FieldScene;
 
 namespace Pattemon;
 
@@ -157,7 +158,7 @@ public class PatteGame : Game
             }
             if (KeyboardHandler.IsKeyDownOnce(Keys.F))
             {
-                _sceneAManager.Next(new OptionMenuScene(this));
+                _sceneAManager.Next(new FieldScene(this));
             }
             if (KeyboardHandler.IsKeyDownOnce(Keys.M))
             {
@@ -179,10 +180,10 @@ public class PatteGame : Game
         var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
         delta = Core.GetDelta(delta);
         
-        //RenderCore.SetTopScreen();
-        //GraphicsDevice.Clear(Color.Black);
-        //RenderCore.SetBottomScreen();
-        //GraphicsDevice.Clear(Color.Black);
+        RenderCore.SetTopScreen();
+        GraphicsDevice.Clear(Color.Black);
+        RenderCore.SetBottomScreen();
+        GraphicsDevice.Clear(Color.Black);
         
         _sceneManager.Draw(_spriteBatch, gameTime);
         _sceneAManager.Draw(_spriteBatch, gameTime, delta);

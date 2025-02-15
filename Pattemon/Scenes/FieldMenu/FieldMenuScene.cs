@@ -155,17 +155,14 @@ public class FieldMenuScene : SceneA
 
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
-        RenderCore.SetTopScreen();
-        _graphics.Clear(Color.Transparent);
         if (_state != _stateProcess)
         {
             return;
         }
-        
+        RenderCore.SetTopScreen();
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _window.Draw(spriteBatch, gameTime, delta);
         spriteBatch.Draw(_cursorTexture, (new Vector2(39, 1 + _index * 6) * 4), Color.White);
-
         
         for (int i = 0; i < _entries.Count; i++)
         {
