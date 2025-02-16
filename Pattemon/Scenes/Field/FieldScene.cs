@@ -18,6 +18,8 @@ public class FieldScene : SceneA
     
     private int _state = _stateMain;
     
+    private Texture2D _background;
+    
     public FieldScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
     {
         MessageSystem.Subscribe("Application Open", (_) =>
@@ -33,12 +35,15 @@ public class FieldScene : SceneA
     public override bool Init()
     {
         GraphicsCore.LoadTexture("icon", "Assets/player_icon.png");
+        _background = _content.Load<Texture2D>("TopScreen");
         return true;
     }
 
     public override bool Exit()
     {
         GraphicsCore.FreeTexture("icon");
+        _content.Unload();
+        _content.Dispose();
         return true;
     }
 
@@ -88,7 +93,7 @@ public class FieldScene : SceneA
             {
                 RenderCore.SetTopScreen();
                 spriteBatch.Begin();
-                spriteBatch.Draw(GraphicsCore.GetTexture("icon"), new Vector2(0, 0), Color.White);
+                spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
                 spriteBatch.End();
                 if (HasProcess)
                 {

@@ -25,6 +25,7 @@ public class FieldMenuScene : SceneA
     private int _state = _stateProcess;
 
     private static int _index = 0;
+    private int _fade = 0;
     
     private Window _window;
 
@@ -104,7 +105,24 @@ public class FieldMenuScene : SceneA
         {
             case _stateProcess:
             {
-                
+                if (_fade == 1)
+                {
+                    if (RenderCore.IsScreenTransitionDone())
+                    {
+                        _fade = 0;
+                        _state = _stateApplicationInit;
+                        MessageSystem.Publish("Application Open");
+                    }
+                    return false;
+                }
+                if (_fade == 2)
+                {
+                    if (RenderCore.IsScreenTransitionDone())
+                    {
+                        _fade = 0;
+                    }
+                    return false;
+                }
                 ProcessInput();
                 
                 // calculate scale for icon animation
@@ -141,7 +159,7 @@ public class FieldMenuScene : SceneA
                 {
                     _iconRotationTime += delta;
 
-                    const float maxTilt = 2;
+                    const float maxTilt = 1.5f;
                     const float frequency = 1f;
                     float angleSpeed = MathF.PI * 2 * frequency;
                     float speed = MathF.Cos(_iconRotationTime * angleSpeed);
@@ -155,9 +173,12 @@ public class FieldMenuScene : SceneA
             }
             case _stateApplicationInit:
             {
-                if (Process.Init())
+                if (RenderCore.IsScreenTransitionDone())
                 {
-                    _state = _stateApplicationProcess;
+                    if (Process.Init())
+                    {
+                        _state = _stateApplicationProcess;
+                    }
                 }
                 break;
             }
@@ -176,6 +197,10 @@ public class FieldMenuScene : SceneA
                     Process = null;
                     MessageSystem.Publish("Application Close");
                     _state = _stateProcess;
+                    _iconRotationTime = 0f;
+                    _iconRotationValue = 0f;
+                    _fade = 2;
+                    RenderCore.StartScreenTransition(500, RenderCore.TransitionType.AlphaIn);
                 }
                 break;
             }
@@ -290,9 +315,9 @@ public class FieldMenuScene : SceneA
             {
                 if (!HasProcess)
                 {
+                    RenderCore.StartScreenTransition(500, RenderCore.TransitionType.AlphaOut);
                     Process = new WorldMapScene(_game);
-                    _state = _stateApplicationInit;
-                    MessageSystem.Publish("Application Open");
+                    _fade = 1;
                 }
             }
         });
