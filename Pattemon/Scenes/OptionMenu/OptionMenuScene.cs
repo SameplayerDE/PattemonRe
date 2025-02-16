@@ -132,7 +132,7 @@ public class OptionMenuScene(Game game) : SceneA(game)
                 _entries[Entry.BattleStyle].index = _options.BattleStyle;
                 _entries[Entry.ButtonMode].index = _options.ButtonMapping;
                 _entries[Entry.MessageBox].index = _options.TextBoxStyle;
-                RenderCore.StartScreenTransition(500, RenderCore.TransitionType.SlideOut);
+                RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaIn);
                 break;
             case State.WaitForFadeIn:
                 if (!RenderCore.IsScreenTransitionDone())
@@ -194,7 +194,7 @@ public class OptionMenuScene(Game game) : SceneA(game)
                 return false;
                 break;
             case State.StartVisualTeardown:
-                RenderCore.StartScreenTransition(500, RenderCore.TransitionType.SlideIn);
+                RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
                 // transition 3, 0, 0, 0x0, 6, 1
                 break;
             case State.WaitForFadeOut:
@@ -206,6 +206,11 @@ public class OptionMenuScene(Game game) : SceneA(game)
     
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
+        if (_state <= State.SetupMenuVisuals)
+        {
+            return;
+        }
+        
         RenderCore.SetBottomScreen();
         _graphics.Clear(Color.Black);
         

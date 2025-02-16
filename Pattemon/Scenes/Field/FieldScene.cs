@@ -19,6 +19,7 @@ public class FieldScene : SceneA
     private int _state = _stateMain;
     
     private Texture2D _background;
+    private Texture2D _bottomScreen;
     
     public FieldScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
     {
@@ -36,6 +37,7 @@ public class FieldScene : SceneA
     {
         GraphicsCore.LoadTexture("icon", "Assets/player_icon.png");
         _background = _content.Load<Texture2D>("TopScreen");
+        _bottomScreen = _content.Load<Texture2D>("BottomScreen");
         return true;
     }
 
@@ -95,6 +97,12 @@ public class FieldScene : SceneA
                 spriteBatch.Begin();
                 spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
                 spriteBatch.End();
+                
+                RenderCore.SetBottomScreen();
+                spriteBatch.Begin();
+                spriteBatch.Draw(_bottomScreen, new Vector2(0, 0), Color.White);
+                spriteBatch.End();
+                
                 if (HasProcess)
                 {
                     Process.Draw(spriteBatch, gameTime, delta);

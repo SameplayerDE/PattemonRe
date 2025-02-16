@@ -176,6 +176,28 @@ public static class RenderCore
         
         SetBottomScreen();
         //not at the same time but delayed so it looks like it is on woosh
+        _spriteBatch.Begin();
+        switch (_transitionType)
+        {
+            case TransitionType.AlphaIn: // Alpha-In
+                _spriteBatch.Draw(_pixel, new Rectangle(0, 0, PreferedScreenSize.X, PreferedScreenSize.Y), new Color(Color.Black, 1f - _transitionProgress));
+                break;
+
+            case TransitionType.AlphaOut: // Alpha-Out
+                _spriteBatch.Draw(_pixel, new Rectangle(0, 0, PreferedScreenSize.X, PreferedScreenSize.Y), new Color(Color.Black, _transitionProgress));
+                break;
+
+            case TransitionType.SlideIn: // Slide-In from bottom
+                _spriteBatch.Draw(_pixel, new Rectangle(0, (int)(PreferedScreenSize.Y * (1f - _transitionProgress)), PreferedScreenSize.X, PreferedScreenSize.Y), Color.Black);
+                break;
+
+            case TransitionType.SlideOut: // Slide-Out to bottom
+                _spriteBatch.Draw(_pixel, new Rectangle(0, (int)(PreferedScreenSize.Y * _transitionProgress), PreferedScreenSize.X, PreferedScreenSize.Y), Color.Black);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        _spriteBatch.End();
     }
     
     public static void SetTopScreen()

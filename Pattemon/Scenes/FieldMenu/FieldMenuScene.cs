@@ -287,7 +287,7 @@ public class FieldMenuScene : SceneA
             {
                 if (!HasProcess)
                 {
-                    RenderCore.StartScreenTransition(500, RenderCore.TransitionType.AlphaOut);
+                    RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
                     Process = new InventoryScene(_game);
                     _fade = 1;
                 }
@@ -301,7 +301,7 @@ public class FieldMenuScene : SceneA
             {
                 if (!HasProcess)
                 {
-                    RenderCore.StartScreenTransition(500, RenderCore.TransitionType.AlphaOut);
+                    RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
                     Process = new TrainerCardScene(_game);
                     _fade = 1;
                 }
@@ -325,8 +325,8 @@ public class FieldMenuScene : SceneA
             {
                 if (!HasProcess)
                 {
-                    RenderCore.StartScreenTransition(500, RenderCore.TransitionType.AlphaOut);
-                    Process = new WorldMapScene(_game);
+                    RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
+                    Process = new OptionMenuScene(_game);
                     _fade = 1;
                 }
             }

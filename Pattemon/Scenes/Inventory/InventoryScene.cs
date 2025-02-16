@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pattemon.Engine;
+using Pattemon.Graphics;
 
 namespace Pattemon.Scenes.Inventory;
 
@@ -22,12 +23,14 @@ public class InventoryScene : SceneA
 
     public override bool Init()
     {
+        GraphicsCore.LoadTexture("inventory", @"Assets/bag_overlay.png");
         _state = _stateFadeIn;
         return true;
     }
 
     public override bool Exit()
     {
+        GraphicsCore.FreeTexture("inventory");
         return true;
     }
 
@@ -37,7 +40,7 @@ public class InventoryScene : SceneA
         {
             case _stateFadeIn:
             {
-                RenderCore.StartScreenTransition(500, RenderCore.TransitionType.AlphaIn);
+                RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaIn);
                 _state = _stateWaitFadeIn;
                 break;
             }
@@ -59,7 +62,7 @@ public class InventoryScene : SceneA
             }
             case _stateFadeOut:
             {
-                RenderCore.StartScreenTransition(500, RenderCore.TransitionType.AlphaOut);
+                RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
                 _state = _stateWaitFadeOut;
                 break;
             }
@@ -84,7 +87,7 @@ public class InventoryScene : SceneA
         }
         RenderCore.SetTopScreen();
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-        RenderCore.WriteText("Inventory", Vector2.Zero, ColorCombination.Invert(ColorCombination.Default));
+        spriteBatch.Draw(GraphicsCore.GetTexture("inventory"), Vector2.Zero, Color.White);
         spriteBatch.End();
     }
 }
