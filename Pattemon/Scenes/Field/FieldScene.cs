@@ -12,11 +12,22 @@ namespace Pattemon.Scenes.Field;
 
 public class FieldScene : SceneA
 {
-
-    private int _state = 0;
+    private const int _stateMain = 10;
+    private const int _stateMenu = 20;
+    private const int _stateApplication = 30;
+    
+    private int _state = _stateMain;
     
     public FieldScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
     {
+        MessageSystem.Subscribe("Application Open", (_) =>
+        {
+            _state = _stateApplication;
+        });
+        MessageSystem.Subscribe("Application Close", (_) =>
+        {
+            _state = _stateMenu;
+        });
     }
 
     public override bool Init()
@@ -36,7 +47,7 @@ public class FieldScene : SceneA
 
         switch (_state)
         {
-            case 0:
+            case _stateMain:
             {
                 if (KeyboardHandler.IsKeyDownOnce(Keys.Escape))
                 {
@@ -45,53 +56,51 @@ public class FieldScene : SceneA
                         Process = new FieldMenuScene(_game);
                         if (Process.Init())
                         {
-                            _state++;
-                        }
-                    }
-                }
-                if (KeyboardHandler.IsKeyDownOnce(Keys.M))
-                {
-                    if (!HasProcess)
-                    {
-                        Process = new WorldMapScene(_game);
-                        if (Process.Init())
-                        {
-                            _state++;
+                            _state = _stateMenu;
                         }
                     }
                 }
                 return false;
             }
-            case 1:
+            case _stateMenu:
+            case _stateApplication:
             {
                 if (Process.Update(gameTime, delta))
                 {
                     if (Process.Exit())
                     {
                         Process = null;
-                        _state--;
+                        _state = _stateMain;
                     }
                 }
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
-        RenderCore.SetTopScreen();
-        spriteBatch.Begin();
-        spriteBatch.Draw(GraphicsCore.GetTexture("icon"), new Vector2(0, 0), Color.White);
-        spriteBatch.End();
-
-        if (HasProcess)
+        switch (_state)
         {
-            if (_state == 1)
+            case _stateMain:
+            case _stateMenu:
+            {
+                RenderCore.SetTopScreen();
+                spriteBatch.Begin();
+                spriteBatch.Draw(GraphicsCore.GetTexture("icon"), new Vector2(0, 0), Color.White);
+                spriteBatch.End();
+                if (HasProcess)
+                {
+                    Process.Draw(spriteBatch, gameTime, delta);
+                }
+                break;
+            }
+            case _stateApplication:
             {
                 Process.Draw(spriteBatch, gameTime, delta);
+                break;
             }
         }
-        
     }
 }

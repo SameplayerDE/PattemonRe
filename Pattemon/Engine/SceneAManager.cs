@@ -28,6 +28,7 @@ public class SceneAManager
                 return;
             }
         }
+
         if (_currentScene.Update(gameTime, delta))
         {
             _currentScene.Exit();

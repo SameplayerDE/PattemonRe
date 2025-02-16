@@ -10,6 +10,7 @@ using Pattemon.Engine;
 using Pattemon.Global;
 using Pattemon.Graphics;
 using Pattemon.Scenes.OptionMenu;
+using Pattemon.Scenes.WorldMap;
 
 namespace Pattemon.Scenes.FieldMenu;
 
@@ -18,6 +19,9 @@ public class FieldMenuScene : SceneA
 
     private const int _stateProcess = 0;
     private const int _stateExit = 1;
+    private const int _stateApplicationInit = 2;
+    private const int _stateApplicationProcess = 3;
+    private const int _stateApplicationExit = 4;
     private int _state = _stateProcess;
 
     private static int _index = 0;
@@ -149,12 +153,42 @@ public class FieldMenuScene : SceneA
             {
                 return true;
             }
+            case _stateApplicationInit:
+            {
+                if (Process.Init())
+                {
+                    _state = _stateApplicationProcess;
+                }
+                break;
+            }
+            case _stateApplicationProcess:
+            {
+                if (Process.Update(gameTime, delta))
+                {
+                    _state = _stateApplicationExit;
+                }
+                break;
+            }
+            case _stateApplicationExit:
+            {
+                if (Process.Exit())
+                {
+                    Process = null;
+                    MessageSystem.Publish("Application Close");
+                    _state = _stateProcess;
+                }
+                break;
+            }
         }
         return false;
     }
 
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
+        if (_state == _stateApplicationProcess)
+        {
+            Process.Draw(spriteBatch, gameTime, delta);
+        }
         if (_state != _stateProcess)
         {
             return;
@@ -254,11 +288,12 @@ public class FieldMenuScene : SceneA
             Text = "OPTIONEN",
             OnClick = () =>
             {
-                // open settings
-                _state = _stateExit;
-                //var manager = _services.GetService<SceneAManager>();
-                //manager.Next(new OptionMenuScene(_game));
-                //_state = _stateExit;
+                if (!HasProcess)
+                {
+                    Process = new WorldMapScene(_game);
+                    _state = _stateApplicationInit;
+                    MessageSystem.Publish("Application Open");
+                }
             }
         });
         _entries.Add(new FieldMenuEntry()

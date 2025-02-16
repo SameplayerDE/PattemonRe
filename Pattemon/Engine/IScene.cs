@@ -8,6 +8,9 @@ public abstract class SceneA
 {
     public SceneA? Process { get; protected set; } = null;
     public bool HasProcess => Process != null;
+
+    public bool BlockUpdate;
+    public bool BlockDraw;
     
     protected ContentManager _content;
     protected GraphicsDevice _graphics;

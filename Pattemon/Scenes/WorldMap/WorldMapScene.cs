@@ -140,6 +140,10 @@ public class WorldMapScene : SceneA
 
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
+        if (_state <= _stateFadeIn)
+        {
+            return;
+        }
         RenderCore.SetTopScreen();
         spriteBatch.Begin();
         spriteBatch.Draw(_islandTexture, new Vector2(0, 0), Color.White);
