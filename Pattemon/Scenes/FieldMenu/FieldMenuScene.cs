@@ -9,7 +9,9 @@ using PatteLib;
 using Pattemon.Engine;
 using Pattemon.Global;
 using Pattemon.Graphics;
+using Pattemon.Scenes.Inventory;
 using Pattemon.Scenes.OptionMenu;
+using Pattemon.Scenes.TrainerCard;
 using Pattemon.Scenes.WorldMap;
 
 namespace Pattemon.Scenes.FieldMenu;
@@ -283,8 +285,12 @@ public class FieldMenuScene : SceneA
             Text = "BEUTEL",
             OnClick = () =>
             {
-                // open bag
-                _state = _stateExit;
+                if (!HasProcess)
+                {
+                    RenderCore.StartScreenTransition(500, RenderCore.TransitionType.AlphaOut);
+                    Process = new InventoryScene(_game);
+                    _fade = 1;
+                }
             }
         });
         _entries.Add(new FieldMenuEntry()
@@ -293,8 +299,12 @@ public class FieldMenuScene : SceneA
             Text = "Spielername",
             OnClick = () =>
             {
-                // open trainercard
-                _state = _stateExit;
+                if (!HasProcess)
+                {
+                    RenderCore.StartScreenTransition(500, RenderCore.TransitionType.AlphaOut);
+                    Process = new TrainerCardScene(_game);
+                    _fade = 1;
+                }
             }
         });
         _entries.Add(new FieldMenuEntry()
