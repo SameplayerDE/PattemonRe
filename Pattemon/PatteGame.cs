@@ -33,11 +33,7 @@ public class PatteGame : Game
     
     private Rectangle _focusScreenRectangle;
     private Rectangle _unfocusScreenRectangle;
-
-    private float _transitionProgress = 1.0f;
-    private const float TransitionSpeed = 2.0f;
-
-    private SceneManager _sceneManager;
+    
     private SceneAManager _sceneAManager;
     private HeaderManager _headerManager;
     
@@ -59,7 +55,6 @@ public class PatteGame : Game
 
     protected override void Initialize()
     {
-        _sceneManager = new SceneManager();
         _sceneAManager = new SceneAManager();
         
         Services.AddService(_sceneAManager);
@@ -85,6 +80,8 @@ public class PatteGame : Game
         GraphicsCore.Load(Content);
         Graphics.Window.Load(Content);
         RenderCore.Init(GraphicsDevice, _spriteBatch);
+        TransitionCore.Init();
+        DualScreenCore.Init();
         AudioCore.Init(Content);
         
         _optionMenuScene.Init();
@@ -115,7 +112,6 @@ public class PatteGame : Game
     protected override void Update(GameTime gameTime)
     {
         var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        //delta = Core.GetDelta(delta);
         
         if (!IsActive)
         {
@@ -123,34 +119,34 @@ public class PatteGame : Game
         }
         
         Core.ReadInput();
+        TransitionCore.Update(gameTime, delta);
+        DualScreenCore.Update(gameTime, delta);
         RenderCore.UpdateTransition(gameTime);
         AudioCore.Update(gameTime);
 
         #region screen swap
-        if (KeyboardHandler.IsKeyDownOnce(Keys.Tab) && _transitionProgress >= 1.0f)
+        if (KeyboardHandler.IsKeyDownOnce(Keys.Tab) && !DualScreenCore.IsSwappingScreens)
         {
             _isBottomScreenFocus = !_isBottomScreenFocus;
-            _transitionProgress = 0f;
+            DualScreenCore.SwapScreens();
         }
         
-        if (_transitionProgress < 1.0f)
+        if (DualScreenCore.IsSwappingScreens)
         {
-            _transitionProgress = Math.Min(_transitionProgress + delta * TransitionSpeed, 1.0f);
-
             if (_isBottomScreenFocus)
             {
-                _bottomScreenRectangle.X = (int)MathHelper.Lerp(_unfocusScreenRectangle.X, _focusScreenRectangle.X, _transitionProgress);
-                _bottomScreenRectangle.Y = (int)MathHelper.Lerp(_unfocusScreenRectangle.Y, _focusScreenRectangle.Y, _transitionProgress);
+                _bottomScreenRectangle.X = (int)MathHelper.Lerp(_unfocusScreenRectangle.X, _focusScreenRectangle.X, DualScreenCore.TransitionProgress);
+                _bottomScreenRectangle.Y = (int)MathHelper.Lerp(_unfocusScreenRectangle.Y, _focusScreenRectangle.Y, DualScreenCore.TransitionProgress);
             }
             else
             {
-                _bottomScreenRectangle.X = (int)MathHelper.Lerp(_focusScreenRectangle.X, _unfocusScreenRectangle.X, _transitionProgress);
-                _bottomScreenRectangle.Y = (int)MathHelper.Lerp(_focusScreenRectangle.Y, _unfocusScreenRectangle.Y, _transitionProgress);
+                _bottomScreenRectangle.X = (int)MathHelper.Lerp(_focusScreenRectangle.X, _unfocusScreenRectangle.X, DualScreenCore.TransitionProgress);
+                _bottomScreenRectangle.Y = (int)MathHelper.Lerp(_focusScreenRectangle.Y, _unfocusScreenRectangle.Y, DualScreenCore.TransitionProgress);
             }
         }
         #endregion
 
-        if (_transitionProgress >= 1.0f)
+        if (!DualScreenCore.IsSwappingScreens)
         {
             if (KeyboardHandler.IsKeyDownOnce(Keys.Z))
             {
@@ -168,7 +164,6 @@ public class PatteGame : Game
             {
                 _sceneAManager.Next(new ChoosePokemonScene(this));
             }
-            _sceneManager.Update(gameTime);
             _sceneAManager.Update(gameTime, delta);
         }
         
@@ -185,29 +180,24 @@ public class PatteGame : Game
         RenderCore.SetBottomScreen();
         GraphicsDevice.Clear(Color.Black);
         
-        _sceneManager.Draw(_spriteBatch, gameTime);
         _sceneAManager.Draw(_spriteBatch, gameTime, delta);
         
-        //RenderCore.SetTopScreen();
-        //_optionMenuScene.Draw(_spriteBatch, gameTime, delta);
-        //_choosePokemonScene.Draw(_spriteBatch, gameTime, delta);
-        //_fieldMenuScene.Draw(_spriteBatch, gameTime, delta);
-        
         RenderCore.RenderTransition();
+        TransitionCore.Draw();
         RenderCore.Reset();
         GraphicsDevice.Clear(Color.Black);
         _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
         if (!_isBottomScreenFocus)
         {
             _spriteBatch.Draw(RenderCore.TopScreen, _topScreenRectangle, Color.White);
-            if (_transitionProgress < 1.0f)
+            if (DualScreenCore.IsSwappingScreens)
             {
                 _spriteBatch.Draw(RenderCore.BottomScreen, _bottomScreenRectangle, Color.White);
             }
         }
         else
         {
-            if (_transitionProgress < 1.0f)
+            if (DualScreenCore.IsSwappingScreens)
             {
                 _spriteBatch.Draw(RenderCore.TopScreen, _topScreenRectangle, Color.White);
             }
