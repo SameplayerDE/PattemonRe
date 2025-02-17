@@ -48,6 +48,10 @@ public static class TransitionCore
 
     public static void Draw()
     {
+        if (!_isTransitioning)
+        {
+            return;
+        }
         // transition.Draw()
     }
 }

@@ -24,6 +24,7 @@ public class InventoryScene : SceneA
     public override bool Init()
     {
         GraphicsCore.LoadTexture("inventory", @"Assets/bag_overlay.png");
+        GraphicsCore.LoadTexture("inventory_bag", @"Assets/bag_sheet.png");
         _state = _stateFadeIn;
         return true;
     }
@@ -31,6 +32,7 @@ public class InventoryScene : SceneA
     public override bool Exit()
     {
         GraphicsCore.FreeTexture("inventory");
+        GraphicsCore.FreeTexture("inventory_bag");
         return true;
     }
 
@@ -87,7 +89,13 @@ public class InventoryScene : SceneA
         }
         RenderCore.SetTopScreen();
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+        // render text
+        
+        // render icons
+        
         spriteBatch.Draw(GraphicsCore.GetTexture("inventory"), Vector2.Zero, Color.White);
+        spriteBatch.Draw(GraphicsCore.GetTexture("inventory_bag"), new Vector2(16, 16), Color.White);
+        // render content
         spriteBatch.End();
     }
 }
