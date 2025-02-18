@@ -1,0 +1,172 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 1800,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 600,
+      "byteStride": 4,
+      "byteOffset": 1800
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1800,
+      "byteOffset": 2400
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4200,
+      "byteStride": 4,
+      "byteLength": 600
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4800,
+      "byteStride": 4,
+      "byteLength": 600
+    },
+    {
+      "buffer": 0,
+      "byteLength": 624,
+      "byteOffset": 5400
+    },
+    {
+      "buffer": 0,
+      "byteLength": 64,
+      "byteOffset": 6024
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 150,
+      "min": [
+        -126.4609375,
+        9.140625,
+        -111.05078125
+      ],
+      "max": [
+        126.4609375,
+        9.140625,
+        125.69140625
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 150
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 150
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 150
+    },
+    {
+      "bufferView": 4,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 150
+    },
+    {
+      "bufferView": 5,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 312
+    },
+    {
+      "bufferView": 6,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 1
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "COLOR_0": 1,
+            "NORMAL": 2,
+            "JOINTS_0": 3,
+            "WEIGHTS_0": 4
+          },
+          "material": 0,
+          "indices": 5,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "gira_shadow01c"
+    }
+  ],
+  "nodes": [
+    {
+      "name": "polySurface14"
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "gira_shadow01c",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0
+      ],
+      "inverseBindMatrices": 6
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ],
+      "name": "gira_shadow01c"
+    }
+  ],
+  "scene": 0,
+  "materials": [
+    {
+      "name": "lambert1",
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 6088,
+      "uri": "gira_shadow01c.bin"
+    }
+  ]
+}

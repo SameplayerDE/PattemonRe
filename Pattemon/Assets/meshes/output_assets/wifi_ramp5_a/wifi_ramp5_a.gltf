@@ -1,0 +1,284 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 240,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 160,
+      "byteOffset": 240
+    },
+    {
+      "buffer": 0,
+      "byteLength": 80,
+      "byteStride": 4,
+      "byteOffset": 400
+    },
+    {
+      "buffer": 0,
+      "byteLength": 240,
+      "byteOffset": 480
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 720,
+      "byteStride": 4,
+      "byteLength": 80
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 800,
+      "byteStride": 4,
+      "byteLength": 80
+    },
+    {
+      "buffer": 0,
+      "byteLength": 60,
+      "byteOffset": 880
+    },
+    {
+      "buffer": 0,
+      "byteLength": 192,
+      "byteOffset": 940
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 20,
+      "min": [
+        -4.85546875,
+        -1.4381861686706544,
+        -0.9677734375
+      ],
+      "max": [
+        20.84765625,
+        66.24195861816406,
+        24.7373046875
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 20
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 20
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 20
+    },
+    {
+      "bufferView": 4,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 20
+    },
+    {
+      "bufferView": 5,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 20
+    },
+    {
+      "bufferView": 6,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 6
+    },
+    {
+      "bufferView": 6,
+      "type": "SCALAR",
+      "byteOffset": 12,
+      "componentType": 5123,
+      "count": 24
+    },
+    {
+      "bufferView": 7,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 3
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "NORMAL": 3,
+            "JOINTS_0": 4,
+            "WEIGHTS_0": 5
+          },
+          "material": 1,
+          "indices": 6,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        },
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "NORMAL": 3,
+            "JOINTS_0": 4,
+            "WEIGHTS_0": 5
+          },
+          "material": 0,
+          "indices": 7,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "wifi_ramp5_a"
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1,
+        2
+      ],
+      "name": "world_root"
+    },
+    {
+      "name": "pPlane1",
+      "translation": [
+        8,
+        1,
+        12
+      ]
+    },
+    {
+      "name": "ramp3",
+      "translation": [
+        8,
+        2.321533203125,
+        11.9482421875
+      ],
+      "scale": [
+        1,
+        1.330322265625,
+        1
+      ]
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "wifi_ramp5_a",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0,
+        1,
+        2
+      ],
+      "inverseBindMatrices": 8
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        3
+      ],
+      "name": "wifi_ramp5_a"
+    }
+  ],
+  "scene": 0,
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497,
+      "magFilter": 9728,
+      "minFilter": 9728
+    }
+  ],
+  "images": [
+    {
+      "uri": "ramp5_a.png"
+    },
+    {
+      "uri": "bg_ramp1.png"
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    },
+    {
+      "source": 1,
+      "sampler": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "color_rightred1",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "BLEND",
+      "emissiveFactor": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "ramp",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "MASK"
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1132,
+      "uri": "wifi_ramp5_a.bin"
+    }
+  ]
+}

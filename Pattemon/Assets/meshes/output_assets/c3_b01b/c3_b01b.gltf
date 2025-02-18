@@ -1,0 +1,172 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 600,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 200,
+      "byteStride": 4,
+      "byteOffset": 600
+    },
+    {
+      "buffer": 0,
+      "byteLength": 600,
+      "byteOffset": 800
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1400,
+      "byteStride": 4,
+      "byteLength": 200
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1600,
+      "byteStride": 4,
+      "byteLength": 200
+    },
+    {
+      "buffer": 0,
+      "byteLength": 180,
+      "byteOffset": 1800
+    },
+    {
+      "buffer": 0,
+      "byteLength": 64,
+      "byteOffset": 1980
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 50,
+      "min": [
+        -38,
+        1.5,
+        -32
+      ],
+      "max": [
+        38,
+        88,
+        24
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 50
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 50
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 50
+    },
+    {
+      "bufferView": 4,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 50
+    },
+    {
+      "bufferView": 5,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 90
+    },
+    {
+      "bufferView": 6,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 1
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "COLOR_0": 1,
+            "NORMAL": 2,
+            "JOINTS_0": 3,
+            "WEIGHTS_0": 4
+          },
+          "material": 0,
+          "indices": 5,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "c3_b01b"
+    }
+  ],
+  "nodes": [
+    {
+      "name": "pCube1"
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "c3_b01b",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0
+      ],
+      "inverseBindMatrices": 6
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ],
+      "name": "c3_b01b"
+    }
+  ],
+  "scene": 0,
+  "materials": [
+    {
+      "name": "c3_b01a",
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 2044,
+      "uri": "c3_b01b.bin"
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 264,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 176,
+      "byteOffset": 264
+    },
+    {
+      "buffer": 0,
+      "byteLength": 88,
+      "byteStride": 4,
+      "byteOffset": 440
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 528,
+      "byteStride": 4,
+      "byteLength": 88
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 616,
+      "byteStride": 4,
+      "byteLength": 88
+    },
+    {
+      "buffer": 0,
+      "byteLength": 72,
+      "byteOffset": 704
+    },
+    {
+      "buffer": 0,
+      "byteLength": 192,
+      "byteOffset": 776
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 22,
+      "min": [
+        -9.5,
+        0,
+        -9
+      ],
+      "max": [
+        9.5,
+        9.5,
+        12
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 22
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 22
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 22
+    },
+    {
+      "bufferView": 4,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 22
+    },
+    {
+      "bufferView": 5,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 18
+    },
+    {
+      "bufferView": 5,
+      "type": "SCALAR",
+      "byteOffset": 36,
+      "componentType": 5123,
+      "count": 18
+    },
+    {
+      "bufferView": 6,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 3
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "JOINTS_0": 3,
+            "WEIGHTS_0": 4
+          },
+          "material": 0,
+          "indices": 5,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        },
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "JOINTS_0": 3,
+            "WEIGHTS_0": 4
+          },
+          "material": 0,
+          "indices": 6,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "machine_pc02_"
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1,
+        2
+      ],
+      "name": "null1"
+    },
+    {
+      "name": "pc_s01b_1"
+    },
+    {
+      "name": "pc_s01b_2"
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "machine_pc02_",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0,
+        1,
+        2
+      ],
+      "inverseBindMatrices": 7
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        3
+      ],
+      "name": "machine_pc02_"
+    }
+  ],
+  "scene": 0,
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497,
+      "magFilter": 9728,
+      "minFilter": 9728
+    }
+  ],
+  "images": [
+    {
+      "uri": "pc_s01.png"
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "pc_s01_lm1",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          0.8064516186714172
+        ]
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "BLEND"
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 968,
+      "uri": "machine_pc02_.bin"
+    }
+  ]
+}

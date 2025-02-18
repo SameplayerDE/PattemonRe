@@ -1,0 +1,160 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 288,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 96,
+      "byteStride": 4,
+      "byteOffset": 288
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 384,
+      "byteStride": 4,
+      "byteLength": 96
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 480,
+      "byteStride": 4,
+      "byteLength": 96
+    },
+    {
+      "buffer": 0,
+      "byteLength": 72,
+      "byteOffset": 576
+    },
+    {
+      "buffer": 0,
+      "byteLength": 64,
+      "byteOffset": 648
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 24,
+      "min": [
+        -7,
+        1,
+        -7
+      ],
+      "max": [
+        7,
+        17,
+        7
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 24
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 24
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 24
+    },
+    {
+      "bufferView": 4,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 36
+    },
+    {
+      "bufferView": 5,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 1
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "COLOR_0": 1,
+            "JOINTS_0": 2,
+            "WEIGHTS_0": 3
+          },
+          "material": 0,
+          "indices": 4,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "shelf02xx"
+    }
+  ],
+  "nodes": [
+    {
+      "name": "dummy"
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "shelf02xx",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0
+      ],
+      "inverseBindMatrices": 5
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ],
+      "name": "shelf02xx"
+    }
+  ],
+  "scene": 0,
+  "materials": [
+    {
+      "name": "dummy_mat",
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 712,
+      "uri": "shelf02xx.bin"
+    }
+  ]
+}

@@ -1,0 +1,341 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 9480,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 6320,
+      "byteOffset": 9480
+    },
+    {
+      "buffer": 0,
+      "byteLength": 3160,
+      "byteStride": 4,
+      "byteOffset": 15800
+    },
+    {
+      "buffer": 0,
+      "byteLength": 9480,
+      "byteOffset": 18960
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 28440,
+      "byteStride": 4,
+      "byteLength": 3160
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 31600,
+      "byteStride": 4,
+      "byteLength": 3160
+    },
+    {
+      "buffer": 0,
+      "byteLength": 2520,
+      "byteOffset": 34760
+    },
+    {
+      "buffer": 0,
+      "byteLength": 64,
+      "byteOffset": 37280
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 790,
+      "min": [
+        -70.6953125,
+        1,
+        -72
+      ],
+      "max": [
+        85,
+        178.1953125,
+        67
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 790
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 790
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 790
+    },
+    {
+      "bufferView": 4,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 790
+    },
+    {
+      "bufferView": 5,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 790
+    },
+    {
+      "bufferView": 6,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 24
+    },
+    {
+      "bufferView": 6,
+      "type": "SCALAR",
+      "byteOffset": 48,
+      "componentType": 5123,
+      "count": 30
+    },
+    {
+      "bufferView": 6,
+      "type": "SCALAR",
+      "byteOffset": 108,
+      "componentType": 5123,
+      "count": 486
+    },
+    {
+      "bufferView": 6,
+      "type": "SCALAR",
+      "byteOffset": 1080,
+      "componentType": 5123,
+      "count": 720
+    },
+    {
+      "bufferView": 7,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 1
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "NORMAL": 3,
+            "JOINTS_0": 4,
+            "WEIGHTS_0": 5
+          },
+          "material": 3,
+          "indices": 6,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        },
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "NORMAL": 3,
+            "JOINTS_0": 4,
+            "WEIGHTS_0": 5
+          },
+          "material": 2,
+          "indices": 7,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        },
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "NORMAL": 3,
+            "JOINTS_0": 4,
+            "WEIGHTS_0": 5
+          },
+          "material": 1,
+          "indices": 8,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        },
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "NORMAL": 3,
+            "JOINTS_0": 4,
+            "WEIGHTS_0": 5
+          },
+          "material": 0,
+          "indices": 9,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "c1_s02"
+    }
+  ],
+  "nodes": [
+    {
+      "name": "polySurface14"
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "c1_s02",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0
+      ],
+      "inverseBindMatrices": 10
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ],
+      "name": "c1_s02"
+    }
+  ],
+  "scene": 0,
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497,
+      "magFilter": 9728,
+      "minFilter": 9728
+    }
+  ],
+  "images": [
+    {
+      "uri": "c1_s02_1.png"
+    },
+    {
+      "uri": "c1_s02_2.png"
+    },
+    {
+      "uri": "c1_s02_3_1.png"
+    },
+    {
+      "uri": "h_kage.png"
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    },
+    {
+      "source": 1,
+      "sampler": 0
+    },
+    {
+      "source": 2,
+      "sampler": 0
+    },
+    {
+      "source": 3,
+      "sampler": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "c1_s02_1",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "MASK"
+    },
+    {
+      "name": "c1_s02_3",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "MASK"
+    },
+    {
+      "name": "c1_s02_4",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 2
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    },
+    {
+      "name": "h_kage",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 3
+        },
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          0.29032257199287417
+        ]
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "BLEND"
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 37344,
+      "uri": "c1_s02.bin"
+    }
+  ]
+}

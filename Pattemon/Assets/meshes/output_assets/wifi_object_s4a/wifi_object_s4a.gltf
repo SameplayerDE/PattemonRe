@@ -1,0 +1,453 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 1344,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 896,
+      "byteOffset": 1344
+    },
+    {
+      "buffer": 0,
+      "byteLength": 448,
+      "byteStride": 4,
+      "byteOffset": 2240
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1344,
+      "byteOffset": 2688
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4032,
+      "byteStride": 4,
+      "byteLength": 448
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4480,
+      "byteStride": 4,
+      "byteLength": 448
+    },
+    {
+      "buffer": 0,
+      "byteLength": 336,
+      "byteOffset": 4928
+    },
+    {
+      "buffer": 0,
+      "byteLength": 256,
+      "byteOffset": 5264
+    },
+    {
+      "buffer": 0,
+      "byteLength": 764,
+      "byteOffset": 5520
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 6284,
+      "byteLength": 236
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 112,
+      "min": [
+        0,
+        0.7109375,
+        -3.6569976806640627
+      ],
+      "max": [
+        32,
+        37.656558990478519,
+        33.462890625
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 112
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 112
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 112
+    },
+    {
+      "bufferView": 4,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 112
+    },
+    {
+      "bufferView": 5,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 112
+    },
+    {
+      "bufferView": 6,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 6
+    },
+    {
+      "bufferView": 6,
+      "type": "SCALAR",
+      "byteOffset": 12,
+      "componentType": 5123,
+      "count": 6
+    },
+    {
+      "bufferView": 6,
+      "type": "SCALAR",
+      "byteOffset": 24,
+      "componentType": 5123,
+      "count": 156
+    },
+    {
+      "bufferView": 7,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 4
+    },
+    {
+      "bufferView": 9,
+      "type": "SCALAR",
+      "componentType": 5126,
+      "byteOffset": 0,
+      "count": 1,
+      "min": [
+        0
+      ],
+      "max": [
+        0
+      ]
+    },
+    {
+      "bufferView": 8,
+      "type": "VEC3",
+      "componentType": 5126,
+      "byteOffset": 0,
+      "count": 1
+    },
+    {
+      "bufferView": 8,
+      "type": "VEC4",
+      "componentType": 5126,
+      "byteOffset": 12,
+      "count": 1
+    },
+    {
+      "bufferView": 9,
+      "type": "SCALAR",
+      "componentType": 5126,
+      "byteOffset": 0,
+      "count": 59,
+      "min": [
+        0
+      ],
+      "max": [
+        0.9666666984558106
+      ]
+    },
+    {
+      "bufferView": 8,
+      "type": "VEC3",
+      "componentType": 5126,
+      "byteOffset": 28,
+      "count": 59
+    },
+    {
+      "bufferView": 8,
+      "type": "VEC4",
+      "componentType": 5126,
+      "byteOffset": 736,
+      "count": 1
+    },
+    {
+      "bufferView": 8,
+      "type": "VEC3",
+      "componentType": 5126,
+      "byteOffset": 752,
+      "count": 1
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "NORMAL": 3,
+            "JOINTS_0": 4,
+            "WEIGHTS_0": 5
+          },
+          "material": 1,
+          "indices": 6,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        },
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "NORMAL": 3,
+            "JOINTS_0": 4,
+            "WEIGHTS_0": 5
+          },
+          "material": 1,
+          "indices": 7,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        },
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "NORMAL": 3,
+            "JOINTS_0": 4,
+            "WEIGHTS_0": 5
+          },
+          "material": 0,
+          "indices": 8,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "wifi_object_s4a"
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1,
+        2,
+        3
+      ],
+      "name": "world_root"
+    },
+    {
+      "name": "pokemon_body",
+      "translation": [
+        8,
+        19.1279296875,
+        13.804443359375
+      ],
+      "rotation": [
+        0.3826629925879859,
+        0,
+        0,
+        0.9238879986792808
+      ]
+    },
+    {
+      "name": "pokemon_head",
+      "translation": [
+        8,
+        32,
+        3
+      ],
+      "rotation": [
+        0.3826629925879859,
+        0,
+        0,
+        0.9238879986792808
+      ]
+    },
+    {
+      "name": "polySurface1",
+      "translation": [
+        0,
+        0,
+        3
+      ]
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "wifi_object_s4a",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "inverseBindMatrices": 9
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        4
+      ],
+      "name": "wifi_object_s4a"
+    }
+  ],
+  "scene": 0,
+  "animations": [
+    {
+      "name": "wifi_object_s4a",
+      "samplers": [
+        {
+          "input": 10,
+          "output": 11
+        },
+        {
+          "input": 10,
+          "output": 12
+        },
+        {
+          "input": 13,
+          "output": 14
+        },
+        {
+          "input": 10,
+          "output": 15
+        },
+        {
+          "input": 10,
+          "output": 16
+        }
+      ],
+      "channels": [
+        {
+          "target": {
+            "node": 1,
+            "path": "translation"
+          },
+          "sampler": 0
+        },
+        {
+          "target": {
+            "node": 1,
+            "path": "rotation"
+          },
+          "sampler": 1
+        },
+        {
+          "target": {
+            "node": 2,
+            "path": "translation"
+          },
+          "sampler": 2
+        },
+        {
+          "target": {
+            "node": 2,
+            "path": "rotation"
+          },
+          "sampler": 3
+        },
+        {
+          "target": {
+            "node": 3,
+            "path": "translation"
+          },
+          "sampler": 4
+        }
+      ]
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497,
+      "magFilter": 9728,
+      "minFilter": 9728
+    }
+  ],
+  "images": [
+    {
+      "uri": "bg_color4y.png"
+    },
+    {
+      "uri": "object_s4a.png"
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    },
+    {
+      "source": 1,
+      "sampler": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "daiza",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "MASK"
+    },
+    {
+      "name": "pokemon",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "MASK"
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 6520,
+      "uri": "wifi_object_s4a.bin"
+    }
+  ]
+}

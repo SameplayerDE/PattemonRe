@@ -1,0 +1,302 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 48,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 32,
+      "byteOffset": 48
+    },
+    {
+      "buffer": 0,
+      "byteLength": 16,
+      "byteStride": 4,
+      "byteOffset": 80
+    },
+    {
+      "buffer": 0,
+      "byteLength": 48,
+      "byteOffset": 96
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 144,
+      "byteStride": 4,
+      "byteLength": 16
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 160,
+      "byteStride": 4,
+      "byteLength": 16
+    },
+    {
+      "buffer": 0,
+      "byteLength": 12,
+      "byteOffset": 176
+    },
+    {
+      "buffer": 0,
+      "byteLength": 64,
+      "byteOffset": 188
+    },
+    {
+      "buffer": 0,
+      "byteLength": 3868,
+      "byteOffset": 252
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4120,
+      "byteLength": 964
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 4,
+      "min": [
+        -16,
+        -0.532823920249939,
+        -16.358306884765626
+      ],
+      "max": [
+        16,
+        25.67979621887207,
+        1.9964896440505982
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 4
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 4
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 4
+    },
+    {
+      "bufferView": 4,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 4
+    },
+    {
+      "bufferView": 5,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 4
+    },
+    {
+      "bufferView": 6,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 6
+    },
+    {
+      "bufferView": 7,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 1
+    },
+    {
+      "bufferView": 9,
+      "type": "SCALAR",
+      "componentType": 5126,
+      "byteOffset": 0,
+      "count": 1,
+      "min": [
+        0
+      ],
+      "max": [
+        0
+      ]
+    },
+    {
+      "bufferView": 8,
+      "type": "VEC3",
+      "componentType": 5126,
+      "byteOffset": 0,
+      "count": 1
+    },
+    {
+      "bufferView": 9,
+      "type": "SCALAR",
+      "componentType": 5126,
+      "byteOffset": 0,
+      "count": 241,
+      "min": [
+        0
+      ],
+      "max": [
+        4
+      ]
+    },
+    {
+      "bufferView": 8,
+      "type": "VEC4",
+      "componentType": 5126,
+      "byteOffset": 12,
+      "count": 241
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "NORMAL": 3,
+            "JOINTS_0": 4,
+            "WEIGHTS_0": 5
+          },
+          "material": 0,
+          "indices": 6,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "yabu_ana_out"
+    }
+  ],
+  "nodes": [
+    {
+      "name": "yabu_ana_out_",
+      "translation": [
+        0,
+        12.573486328125,
+        -7.180908203125
+      ],
+      "rotation": [
+        0.4617426964851731,
+        0,
+        0,
+        0.8870139132181643
+      ]
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "yabu_ana_out",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0
+      ],
+      "inverseBindMatrices": 7
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ],
+      "name": "yabu_ana_out"
+    }
+  ],
+  "scene": 0,
+  "animations": [
+    {
+      "name": "yabu_ana_out",
+      "samplers": [
+        {
+          "input": 8,
+          "output": 9
+        },
+        {
+          "input": 10,
+          "output": 11
+        }
+      ],
+      "channels": [
+        {
+          "target": {
+            "node": 0,
+            "path": "translation"
+          },
+          "sampler": 0
+        },
+        {
+          "target": {
+            "node": 0,
+            "path": "rotation"
+          },
+          "sampler": 1
+        }
+      ]
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497,
+      "magFilter": 9728,
+      "minFilter": 9728
+    }
+  ],
+  "images": [
+    {
+      "uri": "yabu_ana01.png"
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "yabu_ana01_lm1",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "BLEND"
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 5084,
+      "uri": "yabu_ana_out.bin"
+    }
+  ]
+}

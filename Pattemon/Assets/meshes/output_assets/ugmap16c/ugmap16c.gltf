@@ -1,0 +1,226 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 21144,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 14096,
+      "byteOffset": 21144
+    },
+    {
+      "buffer": 0,
+      "byteLength": 7048,
+      "byteStride": 4,
+      "byteOffset": 35240
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 42288,
+      "byteStride": 4,
+      "byteLength": 7048
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 49336,
+      "byteStride": 4,
+      "byteLength": 7048
+    },
+    {
+      "buffer": 0,
+      "byteLength": 7584,
+      "byteOffset": 56384
+    },
+    {
+      "buffer": 0,
+      "byteLength": 64,
+      "byteOffset": 63968
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 1762,
+      "min": [
+        -256,
+        0,
+        -256
+      ],
+      "max": [
+        256,
+        92.5,
+        256
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 1762
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 1762
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 1762
+    },
+    {
+      "bufferView": 4,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 1762
+    },
+    {
+      "bufferView": 5,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 120
+    },
+    {
+      "bufferView": 5,
+      "type": "SCALAR",
+      "byteOffset": 240,
+      "componentType": 5123,
+      "count": 1836
+    },
+    {
+      "bufferView": 5,
+      "type": "SCALAR",
+      "byteOffset": 3912,
+      "componentType": 5123,
+      "count": 1836
+    },
+    {
+      "bufferView": 6,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 1
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "JOINTS_0": 3,
+            "WEIGHTS_0": 4
+          },
+          "material": 1,
+          "indices": 5,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        },
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "JOINTS_0": 3,
+            "WEIGHTS_0": 4
+          },
+          "material": 2,
+          "indices": 6,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        },
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "JOINTS_0": 3,
+            "WEIGHTS_0": 4
+          },
+          "material": 0,
+          "indices": 7,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "ugmap16c"
+    }
+  ],
+  "nodes": [
+    {
+      "name": "polySurface329"
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "ugmap16c",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0
+      ],
+      "inverseBindMatrices": 8
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ],
+      "name": "ugmap16c"
+    }
+  ],
+  "scene": 0,
+  "materials": [
+    {
+      "name": "chisou_lm15",
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    },
+    {
+      "name": "ug_lm13",
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    },
+    {
+      "name": "ugwall_lm14",
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 64032,
+      "uri": "ugmap16c.bin"
+    }
+  ]
+}

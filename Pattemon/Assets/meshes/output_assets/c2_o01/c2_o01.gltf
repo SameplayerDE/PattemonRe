@@ -1,0 +1,172 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 456,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 152,
+      "byteStride": 4,
+      "byteOffset": 456
+    },
+    {
+      "buffer": 0,
+      "byteLength": 456,
+      "byteOffset": 608
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1064,
+      "byteStride": 4,
+      "byteLength": 152
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1216,
+      "byteStride": 4,
+      "byteLength": 152
+    },
+    {
+      "buffer": 0,
+      "byteLength": 144,
+      "byteOffset": 1368
+    },
+    {
+      "buffer": 0,
+      "byteLength": 64,
+      "byteOffset": 1512
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 38,
+      "min": [
+        -14,
+        1.5,
+        -31
+      ],
+      "max": [
+        14,
+        32.5,
+        6
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 38
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 38
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 38
+    },
+    {
+      "bufferView": 4,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 38
+    },
+    {
+      "bufferView": 5,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 72
+    },
+    {
+      "bufferView": 6,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 1
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "COLOR_0": 1,
+            "NORMAL": 2,
+            "JOINTS_0": 3,
+            "WEIGHTS_0": 4
+          },
+          "material": 0,
+          "indices": 5,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "c2_o01"
+    }
+  ],
+  "nodes": [
+    {
+      "name": "c2_o01"
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "c2_o01",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0
+      ],
+      "inverseBindMatrices": 6
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ],
+      "name": "c2_o01"
+    }
+  ],
+  "scene": 0,
+  "materials": [
+    {
+      "name": "house",
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1576,
+      "uri": "c2_o01.bin"
+    }
+  ]
+}

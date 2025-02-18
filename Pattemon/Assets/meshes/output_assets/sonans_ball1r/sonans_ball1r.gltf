@@ -1,0 +1,208 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 1656,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1104,
+      "byteOffset": 1656
+    },
+    {
+      "buffer": 0,
+      "byteLength": 552,
+      "byteStride": 4,
+      "byteOffset": 2760
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3312,
+      "byteStride": 4,
+      "byteLength": 552
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 3864,
+      "byteStride": 4,
+      "byteLength": 552
+    },
+    {
+      "buffer": 0,
+      "byteLength": 672,
+      "byteOffset": 4416
+    },
+    {
+      "buffer": 0,
+      "byteLength": 64,
+      "byteOffset": 5088
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 138,
+      "min": [
+        5.3040771484375,
+        4.77587890625,
+        -35.3675537109375
+      ],
+      "max": [
+        11.8409423828125,
+        11.2841796875,
+        -28.8590087890625
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 138
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 138
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 138
+    },
+    {
+      "bufferView": 4,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 138
+    },
+    {
+      "bufferView": 5,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 336
+    },
+    {
+      "bufferView": 6,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 1
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "JOINTS_0": 3,
+            "WEIGHTS_0": 4
+          },
+          "material": 0,
+          "indices": 5,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "sonans-ball1r"
+    }
+  ],
+  "nodes": [
+    {
+      "name": "w",
+      "translation": [
+        8.572509765625,
+        8.030029296875,
+        -32.11328125
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "sonans-ball1r",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0
+      ],
+      "inverseBindMatrices": 6
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ],
+      "name": "sonans-ball1r"
+    }
+  ],
+  "scene": 0,
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497,
+      "magFilter": 9728,
+      "minFilter": 9728
+    }
+  ],
+  "images": [
+    {
+      "uri": "sonans_pipe2.png"
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "lambert4",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "alphaMode": "MASK"
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 5152,
+      "uri": "sonans_ball1r.bin"
+    }
+  ]
+}

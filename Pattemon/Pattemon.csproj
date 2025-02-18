@@ -71,6 +71,7 @@
         <ProjectReference Include="..\PatteLib\PatteLib.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <Folder Include="Assets\meshes\" />
         <Folder Include="Engine\Input\" />
         <Folder Include="Scenes\StartMenu\" />
     </ItemGroup>

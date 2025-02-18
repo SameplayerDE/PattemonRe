@@ -1,0 +1,298 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 144,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 96,
+      "byteOffset": 144
+    },
+    {
+      "buffer": 0,
+      "byteLength": 48,
+      "byteStride": 4,
+      "byteOffset": 240
+    },
+    {
+      "buffer": 0,
+      "byteLength": 144,
+      "byteOffset": 288
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 432,
+      "byteStride": 4,
+      "byteLength": 48
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 480,
+      "byteStride": 4,
+      "byteLength": 48
+    },
+    {
+      "buffer": 0,
+      "byteLength": 48,
+      "byteOffset": 528
+    },
+    {
+      "buffer": 0,
+      "byteLength": 64,
+      "byteOffset": 576
+    },
+    {
+      "buffer": 0,
+      "byteLength": 408,
+      "byteOffset": 640
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1048,
+      "byteLength": 96
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 12,
+      "min": [
+        -24,
+        0,
+        -40
+      ],
+      "max": [
+        40,
+        0,
+        24
+      ]
+    },
+    {
+      "bufferView": 1,
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 12
+    },
+    {
+      "bufferView": 2,
+      "type": "VEC3",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 12
+    },
+    {
+      "bufferView": 3,
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 12
+    },
+    {
+      "bufferView": 4,
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 12
+    },
+    {
+      "bufferView": 5,
+      "type": "VEC4",
+      "componentType": 5121,
+      "normalized": true,
+      "count": 12
+    },
+    {
+      "bufferView": 6,
+      "type": "SCALAR",
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 24
+    },
+    {
+      "bufferView": 7,
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 1
+    },
+    {
+      "bufferView": 9,
+      "type": "SCALAR",
+      "componentType": 5126,
+      "byteOffset": 0,
+      "count": 1,
+      "min": [
+        0
+      ],
+      "max": [
+        0
+      ]
+    },
+    {
+      "bufferView": 8,
+      "type": "VEC3",
+      "componentType": 5126,
+      "byteOffset": 0,
+      "count": 1
+    },
+    {
+      "bufferView": 9,
+      "type": "SCALAR",
+      "componentType": 5126,
+      "byteOffset": 0,
+      "count": 24,
+      "min": [
+        0
+      ],
+      "max": [
+        0.38333335518836977
+      ]
+    },
+    {
+      "bufferView": 8,
+      "type": "VEC4",
+      "componentType": 5126,
+      "byteOffset": 12,
+      "count": 24
+    },
+    {
+      "bufferView": 8,
+      "type": "VEC3",
+      "componentType": 5126,
+      "byteOffset": 396,
+      "count": 1
+    }
+  ],
+  "extensionsUsed": [
+    "FB_ngon_encoding",
+    "KHR_materials_unlit"
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1,
+            "COLOR_0": 2,
+            "NORMAL": 3,
+            "JOINTS_0": 4,
+            "WEIGHTS_0": 5
+          },
+          "material": 0,
+          "indices": 6,
+          "extensions": {
+            "FB_ngon_encoding": {}
+          }
+        }
+      ],
+      "name": "swing"
+    }
+  ],
+  "nodes": [
+    {
+      "name": "pPlane1",
+      "translation": [
+        8,
+        0,
+        -8
+      ],
+      "scale": [
+        64,
+        64,
+        64
+      ]
+    },
+    {
+      "mesh": 0,
+      "skin": 0,
+      "name": "swing",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "skeleton": 0,
+      "joints": [
+        0
+      ],
+      "inverseBindMatrices": 7
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ],
+      "name": "swing"
+    }
+  ],
+  "scene": 0,
+  "animations": [
+    {
+      "name": "swing",
+      "samplers": [
+        {
+          "input": 8,
+          "output": 9
+        },
+        {
+          "input": 10,
+          "output": 11
+        },
+        {
+          "input": 8,
+          "output": 12
+        }
+      ],
+      "channels": [
+        {
+          "target": {
+            "node": 0,
+            "path": "translation"
+          },
+          "sampler": 0
+        },
+        {
+          "target": {
+            "node": 0,
+            "path": "rotation"
+          },
+          "sampler": 1
+        },
+        {
+          "target": {
+            "node": 0,
+            "path": "scale"
+          },
+          "sampler": 2
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "file1Material",
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "emissiveFactor": [
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1144,
+      "uri": "swing.bin"
+    }
+  ]
+}
