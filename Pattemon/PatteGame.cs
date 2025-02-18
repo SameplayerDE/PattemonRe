@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PatteLib.Data;
 using Pattemon.Audio;
+using Pattemon.Data;
 using Pattemon.Engine;
 using Pattemon.Graphics;
 using Pattemon.Scenes.ChoosePokemon;
@@ -25,14 +26,6 @@ public class PatteGame : Game
     private bool _hasBlackBars; // if the screen fits perfect or not
     private bool _verticalFit; // if the screen fits vertically
     private bool _horizontalFit; // if the screen fits horizontally
-    
-    private bool _isBottomScreenFocus = false;
-    
-    private Rectangle _topScreenRectangle;
-    private Rectangle _bottomScreenRectangle;
-    
-    private Rectangle _focusScreenRectangle;
-    private Rectangle _unfocusScreenRectangle;
     
     private SceneAManager _sceneAManager;
     private HeaderManager _headerManager;
@@ -72,6 +65,8 @@ public class PatteGame : Game
         _headerManager.Load();
         Services.AddService(_headerManager);
         
+        Services.AddService(new Bag());
+        
         _optionMenuScene = new OptionMenuScene(this);
         _choosePokemonScene = new ChoosePokemonScene(this);
         _fieldMenuScene = new FieldMenuScene(this);
@@ -100,11 +95,11 @@ public class PatteGame : Game
         Window.AllowUserResizing = true;
         Window.ClientSizeChanged += OnResize;
         
-        _focusScreenRectangle = new Rectangle(0, 0, RenderCore.OriginalScreenSize.X, RenderCore.OriginalScreenSize.Y);
-        _unfocusScreenRectangle = new Rectangle(0, RenderCore.OriginalScreenSize.Y, RenderCore.OriginalScreenSize.X, RenderCore.OriginalScreenSize.Y);
+        DualScreenCore.FocusScreenRectangle = new Rectangle(0, 0, RenderCore.OriginalScreenSize.X, RenderCore.OriginalScreenSize.Y);
+        DualScreenCore.UnfocusScreenRectangle = new Rectangle(0, RenderCore.OriginalScreenSize.Y, RenderCore.OriginalScreenSize.X, RenderCore.OriginalScreenSize.Y);
         
-        _topScreenRectangle = _focusScreenRectangle;
-        _bottomScreenRectangle = _unfocusScreenRectangle;
+        DualScreenCore.TopScreenRectangle = DualScreenCore.FocusScreenRectangle;
+        DualScreenCore.BottomScreenRectangle = DualScreenCore.UnfocusScreenRectangle;
             
         PerformScreenFit();
     }
@@ -127,22 +122,7 @@ public class PatteGame : Game
         #region screen swap
         if (KeyboardHandler.IsKeyDownOnce(Keys.Tab) && !DualScreenCore.IsSwappingScreens)
         {
-            _isBottomScreenFocus = !_isBottomScreenFocus;
             DualScreenCore.SwapScreens();
-        }
-        
-        if (DualScreenCore.IsSwappingScreens)
-        {
-            if (_isBottomScreenFocus)
-            {
-                _bottomScreenRectangle.X = (int)MathHelper.Lerp(_unfocusScreenRectangle.X, _focusScreenRectangle.X, DualScreenCore.TransitionProgress);
-                _bottomScreenRectangle.Y = (int)MathHelper.Lerp(_unfocusScreenRectangle.Y, _focusScreenRectangle.Y, DualScreenCore.TransitionProgress);
-            }
-            else
-            {
-                _bottomScreenRectangle.X = (int)MathHelper.Lerp(_focusScreenRectangle.X, _unfocusScreenRectangle.X, DualScreenCore.TransitionProgress);
-                _bottomScreenRectangle.Y = (int)MathHelper.Lerp(_focusScreenRectangle.Y, _unfocusScreenRectangle.Y, DualScreenCore.TransitionProgress);
-            }
         }
         #endregion
 
@@ -187,21 +167,21 @@ public class PatteGame : Game
         RenderCore.Reset();
         GraphicsDevice.Clear(Color.Black);
         _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
-        if (!_isBottomScreenFocus)
+        if (!DualScreenCore.IsBottomScreenInFocus)
         {
-            _spriteBatch.Draw(RenderCore.TopScreen, _topScreenRectangle, Color.White);
+            _spriteBatch.Draw(RenderCore.TopScreen, DualScreenCore.TopScreenRectangle, Color.White);
             if (DualScreenCore.IsSwappingScreens)
             {
-                _spriteBatch.Draw(RenderCore.BottomScreen, _bottomScreenRectangle, Color.White);
+                _spriteBatch.Draw(RenderCore.BottomScreen, DualScreenCore.BottomScreenRectangle, Color.White);
             }
         }
         else
         {
             if (DualScreenCore.IsSwappingScreens)
             {
-                _spriteBatch.Draw(RenderCore.TopScreen, _topScreenRectangle, Color.White);
+                _spriteBatch.Draw(RenderCore.TopScreen, DualScreenCore.TopScreenRectangle, Color.White);
             }
-            _spriteBatch.Draw(RenderCore.BottomScreen, _bottomScreenRectangle, Color.White);
+            _spriteBatch.Draw(RenderCore.BottomScreen, DualScreenCore.BottomScreenRectangle, Color.White);
         }
         _spriteBatch.End();
     }
@@ -216,7 +196,7 @@ public class PatteGame : Game
         //Console.WriteLine(outputAspect);
         //Console.WriteLine(preferredAspect);
         
-        Rectangle dst = _focusScreenRectangle;
+        Rectangle dst = DualScreenCore.FocusScreenRectangle;
         if (outputAspect < preferredAspect)
         {
             // output is taller than it is wider, bars on top/bottom
@@ -248,30 +228,30 @@ public class PatteGame : Game
             dst = new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
         }
 
-        _focusScreenRectangle = dst;
-        _unfocusScreenRectangle.Width = _focusScreenRectangle.Width;
-        _unfocusScreenRectangle.Height = _focusScreenRectangle.Height;
+        DualScreenCore.FocusScreenRectangle = dst;
+        DualScreenCore.UnfocusScreenRectangle.Width =  DualScreenCore.FocusScreenRectangle.Width;
+        DualScreenCore.UnfocusScreenRectangle.Height =  DualScreenCore.FocusScreenRectangle.Height;
         
         if (_verticalFit)
         {
-            _unfocusScreenRectangle.X = _barSize;
-            _unfocusScreenRectangle.Y = _focusScreenRectangle.Height;
+            DualScreenCore.UnfocusScreenRectangle.X = _barSize;
+            DualScreenCore.UnfocusScreenRectangle.Y =  DualScreenCore.FocusScreenRectangle.Height;
         }
         if (_horizontalFit)
         {
-            _unfocusScreenRectangle.Y = _barSize;
-            _unfocusScreenRectangle.X = _focusScreenRectangle.Width;
+            DualScreenCore.UnfocusScreenRectangle.Y = _barSize;
+            DualScreenCore.UnfocusScreenRectangle.X =  DualScreenCore.FocusScreenRectangle.Width;
         }
         
-        if (_isBottomScreenFocus)
+        if (DualScreenCore.IsBottomScreenInFocus)
         {
-            _bottomScreenRectangle = _focusScreenRectangle;
-            _topScreenRectangle = _focusScreenRectangle;
+            DualScreenCore.BottomScreenRectangle =  DualScreenCore.FocusScreenRectangle;
+            DualScreenCore.TopScreenRectangle =  DualScreenCore.UnfocusScreenRectangle;
         }
         else
         {
-            _topScreenRectangle = _focusScreenRectangle;
-            _bottomScreenRectangle = _unfocusScreenRectangle;
+            DualScreenCore.TopScreenRectangle =  DualScreenCore.FocusScreenRectangle;
+            DualScreenCore.BottomScreenRectangle = DualScreenCore.UnfocusScreenRectangle;
         }
     }
 

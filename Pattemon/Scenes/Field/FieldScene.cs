@@ -60,6 +60,7 @@ public class FieldScene : SceneA
                 {
                     if (!HasProcess)
                     {
+                        DualScreenCore.SwapScreens(4, DualScreenCore.SwapTop);
                         Process = new FieldMenuScene(_game);
                         if (Process.Init())
                         {

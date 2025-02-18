@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PatteLib;
+using Pattemon.Data;
 using Pattemon.Engine;
 using Pattemon.Graphics;
 
@@ -19,13 +20,19 @@ public class InventoryScene : SceneA
     
     private int _state = 0;
 
+    // vars
+    
     private const int _categoryLaneX = 7;
     private const int _categoryLaneY = 91;
-    private const int _categoryLaneW = 10;
-    private const int _categoryLaneH = 10;
-    private const int _categoryLaneSpace = 1;
-
+    private const int _categoryLaneIconW = 10;
+    private const int _categoryLaneIconH = 10;
+    private const int _categoryLaneIconSpace = 1;
     private int _categoryLaneIndex = 0;
+    
+    private const int _bagIconW = 64;
+    private const int _bagIconH = 64;
+
+    private Bag _bag;
     
     public InventoryScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
     {
@@ -37,6 +44,9 @@ public class InventoryScene : SceneA
         GraphicsCore.LoadTexture("inventory_bag", @"Assets/bag_sheet.png");
         GraphicsCore.LoadTexture("inventory_category_lane_sheet", @"Assets/bag_icon.png");
         GraphicsCore.LoadTexture("inventory_category_lane_cursor", @"Assets/bag_icon_cursor.png");
+        
+        //_bag = _services.GetService<Bag>();
+        
         _state = _stateFadeIn;
         return true;
     }
@@ -118,10 +128,10 @@ public class InventoryScene : SceneA
         // render icons
         for (int iconIndex = 0; iconIndex < 8; iconIndex++)
         {
-            spriteBatch.Draw(GraphicsCore.GetTexture("inventory_category_lane_sheet"), new Vector2(_categoryLaneX + ((_categoryLaneSpace + _categoryLaneW) * iconIndex), _categoryLaneY), new Rectangle(iconIndex == _categoryLaneIndex ? 10 : 0, iconIndex * 10, 10, 10), Color.White);
+            spriteBatch.Draw(GraphicsCore.GetTexture("inventory_category_lane_sheet"), new Vector2(_categoryLaneX + ((_categoryLaneIconSpace + _categoryLaneIconW) * iconIndex), _categoryLaneY), new Rectangle(iconIndex == _categoryLaneIndex ? _categoryLaneIconW : 0, iconIndex * _categoryLaneIconH, _categoryLaneIconW, _categoryLaneIconH), Color.White);
         }
-        spriteBatch.Draw(GraphicsCore.GetTexture("inventory_category_lane_cursor"), new Vector2(_categoryLaneX + ((_categoryLaneSpace + _categoryLaneW) * _categoryLaneIndex) - 3, _categoryLaneY - 3), Color.White);
-        spriteBatch.Draw(GraphicsCore.GetTexture("inventory_bag"), new Vector2(16, 16), new Rectangle(0, 64 * _categoryLaneIndex, 64, 64), Color.White);
+        spriteBatch.Draw(GraphicsCore.GetTexture("inventory_category_lane_cursor"), new Vector2(_categoryLaneX + ((_categoryLaneIconSpace + _categoryLaneIconW) * _categoryLaneIndex) - 3, _categoryLaneY - 3), Color.White);
+        spriteBatch.Draw(GraphicsCore.GetTexture("inventory_bag"), new Vector2(16, 16), new Rectangle(_bagIconW * 0, _bagIconH * _categoryLaneIndex, _bagIconW, _bagIconH), Color.White);
         // render content
         spriteBatch.End();
     }
