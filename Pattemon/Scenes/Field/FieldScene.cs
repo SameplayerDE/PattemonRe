@@ -12,11 +12,15 @@ namespace Pattemon.Scenes.Field;
 
 public class FieldScene : SceneA
 {
-    private const int _stateMain = 10;
-    private const int _stateMenu = 20;
-    private const int _stateApplication = 30;
+    private const int _stateFadeIn = 10;
+    private const int _stateWaitFadeIn = 20;
+    private const int _stateProcess = 30;
+    private const int _stateFadeOut = 40;
+    private const int _stateWaitFadeOut = 50;
+    private const int _stateMenu = 60;
+    private const int _stateApplication = 70;
     
-    private int _state = _stateMain;
+    private int _state = _stateFadeIn;
     
     private Texture2D _background;
     private Texture2D _bottomScreen;
@@ -54,7 +58,21 @@ public class FieldScene : SceneA
 
         switch (_state)
         {
-            case _stateMain:
+            case _stateFadeIn:
+            {
+                RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaIn);
+                _state = _stateWaitFadeIn;
+                return false;
+            }
+            case _stateWaitFadeIn:
+            {
+                if (RenderCore.IsScreenTransitionDone())
+                {
+                    _state = _stateProcess;
+                }
+                return false;
+            }
+            case _stateProcess:
             {
                 if (KeyboardHandler.IsKeyDownOnce(Keys.Escape))
                 {
@@ -78,7 +96,7 @@ public class FieldScene : SceneA
                     if (Process.Exit())
                     {
                         Process = null;
-                        _state = _stateMain;
+                        _state = _stateProcess;
                     }
                 }
                 return false;
@@ -91,7 +109,8 @@ public class FieldScene : SceneA
     {
         switch (_state)
         {
-            case _stateMain:
+            case _stateWaitFadeIn:
+            case _stateProcess:
             case _stateMenu:
             {
                 RenderCore.SetTopScreen();

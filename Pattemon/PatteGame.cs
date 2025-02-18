@@ -101,6 +101,8 @@ public class PatteGame : Game
         
         DualScreenCore.TopScreenRectangle = DualScreenCore.FocusScreenRectangle;
         DualScreenCore.BottomScreenRectangle = DualScreenCore.UnfocusScreenRectangle;
+        
+        _sceneAManager.Next(new TelevisionScene(this));
             
         PerformScreenFit();
     }
@@ -119,31 +121,12 @@ public class PatteGame : Game
         DualScreenCore.Update(gameTime, delta);
         RenderCore.UpdateTransition(gameTime);
         AudioCore.Update(gameTime);
-
-        #region screen swap
-        if (KeyboardHandler.IsKeyDownOnce(Keys.Tab) && !DualScreenCore.IsSwappingScreens)
-        {
-            DualScreenCore.SwapScreens();
-        }
-        #endregion
-
+        
         if (!DualScreenCore.IsSwappingScreens)
         {
-            if (KeyboardHandler.IsKeyDownOnce(Keys.Z))
+            if (KeyboardHandler.IsKeyDownOnce(Keys.Tab))
             {
-                _sceneAManager.Next(new TelevisionScene(this));
-            }
-            if (KeyboardHandler.IsKeyDownOnce(Keys.F))
-            {
-                _sceneAManager.Next(new FieldScene(this));
-            }
-            if (KeyboardHandler.IsKeyDownOnce(Keys.M))
-            {
-                _sceneAManager.Next(new WorldMapScene(this));
-            }
-            if (KeyboardHandler.IsKeyDownOnce(Keys.P))
-            {
-                _sceneAManager.Next(new ChoosePokemonScene(this));
+                DualScreenCore.SwapScreens();
             }
             _sceneAManager.Update(gameTime, delta);
         }

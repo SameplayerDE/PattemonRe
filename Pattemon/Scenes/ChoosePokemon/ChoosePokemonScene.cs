@@ -9,6 +9,7 @@ using PatteLib;
 using Pattemon.Engine;
 using Pattemon.Global;
 using Pattemon.Graphics;
+using Pattemon.Scenes.Field;
 using Camera = Pattemon.Engine.Camera;
 
 namespace Pattemon.Scenes.ChoosePokemon;
@@ -198,7 +199,8 @@ public class ChoosePokemonScene : SceneA
             }
             case CHOOSE_STARTER_MAIN_FADE_OUT:
             {
-                RenderCore.StartScreenTransition(1000, RenderCore.TransitionType.AlphaOut);
+                RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
+                _services.GetService<SceneAManager>().Next(new FieldScene(_game));
                 _state++;
                 break;
             }

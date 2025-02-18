@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pattemon.Engine;
 using Pattemon.Graphics;
+using Pattemon.Scenes.ChoosePokemon;
+using Pattemon.Scenes.Field;
 
 namespace Pattemon.Scenes.Television;
 
@@ -17,8 +19,9 @@ public class TelevisionScene : SceneA
     
     private int _state = 0;
 
-    public float _scrollValue;
-    public int _scrollOffset;
+    private float _timerValue = 0f;
+    private const float _timerDuration = 5f;
+    private float _scrollValue;
     
     public TelevisionScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
     {
@@ -69,15 +72,24 @@ public class TelevisionScene : SceneA
             }
             case _stateProcess:
             {
-                if (KeyboardHandler.IsKeyDownOnce(Keys.Escape))
+                if (_timerValue >= _timerDuration)
                 {
-                    _state = _stateFadeOut;
+                    if (KeyboardHandler.IsKeyDownOnce(Keys.Enter))
+                    {
+                        _state = _stateFadeOut;
+                    }
                 }
+                else
+                {
+                    _timerValue += delta;
+                }
+
                 break;
             }
             case _stateFadeOut:
             {
                 RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
+                _services.GetService<SceneAManager>().Next(new ChoosePokemonScene(_game));
                 _state = _stateWaitFadeOut;
                 break;
             }
