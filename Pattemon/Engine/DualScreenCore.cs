@@ -30,7 +30,17 @@ public static class DualScreenCore
     public static Rectangle UnfocusScreenRectangle;
     public static Rectangle BottomScreenRectangle;
     
-    // the actual current position and scale of the screen
+    public static bool IsDisabled { private set; get; }
+
+    public static void Enable()
+    {
+        IsDisabled = false;
+    }
+
+    public static void Disable()
+    {
+        IsDisabled = true;
+    }
     
     public static void Init()
     {
@@ -75,8 +85,27 @@ public static class DualScreenCore
         }
     }
 
-    public static void SwapScreens(float speed = 2.0f, int type = 0) // 0 = default, 1 = to top, 2 = to bottom
+    public static void SwapScreens() // 0 = default, 1 = to top, 2 = to bottom
     {
+        SwapScreens(SwapDefault, 2.0f);
+    }
+    
+    public static void SwapScreens(int type) // 0 = default, 1 = to top, 2 = to bottom
+    {
+        SwapScreens(type, 2.0f);
+    }
+    
+    public static void SwapScreens(float speed) // 0 = default, 1 = to top, 2 = to bottom
+    {
+        SwapScreens(SwapDefault, speed);
+    }
+    
+    public static void SwapScreens(int type, float speed) // 0 = default, 1 = to top, 2 = to bottom
+    {
+        if (IsDisabled)
+        {
+            return;
+        }
         if (!IsSwappingScreens)
         {
             _transitionSpeed = speed;

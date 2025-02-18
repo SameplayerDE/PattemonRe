@@ -11,6 +11,7 @@ using Pattemon.Graphics;
 using Pattemon.Scenes.ChoosePokemon;
 using Pattemon.Scenes.FieldMenu;
 using Pattemon.Scenes.OptionMenu;
+using Pattemon.Scenes.Television;
 using Pattemon.Scenes.WorldMap;
 using FieldScene = Pattemon.Scenes.Field.FieldScene;
 
@@ -130,7 +131,7 @@ public class PatteGame : Game
         {
             if (KeyboardHandler.IsKeyDownOnce(Keys.Z))
             {
-                _sceneAManager.Next(new FieldMenuScene(this));
+                _sceneAManager.Next(new TelevisionScene(this));
             }
             if (KeyboardHandler.IsKeyDownOnce(Keys.F))
             {
