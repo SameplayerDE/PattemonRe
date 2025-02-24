@@ -8,6 +8,7 @@ using Pattemon.Audio;
 using Pattemon.Data;
 using Pattemon.Engine;
 using Pattemon.Graphics;
+using Pattemon.Scenes;
 using Pattemon.Scenes.ChoosePokemon;
 using Pattemon.Scenes.FieldMenu;
 using Pattemon.Scenes.OptionMenu;

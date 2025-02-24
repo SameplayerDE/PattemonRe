@@ -89,7 +89,7 @@ public class TelevisionScene : SceneA
             case _stateFadeOut:
             {
                 RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
-                _services.GetService<SceneAManager>().Next(new ChoosePokemonScene(_game));
+                _services.GetService<SceneAManager>().Next(new FieldScene(_game));
                 _state = _stateWaitFadeOut;
                 break;
             }

@@ -2,6 +2,7 @@
 
 public static class PlayerData
 {
+    public static bool HasPoketch;
     public static bool HasPokedex;
     public static bool HasPokemon;
     public static bool HasBoots;

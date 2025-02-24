@@ -9,8 +9,10 @@ using PatteLib;
 using Pattemon.Engine;
 using Pattemon.Global;
 using Pattemon.Graphics;
+using Pattemon.Scenes.ChoosePokemon;
 using Pattemon.Scenes.Inventory;
 using Pattemon.Scenes.OptionMenu;
+using Pattemon.Scenes.Television;
 using Pattemon.Scenes.TrainerCard;
 using Pattemon.Scenes.WorldMap;
 
@@ -285,12 +287,18 @@ public class FieldMenuScene : SceneA
             Text = "BEUTEL",
             OnClick = () =>
             {
-                if (!HasProcess)
+                if (!PlayerData.HasPoketch)
                 {
-                    RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
-                    Process = new InventoryScene(_game);
-                    _fade = 1;
+                    MessageSystem.Publish("Poketch", new ChoosePokemonScene(_game));
+                    PlayerData.HasPoketch = true;
                 }
+                _state = _stateExit;
+               // if (!HasProcess)
+               // {
+               //     RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
+               //     Process = new InventoryScene(_game);
+               //     _fade = 1;
+               // }
             }
         });
         _entries.Add(new FieldMenuEntry()
