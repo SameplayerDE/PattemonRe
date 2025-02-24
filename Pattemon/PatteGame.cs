@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PatteLib.Data;
+using PatteLib.World;
 using Pattemon.Audio;
 using Pattemon.Data;
 using Pattemon.Engine;
@@ -31,10 +32,13 @@ public class PatteGame : Game
     
     private SceneAManager _sceneAManager;
     private HeaderManager _headerManager;
+    private WorldTimeManager _worldTimeManager;
     
     private OptionMenuScene _optionMenuScene;
     private ChoosePokemonScene _choosePokemonScene;
     private FieldMenuScene _fieldMenuScene;
+
+    private float _worldTimeUpdateTimer;
     
     public PatteGame()
     {
@@ -66,6 +70,9 @@ public class PatteGame : Game
         HeaderManager.RootDirectory = @"Content\WorldData\Headers";
         _headerManager.Load();
         Services.AddService(_headerManager);
+        
+        _worldTimeManager = new WorldTimeManager();
+        Services.AddService(_worldTimeManager);
         
         Services.AddService(new Bag());
         
@@ -122,7 +129,15 @@ public class PatteGame : Game
         DualScreenCore.Update(gameTime, delta);
         RenderCore.UpdateTransition(gameTime);
         AudioCore.Update(gameTime);
-        
+
+        _worldTimeUpdateTimer += delta;
+
+        if (_worldTimeUpdateTimer > 1)
+        {
+            _worldTimeUpdateTimer -= 1;
+            _worldTimeManager.Update(gameTime);
+        }
+
         if (!DualScreenCore.IsSwappingScreens)
         {
             if (KeyboardHandler.IsKeyDownOnce(Keys.Tab))

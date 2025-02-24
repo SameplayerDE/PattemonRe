@@ -287,18 +287,18 @@ public class FieldMenuScene : SceneA
             Text = "BEUTEL",
             OnClick = () =>
             {
-                if (!PlayerData.HasPoketch)
-                {
-                    MessageSystem.Publish("Poketch", new ChoosePokemonScene(_game));
-                    PlayerData.HasPoketch = true;
-                }
-                _state = _stateExit;
-               // if (!HasProcess)
-               // {
-               //     RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
-               //     Process = new InventoryScene(_game);
-               //     _fade = 1;
-               // }
+                //if (!PlayerData.HasPoketch)
+                //{
+                //    MessageSystem.Publish("Poketch", new ChoosePokemonScene(_game));
+                //    PlayerData.HasPoketch = true;
+                //}
+                //_state = _stateExit;
+               if (!HasProcess)
+               {
+                   RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
+                   Process = new InventoryScene(_game);
+                   _fade = 1;
+               }
             }
         });
         _entries.Add(new FieldMenuEntry()
@@ -321,8 +321,12 @@ public class FieldMenuScene : SceneA
             Text = "SICHERN",
             OnClick = () =>
             {
-                // save
-                _state = _stateExit;
+                if (!HasProcess)
+                {
+                    RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
+                    Process = new WorldMapScene(_game);
+                    _fade = 1;
+                }
             }
         });
         _entries.Add(new FieldMenuEntry()

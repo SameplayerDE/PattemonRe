@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Pattemon.Scenes.PoketchApps.Calculator;
+namespace Pattemon.PoketchApps.Calculator;
 
 public class CalculatorPoketchApp(Game game, object args = null, string contentDirectory = "Content") : PoketchApp(game, args, contentDirectory)
 {
@@ -15,7 +15,7 @@ public class CalculatorPoketchApp(Game game, object args = null, string contentD
         throw new System.NotImplementedException();
     }
 
-    public override bool Update(GameTime gameTime, float delta)
+    public override void Process(GameTime gameTime, float delta)
     {
         throw new System.NotImplementedException();
     }

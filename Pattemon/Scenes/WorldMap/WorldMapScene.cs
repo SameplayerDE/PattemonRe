@@ -151,7 +151,8 @@ public class WorldMapScene : SceneA
         spriteBatch.Draw(_cursorSheetTexture, new Vector2(_mapX, _mapY), new Rectangle(16 * _animationFrame, 0, 16 ,16), Color.White);
         if (!Equals(_currentWorldMapRegion, WorldMapMatrixEntry.Empty))
         {
-           // RenderCore.WriteText(_currentWorldMapRegion.Name, new Vector2(00));
+           RenderCore.WriteText(_currentWorldMapRegion.Name, new Vector2(00));
+           RenderCore.WriteText(_services.GetService<WorldTimeManager>().CurrentTime.ToString(), new Vector2(40));
         }
         spriteBatch.End();
     }
