@@ -6,9 +6,10 @@ namespace Pattemon.PoketchApps.Calculator;
 
 public class CalculatorPoketchApp(Game game, object args = null, string contentDirectory = "Content") : PoketchApp(game, args, contentDirectory)
 {
-    private CalculationOperator _operator;
-    private int _inMemory;
-    private int _onDisplay;
+    private CalculationOperator _operator = CalculationOperator.None;
+    private string _inputBuffer;
+    
+    private Stack<CalculationStep> _steps = [];
     
     public override bool Init()
     {
@@ -22,11 +23,42 @@ public class CalculatorPoketchApp(Game game, object args = null, string contentD
 
     public override void Process(GameTime gameTime, float delta)
     {
-        throw new System.NotImplementedException();
+        // process touch
+        
     }
 
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime, float delta)
     {
         throw new System.NotImplementedException();
+    }
+
+    private void AppendDigit(char digit)
+    {
+        if (digit is >= '0' and <= '9')
+        {
+            if (_inputBuffer.Length == 0)
+            {
+                if (digit is '0')
+                {
+                    return;
+                }
+            }
+        }
+    }
+    
+    private void AppendDecimalPoint()
+    {
+        if (_inputBuffer.Contains('.') || _inputBuffer.Length >= 9) return; // Nur 1 Dezimalpunkt erlaubt
+
+        _inputBuffer += ".";
+    }
+    
+    private void OperatorPressed(CalculationOperator calculationOperator)
+    {
+        _steps.Push(new CalculationStep
+        {
+            Value = double.Parse(_inputBuffer),
+            Operator = calculationOperator,
+        });
     }
 }

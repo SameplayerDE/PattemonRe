@@ -2,10 +2,11 @@ namespace Pattemon.PoketchApps.Calculator;
 
 public enum CalculationOperator
 {
-    Plus,
-    Minus,
-    Multiply,
-    Divide,
+    None,
+    Addition,
+    Subtraction,
+    Multiplication,
+    Division,
     Result, // prints the result
     Clear // clears everything
 }
