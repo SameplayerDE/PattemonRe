@@ -34,15 +34,13 @@ public class CalculatorPoketchApp(Game game, object args = null, string contentD
 
     private void AppendDigit(char digit)
     {
-        if (digit is >= '0' and <= '9')
+        if (digit is < '0' or > '9') return; // Nur Ziffern erlauben
+
+        if (_inputBuffer.Length == 0 && digit == '0') return; // Keine führenden Nullen
+
+        if (_inputBuffer.Length < 10) // Maximal 10 Zeichen erlaubt
         {
-            if (_inputBuffer.Length == 0)
-            {
-                if (digit is '0')
-                {
-                    return;
-                }
-            }
+            _inputBuffer += digit;
         }
     }
     
