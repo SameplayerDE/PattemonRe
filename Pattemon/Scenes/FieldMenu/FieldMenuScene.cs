@@ -288,13 +288,6 @@ public class FieldMenuScene : SceneA
             Text = "BEUTEL",
             OnClick = () =>
             {
-                //if (!PlayerData.HasPoketch)
-                //{
-                //    MessageSystem.Publish("Poketch", new CalculatorPoketchApp(_game));
-                //    PlayerData.HasPoketch = true;
-                //}
-                //_state = _stateExit;
-                PlayerData.HasPoketch = true;
                 if (!HasProcess)
                 {
                     RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);

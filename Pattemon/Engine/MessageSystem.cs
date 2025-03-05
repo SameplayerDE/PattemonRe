@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public static class MessageSystem
 {
+    public const string PoketchApp = "POKETCH_APP_NEW";
+    
     private static readonly Dictionary<string, Action<object?>> _events = new();
 
     public static void Subscribe(string eventName, Action<object?> callback)
