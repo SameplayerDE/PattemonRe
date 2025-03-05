@@ -9,7 +9,6 @@ public class DigitalClockPoketchApp(Game game, object args = null, string conten
 {
 
     private const int _cellSize = 8;
-    private const int _gap = 1; // cells between numbers
     
     private Texture2D _background;
     private Texture2D _font;
@@ -53,16 +52,6 @@ public class DigitalClockPoketchApp(Game game, object args = null, string conten
         DrawDigit(spriteBatch, fourthDigit, 18, 5);
         spriteBatch.End();
     }
-
-    private void DrawTime()
-    {
-        // 32 x 72 One Number
-        // 0 1 2 3 4 5 6 7 8 9
-        // First Number x1 y5
-        // Second Number x6 y5
-        // Third Number x13 y5
-        // Fourth Number x18 y5
-    }
     
     private void DrawDigit(SpriteBatch spriteBatch, int digit, int x, int y)
     {
@@ -72,5 +61,4 @@ public class DigitalClockPoketchApp(Game game, object args = null, string conten
         Rectangle sourceRect = new Rectangle(digit * digitWidth, 0, digitWidth, digitHeight);
         spriteBatch.Draw(_font, new Vector2(x * _cellSize, y * _cellSize), sourceRect, Color.White);
     }
-    
 }
