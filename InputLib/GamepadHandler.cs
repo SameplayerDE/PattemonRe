@@ -8,7 +8,7 @@ public static class GamepadHandler
     private static GamePadState _currGamePadState;
     private static GamePadState _prevGamePadState;
 
-    public static void Update()
+    internal static void Update()
     {
         _prevGamePadState = _currGamePadState;
         _currGamePadState = GamePad.GetState(PlayerIndex.One);

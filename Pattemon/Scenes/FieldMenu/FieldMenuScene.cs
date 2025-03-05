@@ -9,6 +9,7 @@ using PatteLib;
 using Pattemon.Engine;
 using Pattemon.Global;
 using Pattemon.Graphics;
+using Pattemon.PoketchApps.Calculator;
 using Pattemon.Scenes.ChoosePokemon;
 using Pattemon.Scenes.Inventory;
 using Pattemon.Scenes.OptionMenu;
@@ -289,16 +290,17 @@ public class FieldMenuScene : SceneA
             {
                 //if (!PlayerData.HasPoketch)
                 //{
-                //    MessageSystem.Publish("Poketch", new ChoosePokemonScene(_game));
+                //    MessageSystem.Publish("Poketch", new CalculatorPoketchApp(_game));
                 //    PlayerData.HasPoketch = true;
                 //}
                 //_state = _stateExit;
-               if (!HasProcess)
-               {
-                   RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
-                   Process = new InventoryScene(_game);
-                   _fade = 1;
-               }
+                PlayerData.HasPoketch = true;
+                if (!HasProcess)
+                {
+                    RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
+                    Process = new InventoryScene(_game);
+                    _fade = 1;
+                }
             }
         });
         _entries.Add(new FieldMenuEntry()

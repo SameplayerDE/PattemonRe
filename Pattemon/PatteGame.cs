@@ -188,6 +188,16 @@ public class PatteGame : Game
 
     #region ScreenFit
 
+   //private static float GetScaleX()
+   //{
+   //    return (float)Window.ClientBounds.Width / RenderCore.OriginalScreenSize.X;
+   //}
+
+   //private static float GetScaleY()
+   //{
+   //    return (float)Window.ClientBounds.Height / RenderCore.OriginalScreenSize.Y;
+   //}
+    
     private void PerformScreenFit()
     {
         var outputAspect = Window.ClientBounds.Width / (float) Window.ClientBounds.Height;

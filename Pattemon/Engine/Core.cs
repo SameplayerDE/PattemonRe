@@ -20,8 +20,6 @@ public class Core
     
     public static void ReadInput()
     {
-        KeyboardHandler.Update();
-        GamepadHandler.Update();
-        MouseHandler.Update();
+        InputHandler.Update();
     }
 }

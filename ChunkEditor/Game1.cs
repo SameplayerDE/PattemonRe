@@ -134,8 +134,7 @@ namespace ChunkEditor
             if (!_currentConsoleState.IsActive)
             {
 
-                KeyboardHandler.Update();
-                MouseHandler.Update();
+                InputHandler.Update();
 
                 _currCellX = Mouse.GetState().X / CellSize;
                 _currCellY = Mouse.GetState().Y / CellSize;

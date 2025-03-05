@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -20,7 +21,7 @@ public abstract class PoketchApp
     protected const int _stateProcess = 30;
     protected const int _stateFadeOut = 40;
     protected const int _stateWaitFadeOut = 50;
-    protected int _state;
+    protected int _state = _stateFadeIn;
     
     protected PoketchApp(Game game, object args = null, string contentDirectory = "Content")
     {
@@ -37,6 +38,7 @@ public abstract class PoketchApp
     
     public virtual bool Update(GameTime gameTime, float delta)
     {
+        Console.WriteLine(_state);
         switch (_state)
         {
             case _stateFadeIn:

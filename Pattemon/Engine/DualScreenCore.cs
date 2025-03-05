@@ -46,6 +46,19 @@ public static class DualScreenCore
     {
     }
     
+   //public static Rectangle GetScaledRectangle(Rectangle original)
+   //{
+   //    float scaleX = GetScaleX();
+   //    float scaleY = GetScaleY();
+
+   //    int scaledX = (int)(original.X * scaleX);
+   //    int scaledY = (int)(original.Y * scaleY);
+   //    int scaledWidth = (int)(original.Width * scaleX);
+   //    int scaledHeight = (int)(original.Height * scaleY);
+
+   //    return new Rectangle(scaledX, scaledY, scaledWidth, scaledHeight);
+   //}
+    
     public static void Update(GameTime gameTime, float delta)
     {
         if (IsSwappingScreens)

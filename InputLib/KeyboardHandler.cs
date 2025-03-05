@@ -8,7 +8,7 @@ public static class KeyboardHandler
     private static KeyboardState _currKeyboardState;
     private static KeyboardState _prevKeyboardState;
 
-    public static void Update()
+    internal static void Update()
     {
         _prevKeyboardState = _currKeyboardState;
         _currKeyboardState = Keyboard.GetState();

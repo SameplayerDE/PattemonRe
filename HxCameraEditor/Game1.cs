@@ -451,8 +451,7 @@ public class Game1 : Game
         }
         
         float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        KeyboardHandler.Update();
-        MouseHandler.Update();
+        InputHandler.Update();
         
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))

@@ -7,7 +7,9 @@ using PatteLib.World;
 using Pattemon.Engine;
 using Pattemon.Global;
 using Pattemon.Graphics;
+using Pattemon.PoketchApps;
 using Pattemon.Scenes.FieldMenu;
+using Pattemon.Scenes.Poketch;
 using Pattemon.Scenes.WorldMap;
 using Camera = Pattemon.Engine.Camera;
 
@@ -25,7 +27,7 @@ public class FieldScene : SceneA
     
     private int _state = _stateFadeIn;
 
-    private SceneA _poketchScene;
+    private PoketchScene _poketchScene;
     
     private Texture2D _background;
     private Texture2D _bottomScreen;
@@ -46,11 +48,8 @@ public class FieldScene : SceneA
         {
             _state = _stateMenu;
         });
-        MessageSystem.Subscribe("Poketch", (scene) =>
-        {
-            _poketchScene = scene as SceneA;
-            _poketchScene?.Init();
-        });
+        _poketchScene = new PoketchScene(game);
+        _poketchScene?.Init();
     }
 
     public override bool Init()
@@ -101,10 +100,7 @@ public class FieldScene : SceneA
             }
             case _stateProcess:
             {
-                if (PlayerData.HasPoketch)
-                {
-                    _poketchScene.Update(gameTime, delta);
-                }
+                _poketchScene.Update(gameTime, delta);
                 if (KeyboardHandler.IsKeyDownOnce(Keys.Escape))
                 {
                     if (!HasProcess)
@@ -153,16 +149,7 @@ public class FieldScene : SceneA
                 DrawWorldSmart(gameTime, _world, _spawn);
                 
                 RenderCore.SetBottomScreen();
-                if (PlayerData.HasPoketch)
-                {
-                    _poketchScene.Draw(spriteBatch, gameTime, delta);
-                }
-                else
-                {
-                    spriteBatch.Begin();
-                    spriteBatch.Draw(_bottomScreen, new Vector2(0, 0), Color.White);
-                    spriteBatch.End();
-                }
+                _poketchScene.Draw(spriteBatch, gameTime, delta);
 
                 if (HasProcess)
                 {

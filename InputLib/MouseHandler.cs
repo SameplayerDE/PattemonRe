@@ -16,7 +16,7 @@ public static class MouseHandler
 
     public static Point Position => _currMouseState.Position;
     
-    public static void Update()
+    internal static void Update()
     {
         _prevMouseState = _currMouseState;
         _currMouseState = Mouse.GetState();
@@ -62,12 +62,16 @@ public static class MouseHandler
     {
         return IsButtonDown(button) && !WasButtonDown(button);
     }
+
+    public static bool IsAreaOnce(MouseButton button, Rectangle area)
+    {
+        return IsButtonDownOnce(button) && area.Contains(_currMouseState.Position);
+    }
     
     public static Point GetMouseDelta()
     {
         return new Point(_currMouseState.X - _prevMouseState.X, _currMouseState.Y - _prevMouseState.Y);
     }
-    
     
     public static int GetMouseWheelValue()
     {
