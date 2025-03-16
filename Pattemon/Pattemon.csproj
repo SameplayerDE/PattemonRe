@@ -10,6 +10,7 @@
         <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
+        <EmbeddedResource Include="Content\Languages\fr\field_menu.json" />
         <EmbeddedResource Include="Icon.ico">
             <LogicalName>Icon.ico</LogicalName>
         </EmbeddedResource>
@@ -18,10 +19,10 @@
         </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
-        <MonoGameContentReference Include="Content\Content.mgcb"/>
+        <MonoGameContentReference Include="Content\Content.mgcb" />
     </ItemGroup>
     <ItemGroup>
-        <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false"/>
+        <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Emgu.CV" Version="4.9.0.5494" />
@@ -33,9 +34,6 @@
     </ItemGroup>
     <ItemGroup>
         <None Update="Content\pokemon-dp-pro.ttf">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Resources\**">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Assets\**">
@@ -56,12 +54,6 @@
         <None Update="Content\textbox.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="Assets\overlay_closed.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\overlay_open_far.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
     <ItemGroup>
         <Content Include=".config\dotnet-tools.json" />
@@ -70,9 +62,14 @@
         <ProjectReference Include="..\InputLib\InputLib.csproj" />
         <ProjectReference Include="..\PatteLib\PatteLib.csproj" />
     </ItemGroup>
+
+    <PropertyGroup>
+        <ClientLanguage>de</ClientLanguage>
+    </PropertyGroup>
+
     <ItemGroup>
-        <Folder Include="Assets\meshes\" />
-        <Folder Include="Engine\Input\" />
-        <Folder Include="Scenes\StartMenu\" />
+        <EmbeddedResource Include="Content/Languages/en/**" />
+        <EmbeddedResource Include="Content/Languages/$(ClientLanguage)/**" />
     </ItemGroup>
+    
 </Project>

@@ -250,7 +250,7 @@ public class ChoosePokemonScene : SceneA
                 spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 spriteBatch.Draw(_selectorTexture, _cursorPosition, null, Color.White, 0f, _selectorTexture.Bounds.Center.ToVector2(), 1f, SpriteEffects.None, 0f);
                 spriteBatch.Draw(GraphicsCore.GetTexture("textbox"), new Vector2(0, 18) * 8, Color.White);
-                RenderCore.WriteText("Romeo will Fußbilder.", new Vector2(4, 19) * 8);
+                RenderCore.WriteText("Der Bube defäkiert.", new Vector2(4, 19) * 8);
                 spriteBatch.End();
             }
         }
