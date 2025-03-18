@@ -2,11 +2,18 @@
 	Print 0x40F4
 	CompareVarValue 0x40F4 1
 	CallIf NOT_EQUAL Function#1
+	Print Done
 End
 
 Function 1:
 	Print Hallo
 	IncrementVar 0x0 1
 	CompareVarValue 0x0 5
-	CallIf NOT_EQUAL Function#1
+	JumpIf NOT_EQUAL Function#1
+	Call Function#2
+	Print Sex
+Return
+
+Function 2:
+	LockAll
 Return

@@ -4,7 +4,7 @@ namespace PatteLib.Gameplay.Scripting;
 
 public class ScriptProcessor
 {
-    private Dictionary<string, List<ICommand>> _sections = [];
+    private Dictionary<string, ScriptSection> _sections = [];
 
     private bool _comparisonResult;
     private Stack<(string section, int pointer)> _callStack = [];
@@ -14,7 +14,7 @@ public class ScriptProcessor
     
     public void ParseScript(string[] script)
     {
-        List<ICommand> currentSectionCommands = null;
+        List<ICommand> currentSectionCommands = [];
 
         foreach (var line in script)
         {
@@ -25,14 +25,17 @@ public class ScriptProcessor
             if (line.EndsWith(":"))
             {
                 string sectionName = line.TrimEnd(':');
-                currentSectionCommands = new List<ICommand>();
-                _sections[sectionName] = currentSectionCommands;
+                currentSectionCommands = [];
+                _sections[sectionName] = new ScriptSection(currentSectionCommands);
             }
             else if (currentSectionCommands != null)
             {
                 try
                 {
-                    currentSectionCommands.Add(CommandFactory.CreateCommand(line));
+                    if (CommandFactory.TryCreateCommand(line, out ICommand? command))
+                    {
+                        currentSectionCommands.Add(command!);
+                    }
                 }
                 catch (ArgumentException ex)
                 {
@@ -46,12 +49,12 @@ public class ScriptProcessor
     {
         sectionName = sectionName.Replace("#", " ");
         _section = sectionName;
-        if (_sections.TryGetValue(sectionName, out var commands))
+        if (_sections.TryGetValue(sectionName, out var section))
         {
             _sectionEnded = false;
-            while (_pointer < commands.Count && !_sectionEnded)
+            while (_pointer < section.Commands.Count && !_sectionEnded)
             {
-                commands[_pointer].Execute(this);
+                section.Commands[_pointer].Execute(this);
                 _pointer++;
             }
         }

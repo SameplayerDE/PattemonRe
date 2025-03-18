@@ -11,12 +11,22 @@ public class JumpIfCommand : ICommand
         _label = label;
     }
 
+    public static bool TryParse(string[] args, out ICommand? command)
+    {
+        if (args.Length != 2)
+        {
+            throw new ArgumentException("Invalid JumpIf command");
+        }
+        command = new JumpIfCommand(args[0], args[1]);
+        return true;
+    }
+
     public void Execute(ScriptProcessor processor)
     {
         if ((_condition == "EQUAL" && processor.GetComparisonResult()) ||
             (_condition == "NOT_EQUAL" && !processor.GetComparisonResult()))
         {
-            processor.ExecuteSection(_label);
+            processor.JumpToSection(_label);
         }
     }
 }

@@ -10,7 +10,17 @@ public class CallIfCommand : ICommand
         _condition = condition;
         _label = label;
     }
-
+    
+    public static bool TryParse(string[] args, out ICommand? command)
+    {
+        if (args.Length == 2)
+        {
+            command = new CallIfCommand(args[0], args[1]);
+            return true;
+        }
+        throw new ArgumentException("Invalid CallIf command");
+    }
+    
     public void Execute(ScriptProcessor processor)
     {
         if ((_condition == "EQUAL" && processor.GetComparisonResult()) ||

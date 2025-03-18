@@ -1,7 +1,9 @@
 ﻿{
-    "pokemon": "Pokemon",
-    "bag": "Bag",
-    "menu": {
-        "name": "Oktay"
-    }
+    "pokedex": "POKéDEX",
+    "pokemon": "POKéMON",
+    "bag": "BAG",
+    "save": "SAVE",
+    "options": "OPTIONS",
+    "close": "CLOSE",
+    "gay": "Schwul"
 }

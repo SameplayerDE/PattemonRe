@@ -54,6 +54,9 @@
         <None Update="Content\textbox.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Content\Languages\de\558.txt">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <Content Include=".config\dotnet-tools.json" />
@@ -65,8 +68,9 @@
 
     <PropertyGroup>
         <ClientLanguage>de</ClientLanguage>
+        <DefineConstants>$(DefineConstants);CLIENT_LANGUAGE_$(ClientLanguage)</DefineConstants>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <EmbeddedResource Include="Content/Languages/en/**" />
         <EmbeddedResource Include="Content/Languages/$(ClientLanguage)/**" />

@@ -11,6 +11,28 @@ public class SetVarCommand : ICommand
         _value = value;
     }
 
+    public static bool TryParse(string[] args, out ICommand? command)
+    {
+        command = null;
+        if (args.Length != 2)
+        {
+            return false;
+        }
+
+        if (!int.TryParse(args[0], System.Globalization.NumberStyles.HexNumber, null, out int address))
+        {
+            return false;
+        }
+
+        if (!int.TryParse(args[1], out int value))
+        {
+            return false;
+        }
+        
+        command = new SetVarCommand(address, value);
+        return true;
+    }
+
     public void Execute(ScriptProcessor processor)
     {
         processor.SetVariable(_address, _value);

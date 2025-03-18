@@ -1,0 +1,415 @@
+﻿Script 1:
+	PlayFanfare 1500
+	LockAll 
+	Message 4
+	WaitButton 
+	CloseMessage 
+	ReleaseAll 
+End 
+
+Script 2:
+	PlayFanfare 1500
+	LockAll 
+	TextPlayerName 0
+	Message 5
+	WaitButton 
+	CloseMessage 
+	ReleaseAll 
+End 
+
+Script 3:
+	LockAll 
+	SetVar 0x40F9 1
+	Message 0
+	PlaySound 1154
+	Message 1
+	WaitSound 
+	CloseMessage 
+	PlayDefaultMusic 
+	ReleaseAll 
+End 
+
+Script 4:
+	SetTextBoard 3 0
+	ShowBoard 3
+	WaitBoard 
+	BoardMessage 3 0x800C
+	CommonScript 2000
+End 
+
+Script 5:
+	CompareVarValue 0x40F9 0
+	JumpIf EQUAL Function#1
+End 
+
+Script 6:
+	PlayFanfare 1500
+	LockAll 
+	Message 2
+	WaitButton 
+	CloseMessage 
+	ReleaseAll 
+End 
+
+Script 7:
+	SetVar 0x4000 0
+Jump Function#2
+
+Script 8:
+	SetVar 0x4000 1
+Jump Function#2
+
+Script 9:
+	SetVar 0x4000 2
+Jump Function#2
+
+Script 10:
+	SetVar 0x4000 3
+Jump Function#2
+
+Function 1:
+	MusicVolumeSet 1030 50
+End 
+
+Function 2:
+	LockAll 
+	ClearFlag 371
+	AddOW Overworld.0
+	Movement Overworld.0 Action#1
+	WaitMovement 
+	CommonScript 2042
+	TextRivalName 0
+	Message 6
+	CloseMessage 
+	CompareVarValue 0x4000 0
+	CallIf EQUAL Function#3
+	CompareVarValue 0x4000 1
+	CallIf EQUAL Function#4
+	CompareVarValue 0x4000 2
+	CallIf EQUAL Function#5
+	CompareVarValue 0x4000 3
+	CallIf EQUAL Function#6
+	TextPlayerName 1
+	Message 7
+	CloseMessage 
+	Movement Overworld.0 Action#2
+	WaitMovement 
+	CompareVarValue 0x4000 0
+	CallIf EQUAL Function#7
+	CompareVarValue 0x4000 1
+	CallIf EQUAL Function#8
+	CompareVarValue 0x4000 2
+	CallIf EQUAL Function#9
+	CompareVarValue 0x4000 3
+	CallIf EQUAL Function#10
+	Message 8
+	CloseMessage 
+	CompareVarValue 0x4000 0
+	CallIf EQUAL Function#11
+	CompareVarValue 0x4000 1
+	CallIf EQUAL Function#12
+	CompareVarValue 0x4000 2
+	CallIf EQUAL Function#13
+	CompareVarValue 0x4000 3
+	CallIf EQUAL Function#14
+	TextRivalName 0
+	Message 9
+	CloseMessage 
+	CompareVarValue 0x4000 0
+	CallIf EQUAL Function#15
+	CompareVarValue 0x4000 1
+	CallIf EQUAL Function#16
+	CompareVarValue 0x4000 2
+	CallIf EQUAL Function#17
+	CompareVarValue 0x4000 3
+	CallIf EQUAL Function#18
+	TextPlayerName 1
+	Message 10
+	CloseMessage 
+	CompareVarValue 0x4000 0
+	CallIf EQUAL Function#19
+	CompareVarValue 0x4000 1
+	CallIf EQUAL Function#20
+	CompareVarValue 0x4000 2
+	CallIf EQUAL Function#21
+	CompareVarValue 0x4000 3
+	CallIf EQUAL Function#22
+	PlayFanfare 1539
+	RemoveOW Overworld.0
+	CommonScript 2043
+	WaitFanfare 1539
+	SetFlag 371
+	SetVar 0x40A5 1
+	ReleaseAll 
+End 
+
+Function 3:
+	Movement Player Action#3
+	Movement Overworld.0 Action#4
+	WaitMovement 
+Return 
+
+Function 4:
+	Movement Player Action#5
+	Movement Overworld.0 Action#6
+	WaitMovement 
+Return 
+
+Function 5:
+	Movement Overworld.0 Action#7
+	WaitMovement 
+Return 
+
+Function 6:
+	Movement Player Action#5
+	Movement Overworld.0 Action#8
+	WaitMovement 
+Return 
+
+Function 7:
+	Movement Player Action#9
+	Movement Overworld.0 Action#10
+	WaitMovement 
+Return 
+
+Function 8:
+	Movement Player Action#11
+	Movement Overworld.0 Action#12
+	WaitMovement 
+Return 
+
+Function 9:
+	Movement Player Action#13
+	Movement Overworld.0 Action#14
+	WaitMovement 
+Return 
+
+Function 10:
+	Movement Player Action#15
+	Movement Overworld.0 Action#16
+	WaitMovement 
+Return 
+
+Function 11:
+	Movement Overworld.0 Action#17
+	WaitMovement 
+Return 
+
+Function 12:
+	Movement Overworld.0 Action#18
+	WaitMovement 
+Return 
+
+Function 13:
+	Movement Overworld.0 Action#19
+	WaitMovement 
+Return 
+
+Function 14:
+	Movement Overworld.0 Action#20
+	WaitMovement 
+Return 
+
+Function 15:
+	Movement Overworld.0 Action#21
+	WaitMovement 
+Return 
+
+Function 16:
+	Movement Overworld.0 Action#22
+	WaitMovement 
+Return 
+
+Function 17:
+	Movement Overworld.0 Action#23
+	WaitMovement 
+Return 
+
+Function 18:
+	Movement Overworld.0 Action#24
+	WaitMovement 
+Return 
+
+Function 19:
+	Movement Player Action#25
+	Movement Overworld.0 Action#26
+	WaitMovement 
+Return 
+
+Function 20:
+	Movement Player Action#25
+	Movement Overworld.0 Action#27
+	WaitMovement 
+Return 
+
+Function 21:
+	Movement Player Action#25
+	Movement Overworld.0 Action#28
+	WaitMovement 
+Return 
+
+Function 22:
+	Movement Player Action#25
+	Movement Overworld.0 Action#29
+	WaitMovement 
+Return 
+
+Action 1:
+	WalkLeftVeryFast 0x2
+	Exclamation 0x1
+	Freeze8 0x1
+End
+
+Action 2:
+	Exclamation 0x1
+	Freeze8 0x1
+End
+
+Action 3:
+	Freeze8 0x1
+	Freeze4 0x1
+	WalkRightFastSite 0x1
+End
+
+Action 4:
+	WalkLeftVeryFast 0x1
+	WalkDownVeryFast 0x1
+	WalkLeftVeryFast 0x2
+End
+
+Action 5:
+	Freeze8 0x2
+	WalkRightFastSite 0x1
+End
+
+Action 6:
+	WalkLeftVeryFast 0x1
+	WalkDownVeryFast 0x2
+	WalkLeftVeryFast 0x3
+End
+
+Action 7:
+	WalkDownVeryFast 0x2
+	WalkLeftVeryFast 0x2
+End
+
+Action 8:
+	WalkLeftVeryFast 0x1
+	WalkDownVeryFast 0x3
+	WalkLeftVeryFast 0x2
+End
+
+Action 9:
+	Freeze8 0x2
+	WalkLeftVeryFastSite 0x1
+End
+
+Action 10:
+	WalkDownVeryFast 0x1
+	WalkLeftVeryFast 0x4
+	WalkUpVeryFast 0x1
+End
+
+Action 11:
+	Freeze8 0x1
+	WalkLeftFastSite 0x1
+End
+
+Action 12:
+	WalkUpVeryFast 0x1
+	WalkLeftVeryFast 0x3
+	WalkUpVeryFastSite 0x1
+End
+
+Action 13:
+	Freeze8 0x1
+	WalkLeftFastSite 0x1
+End
+
+Action 14:
+	WalkUpVeryFast 0x1
+	WalkLeftVeryFast 0x5
+	WalkUpVeryFastSite 0x1
+End
+
+Action 15:
+	Freeze8 0x1
+	WalkLeftFastSite 0x1
+End
+
+Action 16:
+	WalkUpVeryFast 0x1
+	WalkLeftVeryFast 0x4
+	WalkUpVeryFast 0x1
+End
+
+Action 17:
+	WalkRightFastSite 0x1
+End
+
+Action 18:
+	WalkRightFastSite 0x1
+End
+
+Action 19:
+	WalkRightFastSite 0x1
+End
+
+Action 20:
+	WalkRightFastSite 0x1
+End
+
+Action 21:
+	WalkRightVeryFast 0x2
+End
+
+Action 22:
+	WalkRightVeryFast 0x1
+	WalkDownVeryFast 0x1
+	WalkRightVeryFastSite 0x1
+End
+
+Action 23:
+	WalkRightVeryFast 0x1
+	WalkDownVeryFast 0x1
+	WalkRightVeryFast 0x2
+End
+
+Action 24:
+	WalkRightVeryFast 0x1
+	WalkDownVeryFast 0x2
+	WalkRightVeryFast 0x1
+End
+
+Action 25:
+	Freeze8 0x2
+	WalkRightFastSite 0x1
+End
+
+Action 26:
+	WalkDownVeryFast 0x1
+	WalkRightVeryFast 0x3
+	WalkUpVeryFast 0x2
+	WalkRightVeryFast 0x4
+End
+
+Action 27:
+	WalkUpVeryFast 0x1
+	WalkRightVeryFast 0x4
+	WalkUpVeryFast 0x1
+	WalkRightVeryFast 0x3
+End
+
+Action 28:
+	WalkUpVeryFast 0x1
+	WalkRightVeryFast 0x2
+	WalkUpVeryFast 0x1
+	WalkRightVeryFast 0x3
+End
+
+Action 29:
+	WalkUpVeryFast 0x1
+	WalkRightVeryFast 0x3
+	WalkUpVeryFast 0x2
+	WalkRightVeryFast 0x3
+End

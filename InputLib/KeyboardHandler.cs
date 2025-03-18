@@ -16,11 +16,19 @@ public static class KeyboardHandler
 
     public static bool IsKeyDownOnce(Keys key)
     {
+        if (InputHandler.IsLocked)
+        {
+            return false;
+        }
         return _currKeyboardState.IsKeyDown(key) && _prevKeyboardState.IsKeyUp(key);
     }
 
     public static bool IsKeyDown(Keys key)
     {
+        if (InputHandler.IsLocked)
+        {
+            return false;
+        }
         return _currKeyboardState.IsKeyDown(key);
     }
     

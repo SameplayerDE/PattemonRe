@@ -1,4 +1,8 @@
 ﻿{
-    "pokemon": "Pokemon",
-    "bag": "Beutel"
+    "pokedex": "POKéDEX",
+    "pokemon": "POKéMON",
+    "bag": "BEUTEL",
+    "save": "SICHERN",
+    "options": "OPTION.",
+    "close": "BEENDEN"
 }

@@ -5,94 +5,108 @@ namespace PatteLib.Gameplay.Scripting;
 
 public class CommandFactory
 {
-    public static ICommand CreateCommand(string line)
+    private static readonly Dictionary<string, Func<string[], ICommand>> _commandRegistry = new();
+
+    static CommandFactory()
     {
-        string[] parts = Regex.Replace(line, @"\t|\n|\r", "").Split(' ');
-
-        switch (parts[0])
+        RegisterCommand("Call", args =>
         {
-            case "SetVar":
-                if (parts.Length == 3 && int.TryParse(parts[1], System.Globalization.NumberStyles.HexNumber, null, out int address) && int.TryParse(parts[2], out int val))
-                {
-                    return new SetVarCommand(address, val);
-                }
-                throw new ArgumentException("Invalid SetVar command");
-            case "CompareVarValue":
-                if (parts.Length == 3)
-                {
-                    // Extrahiere die Adresse und den Wert aus parts[1] und parts[2]
-                    string addressStr = parts[1];
-                    string valueStr = parts[2];
-
-                    // Konvertiere die hexadezimale Adresse in eine Dezimalzahl
-                    int compAddress = Convert.ToInt32(addressStr.StartsWith("0x") ? addressStr.Substring(2) : addressStr, 16);
-
-                    // Konvertiere den Wert in eine Dezimalzahl
-                    int compVal;
-                    if (!int.TryParse(valueStr, out compVal))
-                    {
-                        throw new ArgumentException("Invalid CompareVarValue command: value is not a valid integer.");
-                    }
-
-                    return new CompareVarValueCommand(compAddress, compVal);
-                }
-                throw new ArgumentException("Invalid CompareVarValue command: not enough arguments.");
-            case "IncrementVar":
-                if (parts.Length == 3)
-                {
-                    // Extrahiere die Adresse und den Wert aus parts[1] und parts[2]
-                    string addressStr = parts[1];
-                    string valueStr = parts[2];
-
-                    // Konvertiere die hexadezimale Adresse in eine Dezimalzahl
-                    int compAddress = Convert.ToInt32(addressStr.StartsWith("0x") ? addressStr.Substring(2) : addressStr, 16);
-
-                    // Konvertiere den Wert in eine Dezimalzahl
-                    int incVal;
-                    if (!int.TryParse(valueStr, out incVal))
-                    {
-                        throw new ArgumentException("Invalid CompareVarValue command: value is not a valid integer.");
-                    }
-
-                    return new IncrementVarCommand(compAddress, incVal);
-                }
-                throw new ArgumentException("Invalid CompareVarValue command: not enough arguments.");
-            case "CallIf":
-                if (parts.Length == 3)
-                {
-                    return new CallIfCommand(parts[1], parts[2]);
-                }
-                throw new ArgumentException("Invalid CallIf command");
-            case "Call":
-                if (parts.Length == 2)
-                {
-                    return new CallCommand(parts[1]);
-                }
-                throw new ArgumentException("Invalid Call command");
-            case "JumpIf":
-                if (parts.Length == 3)
-                {
-                    return new JumpIfCommand(parts[1], parts[2]);
-                }
-                throw new ArgumentException("Invalid JumpIf command");
-            case "Jump":
-                if (parts.Length == 2)
-                {
-                    return new JumpCommand(parts[1]);
-                }
-                throw new ArgumentException("Invalid Jump command");
-            case "End":
-                return new EndCommand();
-            case "Return":
-                return new ReturnCommand();
-            case "Print":
-                if (parts.Length == 2)
-                {
-                    return new PrintCommand(parts[1]);
-                }
-                throw new ArgumentException("Invalid Print command");
-            default:
-                throw new ArgumentException($"Unknown command: {parts[0]}");
+            if (CallCommand.TryParse(args, out ICommand? command))
+            {
+                return command!;
+            }
+            throw new Exception();
+        });
+        RegisterCommand("CallIf", args =>
+        {
+            if (CallIfCommand.TryParse(args, out ICommand? command))
+            {
+                return command!;
+            }
+            throw new Exception();
+        });
+        RegisterCommand("CompareVarValue", args =>
+        {
+            if (CompareVarValueCommand.TryParse(args, out ICommand? command))
+            {
+                return command!;
+            }
+            throw new Exception();
+        });
+        RegisterCommand("End", args =>
+        {
+            if (EndCommand.TryParse(args, out ICommand? command))
+            {
+                return command!;
+            }
+            throw new Exception();
+        });
+        RegisterCommand("IncrementVar", args =>
+        {
+            if (IncrementVarCommand.TryParse(args, out ICommand? command))
+            {
+                return command!;
+            }
+            throw new Exception();
+        });
+        RegisterCommand("Print", args =>
+        {
+            if (PrintCommand.TryParse(args, out ICommand? command))
+            {
+                return command!;
+            }
+            throw new Exception();
+        });
+        RegisterCommand("Return", args =>
+        {
+            if (ReturnCommand.TryParse(args, out ICommand? command))
+            {
+                return command!;
+            }
+            throw new Exception();
+        });
+        RegisterCommand("SetVar", args =>
+        {
+            if (SetVarCommand.TryParse(args, out ICommand? command))
+            {
+                return command!;
+            }
+            throw new Exception();
+        });
+        RegisterCommand("Jump", args =>
+        {
+            if (JumpCommand.TryParse(args, out ICommand? command))
+            {
+                return command!;
+            }
+            throw new Exception();
+        });
+        RegisterCommand("JumpIf", args =>
+        {
+            if (JumpIfCommand.TryParse(args, out ICommand? command))
+            {
+                return command!;
+            }
+            throw new Exception();
+        });
+    }
+    
+    public static void RegisterCommand(string name, Func<string[], ICommand> parser)
+    {
+        _commandRegistry[name] = parser;
+    }
+    
+    public static bool TryCreateCommand(string line, out ICommand? command)
+    {
+        command = null;
+        string[] parts = Regex.Replace(line, @"\t|\n|\r", "").Split(' ');
+        string commandName = parts[0];
+        string[] args = parts.Skip(1).ToArray();
+        
+        if (_commandRegistry.TryGetValue(commandName, out var parser))
+        {
+            return parser(args) is { } cmd && (command = cmd) != null;
         }
+        throw new ArgumentException("Unkown Command");
     }
 }

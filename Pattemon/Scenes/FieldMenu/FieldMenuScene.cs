@@ -87,6 +87,9 @@ public class FieldMenuScene : SceneA
         _cursorTexture = _content.Load<Texture2D>("MenuSelector");
         _iconSheetTexture = _content.Load<Texture2D>("Icons/MenuIcons");
         
+        // load text data
+        LanguageCore.Load("field_menu");
+        
         // prepare menu matrix
         PrepareMatrix();
         
@@ -261,7 +264,7 @@ public class FieldMenuScene : SceneA
             _entries.Add(new FieldMenuEntry()
             {
                 IconIndex = 0,
-                Text = "POKEDEX",
+                Text = LanguageCore.Get("field_menu", "pokedex"),
                 OnClick = () =>
                 {
                     // open pokedex
@@ -274,7 +277,7 @@ public class FieldMenuScene : SceneA
             _entries.Add(new FieldMenuEntry()
             {
                 IconIndex = 1,
-                Text = "POKEMON",
+                Text = LanguageCore.Get("field_menu", "pokemon"),
                 OnClick = () =>
                 {
                     // open team
@@ -285,7 +288,7 @@ public class FieldMenuScene : SceneA
         _entries.Add(new FieldMenuEntry()
         {
             IconIndex = 2,
-            Text = "BEUTEL",
+            Text = LanguageCore.Get("field_menu", "bag"),
             OnClick = () =>
             {
                 if (!HasProcess)
@@ -313,7 +316,7 @@ public class FieldMenuScene : SceneA
         _entries.Add(new FieldMenuEntry()
         {
             IconIndex = 4,
-            Text = "SICHERN",
+            Text = LanguageCore.Get("field_menu", "save"),
             OnClick = () =>
             {
                 if (!HasProcess)
@@ -327,7 +330,7 @@ public class FieldMenuScene : SceneA
         _entries.Add(new FieldMenuEntry()
         {
             IconIndex = 5,
-            Text = "OPTIONEN",
+            Text = LanguageCore.Get("field_menu", "options"),
             OnClick = () =>
             {
                 if (!HasProcess)
@@ -341,7 +344,7 @@ public class FieldMenuScene : SceneA
         _entries.Add(new FieldMenuEntry()
         {
             IconIndex = 6,
-            Text = "BEENDEN",
+            Text = LanguageCore.Get("field_menu", "close"),
             OnClick = () =>
             {
                 _state = _stateExit;

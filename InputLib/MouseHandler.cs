@@ -18,6 +18,10 @@ public static class MouseHandler
     
     internal static void Update()
     {
+        if (InputHandler.IsLocked)
+        {
+            return;
+        }
         _prevMouseState = _currMouseState;
         _currMouseState = Mouse.GetState();
     }

@@ -1,17 +1,25 @@
 ﻿using System;
 using System.IO;
 using PatteLib.Gameplay.Scripting;
-using Pattemon;
-using Pattemon.Data;
-using Pattemon.Engine;
+using Pattemon.Gameplay.Scripting.Commands;
 
-LanguageCore.Load("field_menu");
-Console.WriteLine(LanguageCore.Get("field_menu", "bag"));
-Console.WriteLine(LanguageCore.Get("field_menu", "menu.name"));
+CommandFactory.RegisterCommand("LockAll", args =>
+{
+    if (args.Length == 0)
+    {
+        return new LockAllCommand();
+    }
+    throw new Exception();
+});
 
-//var processor = new ScriptProcessor();
-//processor.ParseScript(File.ReadAllLines("Content/Scripts/501.sk"));
-//processor.ExecuteSection("Script 1");
-//
-//using var game = new PatteGame();
-//game.Run();
+CommandFactory.RegisterCommand("ReleaseAll", args =>
+{
+    if (args.Length == 0)
+    {
+        return new ReleaseAllCommand();
+    }
+    throw new Exception();
+});
+
+using var game = new Pattemon.PatteGame();
+game.Run();

@@ -9,6 +9,16 @@ public class PrintCommand : ICommand
         _value = value;
     }
 
+    public static bool TryParse(string[] args, out ICommand? command)
+    {
+        if (args.Length != 1)
+        {
+            throw new ArgumentException("Invalid Print command");
+        }
+        command = new PrintCommand(args[0]);
+        return true;
+    }
+
     public void Execute(ScriptProcessor processor)
     {
         // Überprüfen, ob _value ein hexadezimaler Wert ist

@@ -54,7 +54,7 @@ public class MatrixData
 
         return matrixData;
     }
-
+    
     public MatrixCellData Get(int x, int y)
     {
         if (x < 0 || x >= Width || y < 0 || y >= Height)

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PatteLib.Data;
+using PatteLib.Gameplay.Scripting;
 using PatteLib.World;
 using Pattemon.Audio;
 using Pattemon.Data;
@@ -37,6 +38,7 @@ public class PatteGame : Game
     private OptionMenuScene _optionMenuScene;
     private ChoosePokemonScene _choosePokemonScene;
     private FieldMenuScene _fieldMenuScene;
+    private ScriptProcessor _scriptProcessor;
 
     private float _worldTimeUpdateTimer;
     
@@ -55,8 +57,10 @@ public class PatteGame : Game
     protected override void Initialize()
     {
         _sceneAManager = new SceneAManager();
-        
         Services.AddService(_sceneAManager);
+        
+        _scriptProcessor = new ScriptProcessor();
+        Services.AddService(_scriptProcessor);
         
         _preferedScreenSize = RenderCore.PreferedScreenSize;
         base.Initialize();

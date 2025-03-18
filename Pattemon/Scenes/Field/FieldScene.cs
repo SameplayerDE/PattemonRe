@@ -3,6 +3,7 @@ using InputLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using PatteLib.Data;
 using PatteLib.World;
 using Pattemon.Engine;
 using Pattemon.Global;
@@ -27,13 +28,15 @@ public class FieldScene : SceneA
     
     private int _state = _stateFadeIn;
 
-    private PoketchScene _poketchScene;
+    private PoketchScene _poketchScene; // for the bottom screen
     
-    private Texture2D _background;
-    private Texture2D _bottomScreen;
-    private Effect _worldShader;
-    private Effect _buildingShader;
-    private Camera _camera;
+    private Effect _worldShader; // shader for world 3d
+    private Effect _buildingShader; // shader for entities
+    private Camera _camera; // camera
+
+    private MatrixData _currentMatrix; // the data of the current area (matrix)
+    private int _currentHeaderId = int.MinValue;
+    
     private World _world;
     private Vector3 _spawn = new Vector3(4, 0, 6);
     private Random _random = new Random();
@@ -54,20 +57,23 @@ public class FieldScene : SceneA
 
     public override bool Init()
     {
-        GraphicsCore.LoadTexture("icon", "Assets/player_icon.png");
-        _background = _content.Load<Texture2D>("TopScreen");
-        _bottomScreen = _content.Load<Texture2D>("BottomScreen");
+        LanguageCore.Load("433");
         
-        Building.RootDirectory = @"Assets\meshes\output_assets";
-        Chunk.RootDirectory = @"Assets\meshes\overworldmaps";
-   
         _worldShader = _content.Load<Effect>("Shaders/WorldShader");
         _buildingShader = _content.Load<Effect>("Shaders/BuildingShader");
-        _world = World.LoadByMatrix(_graphics, 5);
+        
         _camera = Camera.CameraLookMap[4];
         Camera.ActiveCamera = _camera;
         _camera.CaptureTarget(() => _spawn);
         _camera.SetAsActive();
+
+        _currentMatrix = MatrixData.LoadFromFile(@"Content/WorldData/Matrices/0.json");
+        
+        GraphicsCore.LoadTexture("icon", "Assets/player_icon.png");
+        Building.RootDirectory = @"Assets\meshes\output_assets";
+        Chunk.RootDirectory = @"Assets\meshes\overworldmaps";
+        _world = World.LoadByMatrix(_graphics, 0);
+        
         return true;
     }
 
@@ -100,6 +106,16 @@ public class FieldScene : SceneA
             }
             case _stateProcess:
             {
+                var currentMatrixCell = _currentMatrix.Get((int)(_spawn.X / 32), (int)(_spawn.Z / 32));
+                var currentHeader = _services.GetService<HeaderManager>().GetHeaderById(currentMatrixCell.HeaderId);
+                var direction = KeyboardHandler.GetDirection();
+                _spawn += direction;
+
+                if (currentHeader != null)
+                {
+                    Console.WriteLine(LanguageCore.GetLine("433", currentHeader.LocationNameId));
+                }
+                
                 _poketchScene.Update(gameTime, delta);
                 if (KeyboardHandler.IsKeyDownOnce(Keys.Escape))
                 {

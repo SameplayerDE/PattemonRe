@@ -2,15 +2,16 @@
 
 namespace PatteLib.World;
 
-public class ChunkHeader
+public record ChunkHeader
 {
     public int Id;
     
     //Location Info
-    public string LocationName;
+    //public string LocationName;
+    public int LocationNameId;
     public bool ShowNameTag;
     public int AreaIcon;
-    public string InternalName;
+    //public string InternalName;
     
     //Appearance & Sound
     public int MusicDayId;
@@ -25,6 +26,11 @@ public class ChunkHeader
     
     //Matrix
     public int MatrixId;
+    
+    //Gameplay
+    public int ScriptFileId;
+    public int LevelScriptId;
+    public int TextArchiveId;
     public int EventFileId;
 
     public static ChunkHeader Load(JToken jHeader)
@@ -42,10 +48,11 @@ public class ChunkHeader
         var chunkHeader = new ChunkHeader
         {
             Id = headerId,
-            LocationName = jHeader["locationName"]?.ToString(),
+            //LocationName = jHeader["locationName"]?.ToString(),
+            LocationNameId = jHeader["locationNameId"]?.ToObject<int>() ?? 0,
             ShowNameTag = jHeader["showNameTag"]?.ToObject<bool>() ?? false,
             AreaIcon = jHeader["musicDayId"]?.ToObject<int>() ?? 0,
-            InternalName = jHeader["internalName"]?.ToString(),
+            //InternalName = jHeader["internalName"]?.ToString(),
             MusicDayId = jHeader["musicDayId"]?.ToObject<int>() ?? 0,
             MusicNightId = jHeader["musicNightId"]?.ToObject<int>() ?? 0,
             WeatherId = jHeader["weatherId"]?.ToObject<int>() ?? 0,
@@ -54,9 +61,30 @@ public class ChunkHeader
             CanUseRun = jHeader["canUseRun"]?.ToObject<bool>() ?? false,
             CanUseBicycle = jHeader["canUseBicycle"]?.ToObject<bool>() ?? false,
             MatrixId = jHeader["matrixId"]?.ToObject<int>() ?? 0,
-            EventFileId = jHeader["eventFileId"]?.ToObject<int>() ?? 0
+            EventFileId = jHeader["eventFileId"]?.ToObject<int>() ?? 0,
+            ScriptFileId = jHeader["scriptFileId"]?.ToObject<int>() ?? 0,
+            LevelScriptId = jHeader["levelScriptId"]?.ToObject<int>() ?? 0,
+            TextArchiveId = jHeader["textArchiveId"]?.ToObject<int>() ?? 0
         };
 
         return chunkHeader;
+    }
+    
+    public override string ToString()
+    {
+        return string.Join(Environment.NewLine, new[]
+        {
+            "ChunkHeader:",
+            $"  Id: {Id}",
+            $"  Location: {LocationNameId}",
+            //$"  Location: {LocationName} (Internal: {InternalName})",
+            $"  Show Name Tag: {ShowNameTag}",
+            $"  Area Icon: {AreaIcon}",
+            $"  Music (Day/Night): {MusicDayId}/{MusicNightId}",
+            $"  Weather: {WeatherId}",
+            $"  Usable Features: Fly={CanUseFly}, Rope={CanUseRope}, Run={CanUseRun}, Bicycle={CanUseBicycle}",
+            $"  Matrix Id: {MatrixId}",
+            $"  Gameplay - Script: {ScriptFileId}, LevelScript: {LevelScriptId}, TextArchive: {TextArchiveId}, EventFile: {EventFileId}"
+        });
     }
 }
