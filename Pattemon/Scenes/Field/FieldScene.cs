@@ -40,6 +40,8 @@ public class FieldScene : SceneA
     
     private Texture2D[] _areaIcons = new Texture2D[10];
     
+    private Action<int> _onChunkHeaderIdChanged;
+    
     private PoketchScene _poketchScene; // for the bottom screen
     
     private Effect _worldShader; // shader for world 3d
@@ -71,6 +73,9 @@ public class FieldScene : SceneA
 
     public override bool Init()
     {
+        // load text archieve for chunk names
+        LanguageCore.Load("433");
+        
         // load area icons
         _areaIcons[0] = GraphicsCore.LoadTexture("area_icon_00", @"Assets/images/00.png");
         _areaIcons[1] = GraphicsCore.LoadTexture("area_icon_01", @"Assets/images/01.png");
@@ -83,7 +88,11 @@ public class FieldScene : SceneA
         _areaIcons[8] = GraphicsCore.LoadTexture("area_icon_08", @"Assets/images/08.png");
         _areaIcons[9] = GraphicsCore.LoadTexture("area_icon_09", @"Assets/images/09.png");
         
-        LanguageCore.Load("433");
+        // 
+        _onChunkHeaderIdChanged += id =>
+        {
+            _currentHeaderId = id;
+        };
         
         _worldShader = _content.Load<Effect>("Shaders/WorldShader");
         _buildingShader = _content.Load<Effect>("Shaders/BuildingShader");
@@ -124,7 +133,6 @@ public class FieldScene : SceneA
 
     public override bool Update(GameTime gameTime, float delta)
     {
-
         switch (_state)
         {
             case _stateFadeIn:
@@ -151,16 +159,13 @@ public class FieldScene : SceneA
                 if (currentMatrixCell != MatrixCellData.Empty)
                 {
                     int newHeaderId = currentMatrixCell.HeaderId;
-                    
                     if (_currentHeaderId != newHeaderId)
                     {
-                        _areaIconState = _areaIconStateFadeIn;
-                        _currentHeaderId = newHeaderId;
                         var currentHeader = _services.GetService<HeaderManager>().GetHeaderById(newHeaderId);
                         if (currentHeader != null)
                         {
-                            Console.WriteLine(currentHeader.ToString());
-                            Console.WriteLine(LanguageCore.GetLine("433", currentHeader.LocationNameId));
+                            _areaIconState = _areaIconStateFadeIn;
+                            _onChunkHeaderIdChanged.Invoke(newHeaderId);
                         }
                     }
                 }
