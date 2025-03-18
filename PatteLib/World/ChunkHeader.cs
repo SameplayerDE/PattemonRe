@@ -51,7 +51,7 @@ public record ChunkHeader
             //LocationName = jHeader["locationName"]?.ToString(),
             LocationNameId = jHeader["locationNameId"]?.ToObject<int>() ?? 0,
             ShowNameTag = jHeader["showNameTag"]?.ToObject<bool>() ?? false,
-            AreaIcon = jHeader["musicDayId"]?.ToObject<int>() ?? 0,
+            AreaIcon = jHeader["areaIcon"]?.ToObject<int>() ?? 0,
             //InternalName = jHeader["internalName"]?.ToString(),
             MusicDayId = jHeader["musicDayId"]?.ToObject<int>() ?? 0,
             MusicNightId = jHeader["musicNightId"]?.ToObject<int>() ?? 0,

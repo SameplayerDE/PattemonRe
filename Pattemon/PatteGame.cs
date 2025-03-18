@@ -129,6 +129,7 @@ public class PatteGame : Game
         }
         
         Core.ReadInput();
+        TimerCore.Update(gameTime);
         TransitionCore.Update(gameTime, delta);
         DualScreenCore.Update(gameTime, delta);
         RenderCore.UpdateTransition(gameTime);

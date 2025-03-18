@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using InputLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,6 +29,17 @@ public class FieldScene : SceneA
     
     private int _state = _stateFadeIn;
 
+    private const int _areaIconStateNone = 0;
+    private const int _areaIconStateFadeIn = 10;
+    private const int _areaIconStateWaitFadeIn = 20;
+    private const int _areaIconStateWait = 30;
+    private const int _areaIconStateFadeOut = 40;
+    private const int _areaIconStateWaitFadeOut = 50;
+    
+    private int _areaIconState = _areaIconStateNone;
+    
+    private Texture2D[] _areaIcons = new Texture2D[10];
+    
     private PoketchScene _poketchScene; // for the bottom screen
     
     private Effect _worldShader; // shader for world 3d
@@ -36,6 +48,8 @@ public class FieldScene : SceneA
 
     private MatrixData _currentMatrix; // the data of the current area (matrix)
     private int _currentHeaderId = int.MinValue;
+    private int _prevHeaderId = int.MinValue;
+    private int _nextHeaderId = int.MinValue;
     
     private World _world;
     private Vector3 _spawn = new Vector3(4, 0, 6);
@@ -57,6 +71,18 @@ public class FieldScene : SceneA
 
     public override bool Init()
     {
+        // load area icons
+        _areaIcons[0] = GraphicsCore.LoadTexture("area_icon_00", @"Assets/images/00.png");
+        _areaIcons[1] = GraphicsCore.LoadTexture("area_icon_01", @"Assets/images/01.png");
+        _areaIcons[2] = GraphicsCore.LoadTexture("area_icon_02", @"Assets/images/02.png");
+        _areaIcons[3] = GraphicsCore.LoadTexture("area_icon_03", @"Assets/images/03.png");
+        _areaIcons[4] = GraphicsCore.LoadTexture("area_icon_04", @"Assets/images/04.png");
+        _areaIcons[5] = GraphicsCore.LoadTexture("area_icon_05", @"Assets/images/05.png");
+        _areaIcons[6] = GraphicsCore.LoadTexture("area_icon_06", @"Assets/images/06.png");
+        _areaIcons[7] = GraphicsCore.LoadTexture("area_icon_07", @"Assets/images/07.png");
+        _areaIcons[8] = GraphicsCore.LoadTexture("area_icon_08", @"Assets/images/08.png");
+        _areaIcons[9] = GraphicsCore.LoadTexture("area_icon_09", @"Assets/images/09.png");
+        
         LanguageCore.Load("433");
         
         _worldShader = _content.Load<Effect>("Shaders/WorldShader");
@@ -79,6 +105,17 @@ public class FieldScene : SceneA
 
     public override bool Exit()
     {
+        GraphicsCore.FreeTexture("area_icon_00");
+        GraphicsCore.FreeTexture("area_icon_01");
+        GraphicsCore.FreeTexture("area_icon_02");
+        GraphicsCore.FreeTexture("area_icon_03");
+        GraphicsCore.FreeTexture("area_icon_04");
+        GraphicsCore.FreeTexture("area_icon_05");
+        GraphicsCore.FreeTexture("area_icon_06");
+        GraphicsCore.FreeTexture("area_icon_07");
+        GraphicsCore.FreeTexture("area_icon_08");
+        GraphicsCore.FreeTexture("area_icon_09");
+        
         GraphicsCore.FreeTexture("icon");
         _content.Unload();
         _content.Dispose();
@@ -106,14 +143,26 @@ public class FieldScene : SceneA
             }
             case _stateProcess:
             {
-                var currentMatrixCell = _currentMatrix.Get((int)(_spawn.X / 32), (int)(_spawn.Z / 32));
-                var currentHeader = _services.GetService<HeaderManager>().GetHeaderById(currentMatrixCell.HeaderId);
+                UpdateAreaIconState();
                 var direction = KeyboardHandler.GetDirection();
                 _spawn += direction;
-
-                if (currentHeader != null)
+                
+                var currentMatrixCell = _currentMatrix.Get((int)(_spawn.X / 32), (int)(_spawn.Z / 32));
+                if (currentMatrixCell != MatrixCellData.Empty)
                 {
-                    Console.WriteLine(LanguageCore.GetLine("433", currentHeader.LocationNameId));
+                    int newHeaderId = currentMatrixCell.HeaderId;
+                    
+                    if (_currentHeaderId != newHeaderId)
+                    {
+                        _areaIconState = _areaIconStateFadeIn;
+                        _currentHeaderId = newHeaderId;
+                        var currentHeader = _services.GetService<HeaderManager>().GetHeaderById(newHeaderId);
+                        if (currentHeader != null)
+                        {
+                            Console.WriteLine(currentHeader.ToString());
+                            Console.WriteLine(LanguageCore.GetLine("433", currentHeader.LocationNameId));
+                        }
+                    }
                 }
                 
                 _poketchScene.Update(gameTime, delta);
@@ -163,6 +212,7 @@ public class FieldScene : SceneA
             {
                 RenderCore.SetTopScreen();
                 DrawWorldSmart(gameTime, _world, _spawn);
+                DrawAreaIcon(spriteBatch);
                 
                 RenderCore.SetBottomScreen();
                 _poketchScene.Draw(spriteBatch, gameTime, delta);
@@ -178,6 +228,81 @@ public class FieldScene : SceneA
                 Process.Draw(spriteBatch, gameTime, delta);
                 break;
             }
+        }
+    }
+
+    private void DrawAreaIcon(SpriteBatch spriteBatch)
+    {
+        if (_areaIconState == _areaIconStateNone) return; // Falls kein Icon aktiv ist, nichts zeichnen
+
+        float animationProgress = TimerCore.Get("area_icon_fade"); // Wert zwischen 0 und 1
+        float yOffset = 0f;
+
+        if (_areaIconState is _areaIconStateWaitFadeIn or _areaIconStateFadeIn)
+        {
+            // Bewegung von -38 nach 0 (von oben nach unten)
+            yOffset = -38 + (38 * animationProgress);
+        }
+        else if (_areaIconState == _areaIconStateWait)
+        {
+            // Bleibt an Position 0
+            yOffset = 0;
+        }
+        else if (_areaIconState is _areaIconStateWaitFadeOut or _areaIconStateFadeOut)
+        {
+            // Bewegung von 0 nach -38 (nach oben verschwinden)
+            yOffset = -38 * animationProgress;
+        }
+
+        var currentHeader = _services.GetService<HeaderManager>().GetHeaderById(_currentHeaderId);
+        if (currentHeader != null)
+        {
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            if (currentHeader.AreaIcon is >= 0 and <= 9)
+            {
+                spriteBatch.Draw(_areaIcons[currentHeader.AreaIcon], new Vector2(4, yOffset), Color.White);
+            }
+            spriteBatch.End();
+        }
+    }
+    
+    private void UpdateAreaIconState()
+    {
+        switch (_areaIconState)
+        {
+            case _areaIconStateNone:
+                break;
+            case _areaIconStateFadeIn:
+                TimerCore.Create("area_icon_fade", 320f);
+                _areaIconState = _areaIconStateWaitFadeIn;
+                break;
+            case _areaIconStateWaitFadeIn:
+                if (TimerCore.IsDone("area_icon_fade"))
+                {
+                    TimerCore.Remove("area_icon_fade");
+                    TimerCore.Create("area_icon_wait", 320f);
+                    _areaIconState = _areaIconStateWait;
+                }
+                break;
+            case _areaIconStateWait:
+                if (TimerCore.IsDone("area_icon_wait"))
+                {
+                    TimerCore.Remove("area_icon_wait");
+                    TimerCore.Create("area_icon_fade", 2f);
+                    _areaIconState = _areaIconStateFadeOut;
+                }
+                break;
+            case _areaIconStateFadeOut:
+                TimerCore.Create("area_icon_fade", 320f);
+                _areaIconState = _areaIconStateWaitFadeOut;
+                break;
+            case _areaIconStateWaitFadeOut:
+                if (TimerCore.IsDone("area_icon_fade"))
+                {
+                    TimerCore.Remove("area_icon_fade");
+                    _areaIconState = _areaIconStateNone;
+                }
+                break;
         }
     }
     
