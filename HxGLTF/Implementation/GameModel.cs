@@ -180,9 +180,9 @@ namespace HxGLTF.Implementation
 
                 var valuesPerElement = targetPath switch
                 {
-                    "rotation" => 4,
-                    "translation" or "scale" => 3,
-                    "texture" => 2,
+                    AnimationChannelTargetPath.Rotation => 4,
+                    AnimationChannelTargetPath.Translation or AnimationChannelTargetPath.Scale => 3,
+                    AnimationChannelTargetPath.Texture => 2,
                     _ => 0
                 };
 
@@ -231,22 +231,22 @@ namespace HxGLTF.Implementation
                                 data[i] = sampler.Output[offset + i];
                             }
 
-                            if (targetPath == "rotation")
+                            if (targetPath == AnimationChannelTargetPath.Rotation)
                             {
                                 Quaternion rotation = new Quaternion(data[0], data[1], data[2], data[3]);
                                 Nodes[channel.Target.NodeIndex].Rotate(rotation);
                             }
-                            else if (targetPath == "translation")
+                            else if (targetPath == AnimationChannelTargetPath.Translation)
                             {
                                 Vector3 translation = new Vector3(data[0], data[1], data[2]);
                                 Nodes[channel.Target.NodeIndex].Translate(translation);
                             }
-                            else if (targetPath == "scale")
+                            else if (targetPath == AnimationChannelTargetPath.Scale)
                             {
                                 Vector3 scale = new Vector3(data[0], data[1], data[2]);
                                 Nodes[channel.Target.NodeIndex].Resize(scale);
                             }
-                            else if (targetPath == "texture")
+                            else if (targetPath == AnimationChannelTargetPath.Texture)
                             {
                                 Vector2 uv = new Vector2(data[0], data[1]);
                                 var node = Nodes[channel.Target.NodeIndex];
@@ -291,21 +291,21 @@ namespace HxGLTF.Implementation
                                 nextData[i] = sampler.Output[offsetNext + i];
                             }
 
-                            if (targetPath == "rotation")
+                            if (targetPath == AnimationChannelTargetPath.Rotation)
                             {
                                 Quaternion prevRotation = new Quaternion(prevData[0], prevData[1], prevData[2], prevData[3]);
                                 Quaternion nextRotation = new Quaternion(nextData[0], nextData[1], nextData[2], nextData[3]);
                                 Quaternion rotation = Quaternion.Lerp(prevRotation, nextRotation, t);
                                 Nodes[channel.Target.NodeIndex].Rotate(rotation);
                             }
-                            else if (targetPath == "translation")
+                            else if (targetPath == AnimationChannelTargetPath.Translation)
                             {
                                 Vector3 prevTranslation = new Vector3(prevData[0], prevData[1], prevData[2]);
                                 Vector3 nextTranslation = new Vector3(nextData[0], nextData[1], nextData[2]);
                                 Vector3 translation = Vector3.Lerp(prevTranslation, nextTranslation, t);
                                 Nodes[channel.Target.NodeIndex].Translate(translation);
                             }
-                            else if (targetPath == "scale")
+                            else if (targetPath == AnimationChannelTargetPath.Scale)
                             {
                                 Vector3 prevScale = new Vector3(prevData[0], prevData[1], prevData[2]);
                                 Vector3 nextScale = new Vector3(nextData[0], nextData[1], nextData[2]);

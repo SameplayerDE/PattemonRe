@@ -4,6 +4,6 @@
     {
         public int ByteLength;
         public string? Uri;
-        public byte[] Bytes;
+        public Memory<byte> Bytes;
     }
 }

@@ -7,7 +7,7 @@ public static class TimerCore
 {
     private class Timer
     {
-        public float Duration;
+        public readonly float Duration;
         public float Elapsed;
         public float Progress;
         public bool IsRunning;

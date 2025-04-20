@@ -5,7 +5,7 @@ namespace HxGLTF.Implementation
     public class GameModelAnimationChannelTarget
     {
         public int NodeIndex;
-        public string Path;
+        public AnimationChannelTargetPath Path;
         
         public static GameModelAnimationChannelTarget From(GraphicsDevice graphicsDevice, GLTFFile file, Animation animation, AnimationChannelTarget target)
         {

@@ -17,6 +17,7 @@ public record ChunkHeader
     public int MusicDayId;
     public int MusicNightId;
     public int WeatherId;
+    public int CameraSettingsId;
     
     //Map Settings
     public bool CanUseFly;
@@ -55,6 +56,7 @@ public record ChunkHeader
             //InternalName = jHeader["internalName"]?.ToString(),
             MusicDayId = jHeader["musicDayId"]?.ToObject<int>() ?? 0,
             MusicNightId = jHeader["musicNightId"]?.ToObject<int>() ?? 0,
+            CameraSettingsId = jHeader["cameraAngleId"]?.ToObject<int>() ?? 0,
             WeatherId = jHeader["weatherId"]?.ToObject<int>() ?? 0,
             CanUseFly = jHeader["canUseFly"]?.ToObject<bool>() ?? false,
             CanUseRope = jHeader["canUseRope"]?.ToObject<bool>() ?? false,

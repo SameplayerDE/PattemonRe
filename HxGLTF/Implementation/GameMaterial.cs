@@ -74,15 +74,15 @@ namespace HxGLTF.Implementation
                 else if (image.BufferView != null)
                 {
                     var bufferView = image.BufferView;
-                    var buffer = bufferView.Buffer;
-                    byte[] imageData = new byte[bufferView.ByteLength];
-                    Array.Copy(buffer.Bytes, bufferView.ByteOffset, imageData, 0, bufferView.ByteLength);
+                    var span = bufferView.Buffer.Bytes.Span.Slice(bufferView.ByteOffset, bufferView.ByteLength);
+                    byte[] imageData = span.ToArray();
 
                     using (var stream = new MemoryStream(imageData))
                     {
                         texture = Texture2D.FromStream(graphicsDevice, stream);
                     }
                 }
+
                 else
                 {
                     throw new Exception("Image URI and BufferView are both null.");
@@ -141,15 +141,15 @@ namespace HxGLTF.Implementation
                 else if (image.BufferView != null)
                 {
                     var bufferView = image.BufferView;
-                    var buffer = bufferView.Buffer;
-                    byte[] imageData = new byte[bufferView.ByteLength];
-                    Array.Copy(buffer.Bytes, bufferView.ByteOffset, imageData, 0, bufferView.ByteLength);
+                    var span = bufferView.Buffer.Bytes.Span.Slice(bufferView.ByteOffset, bufferView.ByteLength);
+                    byte[] imageData = span.ToArray();
 
                     using (var stream = new MemoryStream(imageData))
                     {
                         texture = Texture2D.FromStream(graphicsDevice, stream);
                     }
                 }
+
                 else
                 {
                     throw new Exception("Image URI and BufferView are both null.");
@@ -210,15 +210,15 @@ namespace HxGLTF.Implementation
                 else if (image.BufferView != null)
                 {
                     var bufferView = image.BufferView;
-                    var buffer = bufferView.Buffer;
-                    byte[] imageData = new byte[bufferView.ByteLength];
-                    Array.Copy(buffer.Bytes, bufferView.ByteOffset, imageData, 0, bufferView.ByteLength);
+                    var span = bufferView.Buffer.Bytes.Span.Slice(bufferView.ByteOffset, bufferView.ByteLength);
+                    byte[] imageData = span.ToArray();
 
                     using (var stream = new MemoryStream(imageData))
                     {
                         texture = Texture2D.FromStream(graphicsDevice, stream);
                     }
                 }
+
                 else
                 {
                     throw new Exception("Image URI and BufferView are both null.");

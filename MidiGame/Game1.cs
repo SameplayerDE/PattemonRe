@@ -10,6 +10,8 @@ public class Game1 : Game
     private MidiPlayer midiPlayer;
     private MidiFile midiFile;
 
+    // 94 2B 00 00 LOOP
+    
     public Game1()
     {
         graphics = new GraphicsDeviceManager(this);
@@ -18,13 +20,7 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         midiPlayer = new MidiPlayer(@"C:\Users\asame\Music\Pokemon Platinum\SoundFonts\BANK_BGM_FIELD.sf2");
-        midiFile = new MidiFile(@"C:\Users\asame\Music\Pokemon Platinum\SEQ_ROAD_A_D.mid", 0x34);
-
-        foreach (var message in midiFile.messages)
-        {
-            Console.WriteLine(message.ToString());
-        }
-        
+        midiFile = new MidiFile(@"C:\Users\asame\Music\Pokemon Platinum\SEQ_TOWN02_D.mid", MidiFileLoopType.PokemonPlatinum);
     }
 
     protected override void UnloadContent()
@@ -39,7 +35,7 @@ public class Game1 : Game
             midiPlayer.Play(midiFile, true);
         }
 
-        Console.WriteLine(midiPlayer.Sequencer.Position);
+        //Console.WriteLine(midiPlayer.Sequencer.Position);
 
         base.Update(gameTime);
     }

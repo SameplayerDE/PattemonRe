@@ -262,6 +262,7 @@ namespace MeltySynth
                     continue;
                 }
 
+                Console.WriteLine($"{first:X}");
                 switch (first)
                 {
                     case 0xF0: // System Exclusive
@@ -568,11 +569,11 @@ namespace MeltySynth
 
         public enum MessageType
         {
-            Normal = 0,
-            TempoChange = 252,
-            LoopStart = 253,
-            LoopEnd = 254,
-            EndOfTrack = 255
+            Normal = 0,         // 00
+            TempoChange = 252,  // FC
+            LoopStart = 253,    // FD
+            LoopEnd = 254,      // FE
+            EndOfTrack = 255    // FF
         }
     }
 }

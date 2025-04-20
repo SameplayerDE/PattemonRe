@@ -76,4 +76,9 @@
         <EmbeddedResource Include="Content/Languages/$(ClientLanguage)/**" />
     </ItemGroup>
     
+    <ItemGroup>
+      <Folder Include="Assets\Audio\Music\" />
+      <Folder Include="Assets\Audio\Sound\" />
+    </ItemGroup>
+    
 </Project>

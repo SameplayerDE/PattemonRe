@@ -43,8 +43,8 @@ public class MidiPlayer : IDisposable
 
     private void OnBufferNeeded(object sender, EventArgs e)
     {
-        Console.WriteLine(dynamicSound.State);
-        Console.WriteLine(Sequencer.Position);
+        //Console.WriteLine(dynamicSound.State);
+        //Console.WriteLine(Sequencer.Position);
         if (dynamicSound.State == SoundState.Stopped)
         {
             Stop();
@@ -55,8 +55,8 @@ public class MidiPlayer : IDisposable
     
     private void SubmitBuffer()
     {
-        Console.WriteLine(dynamicSound.State);
-        Console.WriteLine(Sequencer.Position);
+        //Console.WriteLine(dynamicSound.State);
+        //Console.WriteLine(Sequencer.Position);
         Sequencer.RenderInterleavedInt16(MemoryMarshal.Cast<byte, short>(buffer));
         dynamicSound.SubmitBuffer(buffer, 0, buffer.Length);
     }

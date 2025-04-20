@@ -289,6 +289,7 @@ public class ImageFontRenderer
     {
         if (_font.HasChar(character))
         {
+            position.Floor();
             var charInfo = _font.GetChar(character) ?? throw new Exception();
             Rectangle sourceRect = new Rectangle(charInfo.X, charInfo.Y, charInfo.Width, charInfo.Height);
             spriteBatch.Draw(_font.Texture, position, sourceRect, tint, 0f, Vector2.Zero, new Vector2(sx, sy), SpriteEffects.None, 0f);

@@ -211,7 +211,7 @@ public class Game1 : Game
         _pixel = new Texture2D(GraphicsDevice, 1, 1);
         _pixel.SetData(new[] { Color.White });
         _map = Content.Load<Texture2D>("map");
-        _imageFont = ImageFont.LoadFromFile(GraphicsDevice, @"Content/Font.json");
+        _imageFont = ImageFont.LoadFromFile(GraphicsDevice, @"Content/Font_0.json");
         _fontRenderer = new ImageFontRenderer(GraphicsDevice, _spriteBatch, _imageFont);
 
         _textBox = Content.Load<Texture2D>("textbox");
@@ -350,7 +350,7 @@ public class Game1 : Game
                         Console.WriteLine(header.Id);
                         Console.WriteLine(_chunkX);
                         Console.WriteLine(_chunkY);
-                        Console.WriteLine(header.LocationName);
+                        Console.WriteLine(header.LocationNameId);
                         // Überprüfe, ob sich die Musik-ID oder Header-ID geändert haben
                         if (header.Id != _currentHeaderId)
                         {
@@ -620,7 +620,7 @@ public class Game1 : Game
 #if DEBUG
         _normalCamera.SetAsActive();
         GraphicsDevice.Clear(new Color(34, 42, 53, 255));
-        DrawWorldSmart(gameTime, _world, _normalCamera.Position, 5);
+        DrawWorld(gameTime, _world);
 #endif
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp, depthStencilState: DepthStencilState.Default, blendState: BlendState.Opaque);
@@ -634,7 +634,7 @@ public class Game1 : Game
 #endif
         try
         {
-            var text = "position: " + _normalCamera.Position + "\\nrotation: " + _normalCamera.Rotation + "\\nfieldofview: " + MathHelper.ToDegrees(_normalCamera.FieldOfViewY) + "\\n\\ntimeOfDay: " + _timeManager.CurrentPeriod.TimeOfDay.ToString() + "\\nlocation: " + HeaderManager.GetHeaderById(_currentHeaderId)?.LocationName;
+            var text = "position: " + _normalCamera.Position + "\\nrotation: " + _normalCamera.Rotation + "\\nfieldofview: " + MathHelper.ToDegrees(_normalCamera.FieldOfViewY) + "\\n\\ntimeOfDay: " + _timeManager.CurrentPeriod.TimeOfDay.ToString() + "\\nlocation: " + HeaderManager.GetHeaderById(_currentHeaderId)?.LocationNameId;
             text = text.Replace("\\r", "");
             text = text.Replace("\\f", "");
             var lines = text.Split("\\n");

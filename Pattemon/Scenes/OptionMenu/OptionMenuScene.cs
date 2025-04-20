@@ -171,13 +171,13 @@ public class OptionMenuScene(Game game) : SceneA(game)
                 {
                     _cursor = (_cursor + 7 - 1) % 7;
                     // play sound
-                    AudioCore.PlaySound(0x00);
+                    //AudioCore.PlaySound(0x00);
                 }
                 else if (KeyboardHandler.IsKeyDownOnce(Keys.Down))
                 {
                     _cursor = (_cursor + 1) % 7;
                     // play sound
-                    AudioCore.PlaySound(0x00);
+                    //AudioCore.PlaySound(0x00);
                 }
                 
                 return false;

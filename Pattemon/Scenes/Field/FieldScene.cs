@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PatteLib.Data;
+using PatteLib.Graphics;
 using PatteLib.World;
 using Pattemon.Engine;
 using Pattemon.Global;
@@ -40,6 +41,9 @@ public class FieldScene : SceneA
     
     private Texture2D[] _areaIcons = new Texture2D[10];
     
+    private const float _areaIconFadeTime = 320f;
+    private const float _areaIconStayTime = 5000f;
+    
     private Action<int> _onChunkHeaderIdChanged;
     
     private PoketchScene _poketchScene; // for the bottom screen
@@ -55,6 +59,7 @@ public class FieldScene : SceneA
     
     private World _world;
     private Vector3 _spawn = new Vector3(4, 0, 6);
+    //private Vector3 _spawn = new Vector3(173, 0, 830);
     private Random _random = new Random();
     
     public FieldScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
@@ -94,10 +99,16 @@ public class FieldScene : SceneA
             _currentHeaderId = id;
         };
         
+        _onChunkHeaderIdChanged += id =>
+        {
+            AudioCore.LoadSong(_content, 10, @"Audio/Songs/Sandgem Town (Night)");
+            AudioCore.PlaySong(10);
+        };
+        
         _worldShader = _content.Load<Effect>("Shaders/WorldShader");
         _buildingShader = _content.Load<Effect>("Shaders/BuildingShader");
         
-        _camera = Camera.CameraLookMap[4];
+        _camera = Camera.CameraLookMap[0];
         Camera.ActiveCamera = _camera;
         _camera.CaptureTarget(() => _spawn);
         _camera.SetAsActive();
@@ -151,6 +162,9 @@ public class FieldScene : SceneA
             }
             case _stateProcess:
             {
+                
+                Console.WriteLine(_spawn);
+                
                 UpdateAreaIconState();
                 var direction = KeyboardHandler.GetDirection();
                 _spawn += direction;
@@ -189,6 +203,7 @@ public class FieldScene : SceneA
             case _stateMenu:
             {
                 _camera.ComputeViewMatrix();
+                UpdateAreaIconState();
                 goto case _stateApplication;
             }
             case _stateApplication:
@@ -265,7 +280,10 @@ public class FieldScene : SceneA
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             if (currentHeader.AreaIcon is >= 0 and <= 9)
             {
-                spriteBatch.Draw(_areaIcons[currentHeader.AreaIcon], new Vector2(4, yOffset), Color.White);
+                var position = new Vector2(4, yOffset);
+                position.Floor();
+                spriteBatch.Draw(_areaIcons[currentHeader.AreaIcon], position, Color.White);
+                RenderCore.WriteText(LanguageCore.GetLine("433", currentHeader.LocationNameId), new Vector2(4 * 3, 5 * 3 + 1 + yOffset), ColorCombination.Area);
             }
             spriteBatch.End();
         }
@@ -278,14 +296,14 @@ public class FieldScene : SceneA
             case _areaIconStateNone:
                 break;
             case _areaIconStateFadeIn:
-                TimerCore.Create("area_icon_fade", 320f);
+                TimerCore.Create("area_icon_fade", _areaIconFadeTime);
                 _areaIconState = _areaIconStateWaitFadeIn;
                 break;
             case _areaIconStateWaitFadeIn:
                 if (TimerCore.IsDone("area_icon_fade"))
                 {
                     TimerCore.Remove("area_icon_fade");
-                    TimerCore.Create("area_icon_wait", 320f);
+                    TimerCore.Create("area_icon_wait", _areaIconStayTime);
                     _areaIconState = _areaIconStateWait;
                 }
                 break;
@@ -293,12 +311,11 @@ public class FieldScene : SceneA
                 if (TimerCore.IsDone("area_icon_wait"))
                 {
                     TimerCore.Remove("area_icon_wait");
-                    TimerCore.Create("area_icon_fade", 2f);
                     _areaIconState = _areaIconStateFadeOut;
                 }
                 break;
             case _areaIconStateFadeOut:
-                TimerCore.Create("area_icon_fade", 320f);
+                TimerCore.Create("area_icon_fade", _areaIconFadeTime);
                 _areaIconState = _areaIconStateWaitFadeOut;
                 break;
             case _areaIconStateWaitFadeOut:

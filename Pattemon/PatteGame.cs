@@ -90,7 +90,7 @@ public class PatteGame : Game
         RenderCore.Init(GraphicsDevice, _spriteBatch);
         TransitionCore.Init();
         DualScreenCore.Init();
-        AudioCore.Init(Content);
+        //AudioCore.Init(Content);
         
         _optionMenuScene.Init();
         _choosePokemonScene.Init();
@@ -133,7 +133,7 @@ public class PatteGame : Game
         TransitionCore.Update(gameTime, delta);
         DualScreenCore.Update(gameTime, delta);
         RenderCore.UpdateTransition(gameTime);
-        AudioCore.Update(gameTime);
+        //AudioCore.Update(gameTime);
 
         _worldTimeUpdateTimer += delta;
 

@@ -25,6 +25,900 @@
 /processorParam:TextureFormat=Color
 /build:00.png
 
+#begin Audio/Songs/A Poke Radar Hit!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/A Poke Radar Hit!.wav
+
+#begin Audio/Songs/A Surprise at the Lake!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/A Surprise at the Lake!.wav
+
+#begin Audio/Songs/Amity Square.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Amity Square.wav
+
+#begin Audio/Songs/Battle Tower.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle Tower.wav
+
+#begin Audio/Songs/Battle! (Azelf_Mesprit_Uxie).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Azelf_Mesprit_Uxie).wav
+
+#begin Audio/Songs/Battle! (Champion).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Champion).wav
+
+#begin Audio/Songs/Battle! (Dialga_Palkia).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Dialga_Palkia).wav
+
+#begin Audio/Songs/Battle! (Elite Four).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Elite Four).wav
+
+#begin Audio/Songs/Battle! (Gym Leader).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Gym Leader).wav
+
+#begin Audio/Songs/Battle! (Legendary Pokemon).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Legendary Pokemon).wav
+
+#begin Audio/Songs/Battle! (Rival).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Rival).wav
+
+#begin Audio/Songs/Battle! (Team Galactic Boss).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Team Galactic Boss).wav
+
+#begin Audio/Songs/Battle! (Team Galactic Commander).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Team Galactic Commander).wav
+
+#begin Audio/Songs/Battle! (Team Galactic).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Team Galactic).wav
+
+#begin Audio/Songs/Battle! (Trainer Battle).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Trainer Battle).wav
+
+#begin Audio/Songs/Battle! (Wild Pokemon).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Battle! (Wild Pokemon).wav
+
+#begin Audio/Songs/Bicycle.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Bicycle.wav
+
+#begin Audio/Songs/Canalave City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Canalave City (Day).wav
+
+#begin Audio/Songs/Canalave City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Canalave City (Night).wav
+
+#begin Audio/Songs/Captured a Flag Underground!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Captured a Flag Underground!.wav
+
+#begin Audio/Songs/Catastrophe!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Catastrophe!.wav
+
+#begin Audio/Songs/Champion Cynthia.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Champion Cynthia.wav
+
+#begin Audio/Songs/Congratulations on Entering the Hall of Fame!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Congratulations on Entering the Hall of Fame!.wav
+
+#begin Audio/Songs/Congratulations! Your Pokemon Evolved!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Congratulations! Your Pokemon Evolved!.wav
+
+#begin Audio/Songs/Contest Hall.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Contest Hall.wav
+
+#begin Audio/Songs/Contest_ Dress Up.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Contest_ Dress Up.wav
+
+#begin Audio/Songs/Contest_ Results Announcement.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Contest_ Results Announcement.wav
+
+#begin Audio/Songs/Contest_ Winner.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Contest_ Winner.wav
+
+#begin Audio/Songs/Dance_ Difficult.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Dance_ Difficult.wav
+
+#begin Audio/Songs/Dance_ Easy.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Dance_ Easy.wav
+
+#begin Audio/Songs/Dawn.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Dawn.wav
+
+#begin Audio/Songs/Decisive Battle! (Pokemon League).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Decisive Battle! (Pokemon League).wav
+
+#begin Audio/Songs/Deep Within Team Galactic HQ.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Deep Within Team Galactic HQ.wav
+
+#begin Audio/Songs/Ending Theme.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Ending Theme.wav
+
+#begin Audio/Songs/Eterna City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Eterna City (Day).wav
+
+#begin Audio/Songs/Eterna City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Eterna City (Night).wav
+
+#begin Audio/Songs/Eterna Forest.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Eterna Forest.wav
+
+#begin Audio/Songs/Evolution.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Evolution.wav
+
+#begin Audio/Songs/Fight Area (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Fight Area (Day).wav
+
+#begin Audio/Songs/Fight Area (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Fight Area (Night).wav
+
+#begin Audio/Songs/Floaroma Town (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Floaroma Town (Day).wav
+
+#begin Audio/Songs/Floaroma Town (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Floaroma Town (Night).wav
+
+#begin Audio/Songs/Galactic Eterna Building.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Galactic Eterna Building.wav
+
+#begin Audio/Songs/Game Corner.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Game Corner.wav
+
+#begin Audio/Songs/Got an Accessory.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Got an Accessory.wav
+
+#begin Audio/Songs/Great Marsh.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Great Marsh.wav
+
+#begin Audio/Songs/GTS.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/GTS.wav
+
+#begin Audio/Songs/Hall of Fame.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Hall of Fame.wav
+
+#begin Audio/Songs/Hearthome City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Hearthome City (Day).wav
+
+#begin Audio/Songs/Hearthome City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Hearthome City (Night).wav
+
+#begin Audio/Songs/Hurry Along.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Hurry Along.wav
+
+#begin Audio/Songs/Introduction.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Introduction.wav
+
+#begin Audio/Songs/Jubilife City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Jubilife City (Day).wav
+
+#begin Audio/Songs/Jubilife City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Jubilife City (Night).wav
+
+#begin Audio/Songs/Lake Caverns.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Lake Caverns.wav
+
+#begin Audio/Songs/Lake.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Lake.wav
+
+#begin Audio/Songs/Let's Go Together!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Let's Go Together!.wav
+
+#begin Audio/Songs/Level Up!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Level Up!.wav
+
+#begin Audio/Songs/Lucas.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Lucas.wav
+
+#begin Audio/Songs/Move Deleted.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Move Deleted.wav
+
+#begin Audio/Songs/Mt. Coronet.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Mt. Coronet.wav
+
+#begin Audio/Songs/Mystery Gift.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Mystery Gift.wav
+
+#begin Audio/Songs/Nintendo Wi-Fi Connection.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Nintendo Wi-Fi Connection.wav
+
+#begin Audio/Songs/Obtained a Badge!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained a Badge!.wav
+
+#begin Audio/Songs/Obtained a Berry!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained a Berry!.wav
+
+#begin Audio/Songs/Obtained a Key Item!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained a Key Item!.wav
+
+#begin Audio/Songs/Obtained a Poketch App!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained a Poketch App!.wav
+
+#begin Audio/Songs/Obtained a TM!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained a TM!.wav
+
+#begin Audio/Songs/Obtained an Item!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Obtained an Item!.wav
+
+#begin Audio/Songs/Old Chateau.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Old Chateau.wav
+
+#begin Audio/Songs/Opening Movie.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Opening Movie.wav
+
+#begin Audio/Songs/Oreburgh City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Oreburgh City (Day).wav
+
+#begin Audio/Songs/Oreburgh City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Oreburgh City (Night).wav
+
+#begin Audio/Songs/Oreburgh Gate.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Oreburgh Gate.wav
+
+#begin Audio/Songs/Oreburgh Mine.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Oreburgh Mine.wav
+
+#begin Audio/Songs/Poffins.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Poffins.wav
+
+#begin Audio/Songs/Poke Mart.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Poke Mart.wav
+
+#begin Audio/Songs/Pokemon Center (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon Center (Day).wav
+
+#begin Audio/Songs/Pokemon Center (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon Center (Night).wav
+
+#begin Audio/Songs/Pokemon Gym.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon Gym.wav
+
+#begin Audio/Songs/Pokemon Healed.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon Healed.wav
+
+#begin Audio/Songs/Pokemon League (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon League (Day).wav
+
+#begin Audio/Songs/Pokemon League (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Pokemon League (Night).wav
+
+#begin Audio/Songs/Rival.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Rival.wav
+
+#begin Audio/Songs/Route 201 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 201 (Day).wav
+
+#begin Audio/Songs/Route 201 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 201 (Night).wav
+
+#begin Audio/Songs/Route 203 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 203 (Day).wav
+
+#begin Audio/Songs/Route 203 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 203 (Night).wav
+
+#begin Audio/Songs/Route 205 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 205 (Day).wav
+
+#begin Audio/Songs/Route 205 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 205 (Night).wav
+
+#begin Audio/Songs/Route 206 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 206 (Day).wav
+
+#begin Audio/Songs/Route 206 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 206 (Night).wav
+
+#begin Audio/Songs/Route 209 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 209 (Day).wav
+
+#begin Audio/Songs/Route 209 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 209 (Night).wav
+
+#begin Audio/Songs/Route 210 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 210 (Day).wav
+
+#begin Audio/Songs/Route 210 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 210 (Night).wav
+
+#begin Audio/Songs/Route 216 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 216 (Day).wav
+
+#begin Audio/Songs/Route 216 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 216 (Night).wav
+
+#begin Audio/Songs/Route 225 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 225 (Day).wav
+
+#begin Audio/Songs/Route 225 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 225 (Night).wav
+
+#begin Audio/Songs/Route 228 (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 228 (Day).wav
+
+#begin Audio/Songs/Route 228 (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Route 228 (Night).wav
+
+#begin Audio/Songs/Sandgem Town (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Sandgem Town (Day).wav
+
+#begin Audio/Songs/Sandgem Town (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Sandgem Town (Night).wav
+
+#begin Audio/Songs/Snowpoint City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Snowpoint City (Day).wav
+
+#begin Audio/Songs/Snowpoint City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Snowpoint City (Night).wav
+
+#begin Audio/Songs/Solaceon Town (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Solaceon Town (Day).wav
+
+#begin Audio/Songs/Solaceon Town (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Solaceon Town (Night).wav
+
+#begin Audio/Songs/Spear Pillar.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Spear Pillar.wav
+
+#begin Audio/Songs/Special Report_ _Search for the Red Gyarados!_.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Special Report_ _Search for the Red Gyarados!_.wav
+
+#begin Audio/Songs/Stark Mountain.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Stark Mountain.wav
+
+#begin Audio/Songs/Sunyshore City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Sunyshore City (Day).wav
+
+#begin Audio/Songs/Sunyshore City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Sunyshore City (Night).wav
+
+#begin Audio/Songs/Super Contest!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Super Contest!.wav
+
+#begin Audio/Songs/Surf.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Surf.wav
+
+#begin Audio/Songs/Team Galactic Appears!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Team Galactic Appears!.wav
+
+#begin Audio/Songs/Team Galactic HQ.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Team Galactic HQ.wav
+
+#begin Audio/Songs/The Elite Four Appear!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/The Elite Four Appear!.wav
+
+#begin Audio/Songs/The Legendary Pokemon Appears!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/The Legendary Pokemon Appears!.wav
+
+#begin Audio/Songs/The Pokemon Lab.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/The Pokemon Lab.wav
+
+#begin Audio/Songs/The Underground.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/The Underground.wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Ace Trainer).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Ace Trainer).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Aroma Lady).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Aroma Lady).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Artist).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Artist).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Black Belt).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Black Belt).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Collector).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Collector).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Cyclist).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Cyclist).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Hiker).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Hiker).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Lass).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Lass).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (PI).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (PI).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Sailor).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Sailor).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Twins).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Twins).wav
+
+#begin Audio/Songs/Trainers' Eyes Meet (Youngster).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Trainers' Eyes Meet (Youngster).wav
+
+#begin Audio/Songs/TV Station.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/TV Station.wav
+
+#begin Audio/Songs/Twinleaf Town (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Twinleaf Town (Day).wav
+
+#begin Audio/Songs/Twinleaf Town (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Twinleaf Town (Night).wav
+
+#begin Audio/Songs/Valor Lakefront (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Valor Lakefront (Day).wav
+
+#begin Audio/Songs/Valor Lakefront (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Valor Lakefront (Night).wav
+
+#begin Audio/Songs/Veilstone City (Day).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Veilstone City (Day).wav
+
+#begin Audio/Songs/Veilstone City (Night).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Veilstone City (Night).wav
+
+#begin Audio/Songs/Victory Road.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory Road.wav
+
+#begin Audio/Songs/Victory! (Champion).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Champion).wav
+
+#begin Audio/Songs/Victory! (Elite Four).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Elite Four).wav
+
+#begin Audio/Songs/Victory! (Gym Leader).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Gym Leader).wav
+
+#begin Audio/Songs/Victory! (Team Galactic).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Team Galactic).wav
+
+#begin Audio/Songs/Victory! (Trainer Battle).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Trainer Battle).wav
+
+#begin Audio/Songs/Victory! (Wild Pokemon).wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/Victory! (Wild Pokemon).wav
+
+#begin Audio/Songs/You're a Jackpot Winner!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/You're a Jackpot Winner!.wav
+
+#begin Audio/Songs/You're a Winner!.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Songs/You're a Winner!.wav
+
 #begin BottomScreen.png
 /importer:TextureImporter
 /processor:TextureProcessor

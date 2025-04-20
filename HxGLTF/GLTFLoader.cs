@@ -865,8 +865,15 @@ namespace HxGLTF
                     {
                         throw new Exception("Path not found for channel target.");
                     }
-                    animationChannelTarget.Path = jAnimationChannelTargetPath.ToString();
-
+                    
+                    if (Enum.TryParse<AnimationChannelTargetPath>(jAnimationChannelTargetPath.ToString(), ignoreCase: true, out var parsedPath))
+                    {
+                        animationChannelTarget.Path = parsedPath;
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Invalid path value: {jAnimationChannelTargetPath}", nameof(jAnimationChannelTargetPath));
+                    }
                     animationChannel.Target = animationChannelTarget;
 
                     animationChannels[c] = animationChannel;
