@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,6 +19,19 @@ public static class GraphicsCore
 
     public static void Load(ContentManager contentManager)
     {
+    }
+    
+    public static async Task<Texture2D> LoadTextureAsync(string key, string path)
+    {
+        return await Task.Run(() =>
+        {
+            var texture = Texture2D.FromFile(_graphics, path);
+            lock (_textures)
+            {
+                _textures[key] = texture;
+            }
+            return texture;
+        });
     }
 
     public static Texture2D LoadTexture(string key, string path)

@@ -308,7 +308,7 @@ public class FieldMenuScene : SceneA
                 if (!HasProcess)
                 {
                     RenderCore.StartScreenTransition(250, RenderCore.TransitionType.AlphaOut);
-                    Process = new WorldMapScene(_game);
+                    Process = new ChoosePokemonScene(_game);
                     _fade = 1;
                 }
             }

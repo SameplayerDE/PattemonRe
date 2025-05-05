@@ -68,10 +68,14 @@ public static class RenderCore
     private static ImageFont _fontOutline;
     private static ImageFont _fontBase;
     
+    private static MeshRenderer _meshRenderer;
+    
     public static void Init(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
     {
         _graphicsDevice = graphicsDevice;
         _spriteBatch = spriteBatch;
+        
+        _meshRenderer = new MeshRenderer(graphicsDevice);
         
         _fontRenderer = new ImageFontRenderer(graphicsDevice, spriteBatch, null);
         _fontBase = ImageFont.LoadFromFile(graphicsDevice, "Content/Fonts/Font_0.json");
@@ -219,6 +223,11 @@ public static class RenderCore
     
     public static void DrawModel(GameTime gameTime, Effect effect, GameModel model, bool alpha = false, Vector3 offset = default)
     {
+        // var worldMatrix = Matrix.CreateScale(model.Scale) *
+        //                   Matrix.CreateFromQuaternion(model.Rotation) *
+        //                   Matrix.CreateTranslation(model.Translation) *
+        //                   Matrix.CreateTranslation(offset);
+        // _meshRenderer.DrawModel(model, worldMatrix, Camera.ActiveCamera.ViewMatrix, Camera.ActiveCamera.ProjectionMatrix, effect);
         foreach (var scene in model.Scenes)
         {
             foreach (var nodeIndex in scene.Nodes)

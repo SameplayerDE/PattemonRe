@@ -207,52 +207,31 @@ public static class AccessorReader
         }
     }
 
-    public static float[] ReadDataIndexed(Accessor dataAccessor, Accessor indexAccessor)
+    public static int[] ReadIndices(Accessor accessor)
     {
-        float[] dataBuffer = ReadData(dataAccessor);
-        float[] indexBuffer = ReadData(indexAccessor);
-        List<float> result = new List<float>();
-        int compCount = dataAccessor.Type.NumberOfComponents;
+        if (accessor.BufferView?.Buffer == null)
+            throw new ArgumentNullException(nameof(accessor));
+        
+        int count      = accessor.Count;
+        int compBytes  = accessor.BytesPerComponent;
+        int stride     = accessor.BufferView.ByteStride != 0 
+            ? accessor.BufferView.ByteStride 
+            : compBytes;
+        int baseOffset = accessor.BufferView.ByteOffset + accessor.ByteOffset;
+        ReadOnlySpan<byte> span = accessor.BufferView.Buffer.Bytes.Span;
+        var indices = new int[count];
 
-        for (int x = 0; x < indexBuffer.Length; x++)
+        for (int i = 0; i < count; i++)
         {
-            ushort idx = (ushort)indexBuffer[x];
-            for (int j = 0; j < compCount; j++)
+            int off = baseOffset + i * stride;
+            indices[i] = accessor.ComponentType.Id switch
             {
-                result.Add(dataBuffer[idx * compCount + j]);
-            }
+                5121 => span[off],                                 // UNSIGNED_BYTE
+                5123 => BitConverter.ToUInt16(span.Slice(off,2)),  // UNSIGNED_SHORT
+                5125 => (int)BitConverter.ToUInt32(span.Slice(off,4)), // UNSIGNED_INT
+                _    => throw new NotSupportedException($"Index-Typ {accessor.ComponentType.Id} nicht unterstützt")
+            };
         }
-
-        return result.ToArray();
-    }
-
-    public static (float[] uniqueData, int[] remappedIndices) ReadDataIndexed2(Accessor dataAccessor, Accessor indexAccessor)
-    {
-        float[] indexBuffer = ReadData(indexAccessor);
-        float[] dataBuffer = ReadData(dataAccessor);
-        HashSet<int> uniqueIndexSet = new HashSet<int>();
-        foreach (float f in indexBuffer)
-        {
-            uniqueIndexSet.Add((int)f);
-        }
-
-        List<int> uniqueIndices = new List<int>(uniqueIndexSet);
-        uniqueIndices.Sort();
-        float[] uniqueData = new float[uniqueIndices.Count];
-        Dictionary<int, int> mapping = new Dictionary<int, int>();
-
-        for (int i = 0; i < uniqueIndices.Count; i++)
-        {
-            mapping[uniqueIndices[i]] = i;
-            uniqueData[i] = dataBuffer[uniqueIndices[i]];
-        }
-
-        int[] remapped = new int[indexBuffer.Length];
-        for (int i = 0; i < indexBuffer.Length; i++)
-        {
-            remapped[i] = mapping[(int)indexBuffer[i]];
-        }
-
-        return (uniqueData, remapped);
+        return indices;
     }
 }

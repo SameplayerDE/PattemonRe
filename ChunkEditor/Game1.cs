@@ -76,6 +76,7 @@ namespace ChunkEditor
         {
             Building.RootDirectory = @"Assets\meshes\output_assets";
             Chunk.RootDirectory = @"Assets\meshes\overworldmaps";
+            Chunk.RootDirectory = @"Assets\meshes\overworldmaps";
             
             var chunkSize = 32;
             
@@ -100,7 +101,7 @@ namespace ChunkEditor
             _gridTexture = new Texture2D(GraphicsDevice, 1, 1);
             _gridTexture.SetData(new[] { Color.White });
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 100; i++)
             {
                 var chunkJson = File.ReadAllText($@"A:\Coding\Survival\TestRender\Content\WorldData\Chunks\{i}.json");
                 var jChunk = JObject.Parse(chunkJson);
@@ -362,12 +363,12 @@ namespace ChunkEditor
         {
             GraphicsDevice.SetRenderTarget(_chunkView);
             GraphicsDevice.Clear(Color.Transparent);
-            //DrawModel(gameTime, _effect, _chunks[_currentChunk].Model);
+            DrawModel(gameTime, _effect, _chunks[_currentChunk].Model);
             foreach (var building in _chunks[_currentChunk].Buildings)
             {
                 //DrawModel(gameTime, _effect, building.Model);
             }
-            //DrawModel(gameTime, _effect, _chunks[_currentChunk].Model, alpha: true);
+            DrawModel(gameTime, _effect, _chunks[_currentChunk].Model, alpha: true);
             foreach (var building in _chunks[_currentChunk].Buildings)
             {
                // DrawModel(gameTime, _effect, building.Model, alpha: true);

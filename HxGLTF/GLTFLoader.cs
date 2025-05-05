@@ -151,7 +151,7 @@ namespace HxGLTF
                 {
                     json = ExtractJSONFromFile(fileStream);
                 }
-
+                
                 return LoadFromJsonWithBinary(path, json, binary);
             }
         }
@@ -264,6 +264,7 @@ namespace HxGLTF
             }
 
             var asset = LoadAsset(jObject["asset"]);
+            var extensionsUsed = LoadExtensionsUsed(jObject["extensionsUsed"]);
             var buffers = jObject["buffers"] != null ? LoadBuffers(path, jObject["buffers"], binary) : null;
             var bufferViews = jObject["bufferViews"] != null ? LoadBufferViews(jObject["bufferViews"], buffers) : null;
             var accessors = jObject["accessors"] != null ? LoadAccessors(jObject["accessors"], bufferViews) : null;
@@ -286,6 +287,7 @@ namespace HxGLTF
             {
                 Path = path,
                 Asset = asset,
+                ExtensionsUsed = extensionsUsed,
                 Buffers = buffers,
                 BufferViews = bufferViews,
                 Accessors = accessors,
@@ -319,7 +321,17 @@ namespace HxGLTF
 
             return asset;
         }
+        
+        private static string[] LoadExtensionsUsed(JToken jExtensionsUsed)
+        {
+            if (jExtensionsUsed == null || jExtensionsUsed.Type != JTokenType.Array)
+            {
+                return Array.Empty<string>();
+            }
 
+            return jExtensionsUsed.Select(x => x.ToString()).ToArray();
+        }
+        
         public static Buffer[] LoadBuffers(string path, JToken jBuffers, byte[] array = null)
         {
             var buffers = new Buffer[jBuffers.Count()];

@@ -1,193 +1,138 @@
 ﻿# HxGLTF - GLTF Loader for MonoGame
 
-**HxGLTF** is a simple library designed to load **GLTF** files into your **MonoGame** projects. It provides a straightforward method for loading 3D models and animations from GLTF files.
+**HxGLTF** is a lightweight and focused library for loading **GLTF** and **GLB** files into MonoGame.
+
+> 🧪 **Quick Start Included**  
+> While HxGLTF is not intended to be a complete rendering engine, it provides a **basic predefined renderer** and an optional **precompiled shader** for quick prototyping.  
+> This allows you to get models on screen quickly — ideal for testing or getting started.  
+> However, this implementation is **not optimized**, **not feature-complete**, and **not meant for production use**.  
+> As your project grows, you're encouraged to implement your **own rendering pipeline** using the structured data the library provides.
+
+> ⚠️ **Rendering is Your Responsibility**  
+> HxGLTF’s main goal is to load GLTF/GLB files into structured, usable C# objects.  
+> You are expected to take over from there and build your own renderer based on your specific needs.
+
+
+## Purpose
+
+HxGLTF is designed to:
+- Parse GLTF / GLB files
+- Provide structured data: scenes, nodes, meshes, skins, textures, animations
+- Integrate easily with MonoGame projects
+
+It is **not designed to**:
+- Fully render models out of the box
+- Handle all rendering or shader needs
+- Abstract away rendering complexity
 
 ## Features
 
-- Load GLTF / GLB models into MonoGame.
-- Support for animations and textures.
+- Load `.gltf` and `.glb` files
+- Convert them into C# objects (`GameModel`, `GameNode`, etc.)
+- Animation, skinning, and texture info included
+- Works directly with MonoGame
 
-![Animations](https://i.imgur.com/K2twCyw.gif)
-![Animations_1](https://i.imgur.com/aoXY3gZ.gif)
-![Models](https://i.imgur.com/0XMY4Sj.gif)
+---
+
+## Quick Start (Optional Renderer)
+
+For convenience, a **predefined renderer** is included:
+
+- `PreImpGameModelRenderer`
+- Includes an optional **precompiled shader**
+- Can display models with basic lighting, skinning, and textures
+
+⚠️ This renderer is **not comprehensive**. It does **not handle all models correctly**.  
+Its only goal is to **get something on screen quickly**.
+
+```csharp
+var renderer = new PreImpGameModelRenderer(GraphicsDevice);
+renderer.LoadPreCompiledEffect(Content); // Optional
+var model = GameModel.From(GraphicsDevice, GLTFLoader.Load("model.glb"));
+renderer.DrawModel(model, worldMatrix, viewMatrix, projectionMatrix);
+```
+
+### Renderer Limitations
+
+- The **indexed mesh rendering issues** (e.g. broken triangles) are **only present in the built-in renderer**.
+- The data is **correctly loaded** — if you write your own renderer, you are in full control.
+- The built-in system is minimal and may not handle all edge cases.
+- But it does show that the data works — and gets **something visual** running fast.
+
+---
 
 ## Installation
 
-You can install **HxGLTF** via [NuGet](https://www.nuget.org/):
-
-```shell
+```bash
 dotnet add package H073.HxGLTF
 ```
 
-Or add the following line to your `.csproj` file:
+Or in `.csproj`:
 
 ```xml
 <PackageReference Include="H073.HxGLTF" Version="1.0.0" />
 ```
 
-## Usage
+---
 
-This package only provides the functionality to **load** GLTF models. Rendering these models, including handling skinning, materials, and effects, must be implemented manually, as it can vary greatly depending on the specific use case. Below is an example of how you might set up rendering logic for a loaded model.
-Models and textures have to be in a folder the code can access.
+## Visuals
+ 
+### 🧪 Default Renderer (Quick Start)
 
-### Example Rendering Code
+These animations were rendered using the included predefined renderer:
 
-```csharp
-GameModel.From(GraphicsDevice, GLTFLoader.Load(modelPath))
+| Idle | Walk |
+|------|------|
+| ![Idle](https://i.imgur.com/K2twCyw.gif) | ![Walk](https://i.imgur.com/aoXY3gZ.gif) |
 
-private void DrawModel(GameTime gameTime, Effect effect, GameModel model, bool alpha = false, Vector3 offset = default)
-{
-    foreach (var scene in model.Scenes)
-    {
-        foreach (var nodeIndex in scene.Nodes)
-        {
-            var node = model.Nodes[nodeIndex];
-            DrawNode(gameTime, effect, model, node, alpha, offset);
-        }
-    }
-}
+### 🧪 Custom Renderer
+> 💡 The following visuals are **not auto-generated features** of the library —  
+> they are shown to **demonstrate what’s possible** when you build your own renderer using HxGLTF's data.  
+> Things like **UV animations** and **texture atlas effects** go beyond standard GLTF features —  
+> but they’re entirely doable with the data you get from this library.  
+> The goal here is to **inspire**, not to prescribe.
+### 🌊 UV Animations (Custom Renderer)
 
-private void DrawNode(GameTime gameTime, Effect effect, GameModel model, GameNode node, bool alpha = false, Vector3 offset = default)
-{
-    if (node.HasMesh)
-    {
-        DrawMesh(gameTime, effect, model, node, node.Mesh, alpha, offset);
-    }
+| Conveyor Belt | Water Surface |
+|---------------|---------------|
+| ![Conveyor](https://i.imgur.com/Wswj4jU.gif) | ![Water](https://i.imgur.com/hQ0dDcH.gif) |
 
-    if (node.HasChildren)
-    {
-        foreach (var child in node.Children)
-        {
-            DrawNode(gameTime, effect, model, node.Model.Nodes[child], alpha, offset);
-        }
-    }
-}
+---
 
-private void DrawMesh(GameTime gameTime, Effect effect, GameModel model, GameNode node, GameMesh mesh, bool alpha = false, Vector3 offset = default)
-{
-    var worldMatrix = Matrix.CreateScale(model.Scale) *
-                      Matrix.CreateFromQuaternion(model.Rotation) *
-                      Matrix.CreateTranslation(model.Translation) *
-                      Matrix.CreateTranslation(offset);
+### ✨ Atlas Animation (Custom Renderer)
 
-    effect.Parameters["World"].SetValue(node.GlobalTransform * worldMatrix);
-    effect.Parameters["View"].SetValue(Camera.ActiveCamera.ViewMatrix);
-    effect.Parameters["Projection"].SetValue(Camera.ActiveCamera.ProjectionMatrix);
+| Game Center Lights |
+|--------------------|
+| ![Lights](https://i.imgur.com/OzDnRAW.gif) |
 
-    // Skinning logic
-    if (model.IsPlaying && model.Skins is { Length: > 0 })
-    {
-        var skin = model.Skins[0];
-        if (skin.JointMatrices.Length > 180)
-        {
-            effect.Parameters["SkinningEnabled"]?.SetValue(false);
-        }
-        else
-        {
-            effect.Parameters["Bones"]?.SetValue(skin.JointMatrices);
-            effect.Parameters["NumberOfBones"]?.SetValue(skin.JointMatrices.Length);
-            effect.Parameters["SkinningEnabled"]?.SetValue(true);
-        }
-    }
-    else
-    {
-        effect.Parameters["SkinningEnabled"]?.SetValue(false);
-    }
-    
-    foreach (var primitive in mesh.Primitives)
-    {
-        if (ShouldSkipPrimitive(primitive, effect, alpha, ref alphaMode))
-        {
-            continue;
-        }
+---
 
-        SetPrimitiveMaterialParameters(gameTime, primitive, effect);
+## Indexed Mesh Fix (Sketchfab, etc.)
 
-        foreach (var pass in effect.Techniques[Math.Max(alphaMode - 1, 0)].Passes)
-        {
-            pass.Apply();
-            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0,
-                primitive.VertexBuffer.VertexCount / 3);
-        }
-    }
-}
+Some models — especially from **Sketchfab** — contain complex or broken mesh data that may fail in the sample renderer.
 
-private bool ShouldSkipPrimitive(GameMeshPrimitives primitive, Effect effect, bool alpha, ref int alphaMode)
-{
-    if (primitive.Material != null)
-    {
-        var material = primitive.Material;
+✅ **If you run into visual issues:**
 
-        switch (material.AlphaMode)
-        {
-            case "OPAQUE":
-                if (alpha)
-                {
-                    return true;
-                }
-                alphaMode = 0;
-                break;
-            case "MASK":
-                if (alpha)
-                {
-                    return true;
-                }
-                alphaMode = 1;
-                break;
-            case "BLEND":
-                if (!alpha)
-                {
-                    return true;
-                }
-                alphaMode = 2;
-                break;
-        }
+- Open the model in **Blender**
+- Re-export as `.glb`
 
-        effect.Parameters["AlphaMode"]?.SetValue(alphaMode);
-    }
-    return false;
-}
+This often fixes mesh indices and makes them work even in the simple renderer.
 
-private void SetPrimitiveMaterialParameters(GameTime gameTime, GameMeshPrimitives primitive, Effect effect)
-{
-    GraphicsDevice.SetVertexBuffer(primitive.VertexBuffer);
+> ⚠️ Reminder: The issue is **only in the basic renderer**, not in the data loading itself.
 
-    effect.Parameters["TextureEnabled"]?.SetValue(false);
-    effect.Parameters["NormalMapEnabled"]?.SetValue(false);
-    effect.Parameters["OcclusionMapEnabled"]?.SetValue(false);
-    effect.Parameters["EmissiveTextureEnabled"]?.SetValue(false);
+---
 
-    if (primitive.Material != null)
-    {
-        var material = primitive.Material;
-            
-        if (_debugTexture)
-        {
-            Console.WriteLine(material.Name);
-        }
-            
-        effect.Parameters["EmissiveColorFactor"]?.SetValue(material.EmissiveFactor.ToVector4());
-        effect.Parameters["BaseColorFactor"]?.SetValue(material.BaseColorFactor.ToVector4());
-        effect.Parameters["AdditionalColorFactor"]?.SetValue(Color.White.ToVector4());
-        effect.Parameters["AlphaCutoff"]?.SetValue(material.AlphaCutoff);
+## Understand the Format
 
-        if (material.HasTexture)
-        {
-            effect.Parameters["TextureEnabled"]?.SetValue(true);
-            effect.Parameters["TextureDimensions"]?.SetValue(material.BaseTexture.Texture.Bounds.Size.ToVector2());
-            effect.Parameters["Texture"]?.SetValue(material.BaseTexture.Texture);
-            effect.Parameters["ShouldAnimate"]?.SetValue(false);
-            SetTextureAnimation(gameTime, material, effect);
-            SetTextureEffects(gameTime, material, effect);
+To get the most out of HxGLTF, we recommend reading the [GLTF 2.0 Specification](https://github.com/KhronosGroup/glTF).
 
-            GraphicsDevice.SamplerStates[0] = material.BaseTexture.Sampler.SamplerState;
-        }
-    }
-}
-```
+This will help you:
+- Understand the structure of your models
+- Build a proper rendering system
+- Handle nodes, hierarchies, animations, skins, and materials correctly
 
-### Important Notes
+---
 
-This example is provided as a **specific implementation** of how you might render a GLTF model loaded via this library. However, rendering GLTF models can vary greatly depending on the complexity of the model, animation handling, and other factors specific to your project.
+## Contact
 
-Feel free to adapt and expand this code based on your project's needs. For any questions or issues, you can reach me on Discord at **sameplayer**.
+For feedback or help, reach out via Discord: **sameplayer**

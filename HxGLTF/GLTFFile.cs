@@ -17,6 +17,7 @@
         public Animation[] Animations;
         public Skin[] Skins;
         public Scene[] Scenes;
+        public string[] ExtensionsUsed;
 
         public bool HasBuffers => Buffers != null && Buffers.Length > 0;
         public bool HasBufferViews => BufferViews != null && BufferViews.Length > 0;

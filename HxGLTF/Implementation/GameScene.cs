@@ -1,22 +1,49 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace HxGLTF.Implementation
+namespace HxGLTF.Implementation;
+
+public class GameScene
 {
-    public class GameScene
+    public int[]? Nodes;
+
+    public void Save(BinaryWriter writer)
     {
-        public int[] Nodes;
-
-        public static GameScene From(GraphicsDevice graphicsDevice, GLTFFile file, Scene scene)
+        if (Nodes != null)
         {
-            var result = new GameScene();
-
-            if (scene.HasNodes)
+            writer.Write(Nodes.Length);
+            foreach (var nodeIndex in Nodes)
             {
-                result.Nodes = scene.NodesIndices;
+                writer.Write(nodeIndex);
             }
+        }
+        else
+        {
+            writer.Write(0);
+        }
+    }
+        
+    public static GameScene Load(BinaryReader reader)
+    {
+        var scene = new GameScene();
 
-            return result;
+        var count = reader.ReadInt32();
+        scene.Nodes = new int[count];
+        for (var i = 0; i < count; i++)
+        {
+            scene.Nodes[i] = reader.ReadInt32();
+        }
+        return scene;
+    }
+        
+    public static GameScene From(GraphicsDevice graphicsDevice, GLTFFile file, Scene scene)
+    {
+        var result = new GameScene();
+
+        if (scene.HasNodes)
+        {
+            result.Nodes = scene.NodesIndices;
         }
 
+        return result;
     }
 }

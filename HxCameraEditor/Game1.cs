@@ -371,7 +371,7 @@ public class Game1 : Game
 
     private void LoadSettingsFromFile()
     {
-        var result = Dialog.FileOpen("bin");
+            var result = Dialog.FileOpen("bin");
 
         if (result.IsOk && !string.IsNullOrEmpty(result.Path))
         {

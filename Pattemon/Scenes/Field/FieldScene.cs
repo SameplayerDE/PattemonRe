@@ -44,7 +44,7 @@ public class FieldScene : SceneA
     private const float _areaIconFadeTime = 320f;
     private const float _areaIconStayTime = 5000f;
     
-    private Action<int> _onChunkHeaderIdChanged;
+    private Action<ChunkHeader> _onChunkHeaderIdChanged;
     
     private PoketchScene _poketchScene; // for the bottom screen
     
@@ -58,9 +58,11 @@ public class FieldScene : SceneA
     private int _nextHeaderId = int.MinValue;
     
     private World _world;
-    private Vector3 _spawn = new Vector3(4, 0, 6);
-    //private Vector3 _spawn = new Vector3(173, 0, 830);
+    //private Vector3 _spawn = new Vector3(4, 0, 6);
+    private Vector3 _spawn = new Vector3(173, 0, 830);
     private Random _random = new Random();
+    private float _chunkLoadTimer = 0f;
+
     
     public FieldScene(Game game, object args = null, string contentDirectory = "Content") : base(game, args, contentDirectory)
     {
@@ -94,12 +96,17 @@ public class FieldScene : SceneA
         _areaIcons[9] = GraphicsCore.LoadTexture("area_icon_09", @"Assets/images/09.png");
         
         // 
-        _onChunkHeaderIdChanged += id =>
+        _onChunkHeaderIdChanged += header =>
         {
-            _currentHeaderId = id;
+            Console.WriteLine(header.Id);
+            _currentHeaderId = header.Id;
+            //_camera = Camera.CameraLookMap[header.CameraSettingsId];
+            //Camera.ActiveCamera = _camera;
+            //_camera.CaptureTarget(() => _spawn);
+            //_camera.SetAsActive();
         };
         
-        _onChunkHeaderIdChanged += id =>
+        _onChunkHeaderIdChanged += _ =>
         {
             AudioCore.LoadSong(_content, 10, @"Audio/Songs/Sandgem Town (Night)");
             AudioCore.PlaySong(10);
@@ -144,6 +151,10 @@ public class FieldScene : SceneA
 
     public override bool Update(GameTime gameTime, float delta)
     {
+        _ = World.LoadNextChunkAsync(_graphics);
+        
+        _world.UpdateChunkLoadingOnMove(_spawn, 2);
+        
         switch (_state)
         {
             case _stateFadeIn:
@@ -162,9 +173,6 @@ public class FieldScene : SceneA
             }
             case _stateProcess:
             {
-                
-                Console.WriteLine(_spawn);
-                
                 UpdateAreaIconState();
                 var direction = KeyboardHandler.GetDirection();
                 _spawn += direction;
@@ -179,7 +187,7 @@ public class FieldScene : SceneA
                         if (currentHeader != null)
                         {
                             _areaIconState = _areaIconStateFadeIn;
-                            _onChunkHeaderIdChanged.Invoke(newHeaderId);
+                            _onChunkHeaderIdChanged.Invoke(currentHeader);
                         }
                     }
                 }

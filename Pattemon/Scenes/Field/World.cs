@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
@@ -13,11 +14,14 @@ public class World
     {
         public const int ChunkWx = 32;
         public const int ChunkWy = 32;
-
+        
+        public static Queue<int> PendingChunkIds = new();
         public static Dictionary<int, Chunk> Chunks = [];
 
         public Dictionary<(int x, int y), (int chunkId, int headerId, int height)> Combination = [];
 
+        private (int x, int y)? _lastLoadedCenter = null;
+        
         public static World LoadByMatrix(GraphicsDevice graphicsDevice, int matrixId)
         {
             var world = new World();
@@ -31,18 +35,78 @@ public class World
                     int.Parse(jCombination["headerId"].ToString()), jCombination["height"].Value<int>());
                 world.Combination.Add(key, value);
 
-                if (!Chunks.ContainsKey(value.chunkId))
+                if (!Chunks.ContainsKey(value.chunkId) && !PendingChunkIds.Contains(value.chunkId))
                 {
-                    var chunkJson = File.ReadAllText($@"Content/WorldData/Chunks/{value.chunkId}.json");
-                    var jChunk = JObject.Parse(chunkJson);
-                    var chunk = Chunk.Load(graphicsDevice, jChunk);
-                    chunk.Load(graphicsDevice);
-                    Chunks.Add(chunk.Id, chunk);
+                    //PendingChunkIds.Enqueue(value.chunkId);
+                   //var chunkJson = File.ReadAllText($@"Content/WorldData/Chunks/{value.chunkId}.json");
+                   //var jChunk = JObject.Parse(chunkJson);
+                   //var chunk = Chunk.Load(graphicsDevice, jChunk);
+                   //chunk.Load(graphicsDevice);
+                   //Chunks.Add(chunk.Id, chunk);
                 }
             }
             return world;
         }
 
+        public static async Task LoadNextChunkAsync(GraphicsDevice graphicsDevice)
+        {
+            if (PendingChunkIds.Count == 0)
+                return;
+
+            int chunkId = PendingChunkIds.Dequeue();
+            if (Chunks.ContainsKey(chunkId))
+                return;
+
+            // Laden im Hintergrund
+            var chunkJson = await File.ReadAllTextAsync($"Content/WorldData/Chunks/{chunkId}.json");
+            var jChunk = JObject.Parse(chunkJson);
+            var chunk = Chunk.Load(graphicsDevice, jChunk);
+
+            // GPU-Kram synchron
+            await Task.Run(() =>
+            {
+                chunk.Load(graphicsDevice);
+                lock (Chunks)
+                {
+                    Chunks[chunk.Id] = chunk;
+                }
+            });
+        }
+        
+        public void UpdateChunkLoadingOnMove(Vector3 position, int radius)
+        {
+            int currentX = (int)(position.X / ChunkWx);
+            int currentY = (int)(position.Z / ChunkWy);
+
+            if (_lastLoadedCenter.HasValue && _lastLoadedCenter.Value.x == currentX && _lastLoadedCenter.Value.y == currentY)
+                return; // Spieler ist im gleichen Chunk → nix machen
+
+            _lastLoadedCenter = (currentX, currentY);
+            EnqueueChunksAround(position, radius);
+        }
+        
+        public void EnqueueChunksAround(Vector3 position, int radius)
+        {
+            int cx = (int)(position.X / ChunkWx);
+            int cy = (int)(position.Z / ChunkWy);
+
+            for (int dx = -radius; dx <= radius; dx++)
+            {
+                for (int dy = -radius; dy <= radius; dy++)
+                {
+                    var key = (cx + dx, cy + dy);
+                    if (Combination.TryGetValue(key, out var tuple))
+                    {
+                        int chunkId = tuple.chunkId;
+                        if (!Chunks.ContainsKey(chunkId) && !PendingChunkIds.Contains(chunkId))
+                        {
+                            PendingChunkIds.Enqueue(chunkId);
+                        }
+                    }
+                }
+            }
+        }
+        
         public Chunk GetChunkAtPosition(Vector3 position)
         {
             try

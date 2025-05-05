@@ -13,6 +13,11 @@ namespace HxGLTF.Implementation
         public GameMaterial Material;
         public Vector3 LocalPosition;
         
+        // For Bounding Box Calculations
+        public Vector3[] Positions;
+        public Vector4[] Weights;
+        public Vector4[] Joints; 
+        
         public void Dispose()
         {
             VertexBuffer?.Dispose();
@@ -35,224 +40,134 @@ namespace HxGLTF.Implementation
         
         public static GameMeshPrimitives From(GraphicsDevice graphicsDevice, GLTFFile file, MeshPrimitive primitive)
         {
-            var result = new GameMeshPrimitives();
 
-            result.Material = GameMaterial.From(graphicsDevice, file, primitive.Material);
+            var result = new GameMeshPrimitives
+            {
+                Material = GameMaterial.From(graphicsDevice, file, primitive.Material)
+            };
 
-            var position = new List<Vector3>();
+            var positions = new List<Vector3>();
             var normals = new List<Vector3>();
             var colors = new List<Color>();
             var uvs = new List<Vector2>();
             var joints = new List<Vector4>();
-            var w = new List<Vector4>();
+            var weights = new List<Vector4>();
             
             foreach (var attribute in primitive.Attributes)
             {
-                //Console.WriteLine(attribute.Key);
-                //Console.WriteLine(attribute.Value.Type.Id);
+                var accessor = attribute.Value;
+                var data = AccessorReader.ReadData(accessor);
+                var compCount = accessor.Type.NumberOfComponents;
 
-                var dataAccessor = attribute.Value;
-                var elementCount = dataAccessor.Count;
-                var numberOfComponents = dataAccessor.Type.NumberOfComponents;
-
-                float[] data;
-
-                
-                
-                if (primitive.HasIndices)
+                for (var i = 0; i < accessor.Count; i++)
                 {
-                    data = AccessorReader.ReadDataIndexed(dataAccessor, primitive.Indices);
+                    var baseIndex = i * compCount;
 
-                    //Console.WriteLine("Key: " + attribute.Key + ", Type: " + dataAccessor.Type.Id);
-
-                    if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
+                    switch (attribute.Key)
                     {
-                        for (var x = 0; x < data.Length; x += 3)
-                        {
-                            position.Add(new Vector3(data[x], data[x + 1], data[x + 2]));
-                        }
-                    }
-                    
-                    if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC4")
-                    {
-                        for (var x = 0; x < data.Length; x += 4)
-                        {
-                            var color = new Color(data[x] / 255f, data[x + 1] / 255f, data[x + 2] / 255f, data[x + 3] / 255f);
-                            colors.Add(color);
-                        }
-                    }
-                    
-                    if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
-                    {
-                        for (var x = 0; x < data.Length; x += 3)
-                        {
-                            var color = new Color(data[x] / 255f, data[x + 1] / 255f, data[x + 2] / 255f, 1);
-                            colors.Add(color);
-                        }
-                    }
-
-                    if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
-                    {
-                        for (var x = 0; x < data.Length; x += 3)
-                        {
-                            normals.Add(new Vector3(data[x], data[x + 1], data[x + 2]));
-                        }
-                    }
-
-                    if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
-                    {
-                        for (var x = 0; x < data.Length; x += 2)
-                        {
-                            uvs.Add(new Vector2(data[x], data[x + 1]));
-                        }
-                    }
-                    
-                    if (attribute.Key == "JOINTS_0" && dataAccessor.Type.Id == "VEC4")
-                    {
-                        for (var x = 0; x < data.Length; x += dataAccessor.Type.NumberOfComponents)
-                        {
-                            joints.Add(new Vector4(data[x], data[x + 1], data[x + 2], data[x + 3]));
-                        }
-                    }
-                    
-                    if (attribute.Key == "WEIGHTS_0" && dataAccessor.Type.Id == "VEC4")
-                    {
-                        for (var x = 0; x < data.Length; x += 4)
-                        {
-                            var vector = new Vector4(
-                                data[x + 0],
-                                data[x + 1],
-                                data[x + 2],
-                                data[x + 3]
-                            );
-                            w.Add(vector);
-                        }
-                    }
-
-                    if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
-                    {
-                        
-                    }
-                }
-                else
-                {
-                    data = AccessorReader.ReadData(dataAccessor);
-
-                    //Console.WriteLine("Key: " + attribute.Key + ", Type: " + dataAccessor.Type.Id);
-                    
-                    for (var i = 0; i < dataAccessor.Count; i++)
-                    {
-                        if (attribute.Key == "POSITION" && dataAccessor.Type.Id == "VEC3")
-                        {
-                            position.Add(new Vector3(
-                                data[i * numberOfComponents + 0],
-                                data[i * numberOfComponents + 1],
-                                data[i * numberOfComponents + 2]
-                            ));
-                        }
-                        else if (attribute.Key == "NORMAL" && dataAccessor.Type.Id == "VEC3")
-                        {
-                            normals.Add(new Vector3(
-                                data[i * numberOfComponents + 0],
-                                data[i * numberOfComponents + 1],
-                                data[i * numberOfComponents + 2]
-                            ));
-                        }
-                        else if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC4")
-                        {
-                            for (var x = 0; x < data.Length; x += 4)
-                            {
-                                var color = new Color(
-                                    data[i * numberOfComponents + 0] / 255f,
-                                    data[i * numberOfComponents + 1] / 255f,
-                                    data[i * numberOfComponents + 2] / 255f,
-                                    data[i * numberOfComponents + 3] / 255f);
-                                colors.Add(color);
-                            }
-                        }
-                        else if (attribute.Key == "COLOR_0" && dataAccessor.Type.Id == "VEC3")
-                        {
-                            for (var x = 0; x < data.Length; x += 3)
-                            {
-                                var color = new Color(
-                                    data[i * numberOfComponents + 0] / 255f,
-                                    data[i * numberOfComponents + 1] / 255f,
-                                    data[i * numberOfComponents + 2] / 255f,
-                                    1);
-                                colors.Add(color);
-                            }
-                        }
-                        else if (attribute.Key == "TEXCOORD_0" && dataAccessor.Type.Id == "VEC2")
-                        {
-                            uvs.Add(new Vector2(
-                                data[i * numberOfComponents + 0],
-                                data[i * numberOfComponents + 1]
-                            ));
-                        }
-                        else if (attribute.Key == "JOINTS_0" && dataAccessor.Type.Id == "VEC4")
-                        {
-                            joints.Add(new Vector4(
-                                data[i * numberOfComponents + 0],
-                                data[i * numberOfComponents + 1],
-                                data[i * numberOfComponents + 2],
-                                data[i * numberOfComponents + 3]
-                            ));
-                        }
-                        else if (attribute.Key == "WEIGHTS_0" && dataAccessor.Type.Id == "VEC4")
-                        {
-                            var vector = new Vector4(
-                                data[i * numberOfComponents + 0],
-                                data[i * numberOfComponents + 1],
-                                data[i * numberOfComponents + 2],
-                                data[i * numberOfComponents + 3]
-                            );
-                            w.Add(vector);
-                        }
+                        case "POSITION":
+                            positions.Add(new Vector3(data[baseIndex], data[baseIndex + 1], data[baseIndex + 2]));
+                            break;
+                        case "NORMAL":
+                            normals.Add(new Vector3(data[baseIndex], data[baseIndex + 1], data[baseIndex + 2]));
+                            break;
+                        case "TEXCOORD_0":
+                            uvs.Add(new Vector2(data[baseIndex], data[baseIndex + 1]));
+                            break;
+                        case "COLOR_0":
+                            colors.Add(compCount == 4
+                                ? new Color(data[baseIndex], data[baseIndex + 1], data[baseIndex + 2], data[baseIndex + 3])
+                                : new Color(data[baseIndex], data[baseIndex + 1], data[baseIndex + 2], 1f));
+                            break;
+                        case "JOINTS_0":
+                            joints.Add(new Vector4(data[baseIndex], data[baseIndex + 1], data[baseIndex + 2], data[baseIndex + 3]));
+                            break;
+                        case "WEIGHTS_0":
+                            weights.Add(new Vector4(data[baseIndex], data[baseIndex + 1], data[baseIndex + 2], data[baseIndex + 3]));
+                            break;
                     }
                 }
             }
 
-            if (position.Count > 0)
+            if (primitive.HasIndices)
             {
-                var centerPosition = Vector3.Zero;
-                foreach (var pos in position)
+                int[] indices = AccessorReader.ReadIndices(primitive.Indices);
+                result.IndexCount = indices.Length;
+                result.IsIndexed = true;
+
+                var finalVertices = new List<VertexPositionColorNormalTextureBlend>();
+                var finalIndices = new List<int>();
+                var vertexMap = new Dictionary<VertexPositionColorNormalTextureBlend, int>();
+
+                for (int i = 0; i < indices.Length; i++)
                 {
-                    // Debug: Ausgabe der Positionen
-                    //Console.WriteLine($"Position: {pos}");
+                    int idx = indices[i];
+                    Vector3 pos = positions[idx];
+                    Vector3 norm = normals.Count > idx ? normals[idx] : Vector3.Up;
+                    Vector2 uv = uvs.Count > idx ? uvs[idx] : Vector2.Zero;
+                    Color col = colors.Count > idx ? colors[idx] : Color.White;
+                    Vector4 joint = joints.Count > idx ? joints[idx] : Vector4.Zero;
+                    Vector4 weight = weights.Count > idx ? weights[idx] : Vector4.UnitX;
 
-                    // Berücksichtige die Skalierung
-                    Vector3 scaledPosition = pos / 16;
-                    centerPosition += scaledPosition;
+                    var vertex = new VertexPositionColorNormalTextureBlend(pos, col, norm, uv, joint, weight);
+
+                    if (!vertexMap.TryGetValue(vertex, out int vertexIndex))
+                    {
+                        vertexIndex = finalVertices.Count;
+                        vertexMap[vertex] = vertexIndex;
+                        finalVertices.Add(vertex);
+                    }
+
+                    finalIndices.Add(vertexIndex);
                 }
-                centerPosition /= position.Count;
 
-                // Debug: Ausgabe der berechneten Center-Position
-                //Console.WriteLine($"Center Position: {centerPosition}");
-
-                result.LocalPosition = centerPosition; // Setze die berechnete Position
-            }
-
-            
-            var vertexBufferDummy = new List<VertexPositionColorNormalTextureBlend>();
-
-            // Hier fügen wir die gesammelten Positionen, Normalen und Texturkoordinaten in die _positions-Liste ein
-            for (int i = 0; i < position.Count; i++)
-            {
-                vertexBufferDummy.Add(new VertexPositionColorNormalTextureBlend(
-                    position[i],
-                    colors.Count > i ? colors[i] : Color.White,
-                    normals.Count > i ? normals[i] : Vector3.Up,
-                    uvs.Count > i ? uvs[i] : Vector2.Zero,
-                    joints.Count > i ? joints[i] : Vector4.Zero,
-                    w.Count > i ?  w[i] : Vector4.UnitX)
+                result.VertexBuffer = new VertexBuffer(
+                    graphicsDevice,
+                    VertexPositionColorNormalTextureBlend.VertexDeclaration,
+                    finalVertices.Count,
+                    BufferUsage.WriteOnly
                 );
+                result.VertexBuffer.SetData(finalVertices.ToArray());
+
+                result.IndexBuffer = new IndexBuffer(
+                    graphicsDevice,
+                    IndexElementSize.ThirtyTwoBits,
+                    finalIndices.Count,
+                    BufferUsage.WriteOnly
+                );
+                result.IndexBuffer.SetData(finalIndices.ToArray());
+            }
+            else
+            {
+                result.IsIndexed = false;
+                result.IndexCount = 0;
+
+                var vertexList = new List<VertexPositionColorNormalTextureBlend>();
+
+                for (int i = 0; i < positions.Count; i++)
+                {
+                    var pos = positions[i];
+                    var norm = (normals.Count > i) ? normals[i] : Vector3.Up;
+                    var uv = (uvs.Count > i) ? uvs[i] : Vector2.Zero;
+                    var col = (colors.Count > i) ? colors[i] : Color.White;
+                    var joint = (joints.Count > i) ? joints[i] : Vector4.Zero;
+                    var weight = (weights.Count > i) ? weights[i] : Vector4.UnitX;
+
+                    vertexList.Add(new VertexPositionColorNormalTextureBlend(pos, col, norm, uv, joint, weight));
+                }
+
+                result.VertexCount = vertexList.Count;
+                result.VertexBuffer = new VertexBuffer(
+                    graphicsDevice,
+                    VertexPositionColorNormalTextureBlend.VertexDeclaration,
+                    vertexList.Count,
+                    BufferUsage.WriteOnly
+                );
+                result.VertexBuffer.SetData(vertexList.ToArray());
             }
 
-            // Setzen des VertexBuffers
-            var vertexArray = vertexBufferDummy.ToArray();
-            //VertexPositionColorNormalTextureBlend.CalculateNormals(vertexArray);
-            result.VertexBuffer = new VertexBuffer(graphicsDevice, VertexPositionColorNormalTextureBlend.VertexDeclaration, vertexBufferDummy.Count, BufferUsage.WriteOnly);
-            result.VertexBuffer.SetData(vertexArray);
+            result.Positions = positions.ToArray();
+            result.LocalPosition = positions.Aggregate(Vector3.Zero, (a, b) => a + b) / positions.Count;
 
             return result;
         }
