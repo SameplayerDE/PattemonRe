@@ -1,6 +1,6 @@
 ﻿using System;
 using HxGLTF;
-using HxGLTF.Implementation;
+using HxGLTF.Monogame;
 using InputLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <OutputType>WinExe</OutputType>
-        <TargetFramework>net8.0</TargetFramework>
+        <OutputType>Exe</OutputType>
         <PublishReadyToRun>false</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -22,15 +22,8 @@
         <MonoGameContentReference Include="Content\Content.mgcb" />
     </ItemGroup>
     <ItemGroup>
-        <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Emgu.CV" Version="4.9.0.5494" />
-        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
-        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
-        <PackageReference Include="System.Drawing.Common" Version="9.0.0-preview.5.24306.5" />
-        <PackageReference Include="Tesseract" Version="5.2.0" />
-        <PackageReference Include="Tesseract.Drawing" Version="5.2.0" />
+        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" />
+        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.3" />
     </ItemGroup>
     <ItemGroup>
         <None Update="Content\pokemon-dp-pro.ttf">
@@ -57,9 +50,6 @@
         <None Update="Content\Languages\de\558.txt">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-    <ItemGroup>
-        <Content Include=".config\dotnet-tools.json" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\InputLib\InputLib.csproj" />

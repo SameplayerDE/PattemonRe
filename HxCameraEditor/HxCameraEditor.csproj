@@ -28,14 +28,15 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303"/>
-        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303"/>
+        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" />
+        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.3" />
         <PackageReference Include="NativeFileDialogSharp" Version="0.6.0-alpha" />
     </ItemGroup>
     <ItemGroup>
       <Content Include=".config\dotnet-tools.json" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\HxGLTF.Monogame\HxGLTF.Monogame.csproj" />
       <ProjectReference Include="..\HxGLTF\HxGLTF.csproj" />
       <ProjectReference Include="..\InputLib\InputLib.csproj" />
       <ProjectReference Include="..\PatteLib\PatteLib.csproj" />

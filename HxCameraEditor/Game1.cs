@@ -6,7 +6,7 @@ using HxCameraEditor.Graphics;
 using HxCameraEditor.UserInterface;
 using HxCameraEditor.UserInterface.Models;
 using HxGLTF;
-using HxGLTF.Implementation;
+using HxGLTF.Monogame;
 using InputLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,7 +17,11 @@ using NativeFileDialogSharp.Native;
 using Newtonsoft.Json.Linq;
 using PatteLib.Graphics;
 using PatteLib.World;
+using Color = Microsoft.Xna.Framework.Color;
 using Image = HxCameraEditor.UserInterface.Image;
+using Matrix = Microsoft.Xna.Framework.Matrix;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace HxCameraEditor;
 

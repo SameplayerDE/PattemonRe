@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Newtonsoft.Json.Linq;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
+﻿using Newtonsoft.Json.Linq;
+using HxGLTF.Core.PrimitiveDataStructures;
+using HxGLTF.Core;
+using Buffer = HxGLTF.Core.Buffer;
 
 namespace HxGLTF
 {
@@ -409,8 +409,10 @@ namespace HxGLTF
                     BufferView = bufferViews[(int)jToken["bufferView"]],
                     ByteOffset = (int)(jToken["byteOffset"] ?? 0),
                     Count = (int)jToken["count"],
-                    ComponentType = ComponentType.FromInt((int)jToken["componentType"]),
-                    Type = Type.FromSting((string)jToken["type"])
+                    Normalized = (bool?)jToken["normalized"] ?? false,
+                    DataType = ComponentDataType.FromInt((int)jToken["componentType"]),
+                    StructureType = StructureType.FromSting((string)jToken["type"]),
+                    Name = (string?)jToken["name"] ?? null,
                 };
             }
             return accessors;
@@ -555,7 +557,7 @@ namespace HxGLTF
                 if (jEmissiveFactor != null)
                 {
                     var rgb = jEmissiveFactor.ToObject<float[]>();
-                    material.EmissiveFactor = new Color(rgb[0], rgb[1], rgb[2], 1);
+                    material.EmissiveFactor = new Color(rgb[0], rgb[1], rgb[2]);
                 }
                 
                 var jEmissiveTextureInfo = jMaterial["emissiveTexture"];

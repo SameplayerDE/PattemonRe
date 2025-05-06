@@ -1,5 +1,5 @@
 ﻿using HxGLTF;
-using HxGLTF.Implementation;
+using HxGLTF.Monogame;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;

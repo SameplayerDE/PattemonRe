@@ -3,7 +3,7 @@
         <OutputType>Exe</OutputType>
         <PublishReadyToRun>false</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -20,11 +20,12 @@
         <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
-        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" />
+        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.3" />
         <PackageReference Include="TextCopy" Version="6.2.1" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\HxGLTF.Monogame\HxGLTF.Monogame.csproj" />
       <ProjectReference Include="..\HxGLTF\HxGLTF.csproj" />
       <ProjectReference Include="..\InputLib\InputLib.csproj" />
       <ProjectReference Include="..\PatteLib\PatteLib.csproj" />

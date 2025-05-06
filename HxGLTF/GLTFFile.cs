@@ -1,4 +1,7 @@
-﻿namespace HxGLTF
+﻿using HxGLTF.Core;
+using Buffer = HxGLTF.Core.Buffer;
+
+namespace HxGLTF
 {
     public class GLTFFile
     {
